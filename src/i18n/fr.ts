@@ -35,6 +35,7 @@ export const fr = {
       lead: 'Systèmes et marketing pour les entreprises au Maroc, en commençant par la restauration. Notre équipe à Rabat passe chez vous.',
       leadShort: 'Systèmes et marketing au Maroc. Notre équipe à Rabat passe chez vous.',
       flow: ['Commande reçue', 'Bon envoyé en cuisine', 'Marge calculée'],
+      flowShort: ['Commande reçue', 'En cuisine', 'Marge calculée'],
       rating: 'sur Google',
       local: 'Équipe basée à Rabat',
       facts: [
