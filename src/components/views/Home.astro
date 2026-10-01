@@ -9,6 +9,7 @@ import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
 import Steps from '../Steps.astro';
 import TryIt from '../TryIt.astro';
+import Loop from '../Loop.astro';
 import Ph from '../Ph.astro';
 import Mark from '../Mark.astro';
 import { SITE, CONTACT, signupUrl } from '../../config';
@@ -151,38 +152,8 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- TRY IT: scan and order in the live demo -->
   <TryIt lang={lang} />
 
-  <!-- PATHS -->
-  <section class="relative isolate overflow-hidden bg-blue py-24 text-white">
-    <div class="mx-auto max-w-6xl px-4 sm:px-6">
-      <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl">{c.paths.h2}</h2>
-      <p class="mt-5 text-lg text-white/75">{c.paths.p}</p>
-      <div class="mt-12 grid grid-cols-[minmax(0,1fr)] gap-5 md:grid-cols-[1.15fr_1fr]">
-        {(['systems', 'marketing'] as const).map((k, i) => {
-          const p = c.paths[k];
-          return (
-            <a href={ROUTES[k][lang]} class={`group flex flex-col rounded-[1.75rem] p-8 md:p-10 ${i === 0 ? 'bg-green text-navy' : 'bg-paper text-navy'}`}>
-              <span class="display text-6xl">{String(i + 1).padStart(2, '0')}</span>
-              <h3 class="display mt-6 text-5xl">{p.h3}</h3>
-              <p class="mt-3 max-w-md">{p.p}</p>
-              <ul class="mt-6 divide-y divide-navy/15 border-y border-navy/15">
-                {p.list.map(x => <li class="flex items-center gap-3 py-3 font-medium"><Icon name="check" class="size-5" />{x}</li>)}
-              </ul>
-              <span class="mt-8 font-semibold underline-offset-4 group-hover:underline">{p.link}</span>
-            </a>
-          );
-        })}
-      </div>
-      <!-- the two products by name, each with its own page -->
-      <div class="mt-5 grid gap-3 sm:grid-cols-2">
-        {c.paths.products.map(([name, sub], i) => (
-          <a href={ROUTES[i === 0 ? 'pos' : 'profit'][lang]} class="group flex items-center justify-between gap-4 rounded-2xl bg-white/5 px-5 py-4 ring-1 ring-white/15 hover:bg-white/10">
-            <span><span class="block text-lg font-semibold">{name}</span><span class="text-sm text-white/65">{sub}</span></span>
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-green text-navy transition-transform group-hover:translate-x-1 rtl:rotate-180" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </a>
-        ))}
-      </div>
-    </div>
-  </section>
+  <!-- LOOP: systems and marketing as one loop, pinned while scrolling -->
+  <Loop lang={lang} />
 
   <!-- FAQ -->
   <section class="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 md:grid-cols-[1fr_1.4fr]">

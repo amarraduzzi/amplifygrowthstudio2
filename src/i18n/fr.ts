@@ -152,6 +152,21 @@ export const fr = {
       note: 'Café fictif, créé pour la démonstration.',
       reviewLabel: 'Avis Google',
     },
+    loop: {
+      h2a: 'Du premier clic',
+      h2b: 'au client qui revient.',
+      p: 'Systèmes et marketing ne font qu’un. Chaque étape nourrit la suivante, et la boucle recommence.',
+      scroll: 'Faites défiler',
+      stations: [
+        { h: 'Attirer', p: 'Un site rapide, une fiche Google soignée et du contenu qui donne envie. On vous trouve.', tags: ['Marketing'], link: 'marketing', icon: 'megaphone' },
+        { h: 'Commander', p: 'Le client commande depuis sa table par QR code, ou de chez lui sur WhatsApp. Sans commission.', tags: ['Menu QR', 'Commande WhatsApp'], link: 'pos', icon: 'qr' },
+        { h: 'Servir', p: 'La commande arrive en caisse et en cuisine, sans papier ni erreur. Même sans internet.', tags: ['Amplify POS'], link: 'pos', icon: 'till' },
+        { h: 'Mesurer', p: 'Marge par plat, stock, coût de l’équipe. Vous savez enfin ce qui rapporte.', tags: ['Amplify Profit'], link: 'profit', icon: 'chart' },
+        { h: 'Faire revenir', p: 'Points de fidélité, avis Google sur le ticket, offres WhatsApp aux clients d’accord. Et la boucle recommence.', tags: ['Fidélité', 'Avis Google'], link: 'marketing', icon: 'check' },
+      ] as { h: string; p: string; tags: string[]; link: 'marketing' | 'pos' | 'profit'; icon: 'megaphone' | 'qr' | 'till' | 'chart' | 'check' }[],
+      more: 'En savoir plus',
+      three: [['Amplify POS', 'La caisse, dès 199 DH HT / mois', 'pos'], ['Amplify Profit', 'Les marges, dès 249 DH HT / mois', 'profit'], ['Marketing', 'Site, WhatsApp, Google, sur devis', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
+    },
     paths: {
       h2: 'On pense au-delà de la caisse.',
       p: 'Deux façons de vous aider. Prenez l’une, l’autre, ou les deux.',

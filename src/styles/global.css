@@ -148,3 +148,24 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
 .js .step-card:not(.seen) .scan-line { opacity: 0; }
 .step-card.seen .scan-line { animation: scan 1.8s ease-in-out .2s both; }
 @keyframes scan { from { top: 4%; opacity: 1; } 90% { opacity: 1; } to { top: 92%; opacity: 0; } }
+
+/* The Amplify loop: pinned while scrolling (only with JS and motion allowed) */
+.loop { --p: 1; }
+.loop-live { --p: 0; height: 340vh; }
+.loop-live .loop-pin { position: sticky; top: 4rem; height: calc(100svh - 4rem); justify-content: center; padding-top: 1.25rem; padding-bottom: 1.25rem; }
+.loop-arc { stroke-dashoffset: calc(var(--c) * (1 - var(--p)) * 1px); }
+.loop-comet { transform: rotate(calc(var(--p) * 360deg)); }
+.loop-live .loop-comet { transition: transform .15s linear; }
+.loop-node.lit { background: var(--color-green); color: var(--color-navy); box-shadow: none; }
+.loop-node.now { scale: 1.22; box-shadow: 0 0 0 6px rgb(5 185 98 / .25); }
+.loop-panel { opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+.loop-panel.is-on { opacity: 1; transform: none; pointer-events: auto; }
+/* no JS or reduced motion: a plain list */
+html:not(.js) .loop-panel, .loop-static .loop-panel { position: static; opacity: 1; transform: none; pointer-events: auto; margin-bottom: 2rem; }
+html:not(.js) .loop-node, .loop-static .loop-node { background: var(--color-green); color: var(--color-navy); }
+html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, .loop-static .loop-comet { display: none; }
+@media (max-width: 767px) {
+  .loop-live .loop-pin { height: calc(100svh - 4rem - 4.75rem); }
+  .loop-live .loop-head p { display: none; }
+  .loop-live .loop-body { margin-top: 1rem; gap: 1rem; }
+}
