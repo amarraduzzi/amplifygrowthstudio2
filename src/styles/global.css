@@ -135,3 +135,13 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
   .hub-line { transform: translateY(-50%); }
   .g-star { color: #F5B301; }
 }
+
+/* Steps: the active card stands out, the others wait; visuals play once the card is reached */
+.js .step-card:not(.is-on) { opacity: .55; scale: .97; }
+.step-card.is-on { box-shadow: 0 30px 60px -35px rgb(0 30 62 / .45); outline: 2px solid var(--color-green); outline-offset: -2px; }
+.js .step-card:not(.seen) .sv, .js .step-card:not(.seen) .bar-up { opacity: 0; }
+.step-card.seen .sv { animation: fade-up .5s ease both; animation-delay: var(--d, 0ms); }
+.step-card.seen .bar-up { animation: bar-rise .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); transform-origin: bottom; }
+.step-card.seen .pin-dot { animation: pin .25s ease both; animation-delay: var(--d, 0ms); }
+@keyframes pin { to { background: var(--color-navy); } }
+@media (prefers-reduced-motion: reduce) { .js .step-card:not(.is-on) { opacity: 1; scale: 1; } .js .step-card:not(.seen) .sv, .js .step-card:not(.seen) .bar-up { opacity: 1; } }

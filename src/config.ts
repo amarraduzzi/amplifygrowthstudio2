@@ -13,6 +13,8 @@ export const SITE = {
   /** Languages that are finished. A language goes in here only when all its pages exist. */
   languages: ['fr'] as const,
   demoUrl: 'https://posamplify.pages.dev',
+  /** Live demo menu of the fictional café Dar Nour (supabase/demo/dar-nour.sql). */
+  demoMenuUrl: 'https://posamplify.pages.dev/dar-nour',
 };
 
 export const CONTACT = {
@@ -33,3 +35,9 @@ export const CONTACT = {
 
 export const isPlaceholder = (v: string) => /^\[.*\]$/.test(v.trim());
 export const waLink = (text: string) => `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
+
+/** Real Google review, word for word in its original language. Shown only when filled in. */
+export const REVIEW = {
+  text: '[TEXTE ORIGINAL DE L’AVIS GOOGLE]',
+  author: 'B N',
+};

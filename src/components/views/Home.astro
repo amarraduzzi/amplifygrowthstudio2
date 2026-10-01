@@ -7,6 +7,8 @@ import Bars from '../Bars.astro';
 import Icon from '../Icon.astro';
 import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
+import Steps from '../Steps.astro';
+import TryIt from '../TryIt.astro';
 import Ph from '../Ph.astro';
 import Mark from '../Mark.astro';
 import { SITE, CONTACT } from '../../config';
@@ -143,41 +145,11 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- PLACES: choose your trade -->
   <Sectors lang={lang} />
 
-  <!-- PROOF -->
-  <section class="relative isolate overflow-hidden bg-blue py-24 text-white">
-    <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32" />
-    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 md:grid-cols-[1fr_1fr]">
-      <div>
-        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.proof.h2a}</span><span class="block text-green">{c.proof.h2b}</span></h2>
-        <p class="measure mt-6 text-white/75">{c.proof.p}</p>
-      </div>
-      <div class="relative mx-auto w-full max-w-md">
-        <div class="absolute inset-0 translate-x-5 -translate-y-5 rotate-3 rounded-[1.75rem] bg-green" aria-hidden="true"></div>
-        <div class="absolute inset-0 -translate-x-3 translate-y-3 -rotate-2 rounded-[1.75rem] bg-mint" aria-hidden="true"></div>
-        <div class="relative rounded-[1.75rem] bg-paper p-8 text-navy">
-          <p class="text-lg"><Ph value={c.proof.ph} /></p>
-          <ul class="mt-6 flex flex-wrap gap-2">{c.proof.tags.map(tag => <li class="rounded-full bg-chalk px-3 py-1 text-sm font-medium">{tag}</li>)}</ul>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- STEPS: how starting works -->
+  <Steps lang={lang} wa={c.wa} />
 
-  <!-- STEPS -->
-  <section class="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-14 px-4 py-24 sm:px-6 md:grid-cols-[1.1fr_1fr] md:items-center">
-    <ol class="grid gap-4 md:col-start-1 md:row-start-1">
-      {c.steps.items.map(([h, p], i) => (
-        <li class={`flex gap-5 rounded-[1.5rem] bg-paper p-6 shadow-[0_20px_40px_-30px_rgba(0,30,62,0.35)] ${['', 'md:ms-12', 'md:ms-4', 'md:ms-16'][i]}`}>
-          <span class="display text-5xl text-green-deep">{String(i + 1).padStart(2, '0')}</span>
-          <div><h3 class="text-xl">{h}</h3><p class="mt-1 text-muted"><Ph value={p} /></p></div>
-        </li>
-      ))}
-    </ol>
-    <div class="md:col-start-2 md:row-start-1">
-      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.steps.h2a}</span><span class="fade-2 block">{c.steps.h2b}</span></h2>
-      <p class="mt-5 text-lg text-muted">{c.steps.p}</p>
-      <WaButton text={c.wa} label={t.ui.whatsapp} where="home-steps" class="mt-8 px-7" />
-    </div>
-  </section>
+  <!-- TRY IT: scan and order in the live demo -->
+  <TryIt lang={lang} />
 
   <!-- PATHS -->
   <section class="relative isolate overflow-hidden bg-blue py-24 text-white">

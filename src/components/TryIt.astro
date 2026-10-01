@@ -1,0 +1,49 @@
+---
+// "Essayez vous-même": the visitor scans a QR code and orders in a live demo café on their own phone.
+// Plus a real Google review, shown only once its original text is filled in.
+import QRCode from 'qrcode';
+import WaButton from './WaButton.astro';
+import Device from './Device.astro';
+import Bars from './Bars.astro';
+import { SITE, CONTACT, REVIEW, isPlaceholder } from '../config';
+import { copy } from '../i18n';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const all = copy(Astro.props.lang);
+const c = all.home.tryit;
+const qr = await QRCode.toString(SITE.demoMenuUrl, { type: 'svg', margin: 0, color: { dark: '#001E3EFF', light: '#FFFFFF00' } });
+const showReview = !isPlaceholder(REVIEW.text);
+---
+<section class="relative isolate overflow-hidden bg-green py-20 text-navy md:py-28">
+  <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32" color="rgba(0,30,62,0.08)" />
+  <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">
+    <div>
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.h2a}</span><span class="block text-white">{c.h2b}</span></h2>
+      <p class="mt-5 hidden max-w-md text-lg text-navy/80 md:block">{c.p}</p>
+      <p class="mt-5 max-w-md text-lg text-navy/80 md:hidden">{c.pMobile}</p>
+      <a href={SITE.demoMenuUrl} target="_blank" rel="noopener" class="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-blue md:hidden">{c.open}</a>
+      <p class="mt-4 text-sm text-navy/60">{c.note}</p>
+      <div class="mx-auto mt-10 w-44 rotate-[3deg] md:hidden"><Device kind="phone" src="/img/menu-fiche.webp" alt="" w={600} h={1298} /></div>
+
+      {showReview && (
+        <figure class="mt-10 max-w-md rounded-2xl bg-white/25 p-6 ring-1 ring-navy/10">
+          <div class="flex text-[#F5B301]" aria-label="5/5">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-4"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</div>
+          <blockquote class="mt-3 text-navy">« {REVIEW.text} »</blockquote>
+          <figcaption class="mt-3 text-sm text-navy/70">{REVIEW.author}, <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="underline">{c.reviewLabel}</a></figcaption>
+        </figure>
+      )}
+    </div>
+
+    <!-- desktop: big QR next to the real menu on a phone -->
+    <div class="relative hidden items-center justify-center gap-8 md:flex">
+      <div class="try-qr rounded-[2rem] bg-paper p-7 text-center text-navy shadow-2xl">
+        <div class="size-52 [&>svg]:size-full" set:html={qr} />
+        <p class="mt-4 font-semibold">{c.scan}</p>
+        <p class="text-xs text-muted" dir="ltr">{SITE.demoMenuUrl.replace('https://', '')}</p>
+      </div>
+      <div class="w-48 rotate-[4deg]">
+        <Device kind="phone" src="/img/menu-fiche.webp" alt="" w={600} h={1298} />
+      </div>
+    </div>
+  </div>
+</section>
