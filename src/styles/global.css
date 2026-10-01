@@ -182,3 +182,17 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 @keyframes dot { 0%, 60%, 100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
 
 @media (prefers-reduced-motion: no-preference) { .pill-in { animation: fade-up .5s ease both; animation-delay: var(--d, 0ms); } }
+
+/* Closing doors: slide in from both sides, caret blinks until the message is typed */
+.door-caret { display: inline-block; width: 2px; height: 1em; margin-inline-start: 2px; vertical-align: -0.15em; background: #075E54; animation: caret 1s steps(1) infinite; }
+.door-l.typed .door-caret { display: none; }
+.door-l.typed .door-send { box-shadow: 0 0 0 6px rgb(5 185 98 / .25); }
+.door-send { transition: box-shadow .4s ease; }
+@keyframes caret { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-doors]:not(.in) .door { opacity: 0; }
+  .js [data-doors]:not(.in) .door-l { transform: translateX(-40px); }
+  .js [data-doors]:not(.in) .door-r { transform: translateX(40px); }
+  .door { transition: opacity .7s ease, transform .8s cubic-bezier(.2,.8,.2,1); }
+  .door-r { transition-delay: .12s; }
+}

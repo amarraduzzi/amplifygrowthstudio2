@@ -1,0 +1,127 @@
+---
+// The closing block: two ways to start. Left, the WhatsApp message writes itself from three taps.
+// Right, start alone with the free trial.
+import Icon from './Icon.astro';
+import Mark from './Mark.astro';
+import Bars from './Bars.astro';
+import { CONTACT, signupUrl, loginUrl } from '../config';
+import { copy } from '../i18n';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = copy(lang).home.doors;
+const t = d.talk;
+const chip = 'door-chip rounded-full px-3.5 py-2 text-sm font-semibold ring-1 ring-white/20 transition-colors hover:bg-white/10 aria-pressed:bg-green aria-pressed:text-navy aria-pressed:ring-green';
+---
+<section class="px-4 pb-24 sm:px-6" data-doors>
+  <div class="mx-auto max-w-6xl">
+    <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{d.h2a}</span><span class="block text-green-deep">{d.h2b}</span></h2>
+
+    <div class="mt-10 grid gap-5 lg:grid-cols-[1.35fr_1fr]">
+      <!-- door 1: talk to us -->
+      <div class="door door-l relative isolate overflow-hidden rounded-[2.25rem] bg-navy p-6 text-white sm:p-9"
+        data-number={CONTACT.whatsapp} data-hello={t.hello} data-in={t.inCity} data-elsewhere={t.elsewhere} data-fallback={t.fallback} data-and={t.and}>
+        <Bars class="absolute inset-x-0 bottom-0 -z-10 h-24" />
+        <h3 class="display text-5xl sm:text-6xl">{t.h3}</h3>
+        <p class="mt-2 text-white/70">{t.p}</p>
+
+        <div class="mt-6 grid gap-6 md:grid-cols-[1fr_16.5rem] md:gap-8">
+          <div class="space-y-5">
+            <fieldset>
+              <legend class="text-sm font-semibold text-white/60">1. {t.q1}</legend>
+              <div class="mt-2 flex flex-wrap gap-2">{t.trades.map(([k, l, phrase], i) => <button type="button" class={chip} data-group="trade" data-val={phrase} aria-pressed={i === 0 ? 'true' : 'false'}>{l}</button>)}</div>
+            </fieldset>
+            <fieldset>
+              <legend class="text-sm font-semibold text-white/60">2. {t.q2}</legend>
+              <div class="mt-2 flex flex-wrap gap-2">{t.needs.map(([k, l, phrase]) => <button type="button" class={chip} data-group="needs" data-val={phrase} aria-pressed="false">{l}</button>)}</div>
+            </fieldset>
+            <fieldset>
+              <legend class="text-sm font-semibold text-white/60">3. {t.q3}</legend>
+              <div class="mt-2 flex flex-wrap gap-2">{t.cities.map((c, i) => <button type="button" class={chip} data-group="city" data-val={i === t.cities.length - 1 ? '' : c} aria-pressed={i === 0 ? 'true' : 'false'}>{c}</button>)}</div>
+            </fieldset>
+          </div>
+
+          <!-- the live message -->
+          <div class="flex flex-col">
+            <div class="overflow-hidden rounded-[1.6rem] bg-[#EEF3EF] text-navy shadow-2xl ring-4 ring-black/30">
+              <div class="flex items-center gap-2.5 bg-[#075E54] px-3.5 py-2.5 text-white">
+                <span class="grid size-8 place-items-center rounded-full bg-white"><Mark class="h-4 w-6" id="door" /></span>
+                <span class="text-sm font-semibold leading-tight">Amplify Growth Studio</span>
+              </div>
+              <div class="min-h-40 p-3">
+                <p class="ms-auto w-fit max-w-[95%] rounded-xl rounded-se-sm bg-[#D9FDD3] px-3 py-2 text-[0.9rem] leading-snug"><span class="door-msg"></span><span class="door-caret" aria-hidden="true"></span></p>
+              </div>
+            </div>
+            <a href="#" target="_blank" rel="noopener" data-wa="home-doors" class="door-send mt-4 inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-full bg-green px-5 font-semibold text-navy hover:bg-[#04A859]">
+              <svg viewBox="0 0 24 24" class="size-5" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6l-.01 6.53L15 12 3.39 13.87z"/></svg>{t.send}
+            </a>
+            <p class="mt-2 text-xs text-white/55">{t.note}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- door 2: start alone -->
+      <div class="door door-r flex flex-col rounded-[2.25rem] bg-green p-6 text-navy sm:p-9">
+        <h3 class="display text-5xl sm:text-6xl">{d.self.h3}</h3>
+        <p class="mt-2 text-lg text-navy/80">{d.self.p}</p>
+        <ol class="mt-6 flex-1 space-y-3">
+          {d.self.steps.map((s, i) => (
+            <li class="flex items-center gap-3 rounded-2xl bg-white/35 px-4 py-3">
+              <span class="grid size-10 shrink-0 place-items-center rounded-xl bg-navy text-green"><Icon name={(['briefcase', 'store', 'qr'] as const)[i]} class="size-5" /></span>
+              <span class="font-semibold"><span class="me-1 text-navy/50">{i + 1}.</span>{s}</span>
+            </li>
+          ))}
+        </ol>
+        <a href={signupUrl(lang)} class="mt-6 grid min-h-14 place-items-center rounded-full bg-navy text-lg font-semibold text-white hover:bg-blue">{d.self.cta}</a>
+        <a href={loginUrl(lang)} class="mt-3 text-center text-sm font-semibold underline underline-offset-4">{d.self.login}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-doors]').forEach((root) => {
+    const door = root.querySelector<HTMLElement>('.door-l')!;
+    const out = door.querySelector<HTMLElement>('.door-msg')!;
+    const send = door.querySelector<HTMLAnchorElement>('.door-send')!;
+    const chips = [...door.querySelectorAll<HTMLButtonElement>('[data-group]')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const D = door.dataset;
+    let shown = '', target = '', timer = 0;
+
+    const compose = () => {
+      const pick = (g: string) => chips.filter(c => c.dataset.group === g && c.getAttribute('aria-pressed') === 'true').map(c => c.dataset.val!);
+      const [trade] = pick('trade'); const [city] = pick('city'); const needs = pick('needs');
+      const list = needs.length ? (needs.length === 1 ? needs[0] : needs.slice(0, -1).join(', ') + D.and + needs[needs.length - 1]) : D.fallback!;
+      return D.hello!.replace('{trade}', trade ?? '').replace('{city}', city ? D.in!.replace('{city}', city) : D.elsewhere!).replace('{needs}', list);
+    };
+    // type the difference: erase back to the common start, then type the new end
+    const tick = () => {
+      let common = 0; while (common < shown.length && shown[common] === target[common]) common++;
+      if (shown.length > common) shown = shown.slice(0, Math.max(common, shown.length - 3));
+      else if (shown.length < target.length) shown = target.slice(0, shown.length + 1);
+      out.textContent = shown;
+      if (shown !== target) timer = window.setTimeout(tick, shown.length > common ? 12 : 22);
+      else door.classList.add('typed');
+    };
+    const update = () => {
+      target = compose();
+      send.href = `https://wa.me/${D.number}?text=${encodeURIComponent(target)}`;
+      door.classList.remove('typed');
+      clearTimeout(timer);
+      if (still) { shown = target; out.textContent = shown; door.classList.add('typed'); } else tick();
+    };
+    chips.forEach(c => c.addEventListener('click', () => {
+      const g = c.dataset.group;
+      if (g === 'needs') c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true'));
+      else chips.filter(x => x.dataset.group === g).forEach(x => x.setAttribute('aria-pressed', String(x === c)));
+      update();
+    }));
+    // start typing when the block comes into view
+    if ('IntersectionObserver' in window && !still) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); root.classList.add('in'); update(); } }, { threshold: 0.3 });
+      io.observe(root);
+      target = compose(); send.href = `https://wa.me/${D.number}?text=${encodeURIComponent(target)}`;
+    } else { root.classList.add('in'); update(); }
+  });
+</script>

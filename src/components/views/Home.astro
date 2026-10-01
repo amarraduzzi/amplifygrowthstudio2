@@ -11,6 +11,7 @@ import Steps from '../Steps.astro';
 import TryIt from '../TryIt.astro';
 import Loop from '../Loop.astro';
 import ChatFaq from '../ChatFaq.astro';
+import Doors from '../Doors.astro';
 import Ph from '../Ph.astro';
 import Mark from '../Mark.astro';
 import { SITE, CONTACT, signupUrl } from '../../config';
@@ -159,16 +160,6 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- FAQ: a WhatsApp conversation -->
   <ChatFaq lang={lang} wa={c.wa} />
 
-  <!-- FINAL -->
-  <section class="px-4 pb-24 sm:px-6">
-    <div class="relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-blue px-6 py-14 text-white md:grid-cols-[1.1fr_1fr] md:px-14">
-      <Bars class="absolute inset-x-0 bottom-0 -z-10 h-28" />
-      <div>
-        <h2 class="text-6xl sm:text-7xl lg:text-[6rem]">{c.final.h2}</h2>
-        <p class="mt-5 text-lg text-white/75">{c.final.p}</p>
-        <WaButton text={c.wa} label={t.ui.whatsapp} where="home-final" class="mt-8 px-8 text-lg" />
-      </div>
-      <ChatThread lang={lang} message={c.wa} reply={t.ui.chatReply} dark />
-    </div>
-  </section>
+  <!-- FINAL: two ways to start -->
+  <Doors lang={lang} />
 </Base>
