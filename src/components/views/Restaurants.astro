@@ -15,11 +15,11 @@ const c = t.restaurants;
 const schema = [serviceSchema(c.hero.h1, c.meta.description, abs(ROUTES.restaurants[lang])), faqSchema(c.faq)].filter(Boolean) as Record<string, unknown>[];
 ---
 <Base lang={lang} page="restaurants" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
-  <PageHero lang={lang} page="restaurants" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} />
+  <PageHero lang={lang} page="restaurants" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} shot={{ src: '/img/tables.webp', alt: 'Le plan de salle de la caisse avec les tables occupées', w: 1600, h: 937 }} />
 
   <section class="border-y border-line bg-paper">
     <div class="mx-auto grid max-w-6xl gap-8 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] md:gap-12">
-      <h2 class="text-2xl md:text-3xl">{c.pains.h2}</h2>
+      <h2 class="text-5xl md:text-6xl">{c.pains.h2}</h2>
       <ul class="grid gap-x-10 sm:grid-cols-2">
         {c.pains.items.map(p => <li class="border-t border-line py-5 text-lg">{p}</li>)}
       </ul>
@@ -27,7 +27,7 @@ const schema = [serviceSchema(c.hero.h1, c.meta.description, abs(ROUTES.restaura
   </section>
 
   <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-    <h2 class="text-2xl md:text-3xl">{c.solutions.h2}</h2>
+    <h2 class="text-5xl md:text-6xl">{c.solutions.h2}</h2>
     <p class="mt-3 text-muted">{c.solutions.p}</p>
     <ol class="mt-10 divide-y divide-line border-y border-line">
       {c.solutions.items.map(([h, p, page], i) => (

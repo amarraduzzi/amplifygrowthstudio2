@@ -16,26 +16,26 @@ const c = t.systems;
 const schema = [serviceSchema(c.hero.h1, c.meta.description, abs(ROUTES.systems[lang])), faqSchema(c.faq)].filter(Boolean) as Record<string, unknown>[];
 ---
 <Base lang={lang} page="systems" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
-  <PageHero lang={lang} page="systems" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} demo>
-    <p class="mt-3 text-sm text-muted">{c.hero.demoNote}</p>
+  <PageHero lang={lang} page="systems" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} demo shot={{ src: '/img/caisse.webp', alt: 'La caisse Amplify POS avec une table ouverte', w: 1600, h: 937 }}>
+    <p class="mt-3 text-sm text-white/60">{c.hero.demoNote}</p>
   </PageHero>
 
-  <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+  <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
     <div class="grid gap-6 md:grid-cols-[1fr_2fr] md:gap-12">
-      <div><h2 class="text-2xl md:text-3xl">{c.pos.h2}</h2><p class="mt-3 text-muted">{c.pos.p}</p></div>
+      <div><h2 class="text-5xl md:text-6xl">{c.pos.h2}</h2><p class="mt-3 text-muted">{c.pos.p}</p></div>
       <FeatureList items={c.pos.items} />
     </div>
   </section>
 
   <section class="bg-navy">
     <div class="mx-auto grid max-w-6xl gap-6 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr] md:gap-12">
-      <div class="text-white"><h2 class="text-2xl md:text-3xl">{c.profit.h2}</h2><p class="mt-3 text-white/70">{c.profit.p}</p></div>
+      <div class="text-white"><h2 class="text-5xl md:text-6xl">{c.profit.h2}</h2><p class="mt-3 text-white/70">{c.profit.p}</p></div>
       <FeatureList items={c.profit.items} dark />
     </div>
   </section>
 
   <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-    <h2 class="text-2xl md:text-3xl">{c.compare.h2}</h2>
+    <h2 class="text-5xl md:text-6xl">{c.compare.h2}</h2>
     <div class="mt-8 overflow-hidden rounded-3xl border border-line bg-paper">
       <table class="w-full text-start">
         <thead><tr class="border-b border-line text-sm text-muted"><th class="w-1/2 px-5 py-3 text-start font-medium">{c.compare.before}</th><th class="px-5 py-3 text-start font-medium text-green-deep">{c.compare.after}</th></tr></thead>

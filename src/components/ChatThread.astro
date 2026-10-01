@@ -3,8 +3,8 @@
 import Mark from './Mark.astro';
 import { copy } from '../i18n';
 import type { Lang } from '../i18n/routes';
-interface Props { lang: Lang; message: string; reply: string }
-const { lang, message, reply } = Astro.props;
+interface Props { lang: Lang; message: string; reply: string; dark?: boolean }
+const { lang, message, reply, dark = false } = Astro.props;
 const t = copy(lang);
 ---
 <figure class="relative mx-auto w-full max-w-sm">
@@ -23,5 +23,5 @@ const t = copy(lang);
       </p>
     </div>
   </div>
-  <figcaption class="mt-4 px-2 text-sm text-muted">{t.ui.chatNote}</figcaption>
+  <figcaption class={`mt-4 px-2 text-sm ${dark ? 'text-white/65' : 'text-muted'}`}>{t.ui.chatNote}</figcaption>
 </figure>

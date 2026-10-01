@@ -13,14 +13,14 @@ const f = c.form;
 ---
 <Base lang={lang} page="contact" title={c.meta.title} description={c.meta.description} wa={c.wa}>
   <section class="mx-auto max-w-6xl px-4 pb-12 pt-12 sm:px-6 md:pt-20">
-    <h1 class="text-[2.4rem] sm:text-4xl lg:text-5xl">{c.hero.h1}</h1>
+    <h1 class="text-[3.2rem] sm:text-6xl lg:text-[5.2rem]">{c.hero.h1}</h1>
     <p class="measure mt-6 text-lg text-muted">{c.hero.lead}</p>
     <WaButton text={c.wa} label={t.ui.whatsapp} where="contact-hero" class="mt-9 px-7 text-lg" />
   </section>
 
   <section class="mx-auto grid max-w-6xl gap-10 px-4 pb-24 sm:px-6 md:grid-cols-[1.2fr_1fr]">
     <form id="wa-form" class="rounded-[2rem] border border-line bg-paper p-6 md:p-10" data-template={f.template} data-number={CONTACT.whatsapp}>
-      <h2 class="text-2xl">{f.h2}</h2>
+      <h2 class="text-4xl md:text-5xl">{f.h2}</h2>
       <p class="mt-2 text-muted">{f.p}</p>
       <div class="mt-8 grid gap-5">
         <label class="grid gap-2"><span class="font-medium">{f.name}</span>
@@ -34,7 +34,7 @@ const f = c.form;
     </form>
 
     <div>
-      <h2 class="text-2xl">{c.details.h2}</h2>
+      <h2 class="text-4xl md:text-5xl">{c.details.h2}</h2>
       <dl class="mt-6 divide-y divide-line border-y border-line">
         <div class="py-4"><dt class="text-sm text-muted">{c.details.phone}</dt><dd><a href={`tel:+${CONTACT.whatsapp}`} dir="ltr" class="text-lg hover:text-green-deep">{CONTACT.phoneDisplay}</a></dd></div>
         <div class="py-4"><dt class="text-sm text-muted">{c.details.email}</dt><dd><a href={`mailto:${CONTACT.email}`} class="text-lg hover:text-green-deep">{CONTACT.email}</a></dd></div>

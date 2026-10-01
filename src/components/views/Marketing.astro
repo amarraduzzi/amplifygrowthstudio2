@@ -16,18 +16,18 @@ const c = t.marketing;
 const schema = [serviceSchema(c.hero.h1, c.meta.description, abs(ROUTES.marketing[lang])), faqSchema(c.faq)].filter(Boolean) as Record<string, unknown>[];
 ---
 <Base lang={lang} page="marketing" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
-  <PageHero lang={lang} page="marketing" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} />
+  <PageHero lang={lang} page="marketing" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} shot={{ src: '/img/menu-qr.webp', alt: 'Le menu QR sur le téléphone du client', w: 780, h: 1688, kind: 'phone' }} />
 
-  <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+  <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
     <div class="grid gap-6 md:grid-cols-[1fr_2fr] md:gap-12">
-      <h2 class="text-2xl md:text-3xl">{c.services.h2}</h2>
+      <h2 class="text-5xl md:text-6xl">{c.services.h2}</h2>
       <FeatureList items={c.services.items} />
     </div>
   </section>
 
   <section class="border-y border-line bg-paper">
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-      <h2 class="text-2xl md:text-3xl">{c.flow.h2}</h2>
+      <h2 class="text-5xl md:text-6xl">{c.flow.h2}</h2>
       <ol class="mt-10 grid gap-8 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-start md:gap-4">
         {c.flow.items.map(([h, p], i) => (
           <>

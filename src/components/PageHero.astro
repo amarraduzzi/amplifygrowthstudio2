@@ -1,18 +1,31 @@
 ---
 import WaButton from './WaButton.astro';
+import Device from './Device.astro';
+import Bars from './Bars.astro';
 import { SITE } from '../config';
 import { copy } from '../i18n';
 import type { Lang, PageKey } from '../i18n/routes';
-interface Props { lang: Lang; page: PageKey; h1: string; lead: string; wa: string; demo?: boolean }
-const { lang, page, h1, lead, wa, demo = false } = Astro.props;
+interface Props {
+  lang: Lang; page: PageKey; h1: string; lead: string; wa: string; demo?: boolean;
+  shot?: { src: string; alt: string; w: number; h: number; kind?: 'tablet' | 'phone' };
+}
+const { lang, page, h1, lead, wa, demo = false, shot } = Astro.props;
 const t = copy(lang);
 ---
-<section class="mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 md:pt-20">
-  <h1 class="max-w-4xl text-[2.4rem] sm:text-4xl lg:text-5xl">{h1}</h1>
-  <p class="measure mt-6 text-lg text-muted">{lead}</p>
-  <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-    <WaButton text={wa} label={t.ui.whatsapp} where={`${page}-hero`} class="px-7 text-lg" />
-    {demo && <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-navy/25 px-7 text-lg hover:border-navy">{t.ui.demo}</a>}
+<section class="relative isolate overflow-hidden bg-blue text-white">
+  <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32 md:h-44" animate />
+  <div class={`mx-auto grid max-w-6xl gap-12 px-4 pb-20 pt-12 sm:px-6 md:pt-20 ${shot ? 'md:grid-cols-[1.1fr_1fr] md:items-center' : ''}`}>
+    <div>
+      <h1 class="text-[3.2rem] sm:text-6xl lg:text-[5.2rem]">{h1}</h1>
+      <p class="measure mt-6 text-lg text-white/80">{lead}</p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <WaButton text={wa} label={t.ui.whatsapp} where={`${page}-hero`} class="px-7 text-lg" />
+        {demo && <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 px-7 text-lg hover:border-white">{t.ui.demo}</a>}
+      </div>
+      <slot />
+    </div>
+    {shot && (shot.kind === 'phone'
+      ? <Device kind="phone" src={shot.src} alt={shot.alt} w={shot.w} h={shot.h} eager class="mx-auto w-56 rotate-[3deg] md:w-64" />
+      : <Device src={shot.src} alt={shot.alt} w={shot.w} h={shot.h} eager class="rotate-[-2deg] md:-me-16" />)}
   </div>
-  <slot />
 </section>

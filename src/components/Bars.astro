@@ -1,0 +1,9 @@
+---
+// The sound bars of the Amplify logo, as a rhythm along the bottom of a block.
+interface Props { class?: string; color?: string; count?: number; animate?: boolean }
+const { class: cls = '', color = 'rgba(255,255,255,0.08)', count = 28, animate = false } = Astro.props;
+const H = [24, 46, 70, 100, 76, 52, 34, 58, 84, 64, 40, 30, 54, 90, 72, 48, 36, 62, 96, 80, 56, 38, 28, 50, 74, 92, 66, 44];
+---
+<div class={`pointer-events-none flex items-end gap-[1.2%] ${cls}`} aria-hidden="true">
+  {H.slice(0, count).map((h, i) => <span class={`block flex-1 rounded-t-full ${animate ? 'bar-rise' : ''}`} style={`height:${h}%;background:${color};--d:${i * 25}ms`}></span>)}
+</div>
