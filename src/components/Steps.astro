@@ -1,80 +1,133 @@
 ---
-// "Démarrer, c'est simple": the title stays put on the left (desktop) while the four steps
-// light up one by one as you scroll. Each step says what Amplify does and what the owner does.
+// "Démarrer, c'est simple": two ways to start. "Avec nous" (we come and install) or
+// "Seul, en 5 minutes" (free trial, menu from a photo). The title stays on the left (desktop)
+// while the steps light up one by one as you scroll.
 import WaButton from './WaButton.astro';
 import Icon from './Icon.astro';
+import { signupUrl } from '../config';
 import { copy } from '../i18n';
 import type { Lang } from '../i18n/routes';
 interface Props { lang: Lang; wa: string }
 const all = copy(Astro.props.lang);
 const c = all.home.steps;
+const routes = [{ key: 'us', items: c.items }, { key: 'self', items: c.self }] as const;
 ---
 <section class="mx-auto grid max-w-6xl gap-10 px-4 py-24 sm:px-6 lg:grid-cols-[1fr_1.25fr] lg:gap-16" data-steps>
   <div class="lg:sticky lg:top-28 lg:self-start">
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.h2a}</span><span class="block text-green-deep">{c.h2b}</span></h2>
     <p class="mt-5 max-w-sm text-lg text-muted">{c.p}</p>
-    <!-- progress: 01 to 04 -->
+
+    <!-- the two routes -->
+    <div class="mt-7 inline-flex rounded-full bg-paper p-1 ring-1 ring-line" role="tablist" aria-label={c.h2a}>
+      {routes.map((r, i) => (
+        <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-route={r.key}
+          class="rounded-full px-4 py-2.5 text-[0.95rem] font-semibold text-muted transition-colors aria-selected:bg-navy aria-selected:text-white sm:px-5">{c.routes[i]}</button>
+      ))}
+    </div>
+
     <div class="mt-8 hidden items-center gap-4 lg:flex" aria-hidden="true">
       <span class="steps-count display text-6xl text-navy">01</span>
       <span class="h-1 w-40 overflow-hidden rounded-full bg-line"><span class="steps-bar block h-full w-full origin-left scale-x-[0.25] bg-green transition-transform duration-500 rtl:origin-right"></span></span>
       <span class="display text-2xl text-muted">04</span>
     </div>
-    <WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-steps" class="mt-8 px-7" />
+    <div class="mt-8" data-cta="us"><WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-steps" class="px-7" /></div>
+    <div class="mt-8 hidden" data-cta="self">
+      <a href={signupUrl(Astro.props.lang)} class="inline-flex min-h-12 items-center rounded-full bg-navy px-7 font-semibold text-white hover:bg-blue">{c.selfCta}</a>
+      <p class="mt-2 text-sm text-muted">{c.selfNote}</p>
+    </div>
   </div>
 
-  <ol class="relative space-y-5">
-    {c.items.map((s, i) => (
-      <li class="step-card grid gap-5 rounded-[1.75rem] bg-paper p-6 ring-1 ring-line transition-all duration-500 sm:grid-cols-[1fr_11rem] sm:p-8" data-step={i}>
-        <div>
-          <span class="display text-6xl text-green-deep">{String(i + 1).padStart(2, '0')}</span>
-          <h3 class="mt-3 text-2xl">{s.h}</h3>
-          <p class="mt-2 text-muted">{s.p}</p>
-          <p class="mt-4 inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-sm font-semibold text-navy"><Icon name="check" class="size-4 text-green-deep" />{s.you}</p>
-        </div>
-        <!-- small visual per step -->
-        <div class="step-vis grid min-h-36 place-items-center rounded-2xl bg-chalk p-4" aria-hidden="true">
-          {s.visual === 'meet' && (
-            <div class="w-full space-y-2 text-[0.75rem] leading-snug">
-              <p class="sv ms-auto w-fit max-w-[90%] rounded-lg rounded-se-none bg-[#D9FDD3] px-2.5 py-1.5" style="--d:150ms">{c.meet[0]}</p>
-              <p class="sv w-fit max-w-[80%] rounded-lg rounded-ss-none bg-white px-2.5 py-1.5" style="--d:700ms">{c.meet[1]}</p>
+  <div>
+    {routes.map((r, ri) => (
+      <ol class={`relative space-y-5 ${ri ? 'hidden' : ''}`} data-list={r.key}>
+        {r.items.map((s, i) => (
+          <li class="step-card grid gap-5 rounded-[1.75rem] bg-paper p-6 ring-1 ring-line transition-all duration-500 sm:grid-cols-[1fr_11rem] sm:p-8" data-step={i}>
+            <div>
+              <span class="display text-6xl text-green-deep">{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-3 text-2xl">{s.h}</h3>
+              <p class="mt-2 text-muted">{s.p}</p>
+              <p class="mt-4 inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-sm font-semibold text-navy"><Icon name="check" class="size-4 text-green-deep" />{s.you}</p>
             </div>
-          )}
-          {s.visual === 'setup' && (
-            <ul class="w-full space-y-1.5 text-[0.75rem] font-semibold">
-              {c.setup.map((x, k) => <li class="sv flex items-center gap-2" style={`--d:${150 + k * 220}ms`}><span class="grid size-4 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3" /></span>{x}</li>)}
-            </ul>
-          )}
-          {s.visual === 'pin' && (
-            <div class="text-center">
-              <p class="text-[0.7rem] font-semibold text-muted">{c.pin}</p>
-              <div class="mt-2 flex justify-center gap-2">{[0, 1, 2, 3].map(k => <span class="pin-dot size-3.5 rounded-full border-2 border-navy" style={`--d:${200 + k * 220}ms`}></span>)}</div>
-              <div class="mt-3 grid grid-cols-3 gap-1">{[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => <span class="grid size-7 place-items-center rounded-md bg-white text-[0.7rem] font-bold">{n}</span>)}</div>
+            <div class="step-vis grid min-h-36 place-items-center rounded-2xl bg-chalk p-4" aria-hidden="true">
+              {s.visual === 'meet' && (
+                <div class="w-full space-y-2 text-[0.75rem] leading-snug">
+                  <p class="sv ms-auto w-fit max-w-[90%] rounded-lg rounded-se-none bg-[#D9FDD3] px-2.5 py-1.5" style="--d:150ms">{c.meet[0]}</p>
+                  <p class="sv w-fit max-w-[80%] rounded-lg rounded-ss-none bg-white px-2.5 py-1.5" style="--d:700ms">{c.meet[1]}</p>
+                </div>
+              )}
+              {s.visual === 'setup' && (
+                <ul class="w-full space-y-1.5 text-[0.75rem] font-semibold">
+                  {c.setup.map((x, k) => <li class="sv flex items-center gap-2" style={`--d:${150 + k * 220}ms`}><span class="grid size-4 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3" /></span>{x}</li>)}
+                </ul>
+              )}
+              {s.visual === 'pin' && (
+                <div class="text-center">
+                  <p class="text-[0.7rem] font-semibold text-muted">{c.pin}</p>
+                  <div class="mt-2 flex justify-center gap-2">{[0, 1, 2, 3].map(k => <span class="pin-dot size-3.5 rounded-full border-2 border-navy" style={`--d:${200 + k * 220}ms`}></span>)}</div>
+                  <div class="mt-3 grid grid-cols-3 gap-1">{[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => <span class="grid size-7 place-items-center rounded-md bg-white text-[0.7rem] font-bold">{n}</span>)}</div>
+                </div>
+              )}
+              {s.visual === 'chart' && (
+                <div class="flex h-24 w-full items-end gap-1.5">{[30, 42, 38, 55, 62, 70, 86].map((hh, k) => <span class="bar-up flex-1 rounded-t-md bg-green" style={`height:${hh}%;--d:${100 + k * 90}ms;opacity:${0.45 + k * 0.08}`}></span>)}</div>
+              )}
+              {s.visual === 'signup' && (
+                <div class="w-full space-y-1.5 text-[0.7rem]">
+                  {c.signupMock.slice(0, 2).map((l, k) => <div class="sv rounded-md bg-white px-2 py-1.5 text-muted ring-1 ring-line" style={`--d:${150 + k * 250}ms`}>{l}</div>)}
+                  <div class="sv rounded-md bg-navy px-2 py-1.5 text-center font-bold text-white" style="--d:700ms">{c.signupMock[2]}</div>
+                </div>
+              )}
+              {s.visual === 'photo' && (
+                <div class="relative w-full rounded-lg bg-white p-2.5 text-[0.7rem] ring-1 ring-line">
+                  {c.photoMock.map((l, k) => <p class={`sv flex justify-between ${k === 0 ? 'font-bold' : ''}`} style={`--d:${150 + k * 200}ms`}><span>{l}</span>{k > 0 && <span class="text-green-deep">✓</span>}</p>)}
+                  <span class="scan-line pointer-events-none absolute inset-x-1 top-1 h-0.5 rounded bg-green shadow-[0_0_10px_2px_rgba(5,185,98,.6)]"></span>
+                </div>
+              )}
+              {s.visual === 'qr' && (
+                <div class="grid grid-cols-3 gap-2">{[0, 1, 2, 3, 4, 5].map(k => (
+                  <span class="sv grid size-10 place-items-center rounded-md bg-white ring-1 ring-line" style={`--d:${100 + k * 110}ms`}><Icon name="qr" class="size-6 text-navy" /></span>
+                ))}</div>
+              )}
             </div>
-          )}
-          {s.visual === 'chart' && (
-            <div class="flex h-24 w-full items-end gap-1.5">{[30, 42, 38, 55, 62, 70, 86].map((h, k) => <span class="bar-up flex-1 rounded-t-md bg-green" style={`height:${h}%;--d:${100 + k * 90}ms;opacity:${0.45 + k * 0.08}`}></span>)}</div>
-          )}
-        </div>
-      </li>
+          </li>
+        ))}
+      </ol>
     ))}
-  </ol>
+  </div>
 </section>
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-steps]').forEach((root) => {
-    const cards = [...root.querySelectorAll<HTMLElement>('[data-step]')];
     const count = root.querySelector<HTMLElement>('.steps-count');
     const bar = root.querySelector<HTMLElement>('.steps-bar');
-    const set = (i: number) => {
+    const lists = [...root.querySelectorAll<HTMLElement>('[data-list]')];
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-route]')];
+    const ctas = [...root.querySelectorAll<HTMLElement>('[data-cta]')];
+    const set = (cards: HTMLElement[], i: number) => {
       cards.forEach((c, k) => { c.classList.toggle('is-on', k === i); if (k <= i) c.classList.add('seen'); });
       if (count) count.textContent = String(i + 1).padStart(2, '0');
       if (bar) bar.style.transform = `scaleX(${(i + 1) / cards.length})`;
     };
-    if (!('IntersectionObserver' in window)) { cards.forEach(c => c.classList.add('is-on', 'seen')); return; }
+    const all = lists.map(l => [...l.querySelectorAll<HTMLElement>('[data-step]')]);
+    if (!('IntersectionObserver' in window)) { all.flat().forEach(c => c.classList.add('is-on', 'seen')); return; }
     // the step crossing the middle of the screen is the active one
     const io = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) set(cards.indexOf(e.target as HTMLElement)); });
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const cards = all.find(a => a.includes(e.target as HTMLElement))!;
+        set(cards, cards.indexOf(e.target as HTMLElement));
+      });
     }, { rootMargin: '-45% 0px -45% 0px' });
-    cards.forEach(c => io.observe(c));
+    all.flat().forEach(c => io.observe(c));
+
+    tabs.forEach((tab) => tab.addEventListener('click', () => {
+      const key = tab.dataset.route;
+      tabs.forEach(t => t.setAttribute('aria-selected', String(t === tab)));
+      lists.forEach(l => l.classList.toggle('hidden', l.dataset.list !== key));
+      ctas.forEach(c => c.classList.toggle('hidden', c.dataset.cta !== key));
+      const cards = all[lists.findIndex(l => l.dataset.list === key)];
+      cards.forEach(c => c.classList.remove('seen'));
+      set(cards, 0);
+      root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }));
   });
 </script>

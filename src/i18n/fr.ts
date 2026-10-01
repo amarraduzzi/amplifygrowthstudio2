@@ -3,7 +3,7 @@
 // Placeholders: [IN CAPITALS], listed in OPEN-PUNTEN.md. Nothing here is invented.
 
 export const fr = {
-  nav: { systems: 'Systèmes', marketing: 'Marketing', restaurants: 'Restaurants', contact: 'Contact' },
+  nav: { systems: 'Systèmes', pos: 'Amplify POS', profit: 'Amplify Profit', features: 'Fonctionnalités', marketing: 'Marketing', restaurants: 'Restaurants', contact: 'Contact', login: 'Se connecter', trial: 'Essai gratuit' },
   ui: {
     whatsapp: 'Écrire sur WhatsApp',
     whatsappShort: 'WhatsApp',
@@ -36,6 +36,7 @@ export const fr = {
       leadShort: 'Systèmes et marketing au Maroc. Notre équipe à Rabat passe chez vous.',
       flow: ['Commande reçue', 'Bon envoyé en cuisine', 'Marge calculée'],
       flowShort: ['Commande reçue', 'En cuisine', 'Marge calculée'],
+      trial: 'Essai gratuit 30 jours',
       rating: 'sur Google',
       local: 'Équipe basée à Rabat',
       facts: [
@@ -125,6 +126,17 @@ export const fr = {
         { h: 'On forme votre équipe', p: 'Chaque employé reçoit son code personnel. Nous formons l’équipe sur place, jusqu’à ce que chacun soit à l’aise.', you: 'Vous : réunir l’équipe', visual: 'pin' },
         { h: 'On suit vos chiffres', p: 'Ensuite, nous restons joignables sur WhatsApp et regardons vos résultats avec vous.', you: 'Vous : décider avec de vrais chiffres', visual: 'chart' },
       ] as { h: string; p: string; you: string; visual: 'meet' | 'setup' | 'pin' | 'chart' }[],
+      routes: ['Avec nous', 'Seul, en 5 minutes'],
+      self: [
+        { h: 'Créez votre compte', p: 'En 5 minutes, sans carte bancaire. Votre restaurant et votre caisse sont prêts.', you: 'Vous : un e-mail et un mot de passe', visual: 'signup' },
+        { h: 'Photographiez votre carte', p: 'L’IA lit vos plats, vos prix et vos catégories. Vous corrigez si besoin.', you: 'Vous : une photo de votre menu', visual: 'photo' },
+        { h: 'Imprimez vos QR codes', p: 'Chaque table a son QR code. La caisse s’ouvre sur un PC, une tablette ou un téléphone.', you: 'Vous : imprimer et poser', visual: 'qr' },
+        { h: '30 jours pour essayer', p: 'Vous testez en vrai service. Sans engagement : vous continuez seulement si ça vous convient.', you: 'Vous : décider après 30 jours', visual: 'chart' },
+      ] as { h: string; p: string; you: string; visual: 'signup' | 'photo' | 'qr' | 'chart' }[],
+      selfCta: 'Créer mon restaurant',
+      selfNote: 'Sans carte bancaire. Sans engagement.',
+      signupMock: ['E-mail', 'Nom du restaurant', 'Créer mon restaurant'],
+      photoMock: ['Petit-déjeuner', 'Msemen au miel', 'Thé à la menthe', 'Jus d’orange'],
       meet: ['Bonjour, on passe jeudi à 10 h pour voir votre installation ?', 'Parfait, à jeudi !'],
       setup: ['Menu importé', 'Tables et QR codes', 'Imprimantes cuisine et bar', 'Comptes de l’équipe'],
       pin: 'Code personnel',
@@ -136,6 +148,7 @@ export const fr = {
       pMobile: 'Ouvrez le menu d’un café de démonstration et commandez comme si vous y étiez.',
       scan: 'Scannez avec l’appareil photo',
       open: 'Ouvrir le menu de démo',
+      create: 'Créer mon restaurant',
       note: 'Café fictif, créé pour la démonstration.',
       reviewLabel: 'Avis Google',
     },
@@ -154,9 +167,10 @@ export const fr = {
         list: ['Site et page de commande', 'Commande WhatsApp', 'Fiche Google et avis'],
         link: 'Découvrir le marketing',
       },
+      products: [['Amplify POS', 'la caisse, dès 199 DH HT / mois'], ['Amplify Profit', 'les marges, dès 249 DH HT / mois']],
     },
     faq: [
-      ['Combien ça coûte ?', 'Cela dépend de votre établissement et de ce dont vous avez besoin. Demandez un devis sur WhatsApp, la réponse est rapide.'],
+      ['Combien ça coûte ?', 'Les systèmes ont des prix publics : Amplify POS dès 199 DH HT par mois, Amplify Profit dès 249 DH HT, avec 30 jours gratuits et sans engagement. Pour un site ou le marketing, demandez un devis sur WhatsApp.'],
       ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Nous formons votre équipe à l’installation.'],
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. La gestion des marges, du stock et de l’équipe fonctionne aussi sans notre caisse.'],
       ['Vous travaillez seulement à Rabat ?', 'Notre équipe est à Rabat. Pour le reste du Maroc, écrivez-nous et nous voyons ensemble comment faire.'],
@@ -167,10 +181,19 @@ export const fr = {
 
   systems: {
     meta: {
-      title: 'Logiciel de caisse restaurant au Maroc | Amplify',
-      description: 'Caisse, commande à table, menu QR, écran cuisine, marges, stock et équipe. Un seul système pour restaurants et cafés au Maroc. Demandez une démo.',
+      title: 'Logiciel de gestion pour restaurant au Maroc | Amplify',
+      description: 'Deux systèmes qui se parlent : Amplify POS pour la caisse, Amplify Profit pour les marges, le stock et l’équipe. Prenez l’un, l’autre, ou les deux.',
     },
     wa: 'Bonjour, je voudrais une démo du système de caisse et de gestion.',
+    hub: {
+      h1a: 'Deux systèmes.',
+      h1b: 'Un seul partenaire.',
+      lead: 'La caisse pour servir vite et sans erreurs. La gestion pour savoir enfin ce qui rapporte. Prenez l’un, l’autre, ou les deux : ensemble, ils partagent tout automatiquement.',
+      from: 'Dès',
+      per: 'DH HT / mois',
+      discover: 'Découvrir',
+      trial: '30 jours gratuits',
+    },
     hero: {
       h1: 'Logiciel de caisse et de gestion pour restaurants au Maroc',
       lead: 'Une caisse qui continue de fonctionner sans internet, et la gestion qui va avec : marge par plat, stock, équipe et charges. En français et en arabe, pensé pour les restaurants et cafés au Maroc.',
@@ -216,7 +239,6 @@ export const fr = {
       ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Chaque employé a son code personnel. Nous formons votre équipe à l’installation.'],
       ['Que se passe-t-il si internet coupe ?', 'La caisse continue de prendre et d’encaisser les commandes. Tout se synchronise dès que la connexion revient.'],
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. Amplify Profit (marges, stock, équipe, charges) fonctionne aussi seul, sans notre caisse.'],
-      ['Combien de temps prend l’installation ?', '[DÉLAI À CONFIRMER]'],
       ['Combien ça coûte ?', 'Le prix dépend de votre établissement et des modules choisis. Demandez un devis sur WhatsApp, la réponse est rapide.'],
     ],
     final: { h2: 'Voyez le système avec vos propres plats.', p: 'Envoyez-nous un message, nous vous montrons la caisse et la gestion.' },

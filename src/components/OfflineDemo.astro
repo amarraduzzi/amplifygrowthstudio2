@@ -1,0 +1,64 @@
+---
+// Interactive: switch internet off, orders keep coming and wait; switch it back on, everything syncs.
+import Icon from './Icon.astro';
+import { posFr } from '../i18n/products-fr';
+const c = posFr.offline;
+---
+<section class="relative isolate overflow-hidden bg-blue py-20 text-white md:py-28" data-offline>
+  <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr]">
+    <div>
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{c.title}</h2>
+      <p class="mt-5 max-w-md text-lg text-white/80">{c.text}</p>
+      <button type="button" class="off-switch mt-8 inline-flex items-center gap-4 rounded-full bg-white/10 py-2 pe-6 ps-2 ring-1 ring-white/20" role="switch" aria-checked="true">
+        <span class="off-track relative h-9 w-16 rounded-full bg-green transition-colors"><span class="off-knob absolute start-1 top-1 size-7 rounded-full bg-white shadow transition-transform"></span></span>
+        <span class="text-lg font-semibold">{c.internet} : <span class="off-state">{c.on}</span></span>
+      </button>
+    </div>
+    <div class="rounded-[2rem] bg-navy p-5 ring-1 ring-white/10 sm:p-7">
+      <div class="flex items-center justify-between text-sm">
+        <span class="font-semibold">Amplify POS</span>
+        <span class="off-pill flex items-center gap-1.5 rounded-full bg-green/15 px-3 py-1 font-bold text-green"><span class="size-2 rounded-full bg-current"></span><span class="off-pill-text">{c.on}</span></span>
+      </div>
+      <ul class="off-list mt-5 space-y-2" aria-live="polite"></ul>
+      <p class="off-synced mt-4 hidden items-center gap-2 text-sm font-semibold text-green"><Icon name="check" class="size-4" />{c.synced}</p>
+    </div>
+  </div>
+  <template class="off-tpl">
+    <li class="off-item flex items-center justify-between rounded-xl bg-white/5 px-4 py-3 text-[0.95rem] ring-1 ring-white/10">
+      <span class="off-text"></span>
+      <span class="off-badge rounded-lg px-2 py-0.5 text-xs font-bold"></span>
+    </li>
+  </template>
+  <script define:vars={{ events: c.events, on: c.on, off: c.off, queued: c.queued }}>
+    const root = document.querySelector('[data-offline]');
+    const list = root.querySelector('.off-list'), tpl = root.querySelector('.off-tpl');
+    const sw = root.querySelector('.off-switch'), synced = root.querySelector('.off-synced');
+    let online = true, k = 0, timer = 0;
+    const badge = (li, ok) => { const b = li.querySelector('.off-badge'); b.textContent = ok ? '✓' : queued; b.className = 'off-badge rounded-lg px-2 py-0.5 text-xs font-bold ' + (ok ? 'bg-green/20 text-green' : 'bg-[#F5B301] text-[#001E3E]'); li.dataset.ok = ok ? '1' : ''; };
+    const add = () => {
+      const li = tpl.content.firstElementChild.cloneNode(true);
+      li.querySelector('.off-text').textContent = events[k++ % events.length];
+      badge(li, online); li.classList.add('chat-in');
+      list.prepend(li); while (list.children.length > 5) list.lastElementChild.remove();
+      synced.classList.add('hidden'); synced.classList.remove('flex');
+    };
+    const set = (v) => {
+      online = v;
+      sw.setAttribute('aria-checked', String(v));
+      root.querySelector('.off-state').textContent = v ? on : off;
+      root.querySelector('.off-pill-text').textContent = v ? on : off;
+      root.querySelector('.off-pill').className = 'off-pill flex items-center gap-1.5 rounded-full px-3 py-1 font-bold ' + (v ? 'bg-green/15 text-green' : 'bg-[#F5B301]/20 text-[#F5B301]');
+      root.querySelector('.off-track').className = 'off-track relative h-9 w-16 rounded-full transition-colors ' + (v ? 'bg-green' : 'bg-white/25');
+      root.querySelector('.off-knob').style.transform = v ? 'translateX(1.75rem)' : 'translateX(0)';
+      if (v) {
+        const waiting = [...list.children].filter(li => !li.dataset.ok);
+        waiting.reverse().forEach((li, i) => setTimeout(() => { badge(li, true); if (i === waiting.length - 1) { synced.classList.remove('hidden'); synced.classList.add('flex'); } }, 350 * (i + 1)));
+      }
+    };
+    sw.addEventListener('click', () => set(!online));
+    set(true);
+    for (let i = 0; i < 3; i++) add();
+    const start = () => { if (!timer) timer = setInterval(add, 2200); };
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else { clearInterval(timer); timer = 0; } }).observe(root);
+  </script>
+</section>

@@ -1,0 +1,125 @@
+---
+// Amplify POS product page (was the landing of posamplify.pages.dev), in the Amplify Growth Studio style.
+import Base from '../../layouts/Base.astro';
+import WaButton from '../WaButton.astro';
+import Device from '../Device.astro';
+import Icon from '../Icon.astro';
+import OfflineDemo from '../OfflineDemo.astro';
+import TryIt from '../TryIt.astro';
+import Pricing from '../Pricing.astro';
+import Faq from '../Faq.astro';
+import { SITE, signupUrl } from '../../config';
+import { copy } from '../../i18n';
+import { posFr as p } from '../../i18n/products-fr';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy(lang);
+const title = 'Logiciel de caisse restaurant au Maroc | Amplify POS';
+const description = 'Amplify POS : caisse tactile, menu QR, bons cuisine, rapports X et Z. Fonctionne sans internet. Dès 199 DH HT par mois, 30 jours gratuits.';
+const wa = 'Bonjour, j’ai une question sur Amplify POS.';
+const signup = signupUrl(lang);
+const nFeatures = 40;
+const schema = [
+  {
+    '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Amplify POS', applicationCategory: 'BusinessApplication',
+    operatingSystem: 'Web (Chrome)', url: abs(ROUTES.pos[lang]), description,
+    offers: p.pricing.plans.filter(x => x.product !== 'profit').map(x => ({ '@type': 'Offer', name: x.name, price: x.price, priceCurrency: 'MAD' })),
+    publisher: { '@id': `${SITE.url}/#business` },
+  },
+  faqSchema(p.faq.items),
+].filter(Boolean) as Record<string, unknown>[];
+const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
+---
+<Base lang={lang} page="pos" title={title} description={description} wa={wa} schema={schema}>
+  <!-- hero -->
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-14 pt-8 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:pt-14">
+    <div>
+      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line" style="--d:0ms"><span class="size-2 rounded-full bg-green"></span>Amplify POS</p>
+      <h1 class="mt-5 text-[clamp(2.7rem,4.8vw,4.6rem)]">
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">La caisse de votre restaurant</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">qui ne s’arrête jamais.</span></span>
+      </h1>
+      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{p.hero.sub}</p>
+      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+        <a href={signup} class="inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{p.hero.cta}</a>
+        <a href="#demo" class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">{p.hero.demo}</a>
+      </div>
+      <p class="fade-up mt-3 text-sm text-muted" style="--d:450ms">{p.hero.note}</p>
+      <ul class="fade-up mt-6 flex flex-wrap gap-2 text-sm" style="--d:500ms">
+        {p.hero.chips.map(chip => <li class="rounded-full bg-paper px-3 py-1.5 ring-1 ring-line">{chip.replace(' · ', ', ')}</li>)}
+      </ul>
+    </div>
+    <div class="relative isolate overflow-hidden rounded-[2rem] bg-mint p-6 sm:p-10">
+      <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 1024px) 50vw, 100vw" alt="" width="1200" height="900" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy/10 to-navy/35" aria-hidden="true"></div>
+      <div class="land" style="--d:300ms"><Device src="/img/tour-caisse.webp" alt="La caisse Amplify POS : une table ouverte, le ticket et le total" w={2400} h={1406} eager /></div>
+      <div class="drop absolute bottom-4 end-4 w-[26%]" style="--d:600ms"><Device kind="phone" src="/img/menu-liste.webp" alt="Le menu QR sur le téléphone du client" w={600} h={1298} eager class="rotate-[3deg]" /></div>
+    </div>
+  </section>
+
+  <!-- offline -->
+  <OfflineDemo />
+
+  <!-- features -->
+  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+    <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.features.title}</h2>
+    <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {p.features.items.map(([h, d], i) => (
+        <li class="rounded-[1.5rem] bg-paper p-6 ring-1 ring-line">
+          <span class={`grid size-11 place-items-center rounded-xl ${['bg-blue text-white', 'bg-green text-navy', 'bg-navy text-green'][i % 3]}`}><Icon name={ICONS[i]} /></span>
+          <h3 class="mt-4 text-xl">{h}</h3>
+          <p class="mt-2 text-muted">{d}</p>
+        </li>
+      ))}
+    </ul>
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <a href={ROUTES.features[lang]} class="inline-flex min-h-12 items-center rounded-full bg-navy px-6 font-semibold text-white hover:bg-blue">{p.nav.allCta.replace('{n}', `${nFeatures}+`)}</a>
+      <a href={ROUTES.profit[lang]} class="font-semibold text-green-deep underline underline-offset-4">{p.products.profit.cta}</a>
+    </div>
+  </section>
+
+  <!-- languages -->
+  <section class="border-y border-line bg-paper">
+    <div class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-16 sm:px-6 md:grid-cols-[1.2fr_1fr]">
+      <div>
+        <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl">{p.lang.title}</h2>
+        <p class="mt-4 max-w-lg text-lg text-muted">{p.lang.text}</p>
+      </div>
+      <div class="flex flex-wrap gap-3 md:justify-end" aria-hidden="true">
+        <span class="display rounded-2xl bg-chalk px-6 py-4 text-4xl">Bonjour</span>
+        <span class="rounded-2xl bg-navy px-6 py-4 text-4xl font-bold text-white" lang="ar" dir="rtl">مرحبا</span>
+        <span class="display rounded-2xl bg-green px-6 py-4 text-4xl">Hello</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- live demo -->
+  <TryIt lang={lang} id="demo" />
+
+  <!-- pricing -->
+  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6">
+    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.pricing.title}</h2>
+    <p class="mt-4 max-w-2xl text-muted">{p.pricing.note}</p>
+    <div class="mt-12"><Pricing plans={p.pricing.plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.popular} lang={lang} /></div>
+    <div class="mt-8 grid gap-6 rounded-[1.75rem] bg-paper p-6 ring-1 ring-line md:grid-cols-[1fr_1.4fr] md:p-8">
+      <div><h3 class="text-2xl">{p.pricing.included.title}</h3><p class="mt-2 text-muted">{p.pricing.included.text}</p></div>
+      <ul class="grid gap-2 sm:grid-cols-2">{p.pricing.included.items.map(it => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green-deep" />{it}</li>)}</ul>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={p.faq.items} />
+
+  <!-- final -->
+  <section class="px-4 pb-24 sm:px-6">
+    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <h2 class="max-w-3xl text-6xl sm:text-7xl">{p.final.title}</h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{p.final.text}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href={signup} class="inline-flex min-h-12 items-center rounded-full bg-green px-8 text-lg font-semibold text-navy hover:bg-[#04A859]">{p.final.cta}</a>
+        <WaButton text={wa} label={t.ui.whatsapp} where="pos-final" tone="light" class="px-6" />
+      </div>
+    </div>
+  </section>
+</Base>

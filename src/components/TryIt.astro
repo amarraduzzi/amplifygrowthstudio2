@@ -5,23 +5,26 @@ import QRCode from 'qrcode';
 import WaButton from './WaButton.astro';
 import Device from './Device.astro';
 import Bars from './Bars.astro';
-import { SITE, CONTACT, REVIEW, isPlaceholder } from '../config';
+import { SITE, CONTACT, REVIEW, isPlaceholder, signupUrl } from '../config';
 import { copy } from '../i18n';
 import type { Lang } from '../i18n/routes';
-interface Props { lang: Lang }
+interface Props { lang: Lang; id?: string }
 const all = copy(Astro.props.lang);
 const c = all.home.tryit;
 const qr = await QRCode.toString(SITE.demoMenuUrl, { type: 'svg', margin: 0, color: { dark: '#001E3EFF', light: '#FFFFFF00' } });
 const showReview = !isPlaceholder(REVIEW.text);
 ---
-<section class="relative isolate overflow-hidden bg-green py-20 text-navy md:py-28">
+<section id={Astro.props.id} class="relative isolate scroll-mt-20 overflow-hidden bg-green py-20 text-navy md:py-28">
   <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32" color="rgba(0,30,62,0.08)" />
   <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">
     <div>
       <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.h2a}</span><span class="block text-white">{c.h2b}</span></h2>
       <p class="mt-5 hidden max-w-md text-lg text-navy/80 md:block">{c.p}</p>
       <p class="mt-5 max-w-md text-lg text-navy/80 md:hidden">{c.pMobile}</p>
-      <a href={SITE.demoMenuUrl} target="_blank" rel="noopener" class="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-blue md:hidden">{c.open}</a>
+      <div class="mt-7 flex flex-wrap items-center gap-3">
+        <a href={SITE.demoMenuUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center gap-2 rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-blue md:hidden">{c.open}</a>
+        <a href={signupUrl(Astro.props.lang)} class="inline-flex min-h-12 items-center rounded-full border-2 border-navy px-6 text-lg font-semibold hover:bg-navy hover:text-white">{c.create}</a>
+      </div>
       <p class="mt-4 text-sm text-navy/60">{c.note}</p>
       <div class="mx-auto mt-10 w-44 rotate-[3deg] md:hidden"><Device kind="phone" src="/img/menu-fiche.webp" alt="" w={600} h={1298} /></div>
 

@@ -1,0 +1,23 @@
+---
+// Plans with a trial link each. Prices come from the product copy.
+import Icon from './Icon.astro';
+import { signupUrl } from '../config';
+import type { Plan } from '../i18n/products-fr';
+interface Props { plans: Plan[]; per: string; choose: string; popular: string; lang?: string }
+const { plans, per, choose, popular, lang = 'fr' } = Astro.props;
+---
+<div class={`grid gap-4 ${plans.length > 2 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'mx-auto max-w-3xl sm:grid-cols-2'}`}>
+  {plans.map(p => (
+    <div class={`relative flex flex-col rounded-[1.75rem] p-6 ${p.featured ? 'bg-navy text-white ring-2 ring-green' : 'bg-paper ring-1 ring-line'}`}>
+      {p.featured && <span class="absolute -top-3 start-6 rounded-full bg-green px-3 py-1 text-xs font-bold text-navy">{popular}</span>}
+      <p class={`text-sm font-semibold ${p.featured ? 'text-green' : 'text-green-deep'}`}>{p.tag}</p>
+      <h3 class="display mt-1 text-[2rem] leading-none">{p.name}</h3>
+      <p class={`mt-1 text-[0.95rem] ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.text}</p>
+      <p class="mt-5 flex items-baseline gap-2"><span class="display text-6xl" dir="ltr">{p.price}</span><span class={`text-sm ${p.featured ? 'text-white/60' : 'text-muted'}`}>{per}</span></p>
+      <ul class="mt-5 flex-1 space-y-2 text-[0.95rem]">
+        {p.items.map(it => <li class="flex gap-2"><Icon name="check" class={`mt-0.5 size-4 shrink-0 ${p.featured ? 'text-green' : 'text-green-deep'}`} />{it}</li>)}
+      </ul>
+      <a href={signupUrl(lang, p.product === 'profit' ? 'profit' : undefined)} class={`mt-6 grid min-h-12 place-items-center rounded-full font-semibold ${p.featured ? 'bg-green text-navy hover:bg-[#04A859]' : 'border border-navy/25 hover:border-navy'}`}>{choose}</a>
+    </div>
+  ))}
+</div>

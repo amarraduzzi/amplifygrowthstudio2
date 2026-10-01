@@ -12,10 +12,24 @@ export const SITE = {
   live: false,
   /** Languages that are finished. A language goes in here only when all its pages exist. */
   languages: ['fr'] as const,
-  demoUrl: 'https://posamplify.pages.dev',
   /** Live demo menu of the fictional café Dar Nour (supabase/demo/dar-nour.sql). */
   demoMenuUrl: 'https://posamplify.pages.dev/dar-nour',
+  /** where "Voir la démo" goes: the live demo section of the POS page on this site */
+  demoUrl: '/amplify-pos/#demo',
 };
+
+/**
+ * The apps (separate projects). When the domain is live these become subdomains of the same domain:
+ * app.amplifygrowthstudio.com and menu.amplifygrowthstudio.com. Change them here only.
+ */
+export const APPS = {
+  admin: 'https://amplify-admin.pages.dev',
+  menu: 'https://posamplify.pages.dev',
+};
+/** Start the free trial. product 'profit' = Amplify Profit alone. */
+export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit') =>
+  `${APPS.admin}/?inscription=1&lang=${lang}${product === 'profit' ? '&produit=profit' : ''}`;
+export const loginUrl = (lang = 'fr') => `${APPS.admin}/?lang=${lang}`;
 
 export const CONTACT = {
   /** International format without + or spaces, for wa.me links */

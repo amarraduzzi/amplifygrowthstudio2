@@ -1,0 +1,140 @@
+---
+// Amplify Profit product page (was posamplify.pages.dev/profit), in the Amplify Growth Studio style.
+import Base from '../../layouts/Base.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import Pricing from '../Pricing.astro';
+import Faq from '../Faq.astro';
+import { SITE, signupUrl } from '../../config';
+import { copy } from '../../i18n';
+import { profitFr as p, posFr, type Plan } from '../../i18n/products-fr';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy(lang);
+const title = 'Marge et food cost restaurant au Maroc | Amplify Profit';
+const description = 'Amplify Profit calcule le coût et la marge de chaque plat, et le bon prix de vente. Avec votre caisse actuelle. 30 jours gratuits, sans engagement.';
+const wa = 'Bonjour, j’ai une question sur Amplify Profit.';
+// illustration: tajine poulet citron, 95 DH TTC (VAT 10 %)
+const COST = 28.2, PRICE = 95, HT = PRICE / 1.1;
+const money = (n: number) => `${n.toFixed(2).replace('.', ',')} DH`;
+const fc = ((COST / HT) * 100).toFixed(1).replace('.', ',');
+const plans: Plan[] = [
+  { name: p.pricing.alone.name, tag: 'Amplify Profit', price: '249', text: p.pricing.alone.text, items: p.pricing.alone.items, product: 'profit' },
+  { name: p.pricing.both.name, tag: p.pricing.both.tag, price: '499', text: p.pricing.both.text, items: p.pricing.both.items, featured: true },
+];
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Amplify Profit', applicationCategory: 'BusinessApplication', operatingSystem: 'Web',
+    url: abs(ROUTES.profit[lang]), description, offers: plans.map(x => ({ '@type': 'Offer', name: x.name, price: x.price, priceCurrency: 'MAD' })), publisher: { '@id': `${SITE.url}/#business` } },
+  faqSchema(p.faq.items),
+].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="profit" title={title} description={description} wa={wa} schema={schema}>
+  <!-- hero -->
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-14 pt-8 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:pt-14">
+    <div>
+      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Amplify Profit</p>
+      <h1 class="mt-5 text-[clamp(2.7rem,4.8vw,4.6rem)]">
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{p.hero.title1}</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{p.hero.title2}</span></span>
+      </h1>
+      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{p.hero.text}</p>
+      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+        <a href={signupUrl(lang, 'profit')} class="inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{p.hero.cta}</a>
+        <a href="#comment" class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">{p.hero.cta2}</a>
+      </div>
+      <p class="fade-up mt-3 text-sm text-muted" style="--d:450ms">{p.hero.note}</p>
+    </div>
+
+    <!-- the recipe card: lines appear, then the result -->
+    <figure class="land relative mx-auto w-full max-w-md" style="--d:350ms">
+      <div class="rounded-[2rem] bg-paper p-6 shadow-[0_40px_80px_-40px_rgba(0,30,62,0.5)] ring-1 ring-line sm:p-8">
+        <p class="text-sm font-semibold text-green-deep">{p.card.label}</p>
+        <p class="display mt-1 text-4xl">{p.card.dish}</p>
+        <ul class="mt-5 divide-y divide-line border-y border-line text-[0.95rem]">
+          {p.card.lines.map(([a, q, c], k) => (
+            <li class="fade-up flex items-center justify-between py-2.5" style={`--d:${600 + k * 160}ms`}><span>{a}{q && <span class="ms-2 text-muted">{q}</span>}</span><span class="tabular-nums">{c} DH</span></li>
+          ))}
+        </ul>
+        <dl class="mt-5 grid grid-cols-2 gap-3">
+          {[[p.card.cost, money(COST)], [p.card.price, money(PRICE)], [p.card.fc, `${fc} %`], [p.card.margin, money(HT - COST)]].map(([l, v], k) => (
+            <div class={`fade-up rounded-2xl p-3 ${k === 3 ? 'bg-green text-navy' : 'bg-chalk'}`} style={`--d:${1300 + k * 120}ms`}><dt class="text-xs font-semibold opacity-70">{l}</dt><dd class="display text-3xl">{v}</dd></div>
+          ))}
+        </dl>
+        <p class="fade-up mt-4 flex gap-2 rounded-2xl bg-[#FFF4D6] p-3 text-sm font-medium text-[#6B4E00]" style="--d:1900ms"><span aria-hidden="true">!</span>{p.card.alert}</p>
+      </div>
+      <figcaption class="mt-3 text-center text-xs text-muted">{p.card.example}</figcaption>
+    </figure>
+  </section>
+
+  <!-- the problem -->
+  <section class="bg-blue py-20 text-white md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.pains.title}</h2>
+      <ul class="mt-12 grid gap-4 md:grid-cols-3">
+        {p.pains.items.map(([h, d], i) => (
+          <li class="rounded-[1.5rem] bg-white/5 p-6 ring-1 ring-white/15">
+            <span class="display text-5xl text-green">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="mt-3 text-xl">{h}</h3>
+            <p class="mt-2 text-white/70">{d}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- what you get -->
+  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+    <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.features.title}</h2>
+    <ul class="mt-12 grid gap-4 sm:grid-cols-2">
+      {p.features.items.map(([h, d, ready]) => (
+        <li class="flex gap-4 rounded-[1.5rem] bg-paper p-6 ring-1 ring-line">
+          <span class={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full ${ready ? 'bg-green text-navy' : 'bg-chalk text-muted'}`}><Icon name="check" class="size-4" /></span>
+          <div>
+            <h3 class="flex flex-wrap items-center gap-2 text-xl">{h}{!ready && <span class="rounded-full bg-[#FFF4D6] px-2.5 py-0.5 text-xs font-bold text-[#6B4E00]">{p.features.soon}</span>}</h3>
+            <p class="mt-1.5 text-muted">{d}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- how it works -->
+  <section id="comment" class="scroll-mt-20 border-y border-line bg-paper">
+    <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.how.title}</h2>
+      <p class="mt-4 max-w-2xl text-lg text-muted">{p.how.text}</p>
+      <ol class="mt-12 grid gap-4 md:grid-cols-3">
+        {p.how.steps.map(([h, d], i) => (
+          <li class="rounded-[1.5rem] bg-chalk p-6">
+            <span class="display text-6xl text-green-deep">{String(i + 1).padStart(2, '0')}</span>
+            <h3 class="mt-3 text-xl">{h}</h3>
+            <p class="mt-2 text-muted">{d}</p>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-8 flex gap-3 rounded-2xl bg-mint p-5 font-medium"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green-deep" />{p.how.together} <a href={ROUTES.pos[lang]} class="whitespace-nowrap font-semibold text-green-deep underline underline-offset-4">{posFr.products.pos.name}</a></p>
+    </div>
+  </section>
+
+  <!-- pricing -->
+  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6">
+    <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.pricing.title}</h2>
+    <p class="mt-4 max-w-2xl text-muted">{p.pricing.note}</p>
+    <div class="mt-12"><Pricing plans={plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.best} lang={lang} /></div>
+  </section>
+
+  <Faq lang={lang} items={p.faq.items} />
+
+  <section class="px-4 pb-24 sm:px-6">
+    <div class="mx-auto max-w-6xl rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <h2 class="max-w-3xl text-6xl sm:text-7xl">{p.final.title}</h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{p.final.text}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href={signupUrl(lang, 'profit')} class="inline-flex min-h-12 items-center rounded-full bg-green px-8 text-lg font-semibold text-navy hover:bg-[#04A859]">{p.final.cta}</a>
+        <WaButton text={wa} label={t.ui.whatsapp} where="profit-final" tone="light" class="px-6" />
+      </div>
+    </div>
+  </section>
+</Base>

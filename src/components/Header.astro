@@ -2,35 +2,44 @@
 import Logo from './Logo.astro';
 import WaButton from './WaButton.astro';
 import { copy } from '../i18n';
+import { loginUrl, signupUrl } from '../config';
 import { ROUTES, liveLanguages, type Lang, type PageKey } from '../i18n/routes';
 interface Props { lang: Lang; page: PageKey; wa: string }
 const { lang, page, wa } = Astro.props;
 const t = copy(lang);
-const nav = (['systems', 'marketing', 'restaurants', 'contact'] as const).map(k => ({ k, label: t.nav[k], href: ROUTES[k][lang] }));
+const nav = (['pos', 'profit', 'marketing', 'restaurants', 'contact'] as const).map(k => ({ k, label: t.nav[k], href: ROUTES[k][lang] }));
+const active = (k: string) => k === page || (k === 'pos' && page === 'features');
 const langs = liveLanguages();
 const LABEL: Record<Lang, string> = { fr: 'FR', ar: 'عربي', en: 'EN' };
+const trial = signupUrl(lang, page === 'profit' ? 'profit' : undefined);
 ---
 <header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/90 backdrop-blur">
-  <div class="mx-auto flex h-16 max-w-6xl items-center gap-6 px-4 sm:px-6">
+  <div class="mx-auto flex h-16 max-w-6xl items-center gap-5 px-4 sm:px-6">
     <a href={ROUTES.home[lang]} aria-label="Amplify Growth Studio" class="me-auto"><Logo /></a>
-    <nav class="hidden items-center gap-7 text-[0.95rem] md:flex" aria-label="Navigation">
-      {nav.map(n => <a href={n.href} aria-current={n.k === page ? 'page' : undefined}
-        class={`transition-colors hover:text-green-deep ${n.k === page ? 'font-semibold text-green-deep' : 'text-navy'}`}>{n.label}</a>)}
+    <nav class="hidden items-center gap-5 text-[0.95rem] lg:flex xl:gap-6" aria-label="Navigation">
+      {nav.map(n => <a href={n.href} aria-current={active(n.k) ? 'page' : undefined}
+        class={`whitespace-nowrap transition-colors hover:text-green-deep ${active(n.k) ? 'font-semibold text-green-deep' : 'text-navy'}`}>{n.label}</a>)}
     </nav>
     {langs.length > 1 && (
-      <div class="hidden items-center gap-1 text-sm md:flex" aria-label={t.ui.langLabel}>
+      <div class="hidden items-center gap-1 text-sm lg:flex" aria-label={t.ui.langLabel}>
         {langs.map(l => <a href={ROUTES[page][l]} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}
           class={`rounded-md px-2 py-1 ${l === lang ? 'bg-navy text-white' : 'text-muted hover:text-navy'}`}>{LABEL[l]}</a>)}
       </div>
     )}
-    <span class="hidden md:block"><WaButton text={wa} label={t.ui.whatsappShort} where={`${page}-header`} class="min-h-11! px-5 text-[0.95rem]" /></span>
-    <details class="group md:hidden">
+    <a href={loginUrl(lang)} class="hidden whitespace-nowrap text-[0.95rem] text-muted hover:text-navy md:block">{t.nav.login}</a>
+    <a href={trial} class="hidden min-h-11 items-center whitespace-nowrap rounded-full bg-navy px-5 text-[0.95rem] font-medium text-white hover:bg-blue md:inline-flex">{t.nav.trial}</a>
+    <span class="hidden md:block"><WaButton text={wa} label="" where={`${page}-header`} class="min-h-11! size-11 px-0!" /></span>
+    <details class="group lg:hidden">
       <summary class="flex size-11 cursor-pointer list-none items-center justify-center rounded-full border border-line" aria-label={t.ui.menu}>
         <svg viewBox="0 0 24 24" class="size-5 group-open:hidden" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <svg viewBox="0 0 24 24" class="hidden size-5 group-open:block" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </summary>
-      <nav class="absolute inset-x-0 top-16 bg-chalk px-4 pb-6 pt-2 shadow-2xl" aria-label="Navigation">
+      <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto bg-chalk px-4 pb-6 pt-2 shadow-2xl" aria-label="Navigation">
         {nav.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl">{n.label}</a>)}
+        <div class="mt-5 grid grid-cols-2 gap-2">
+          <a href={loginUrl(lang)} class="grid min-h-12 place-items-center rounded-full border border-navy/25 font-medium">{t.nav.login}</a>
+          <a href={trial} class="grid min-h-12 place-items-center rounded-full bg-navy font-medium text-white">{t.nav.trial}</a>
+        </div>
         {langs.length > 1 && <div class="mt-4 flex gap-2">{langs.map(l => <a href={ROUTES[page][l]} lang={l} class={`rounded-md px-3 py-2 ${l === lang ? 'bg-navy text-white' : 'border border-line'}`}>{LABEL[l]}</a>)}</div>}
       </nav>
     </details>

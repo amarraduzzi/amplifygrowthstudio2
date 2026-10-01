@@ -11,7 +11,7 @@ import Steps from '../Steps.astro';
 import TryIt from '../TryIt.astro';
 import Ph from '../Ph.astro';
 import Mark from '../Mark.astro';
-import { SITE, CONTACT } from '../../config';
+import { SITE, CONTACT, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema } from '../../lib/schema';
@@ -43,7 +43,7 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
         <p class="fade-up mt-4 max-w-xl text-[1.05rem] leading-snug text-muted md:mt-5 md:text-xl" style="--d:300ms"><span class="md:hidden">{c.hero.leadShort}</span><span class="hidden md:inline">{c.hero.lead}</span></p>
         <div id="hero-cta" class="fade-up mt-5 flex items-center gap-3.5 md:mt-7 md:gap-3" style="--d:400ms">
           <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="whitespace-nowrap px-4 text-[0.95rem] md:px-7 md:text-lg" />
-          <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex items-center whitespace-nowrap text-sm font-medium underline underline-offset-4 md:min-h-12 md:rounded-full md:border md:border-navy/25 md:px-7 md:text-lg md:font-normal md:no-underline md:hover:border-navy">{t.ui.demo}</a>
+          <a href={signupUrl(lang)} class="inline-flex items-center whitespace-nowrap text-sm font-medium underline underline-offset-4 md:min-h-12 md:rounded-full md:border md:border-navy/25 md:px-7 md:text-lg md:font-normal md:no-underline md:hover:border-navy">{c.hero.trial}</a>
         </div>
         <ul class="fade-up mt-4 flex items-center gap-x-4 text-[0.8rem] md:mt-6 md:gap-x-6 md:text-[0.95rem]" style="--d:500ms">
           <li>
@@ -171,6 +171,15 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
             </a>
           );
         })}
+      </div>
+      <!-- the two products by name, each with its own page -->
+      <div class="mt-5 grid gap-3 sm:grid-cols-2">
+        {c.paths.products.map(([name, sub], i) => (
+          <a href={ROUTES[i === 0 ? 'pos' : 'profit'][lang]} class="group flex items-center justify-between gap-4 rounded-2xl bg-white/5 px-5 py-4 ring-1 ring-white/15 hover:bg-white/10">
+            <span><span class="block text-lg font-semibold">{name}</span><span class="text-sm text-white/65">{sub}</span></span>
+            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-green text-navy transition-transform group-hover:translate-x-1 rtl:rotate-180" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        ))}
       </div>
     </div>
   </section>

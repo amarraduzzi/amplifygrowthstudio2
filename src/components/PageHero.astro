@@ -20,7 +20,7 @@ const t = copy(lang);
       <p class="measure mt-6 text-lg text-white/80">{lead}</p>
       <div class="mt-9 flex flex-col gap-3 sm:flex-row">
         <WaButton text={wa} label={t.ui.whatsapp} where={`${page}-hero`} class="px-7 text-lg" />
-        {demo && <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 px-7 text-lg hover:border-white">{t.ui.demo}</a>}
+        {demo && <a href={SITE.demoUrl} class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 px-7 text-lg hover:border-white">{t.ui.demo}</a>}
       </div>
       <slot />
     </div>

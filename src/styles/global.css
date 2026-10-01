@@ -145,3 +145,6 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
 .step-card.seen .pin-dot { animation: pin .25s ease both; animation-delay: var(--d, 0ms); }
 @keyframes pin { to { background: var(--color-navy); } }
 @media (prefers-reduced-motion: reduce) { .js .step-card:not(.is-on) { opacity: 1; scale: 1; } .js .step-card:not(.seen) .sv, .js .step-card:not(.seen) .bar-up { opacity: 1; } }
+.js .step-card:not(.seen) .scan-line { opacity: 0; }
+.step-card.seen .scan-line { animation: scan 1.8s ease-in-out .2s both; }
+@keyframes scan { from { top: 4%; opacity: 1; } 90% { opacity: 1; } to { top: 92%; opacity: 0; } }

@@ -1,7 +1,7 @@
 ---
 import Logo from './Logo.astro';
 import Ph from './Ph.astro';
-import { CONTACT, SITE, isPlaceholder } from '../config';
+import { CONTACT, SITE, isPlaceholder, loginUrl, signupUrl } from '../config';
 import { copy } from '../i18n';
 import { ROUTES, type Lang } from '../i18n/routes';
 interface Props { lang: Lang }
@@ -16,11 +16,15 @@ const t = copy(lang);
       <p class="mt-4 max-w-xs text-[0.95rem]">{t.ui.footerTagline}</p>
     </div>
     <nav class="flex flex-col gap-2 text-[0.95rem]" aria-label="Pages">
+      <a class="hover:text-white" href={ROUTES.pos[lang]}>{t.nav.pos}</a>
+      <a class="hover:text-white" href={ROUTES.profit[lang]}>{t.nav.profit}</a>
+      <a class="hover:text-white" href={ROUTES.features[lang]}>{t.nav.features}</a>
       <a class="hover:text-white" href={ROUTES.systems[lang]}>{t.nav.systems}</a>
       <a class="hover:text-white" href={ROUTES.marketing[lang]}>{t.nav.marketing}</a>
       <a class="hover:text-white" href={ROUTES.restaurants[lang]}>{t.nav.restaurants}</a>
       <a class="hover:text-white" href={ROUTES.contact[lang]}>{t.nav.contact}</a>
-      <a class="hover:text-white" href={SITE.demoUrl} target="_blank" rel="noopener">{t.ui.demo}</a>
+      <a class="hover:text-white" href={loginUrl(lang)}>{t.nav.login}</a>
+      <a class="hover:text-white" href={signupUrl(lang)}>{t.nav.trial}</a>
     </nav>
     <address class="not-italic text-[0.95rem] leading-relaxed">
       <strong class="font-medium text-white">{SITE.name}</strong><br />
