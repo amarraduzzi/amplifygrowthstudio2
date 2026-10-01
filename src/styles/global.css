@@ -214,3 +214,9 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 @media (prefers-reduced-motion: reduce) { .ft-word, .ft-bar { transition: none; } }
 [dir="rtl"] .ft-word { background-image: linear-gradient(270deg, #05B962 0 50%, transparent 50% 100%); background-position: 0 0; }
 [dir="rtl"] .ft-in .ft-word { background-position: 100% 0; }
+
+/* POS hero: the kitchen ticket prints line by line */
+.hero-print .pr-line { animation: print .35s steps(4, end) both; animation-delay: var(--d, 0ms); }
+.hero-print > div { animation: ticket-out .9s cubic-bezier(.2,.8,.2,1) 1.8s both; }
+@keyframes ticket-out { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@media (prefers-reduced-motion: reduce) { .hero-print .pr-line, .hero-print > div { animation: none; } }

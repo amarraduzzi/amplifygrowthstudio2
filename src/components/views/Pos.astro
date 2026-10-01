@@ -34,29 +34,61 @@ const schema = [
 const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 ---
 <Base lang={lang} page="pos" title={title} description={description} wa={wa} schema={schema}>
-  <!-- hero -->
-  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-14 pt-8 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:pt-14">
-    <div>
-      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line" style="--d:0ms"><span class="size-2 rounded-full bg-green"></span>Amplify POS</p>
-      <h1 class="mt-5 text-[clamp(2.7rem,4.8vw,4.6rem)]">
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">La caisse de votre restaurant</span></span>
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">qui ne s’arrête jamais.</span></span>
-      </h1>
-      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{p.hero.sub}</p>
-      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
-        <a href={signup} class="inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{p.hero.cta}</a>
-        <a href="#demo" class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">{p.hero.demo}</a>
+  <!-- hero: the till takes an order, the kitchen ticket prints, and the service goes on without internet -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl gap-8 px-4 pb-10 pt-5 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-12 lg:pb-14 lg:pt-12">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Amplify POS</p>
+        <h1 class="mt-4 text-[clamp(2.9rem,12vw,3.6rem)] lg:mt-5 lg:text-[clamp(3.4rem,5.4vw,5.4rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block whitespace-nowrap" style="--d:80ms">La caisse qui</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block whitespace-nowrap text-green-deep" style="--d:200ms">ne s’arrête jamais.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-4 max-w-xl text-[1.05rem] leading-snug text-muted md:mt-5 md:text-xl" style="--d:300ms">Caisse tactile, menu QR, bons cuisine et chiffres du jour pour cafés et restaurants au Maroc. En français et en arabe. Même quand internet tombe.</p>
+        <div class="fade-up mt-6 flex items-center gap-4 md:mt-7" style="--d:400ms">
+          <a href={signup} class="inline-flex min-h-12 items-center whitespace-nowrap rounded-full bg-green px-5 text-[0.95rem] font-semibold text-navy hover:bg-[#04A859] md:px-7 md:text-lg">{p.hero.cta}</a>
+          <a href="#demo" class="whitespace-nowrap text-sm font-medium underline underline-offset-4 md:inline-flex md:min-h-12 md:items-center md:rounded-full md:border md:border-navy/25 md:px-6 md:text-lg md:font-normal md:no-underline md:hover:border-navy">Voir la démo</a>
+        </div>
+        <p class="fade-up mt-3 text-sm text-muted" style="--d:450ms">{p.hero.note}</p>
       </div>
-      <p class="fade-up mt-3 text-sm text-muted" style="--d:450ms">{p.hero.note}</p>
-      <ul class="fade-up mt-6 flex flex-wrap gap-2 text-sm" style="--d:500ms">
-        {p.hero.chips.map(chip => <li class="rounded-full bg-paper px-3 py-1.5 ring-1 ring-line">{chip.replace(' · ', ', ')}</li>)}
-      </ul>
+
+      <div class="relative isolate aspect-[4/3.3] overflow-hidden rounded-[1.75rem] bg-mint lg:aspect-[5/4.4] lg:rounded-[2.25rem]">
+        <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 1024px) 50vw, 100vw" alt="" width="1200" height="900" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
+        <div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy/10 via-transparent to-navy/35" aria-hidden="true"></div>
+        <!-- the till -->
+        <span class="shadow-in absolute bottom-[14%] end-[6%] h-6 w-[60%] rounded-[50%] bg-black/45 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+        <div class="land absolute bottom-[17%] end-[4%] w-[68%]" style="--d:400ms">
+          <Device src="/img/caisse-ticket.webp" alt="La caisse Amplify POS : le ticket de la table, 48 MAD, prêt à envoyer en cuisine" w={1200} h={878} eager>
+            <span class="glow absolute start-[52.9%] top-[85.9%] h-[9.4%] w-[22.2%] rounded-[0.6rem] ring-[3px] ring-green" style="--d:1500ms" aria-hidden="true"></span>
+          </Device>
+        </div>
+        <!-- the guest's phone -->
+        <span class="shadow-in absolute bottom-[4%] start-[7%] h-4 w-[20%] rounded-[50%] bg-black/50 blur-lg" style="--d:900ms" aria-hidden="true"></span>
+        <div class="drop absolute bottom-[5%] start-[5%] w-[24%]" style="--d:650ms"><Device kind="phone" src="/img/menu-liste.webp" alt="Le menu QR sur le téléphone du client" w={600} h={1298} eager class="-rotate-[4deg]" /></div>
+        <!-- the kitchen ticket prints -->
+        <div class="hero-print absolute start-[5%] top-0 w-[40%] max-w-[12.5rem] origin-top" aria-hidden="true">
+          <div class="rounded-b-md bg-white px-3 pb-3 pt-2 font-mono text-[0.55rem] leading-snug text-navy shadow-xl sm:text-[0.7rem]">
+            <p class="pr-line text-center font-bold" style="--d:1900ms">BON CUISINE</p>
+            <p class="pr-line text-center" style="--d:2000ms">Table 4 · Sara</p>
+            <p class="pr-line my-1 border-t border-dashed border-navy/40" style="--d:2100ms"></p>
+            <p class="pr-line whitespace-nowrap" style="--d:2250ms">1 × Thé menthe</p>
+            <p class="pr-line whitespace-nowrap" style="--d:2400ms">2 × Café noir</p>
+          </div>
+        </div>
+        <!-- internet drops, the service goes on -->
+        <p class="chat-in absolute bottom-[3%] end-[4%] flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:3000ms" aria-hidden="true">
+          <span class="grid size-6 place-items-center rounded-full bg-[#F5B301] sm:size-7"><svg viewBox="0 0 24 24" class="size-3.5 sm:size-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.3a10 10 0 0 1 13 0M9 15.8a5 5 0 0 1 6 0M12 19.5h.01M3 3l18 18"/></svg></span>
+          Internet coupé, le service continue
+        </p>
+      </div>
     </div>
-    <div class="relative isolate overflow-hidden rounded-[2rem] bg-mint p-6 sm:p-10">
-      <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 1024px) 50vw, 100vw" alt="" width="1200" height="900" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
-      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy/10 to-navy/35" aria-hidden="true"></div>
-      <div class="land" style="--d:300ms"><Device src="/img/tour-caisse.webp" alt="La caisse Amplify POS : une table ouverte, le ticket et le total" w={2400} h={1406} eager /></div>
-      <div class="drop absolute bottom-4 end-4 w-[26%]" style="--d:600ms"><Device kind="phone" src="/img/menu-liste.webp" alt="Le menu QR sur le téléphone du client" w={600} h={1298} eager class="rotate-[3deg]" /></div>
+
+    <!-- three facts -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['199', 'DH HT / mois, tout compris'], ['30', 'jours gratuits, sans carte bancaire'], ['0', 'coupure de service si internet tombe']].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
+        ))}
+      </ul>
     </div>
   </section>
 
