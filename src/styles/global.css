@@ -111,3 +111,27 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
   .spot-ring, .tour-panel.is-on, .tour-panel.is-on .chat-msg { animation: none; }
   .cam, .cam .spot, .tilt { transition: none; }
 }
+
+/* Sectors: hub + panels */
+.hub-orbit { transform: rotate(var(--rot)); transition: transform 1.1s cubic-bezier(.65,0,.25,1); }
+.hub-sat { transform: rotate(var(--a)) translateX(8.6rem); }
+.hub-sat-inner { transform: translate(-50%, -50%) rotate(calc(-1 * (var(--a) + var(--rot)))); transition: transform 1.1s cubic-bezier(.65,0,.25,1), background-color .4s, scale .4s; cursor: pointer; }
+.hub-sat.on .hub-sat-inner { background: var(--color-green); scale: 1.18; box-shadow: 0 0 0 6px rgb(5 185 98 / .18); }
+.hub-line { transform: translateY(-50%) scaleX(0); }
+.hub-line.draw-line { animation: hub-line .7s .55s cubic-bezier(.6,0,.2,1) both; }
+@keyframes hub-line { to { transform: translateY(-50%) scaleX(1); } }
+.sec-tab.running .sec-progress { animation: tour-progress 5.5s linear forwards; }
+.sec-panel.is-on .sec-in { animation: fade-up .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+.sec-panel.is-on .pr-line { animation: print .35s steps(4, end) both; animation-delay: var(--d, 0ms); }
+@keyframes print { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+.sec-panel.is-on .q-card { animation: q-in .5s cubic-bezier(.2,.9,.25,1.2) both; animation-delay: var(--d, 0ms); }
+@keyframes q-in { from { opacity: 0; transform: translateX(40px); } }
+.g-star { color: var(--color-line); }
+.sec-panel.is-on .g-star { animation: star .3s ease both; animation-delay: var(--d, 0ms); }
+@keyframes star { from { color: var(--color-line); transform: scale(.6); } to { color: #F5B301; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) {
+  .hub-orbit, .hub-sat-inner { transition: none; }
+  .sec-panel.is-on .sec-in, .sec-panel.is-on .pr-line, .sec-panel.is-on .q-card, .hub-line.draw-line { animation: none; }
+  .hub-line { transform: translateY(-50%); }
+  .g-star { color: #F5B301; }
+}
