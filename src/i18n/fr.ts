@@ -31,8 +31,7 @@ export const fr = {
     },
     wa: 'Bonjour, je souhaite en savoir plus sur Amplify pour mon restaurant.',
     hero: {
-      h1a: 'Gérez mieux.',
-      h1b: 'Gagnez plus.',
+      h1: ['Votre restaurant.', 'Mieux géré.', 'Plus rentable.'],
       lead: 'Caisse, marges et marketing pour restaurants au Maroc. Notre équipe à Rabat passe chez vous.',
       flow: ['Commande reçue', 'Bon envoyé en cuisine', 'Marge calculée'],
       rating: 'sur Google',
@@ -43,7 +42,7 @@ export const fr = {
         ['1', 'seul partenaire pour la caisse, le site et le marketing'],
       ],
       shotAlt: 'La caisse Amplify POS : une table ouverte avec ses articles et le total',
-      phoneAlt: 'Le menu QR Amplify sur un téléphone, vu par le client à table',
+      phoneAlt: 'Le menu QR sur le téléphone du client : les plats et leurs prix',
     },
     statement: {
       a: 'Votre restaurant n’a pas besoin de plus d’outils.',

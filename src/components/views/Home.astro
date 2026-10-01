@@ -31,9 +31,9 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- HERO: light, the promise left, the real product on a mint panel right.
        One orchestrated moment: an order travels from the QR menu to the kitchen to the margin. -->
   <section class="relative">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-14 pt-10 sm:px-6 md:grid-cols-[0.9fr_1.1fr] md:items-center md:pt-14 lg:gap-14">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-14 pt-10 sm:px-6 md:grid-cols-[1fr_1.05fr] md:items-center md:pt-14 lg:gap-12">
       <div>
-        <h1 class="text-[clamp(3.6rem,8.4vw,7rem)]"><span class="block whitespace-nowrap">{c.hero.h1a}</span><span class="block whitespace-nowrap">{c.hero.h1b}</span></h1>
+        <h1 class="text-[clamp(3rem,5.6vw,5.4rem)]">{c.hero.h1.map((l, i) => <span class={`block whitespace-nowrap ${i === 2 ? 'text-green-deep' : ''}`}>{l}</span>)}</h1>
         <p class="mt-5 max-w-md text-xl leading-snug text-muted">{c.hero.lead}</p>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="px-7 text-lg" />
@@ -50,19 +50,23 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
         </ul>
       </div>
 
-      <div class="relative isolate flex flex-col justify-center overflow-hidden rounded-[2.25rem] bg-mint px-5 pb-12 pt-16 sm:px-8 md:self-stretch md:pb-16 md:pt-20">
+      <div class="relative isolate aspect-[5/4.3] overflow-hidden rounded-[2.25rem] bg-mint">
         <!-- a café counter in Rabat (AI image), behind the real product -->
         <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 768px) 50vw, 100vw"
-          alt="" width="1200" height="900" decoding="async" fetchpriority="low" class="absolute inset-0 -z-20 size-full object-cover object-[50%_65%]" />
+          alt="" width="1200" height="900" decoding="async" fetchpriority="low" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
         <div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy/10 via-transparent to-navy/30" aria-hidden="true"></div>
-        <div class="relative pe-[18%]">
-          <Device src="/img/caisse.webp" alt={c.hero.shotAlt} w={1600} h={937} eager />
-          <Device kind="phone" src="/img/menu-qr.webp" alt={c.hero.phoneAlt} w={780} h={1688} eager class="absolute -bottom-8 end-0 w-[30%] rotate-[3deg]" />
+        <!-- the devices stand on the counter: same eye level as the photo, contact shadows underneath -->
+        <div class="absolute inset-0">
+          <span class="absolute bottom-[10%] end-[8%] h-7 w-[66%] rounded-[50%] bg-black/45 blur-xl" aria-hidden="true"></span>
+          <span class="absolute bottom-[4%] start-[7%] h-5 w-[22%] rounded-[50%] bg-black/50 blur-lg" aria-hidden="true"></span>
+          <Device src="/img/caisse-ticket.webp" alt={c.hero.shotAlt} w={1200} h={878} eager class="absolute bottom-[13%] end-[5%] w-[74%]" />
+          <Device kind="phone" src="/img/menu-liste.webp" alt={c.hero.phoneAlt} w={600} h={1298} eager class="absolute bottom-[6%] start-[5%] w-[25%] -rotate-[4deg]" />
         </div>
         <ol class="pointer-events-none text-sm font-semibold" aria-label="Commande">
           {c.hero.flow.map((label, i) => (
-            <li class={`chat-in absolute flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-navy shadow-[0_12px_30px_-12px_rgba(0,30,62,0.45)] ${['bottom-[34%] end-[3%]', 'top-5 start-6', 'bottom-4 start-6'][i]}`} style={`--d:${500 + i * 800}ms`}>
-              <span class={`grid size-7 place-items-center rounded-full ${['bg-blue text-white', 'bg-navy text-green', 'bg-green text-navy'][i]}`}><Icon name={(['qr', 'chef', 'chart'] as const)[i]} class="size-4" /></span>
+            <li class={`chat-in absolute flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-navy shadow-[0_12px_30px_-12px_rgba(0,30,62,0.45)] ${['top-5 start-5', 'top-[17%] end-5', 'bottom-4 end-5'][i]}`} style={`--d:${500 + i * 800}ms`}>
+              <span class="grid size-7 place-items-center rounded-full bg-navy text-xs font-bold text-white">{i + 1}</span>
+              <Icon name={(['qr', 'chef', 'chart'] as const)[i]} class="size-4 text-green-deep" />
               {label}
             </li>
           ))}
