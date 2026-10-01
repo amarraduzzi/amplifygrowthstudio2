@@ -1,0 +1,83 @@
+---
+import Base from '../../layouts/Base.astro';
+import ChatThread from '../ChatThread.astro';
+import WaButton from '../WaButton.astro';
+import Proof from '../Proof.astro';
+import FinalCta from '../FinalCta.astro';
+import Ph from '../Ph.astro';
+import Mark from '../Mark.astro';
+import { SITE, CONTACT } from '../../config';
+import { copy } from '../../i18n';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy(lang);
+const c = t.home;
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE.url}/#org`, name: SITE.name, url: SITE.url,
+    logo: abs('/favicon.svg'), email: CONTACT.email, telephone: `+${CONTACT.whatsapp}` },
+  { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: abs(ROUTES.home[lang]), inLanguage: lang },
+];
+---
+<Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
+  <section class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-12 sm:px-6 md:grid-cols-[1.2fr_0.8fr] md:pt-20">
+    <div>
+      <h1 class="text-[2.6rem] sm:text-4xl lg:text-5xl">{c.hero.h1}</h1>
+      <p class="measure mt-6 text-lg text-muted">{c.hero.lead}</p>
+      <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+        <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="px-7 text-lg" />
+        <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-navy/25 px-7 text-lg hover:border-navy">{t.ui.demo}</a>
+      </div>
+    </div>
+    <ChatThread lang={lang} message={c.wa} reply={c.hero.reply} />
+  </section>
+
+  <section class="border-y border-line bg-paper">
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+      <h2 class="text-2xl md:text-3xl">{c.pains.h2}</h2>
+      <ul class="mt-10 divide-y divide-line border-t border-line">
+        {c.pains.items.map(([q, a]) => (
+          <li class="grid gap-3 py-7 md:grid-cols-[1.1fr_1fr] md:gap-12">
+            <p class="text-xl font-medium leading-snug md:text-2xl">{q}</p>
+            <p class="flex gap-3 text-muted md:pt-1"><span class="mt-2.5 h-0.5 w-6 shrink-0 bg-green" aria-hidden="true"></span>{a}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+    <h2 class="text-2xl md:text-3xl">{c.paths.h2}</h2>
+    <div class="mt-10 grid gap-5 md:grid-cols-[7fr_5fr]">
+      <a href={ROUTES.systems[lang]} class="group relative flex min-h-80 flex-col justify-end overflow-hidden rounded-[2rem] bg-navy p-8 text-white md:p-10">
+        <Mark class="absolute -end-8 -top-6 h-44 w-56 opacity-15" bars="#FFFFFF" id="p1" />
+        <h3 class="text-3xl">{c.paths.systems.h3}</h3>
+        <p class="mt-3 max-w-md text-white/75">{c.paths.systems.p}</p>
+        <span class="mt-6 font-medium text-green underline-offset-4 group-hover:underline">{c.paths.systems.link}</span>
+      </a>
+      <a href={ROUTES.marketing[lang]} class="group flex min-h-80 flex-col justify-end rounded-[2rem] border border-line bg-paper p-8 md:p-10">
+        <h3 class="text-3xl">{c.paths.marketing.h3}</h3>
+        <p class="mt-3 text-muted">{c.paths.marketing.p}</p>
+        <span class="mt-6 font-medium text-green-deep underline-offset-4 group-hover:underline">{c.paths.marketing.link}</span>
+      </a>
+    </div>
+  </section>
+
+  <Proof h2={c.proof.h2} p={c.proof.p} ph={c.proof.ph} />
+
+  <section class="border-t border-line bg-paper">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-20 sm:px-6 md:grid-cols-[1fr_2fr]">
+      <h2 class="text-2xl md:text-3xl">{c.steps.h2}</h2>
+      <ol class="space-y-10">
+        {c.steps.items.map(([h, p], i) => (
+          <li class="grid grid-cols-[3rem_1fr] gap-4">
+            <span class="grid size-12 place-items-center rounded-full border-2 border-green text-lg font-semibold text-green-deep" aria-hidden="true">{i + 1}</span>
+            <div><h3 class="text-xl">{h}</h3><p class="measure mt-2 text-muted"><Ph value={p} /></p></div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <FinalCta lang={lang} page="home" h2={c.final.h2} p={c.final.p} wa={c.wa} />
+</Base>

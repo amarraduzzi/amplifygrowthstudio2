@@ -1,0 +1,64 @@
+---
+import Base from '../../layouts/Base.astro';
+import WaButton from '../WaButton.astro';
+import Ph from '../Ph.astro';
+import { CONTACT, isPlaceholder } from '../../config';
+import { copy } from '../../i18n';
+import type { Lang } from '../../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy(lang);
+const c = t.contact;
+const f = c.form;
+---
+<Base lang={lang} page="contact" title={c.meta.title} description={c.meta.description} wa={c.wa}>
+  <section class="mx-auto max-w-6xl px-4 pb-12 pt-12 sm:px-6 md:pt-20">
+    <h1 class="text-[2.4rem] sm:text-4xl lg:text-5xl">{c.hero.h1}</h1>
+    <p class="measure mt-6 text-lg text-muted">{c.hero.lead}</p>
+    <WaButton text={c.wa} label={t.ui.whatsapp} where="contact-hero" class="mt-9 px-7 text-lg" />
+  </section>
+
+  <section class="mx-auto grid max-w-6xl gap-10 px-4 pb-24 sm:px-6 md:grid-cols-[1.2fr_1fr]">
+    <form id="wa-form" class="rounded-[2rem] border border-line bg-paper p-6 md:p-10" data-template={f.template} data-number={CONTACT.whatsapp}>
+      <h2 class="text-2xl">{f.h2}</h2>
+      <p class="mt-2 text-muted">{f.p}</p>
+      <div class="mt-8 grid gap-5">
+        <label class="grid gap-2"><span class="font-medium">{f.name}</span>
+          <input name="name" required autocomplete="given-name" class="min-h-12 rounded-xl border border-line bg-chalk px-4" /></label>
+        <label class="grid gap-2"><span class="font-medium">{f.type}</span>
+          <select name="type" class="min-h-12 rounded-xl border border-line bg-chalk px-4">{f.types.map(x => <option>{x}</option>)}</select></label>
+        <label class="grid gap-2"><span class="font-medium">{f.city}</span>
+          <input name="city" value={f.cityDefault} autocomplete="address-level2" class="min-h-12 rounded-xl border border-line bg-chalk px-4" /></label>
+        <button type="submit" class="mt-2 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-medium text-navy hover:bg-[#04A859]">{f.send}</button>
+      </div>
+    </form>
+
+    <div>
+      <h2 class="text-2xl">{c.details.h2}</h2>
+      <dl class="mt-6 divide-y divide-line border-y border-line">
+        <div class="py-4"><dt class="text-sm text-muted">{c.details.phone}</dt><dd><a href={`tel:+${CONTACT.whatsapp}`} dir="ltr" class="text-lg hover:text-green-deep">{CONTACT.phoneDisplay}</a></dd></div>
+        <div class="py-4"><dt class="text-sm text-muted">{c.details.email}</dt><dd><a href={`mailto:${CONTACT.email}`} class="text-lg hover:text-green-deep">{CONTACT.email}</a></dd></div>
+        <div class="py-4"><dt class="text-sm text-muted">{c.details.address}</dt><dd class="text-lg"><Ph value={CONTACT.street} />, {CONTACT.city}</dd></div>
+        <div class="py-4"><dt class="text-sm text-muted">{c.details.hours}</dt><dd class="text-lg"><Ph value={CONTACT.hours} /></dd></div>
+      </dl>
+      {isPlaceholder(CONTACT.mapsUrl)
+        ? <p class="mt-5"><Ph value={CONTACT.mapsUrl} /></p>
+        : <a href={CONTACT.mapsUrl} target="_blank" rel="noopener" class="mt-5 inline-block font-medium text-green-deep underline underline-offset-4">{c.details.map}</a>}
+    </div>
+  </section>
+
+  <script>
+    // Builds the WhatsApp message from three fields. Nothing is sent to a server.
+    const form = document.getElementById('wa-form') as HTMLFormElement;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const d = new FormData(form);
+      const text = (form.dataset.template ?? '')
+        .replace('{name}', String(d.get('name') ?? '').trim())
+        .replace('{type}', String(d.get('type') ?? '').toLowerCase())
+        .replace('{city}', String(d.get('city') ?? '').trim() || 'Rabat');
+      (window as any).dataLayer?.push({ event: 'whatsapp_click', where: 'contact-form', lang: document.documentElement.lang });
+      window.open(`https://wa.me/${form.dataset.number}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    });
+  </script>
+</Base>

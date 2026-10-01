@@ -1,0 +1,18 @@
+---
+import WaButton from './WaButton.astro';
+import { SITE } from '../config';
+import { copy } from '../i18n';
+import type { Lang, PageKey } from '../i18n/routes';
+interface Props { lang: Lang; page: PageKey; h1: string; lead: string; wa: string; demo?: boolean }
+const { lang, page, h1, lead, wa, demo = false } = Astro.props;
+const t = copy(lang);
+---
+<section class="mx-auto max-w-6xl px-4 pb-16 pt-12 sm:px-6 md:pt-20">
+  <h1 class="max-w-4xl text-[2.4rem] sm:text-4xl lg:text-5xl">{h1}</h1>
+  <p class="measure mt-6 text-lg text-muted">{lead}</p>
+  <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+    <WaButton text={wa} label={t.ui.whatsapp} where={`${page}-hero`} class="px-7 text-lg" />
+    {demo && <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-navy/25 px-7 text-lg hover:border-navy">{t.ui.demo}</a>}
+  </div>
+  <slot />
+</section>

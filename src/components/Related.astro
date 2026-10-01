@@ -1,0 +1,8 @@
+---
+// Links to the neighbouring pages, with descriptive anchor text.
+interface Props { links: [string, string][] }
+const { links } = Astro.props;
+---
+<nav class="mx-auto flex max-w-6xl flex-wrap gap-3 px-4 pb-4 sm:px-6" aria-label="Voir aussi">
+  {links.map(([label, href]) => <a href={href} class="rounded-full border border-line bg-paper px-4 py-2 text-[0.95rem] hover:border-navy">{label}</a>)}
+</nav>

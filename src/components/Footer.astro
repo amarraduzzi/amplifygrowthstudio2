@@ -1,0 +1,35 @@
+---
+import Logo from './Logo.astro';
+import Ph from './Ph.astro';
+import { CONTACT, SITE, isPlaceholder } from '../config';
+import { copy } from '../i18n';
+import { ROUTES, type Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy(lang);
+---
+<footer class="bg-navy text-white/80">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
+    <div>
+      <Logo light id="ft" />
+      <p class="mt-4 max-w-xs text-[0.95rem]">{t.ui.footerTagline}</p>
+    </div>
+    <nav class="flex flex-col gap-2 text-[0.95rem]" aria-label="Pages">
+      <a class="hover:text-white" href={ROUTES.systems[lang]}>{t.nav.systems}</a>
+      <a class="hover:text-white" href={ROUTES.marketing[lang]}>{t.nav.marketing}</a>
+      <a class="hover:text-white" href={ROUTES.restaurants[lang]}>{t.nav.restaurants}</a>
+      <a class="hover:text-white" href={ROUTES.contact[lang]}>{t.nav.contact}</a>
+      <a class="hover:text-white" href={SITE.demoUrl} target="_blank" rel="noopener">{t.ui.demo}</a>
+    </nav>
+    <address class="not-italic text-[0.95rem] leading-relaxed">
+      <strong class="font-medium text-white">{SITE.name}</strong><br />
+      <Ph value={CONTACT.street} /><br />
+      {!isPlaceholder(CONTACT.postalCode) && `${CONTACT.postalCode} `}{CONTACT.city}, Maroc<br />
+      <a class="hover:text-white" href={`tel:+${CONTACT.whatsapp}`} dir="ltr">{CONTACT.phoneDisplay}</a><br />
+      <a class="hover:text-white" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+    </address>
+  </div>
+  <div class="border-t border-white/10">
+    <p class="mx-auto max-w-6xl px-4 py-5 text-sm text-white/60 sm:px-6">© {new Date().getFullYear()} {SITE.name}. {t.ui.rights} {t.ui.privacy}</p>
+  </div>
+</footer>

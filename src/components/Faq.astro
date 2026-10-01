@@ -1,0 +1,24 @@
+---
+import Ph from './Ph.astro';
+import { copy } from '../i18n';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang; items: string[][] }
+const { lang, items } = Astro.props;
+const t = copy(lang);
+---
+<section class="mx-auto max-w-6xl px-4 py-20 sm:px-6" aria-labelledby="faq">
+  <div class="grid gap-10 md:grid-cols-[1fr_2fr]">
+    <h2 id="faq" class="text-2xl">{t.ui.faq}</h2>
+    <div class="divide-y divide-line border-y border-line">
+      {items.map(([q, a]) => (
+        <details class="group py-5">
+          <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-medium">
+            {q}
+            <span class="mt-1 grid size-7 shrink-0 place-items-center rounded-full border border-line transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+          </summary>
+          <p class="measure mt-3 text-muted"><Ph value={a} /></p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,6 @@
+---
+// Text where any [PLACEHOLDER IN CAPITALS] is shown as a visible yellow mark until real data arrives.
+interface Props { value: string }
+const parts = Astro.props.value.split(/(\[[^\]]+\])/).filter(Boolean);
+---
+{parts.map(p => /^\[.*\]$/.test(p) ? <span class="ph">{p}</span> : p)}

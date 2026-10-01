@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../PageHero.astro';
+import FeatureList from '../FeatureList.astro';
+import Proof from '../Proof.astro';
+import Faq from '../Faq.astro';
+import FinalCta from '../FinalCta.astro';
+import Related from '../Related.astro';
+import { copy } from '../../i18n';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy(lang);
+const c = t.marketing;
+const schema = [serviceSchema(c.hero.h1, c.meta.description, abs(ROUTES.marketing[lang])), faqSchema(c.faq)].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="marketing" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
+  <PageHero lang={lang} page="marketing" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} />
+
+  <section class="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+    <div class="grid gap-6 md:grid-cols-[1fr_2fr] md:gap-12">
+      <h2 class="text-2xl md:text-3xl">{c.services.h2}</h2>
+      <FeatureList items={c.services.items} />
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-paper">
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
+      <h2 class="text-2xl md:text-3xl">{c.flow.h2}</h2>
+      <ol class="mt-10 grid gap-8 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-start md:gap-4">
+        {c.flow.items.map(([h, p], i) => (
+          <>
+            {i > 0 && <li aria-hidden="true" class="hidden pt-5 text-2xl text-green md:block">›</li>}
+            <li>
+              <span class="text-sm font-medium text-green-deep">{i + 1}</span>
+              <h3 class="mt-1 text-xl">{h}</h3>
+              <p class="mt-2 text-muted">{p}</p>
+            </li>
+          </>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <Proof h2={c.proof.h2} ph={c.proof.ph} />
+  <Related links={[[t.systems.hero.h1, ROUTES.systems[lang]], [t.restaurants.hero.h1, ROUTES.restaurants[lang]], [t.nav.contact, ROUTES.contact[lang]]]} />
+  <Faq lang={lang} items={c.faq} />
+  <FinalCta lang={lang} page="marketing" h2={c.final.h2} p={c.final.p} wa={c.wa} />
+</Base>

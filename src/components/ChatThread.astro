@@ -1,0 +1,27 @@
+---
+// The hero picture: the WhatsApp message the button sends, exactly as written.
+import Mark from './Mark.astro';
+import { copy } from '../i18n';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang; message: string; reply: string }
+const { lang, message, reply } = Astro.props;
+const t = copy(lang);
+---
+<figure class="relative mx-auto w-full max-w-sm">
+  <div class="overflow-hidden rounded-[1.75rem] border border-line bg-paper shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)]">
+    <div class="flex items-center gap-3 bg-navy px-4 py-3 text-white">
+      <span class="grid size-10 place-items-center rounded-full bg-white"><Mark class="h-5 w-7" id="ch" /></span>
+      <span class="leading-tight"><span class="block font-medium">Amplify Growth Studio</span><span class="text-sm text-white/65">Rabat</span></span>
+    </div>
+    <div class="space-y-3 bg-[#EEF3EF] px-4 py-6" aria-label="WhatsApp">
+      <p class="chat-in ms-auto max-w-[85%] rounded-2xl rounded-se-md bg-mint px-3.5 py-2.5 text-[0.95rem] leading-snug text-navy" style="--d:150ms">
+        <span class="sr-only">{t.ui.chatYou} : </span>{message}
+        <span class="mt-1 block text-end text-xs text-muted" aria-hidden="true">✓✓</span>
+      </p>
+      <p class="chat-in me-auto max-w-[85%] rounded-2xl rounded-ss-md bg-paper px-3.5 py-2.5 text-[0.95rem] leading-snug text-navy" style="--d:900ms">
+        <span class="sr-only">{t.ui.chatUs} : </span>{reply}
+      </p>
+    </div>
+  </div>
+  <figcaption class="mt-4 px-2 text-sm text-muted">{t.ui.chatNote}</figcaption>
+</figure>
