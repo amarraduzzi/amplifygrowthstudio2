@@ -1,0 +1,89 @@
+---
+// "Dès 199 DH, tout compris": one big price, the included features as pills, and a small
+// calculator: tick what you need, see the plan and its price. Nothing else to pay.
+import Icon from './Icon.astro';
+import { signupUrl } from '../config';
+import { posFr } from '../i18n/products-fr';
+interface Props { lang?: string }
+const lang = Astro.props.lang ?? 'fr';
+const a = posFr.allin;
+const plans = Object.fromEntries(posFr.pricing.plans.map(p => [p.name, p]));
+---
+<div class="grid gap-5 lg:grid-cols-[1.1fr_1fr]" data-pricebuilder data-plans={JSON.stringify(plans)} data-signup={signupUrl(lang)} data-signup-profit={signupUrl(lang, 'profit')}>
+  <!-- the anchor -->
+  <div class="relative overflow-hidden rounded-[2rem] bg-navy p-7 text-white sm:p-10">
+    <p class="text-sm font-semibold text-green">Amplify POS</p>
+    <p class="mt-3 flex flex-wrap items-baseline gap-x-3">
+      <span class="text-lg text-white/60">{a.from}</span>
+      <span class="display text-[5.5rem] leading-none sm:text-[7rem]" dir="ltr">199</span>
+      <span class="text-lg text-white/70">{a.per}</span>
+    </p>
+    <p class="display mt-2 text-5xl text-green sm:text-6xl">{a.title}</p>
+    <p class="mt-4 max-w-md text-white/70">{a.sub}</p>
+    <ul class="mt-6 grid gap-2 sm:grid-cols-2">
+      {a.items.map((it, k) => (
+        <li class="pill-in flex items-center justify-between gap-3 rounded-xl bg-white/5 px-3.5 py-2.5 ring-1 ring-white/10" style={`--d:${k * 70}ms`}>
+          <span class="text-[0.95rem]">{it}</span>
+          <span class="shrink-0 rounded-full bg-green px-2.5 py-0.5 text-xs font-bold text-navy">{a.included}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+
+  <!-- the calculator -->
+  <form class="flex flex-col rounded-[2rem] bg-paper p-6 ring-1 ring-line sm:p-8" onsubmit="return false">
+    <h3 class="text-2xl">{a.calc.title}</h3>
+    <p class="mt-1 text-muted">{a.calc.text}</p>
+    <div class="mt-5 grid gap-2">
+      {a.calc.needs.map(([key, label]) => (
+        <label class="need flex cursor-pointer items-center gap-3 rounded-xl bg-chalk px-4 py-3 ring-1 ring-line transition-colors has-[:checked]:bg-mint has-[:checked]:ring-green">
+          <input type="checkbox" name={key} checked={key === 'caisse'} class="size-5 shrink-0 accent-[#00804A]" />
+          <span class="font-medium">{label}</span>
+        </label>
+      ))}
+    </div>
+    <div class="mt-5 flex flex-1 flex-col justify-end">
+      <div class="rounded-2xl bg-navy p-5 text-white" aria-live="polite">
+        <p class="text-sm text-white/60">{a.calc.result}</p>
+        <div class="flex flex-wrap items-baseline justify-between gap-2">
+          <p class="pb-name display text-4xl">Essentiel</p>
+          <p><span class="pb-price display text-5xl text-green" dir="ltr">199</span> <span class="text-sm text-white/60">{a.per}</span></p>
+        </div>
+        <p class="pb-text mt-1 text-sm text-white/70"></p>
+        <p class="pb-empty mt-1 hidden text-sm text-[#F5B301]">{a.calc.empty}</p>
+      </div>
+      <a href={signupUrl(lang)} class="pb-start mt-3 grid min-h-12 place-items-center rounded-full bg-green font-semibold text-navy hover:bg-[#04A859]">{a.calc.start}</a>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pricebuilder]').forEach((root) => {
+    const plans = JSON.parse(root.dataset.plans!) as Record<string, { name: string; price: string; text: string }>;
+    const form = root.querySelector('form')!;
+    const name = root.querySelector<HTMLElement>('.pb-name')!, price = root.querySelector<HTMLElement>('.pb-price')!;
+    const text = root.querySelector<HTMLElement>('.pb-text')!, empty = root.querySelector<HTMLElement>('.pb-empty')!;
+    const start = root.querySelector<HTMLAnchorElement>('.pb-start')!;
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let shown = 199;
+    const count = (to: number) => {
+      if (still) { price.textContent = String(to); shown = to; return; }
+      const from = shown, t0 = performance.now();
+      const step = (t: number) => { const k = Math.min(1, (t - t0) / 450); price.textContent = String(Math.round(from + (to - from) * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step); shown = to;
+    };
+    const update = () => {
+      const on = (k: string) => (form.elements.namedItem(k) as HTMLInputElement).checked;
+      const till = on('caisse') || on('multi') || on('qr');
+      const gestion = on('stock') || on('marges') || on('equipe');
+      empty.classList.toggle('hidden', till || gestion);
+      if (!till && !gestion) return;
+      // which plan covers the needs
+      const plan = till && gestion ? plans['Contrôle'] : gestion ? plans['Profit'] : (on('multi') || on('qr')) ? plans['Restaurant'] : plans['Essentiel'];
+      name.textContent = plan.name; text.textContent = plan.text; count(Number(plan.price));
+      start.href = !till && gestion ? root.dataset.signupProfit! : root.dataset.signup!;
+    };
+    form.addEventListener('change', update);
+    update();
+  });
+</script>

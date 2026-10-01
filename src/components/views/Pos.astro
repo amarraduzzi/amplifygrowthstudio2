@@ -7,6 +7,7 @@ import Icon from '../Icon.astro';
 import OfflineDemo from '../OfflineDemo.astro';
 import TryIt from '../TryIt.astro';
 import Pricing from '../Pricing.astro';
+import PriceBuilder from '../PriceBuilder.astro';
 import Faq from '../Faq.astro';
 import { SITE, signupUrl } from '../../config';
 import { copy } from '../../i18n';
@@ -102,11 +103,8 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
   <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6">
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.pricing.title}</h2>
     <p class="mt-4 max-w-2xl text-muted">{p.pricing.note}</p>
-    <div class="mt-12"><Pricing plans={p.pricing.plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.popular} lang={lang} /></div>
-    <div class="mt-8 grid gap-6 rounded-[1.75rem] bg-paper p-6 ring-1 ring-line md:grid-cols-[1fr_1.4fr] md:p-8">
-      <div><h3 class="text-2xl">{p.pricing.included.title}</h3><p class="mt-2 text-muted">{p.pricing.included.text}</p></div>
-      <ul class="grid gap-2 sm:grid-cols-2">{p.pricing.included.items.map(it => <li class="flex gap-2"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green-deep" />{it}</li>)}</ul>
-    </div>
+    <div class="mt-12"><PriceBuilder lang={lang} /></div>
+    <div class="mt-5"><Pricing plans={p.pricing.plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.popular} lang={lang} /></div>
   </section>
 
   <Faq lang={lang} items={p.faq.items} />

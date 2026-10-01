@@ -165,7 +165,7 @@ export const fr = {
         { h: 'Faire revenir', p: 'Points de fidélité, avis Google sur le ticket, offres WhatsApp aux clients d’accord. Et la boucle recommence.', tags: ['Fidélité', 'Avis Google'], link: 'marketing', icon: 'check' },
       ] as { h: string; p: string; tags: string[]; link: 'marketing' | 'pos' | 'profit'; icon: 'megaphone' | 'qr' | 'till' | 'chart' | 'check' }[],
       more: 'En savoir plus',
-      three: [['Amplify POS', 'La caisse, dès 199 DH HT / mois', 'pos'], ['Amplify Profit', 'Les marges, dès 249 DH HT / mois', 'profit'], ['Marketing', 'Site, WhatsApp, Google, sur devis', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
+      three: [['Amplify POS', 'La caisse, dès 199 DH HT / mois, tout compris', 'pos'], ['Amplify Profit', 'Les marges, dès 249 DH HT / mois', 'profit'], ['Marketing', 'Site, WhatsApp, Google, sur devis', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
     },
     paths: {
       h2: 'On pense au-delà de la caisse.',
