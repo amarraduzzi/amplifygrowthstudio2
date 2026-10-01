@@ -31,8 +31,8 @@ export const fr = {
     },
     wa: 'Bonjour, je souhaite en savoir plus sur Amplify pour mon restaurant.',
     hero: {
-      h1: ['Votre restaurant.', 'Mieux géré.', 'Plus rentable.'],
-      lead: 'Caisse, marges et marketing pour restaurants au Maroc. Notre équipe à Rabat passe chez vous.',
+      h1: ['Votre entreprise.', 'Plus simple.', 'Plus rentable.'],
+      lead: 'Systèmes et marketing pour les entreprises au Maroc, en commençant par la restauration. Notre équipe à Rabat passe chez vous.',
       flow: ['Commande reçue', 'Bon envoyé en cuisine', 'Marge calculée'],
       rating: 'sur Google',
       local: 'Équipe basée à Rabat',
@@ -45,7 +45,7 @@ export const fr = {
       phoneAlt: 'Le menu QR sur le téléphone du client : les plats et leurs prix',
     },
     statement: {
-      a: 'Votre restaurant n’a pas besoin de plus d’outils.',
+      a: 'Votre entreprise n’a pas besoin de plus d’outils.',
       b: 'Il a besoin d’outils qui se parlent.',
       p: 'La commande prise à table arrive en cuisine, la vente met à jour votre stock et votre marge, et vos clients reviennent par WhatsApp. Tout est relié.',
       items: [
@@ -69,14 +69,14 @@ export const fr = {
       marketing: ['Marketing', 'Site web, commande WhatsApp, Instagram et fiche Google qui ramènent des clients.'],
     },
     places: {
-      h2a: 'Différents établissements.',
+      h2a: 'Différents métiers.',
       h2b: 'Mêmes problèmes.',
-      p: 'Le problème change de forme, la cause est souvent la même : pas de vue claire sur ce qui se passe.',
+      p: 'Nous commençons par la restauration, mais le problème est souvent le même partout : trop de travail à la main, et pas de vue claire sur ce qui se passe.',
       items: [
-        ['Restaurants', 'Des commandes perdues entre la salle et la cuisine, et une marge qu’on ne connaît pas vraiment.'],
-        ['Cafés', 'Beaucoup de petits tickets, une caisse du soir qui ne tombe pas juste.'],
+        ['Restaurants et cafés', 'Des commandes perdues entre la salle et la cuisine, et une marge qu’on ne connaît pas vraiment.'],
         ['Snacks et fast-food', 'Le rush du midi, l’emporter et la livraison en même temps.'],
-        ['Salons de thé et pâtisseries', 'Un stock qui part vite, des produits qui se perdent.'],
+        ['Commerces', 'Des clients qui ne vous trouvent pas sur Google, et des ventes qu’on suit sur un cahier.'],
+        ['Professions libérales', 'Cabinets, avocats, cliniques : un site qui inspire confiance et des rendez-vous qui arrivent sur WhatsApp.'],
       ],
     },
     proof: {
@@ -119,7 +119,7 @@ export const fr = {
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. La gestion des marges, du stock et de l’équipe fonctionne aussi sans notre caisse.'],
       ['Vous travaillez seulement à Rabat ?', 'Notre équipe est à Rabat. Pour le reste du Maroc, écrivez-nous et nous voyons ensemble comment faire.'],
     ],
-    final: { h2: 'Parlons de votre restaurant.', p: 'Un message suffit. Nous répondons directement sur WhatsApp.' },
+    final: { h2: 'Parlons de votre entreprise.', p: 'Un message suffit. Nous répondons directement sur WhatsApp.' },
     footerLine: 'Un seul partenaire pour vendre plus.',
   },
 

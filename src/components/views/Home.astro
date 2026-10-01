@@ -23,7 +23,7 @@ const schema = [
 ].filter(Boolean) as Record<string, unknown>[];
 const ICONS = ['till', 'chef', 'qr', 'chart', 'megaphone'] as const;
 const TILE = ['bg-green text-navy', 'bg-blue text-white', 'bg-mint text-navy', 'bg-navy text-green', 'bg-paper text-navy ring-1 ring-line'];
-const PLACE_ICONS = ['store', 'cup', 'bag', 'cake'] as const;
+const PLACE_ICONS = ['cup', 'bag', 'store', 'briefcase'] as const;
 const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [1600, 937], cuisine: [1600, 937], marges: [1400, 714], 'menu-qr': [780, 1688] };
 ---
 <Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
@@ -34,7 +34,7 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
     <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-14 pt-10 sm:px-6 md:grid-cols-[1fr_1.05fr] md:items-center md:pt-14 lg:gap-12">
       <div>
         <h1 class="text-[clamp(3rem,5.6vw,5.4rem)]">{c.hero.h1.map((l, i) => <span class={`block whitespace-nowrap ${i === 2 ? 'text-green-deep' : ''}`}>{l}</span>)}</h1>
-        <p class="mt-5 max-w-md text-xl leading-snug text-muted">{c.hero.lead}</p>
+        <p class="mt-5 max-w-xl text-xl leading-snug text-muted">{c.hero.lead}</p>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="px-7 text-lg" />
           <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-navy/25 px-7 text-lg hover:border-navy">{t.ui.demo}</a>

@@ -1,5 +1,5 @@
 ---
-interface Props { name: 'till' | 'chef' | 'qr' | 'chart' | 'megaphone' | 'store' | 'cup' | 'bag' | 'cake' | 'check'; class?: string }
+interface Props { name: 'till' | 'chef' | 'qr' | 'chart' | 'megaphone' | 'store' | 'cup' | 'bag' | 'cake' | 'check' | 'briefcase'; class?: string }
 const { name, class: cls = 'size-6' } = Astro.props;
 const P: Record<string, string> = {
   till: 'M4 10h16v10H4zM7 10V5h10v5M8 14h2M14 14h2M8 17h8',
@@ -12,6 +12,7 @@ const P: Record<string, string> = {
   bag: 'M5 8h14l-1 12H6zM9 8V6a3 3 0 0 1 6 0v2',
   cake: 'M4 20h16M5 20v-7h14v7M5 16c2 1.5 4 1.5 7 0s5-1.5 7 0M12 13V9M12 6v.5',
   check: 'M5 12l4 4 10-10',
+  briefcase: 'M3 8h18v11H3zM8 8V5h8v3M3 13h18M11 12h2v2h-2z',
 };
 ---
 <svg viewBox="0 0 24 24" class={cls} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={P[name]} /></svg>

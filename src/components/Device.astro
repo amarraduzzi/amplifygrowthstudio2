@@ -1,12 +1,27 @@
 ---
-// A real screenshot in a tablet or phone frame.
-interface Props { src: string; alt: string; kind?: 'tablet' | 'phone'; class?: string; w: number; h: number; eager?: boolean }
-const { src, alt, kind = 'tablet', class: cls = '', w, h, eager = false } = Astro.props;
+// A real screenshot in a tablet frame or an iPhone-style frame.
+interface Props { src: string; alt: string; kind?: 'tablet' | 'phone'; class?: string; w: number; h: number; eager?: boolean; screenBg?: string }
+const { src, alt, kind = 'tablet', class: cls = '', w, h, eager = false, screenBg = '#FAF8F3' } = Astro.props;
 ---
 {kind === 'tablet'
   ? <div class={`rounded-[1.6rem] bg-[#0B1422] p-2.5 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)] ring-1 ring-white/10 ${cls}`}>
       <img src={src} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" class="block h-auto w-full rounded-[1.1rem]" />
     </div>
-  : <div class={`rounded-[2.2rem] bg-[#0B1422] p-2 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)] ring-1 ring-white/10 ${cls}`}>
-      <img src={src} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" class="block h-auto w-full rounded-[1.8rem]" />
+  : <div class={`${cls}`}>
+      <!-- titanium edge, black bezel, side buttons, Dynamic Island -->
+      <div class="relative rounded-[18%/8.5%] bg-gradient-to-b from-[#3A3F47] via-[#1C1F24] to-[#3A3F47] p-[2.2%] shadow-[0_30px_60px_-20px_rgba(0,0,0,0.65)]">
+        <span class="absolute -start-[1.6%] top-[18%] h-[5%] w-[1.6%] rounded-s-sm bg-[#2A2E35]" aria-hidden="true"></span>
+        <span class="absolute -start-[1.6%] top-[26%] h-[9%] w-[1.6%] rounded-s-sm bg-[#2A2E35]" aria-hidden="true"></span>
+        <span class="absolute -end-[1.6%] top-[24%] h-[13%] w-[1.6%] rounded-e-sm bg-[#2A2E35]" aria-hidden="true"></span>
+        <div class="rounded-[16%/7.6%] bg-black p-[3.2%]">
+          <div class="relative overflow-hidden rounded-[13%/6.2%]" style={`background:${screenBg}`}>
+            <div class="flex h-[1.6em] items-center justify-between px-[9%] text-[clamp(5px,0.55vw,9px)] font-semibold text-black" aria-hidden="true">
+              <span>9:41</span>
+              <span class="flex items-center gap-[0.35em]"><span class="h-[0.7em] w-[1.1em] rounded-[2px] border border-black/80"></span></span>
+            </div>
+            <span class="absolute start-1/2 top-[0.45em] h-[1.05em] w-[30%] -translate-x-1/2 rounded-full bg-black text-[clamp(5px,0.55vw,9px)] rtl:translate-x-1/2" aria-hidden="true"></span>
+            <img src={src} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" class="block h-auto w-full" />
+          </div>
+        </div>
+      </div>
     </div>}
