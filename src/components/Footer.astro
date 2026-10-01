@@ -1,40 +1,90 @@
 ---
+// Footer: closing line with the two ways to start, the links, and a giant AMPLIFY that fills up
+// with green once it comes into view, with the logo's sound bars rising behind it.
 import Logo from './Logo.astro';
-import Ph from './Ph.astro';
+import WaButton from './WaButton.astro';
 import { CONTACT, SITE, isPlaceholder, loginUrl, signupUrl } from '../config';
 import { copy } from '../i18n';
 import { ROUTES, type Lang } from '../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
+const f = t.ui.footer;
+const H = [22, 40, 64, 92, 70, 48, 30, 56, 82, 60, 38, 26, 50, 86, 66, 44, 32, 58, 90, 74, 52, 34, 24, 46, 72, 94, 62, 40, 28, 54, 80, 58];
+const cols = [
+  { h: f.cols.products, links: [[t.nav.pos, ROUTES.pos[lang]], [t.nav.profit, ROUTES.profit[lang]], [t.nav.features, ROUTES.features[lang]], [f.pricing, `${ROUTES.pos[lang]}#tarifs`]] },
+  { h: f.cols.services, links: [[t.nav.systems, ROUTES.systems[lang]], [t.nav.marketing, ROUTES.marketing[lang]], [t.nav.restaurants, ROUTES.restaurants[lang]]] },
+  { h: f.cols.company, links: [[t.nav.contact, ROUTES.contact[lang]], [t.nav.login, loginUrl(lang)], [t.nav.trial, signupUrl(lang)]] },
+];
+const wa = 'Bonjour, je souhaite en savoir plus sur Amplify.';
 ---
-<footer class="bg-navy text-white/80">
-  <div class="mx-auto max-w-6xl px-4 pt-16 sm:px-6"><p class="display max-w-4xl text-6xl text-white sm:text-7xl lg:text-[6.5rem]">{t.home.footerLine}</p></div>
-  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr]">
-    <div>
+<footer class="ft relative isolate overflow-hidden bg-navy text-white/75" data-footer>
+  <!-- closing line + the two ways to start -->
+  <div class="mx-auto flex max-w-6xl flex-col gap-8 px-4 pt-16 sm:px-6 md:pt-20 lg:flex-row lg:items-end lg:justify-between">
+    <p class="display max-w-3xl text-[3.2rem] leading-[0.92] text-white sm:text-7xl lg:text-[5.5rem]">{t.home.footerLine}</p>
+    <div class="flex flex-wrap gap-3 lg:pb-3">
+      <WaButton text={wa} label={t.ui.whatsapp} where="footer" class="px-6" />
+      <a href={signupUrl(lang)} class="inline-flex min-h-12 items-center rounded-full bg-paper px-6 font-semibold text-navy hover:bg-mint">{t.nav.trial}</a>
+    </div>
+  </div>
+
+  <!-- links -->
+  <div class="mx-auto mt-14 grid max-w-6xl gap-x-6 gap-y-10 border-t border-white/10 px-4 pt-12 sm:px-6 grid-cols-2 md:grid-cols-[1.4fr_0.8fr_0.8fr_0.8fr_1.6fr]">
+    <div class="col-span-2 md:col-span-1">
       <Logo light id="ft" />
       <p class="mt-4 max-w-xs text-[0.95rem]">{t.ui.footerTagline}</p>
+      <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="mt-5 inline-flex items-center gap-2 rounded-full bg-white/5 px-3.5 py-2 text-sm ring-1 ring-white/10 hover:bg-white/10">
+        <span class="flex text-[#F5B301]" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-3.5"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
+        <span><strong class="text-white">{CONTACT.googleRating}</strong> {t.home.hero.rating}</span>
+      </a>
     </div>
-    <nav class="flex flex-col gap-2 text-[0.95rem]" aria-label="Pages">
-      <a class="hover:text-white" href={ROUTES.pos[lang]}>{t.nav.pos}</a>
-      <a class="hover:text-white" href={ROUTES.profit[lang]}>{t.nav.profit}</a>
-      <a class="hover:text-white" href={ROUTES.features[lang]}>{t.nav.features}</a>
-      <a class="hover:text-white" href={ROUTES.systems[lang]}>{t.nav.systems}</a>
-      <a class="hover:text-white" href={ROUTES.marketing[lang]}>{t.nav.marketing}</a>
-      <a class="hover:text-white" href={ROUTES.restaurants[lang]}>{t.nav.restaurants}</a>
-      <a class="hover:text-white" href={ROUTES.contact[lang]}>{t.nav.contact}</a>
-      <a class="hover:text-white" href={loginUrl(lang)}>{t.nav.login}</a>
-      <a class="hover:text-white" href={signupUrl(lang)}>{t.nav.trial}</a>
-    </nav>
-    <address class="not-italic text-[0.95rem] leading-relaxed">
-      <strong class="font-medium text-white">{SITE.name}</strong><br />
-      <Ph value={CONTACT.street} /><br />
-      {!isPlaceholder(CONTACT.postalCode) && `${CONTACT.postalCode} `}{CONTACT.city}, Maroc<br />
-      <a class="hover:text-white" href={`tel:+${CONTACT.whatsapp}`} dir="ltr">{CONTACT.phoneDisplay}</a><br />
-      <a class="hover:text-white" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+    {cols.map(col => (
+      <nav aria-label={col.h}>
+        <p class="text-sm font-semibold text-green">{col.h}</p>
+        <ul class="mt-4 space-y-2.5 text-[0.95rem]">{col.links.map(([l, h]) => <li><a href={h} class="ft-link hover:text-white">{l}</a></li>)}</ul>
+      </nav>
+    ))}
+    <address class="col-span-2 not-italic md:col-span-1">
+      <p class="text-sm font-semibold text-green">{f.cols.contact}</p>
+      <ul class="mt-4 space-y-2.5 text-[0.95rem]">
+        <li><a href={`https://wa.me/${CONTACT.whatsapp}`} target="_blank" rel="noopener" class="ft-link hover:text-white" dir="ltr">{CONTACT.phoneDisplay}</a></li>
+        <li><a href={`mailto:${CONTACT.email}`} class="ft-link break-words hover:text-white">{CONTACT.email}</a></li>
+        <li>{!isPlaceholder(CONTACT.street) && <>{CONTACT.street}<br /></>}{!isPlaceholder(CONTACT.postalCode) && `${CONTACT.postalCode} `}{CONTACT.city}, Maroc</li>
+        <li class="flex items-center gap-2 text-white/55"><span class="size-2 rounded-full bg-green ft-pulse"></span>{f.now} <span class="ft-clock tabular-nums text-white" data-tz="Africa/Casablanca">--:--</span></li>
+      </ul>
     </address>
   </div>
-  <div class="border-t border-white/10">
-    <p class="mx-auto max-w-6xl px-4 py-5 text-sm text-white/60 sm:px-6">© {new Date().getFullYear()} {SITE.name}. {t.ui.rights} {t.ui.privacy}</p>
+
+  <!-- the giant wordmark -->
+  <div class="relative mt-14 select-none px-2" aria-hidden="true">
+    <div class="ft-bars absolute inset-x-0 bottom-0 -z-10 flex h-[70%] items-end gap-[1%] px-2">
+      {H.map((h, i) => <span class="ft-bar block flex-1 rounded-t-full bg-white/[0.06]" style={`height:${h}%;--d:${i * 22}ms`}></span>)}
+    </div>
+    <p class="ft-word display text-center leading-[0.8]" style="font-size:clamp(4.5rem,25.5vw,24rem)">AMPLIFY</p>
+  </div>
+
+  <!-- bottom bar -->
+  <div class="relative border-t border-white/10 bg-navy">
+    <div class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-5 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+      <p>© {new Date().getFullYear()} {SITE.name}. {t.ui.rights} {f.made} {t.ui.privacy}</p>
+      <a href="#main" class="inline-flex items-center gap-2 font-semibold text-white hover:text-green">
+        {f.top}
+        <span class="grid size-8 place-items-center rounded-full bg-white/10" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"/></svg></span>
+      </a>
+    </div>
   </div>
 </footer>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-footer]').forEach((root) => {
+    // live time in Rabat
+    const clock = root.querySelector<HTMLElement>('.ft-clock');
+    const tick = () => { if (clock) clock.textContent = new Intl.DateTimeFormat('fr-MA', { hour: '2-digit', minute: '2-digit', timeZone: clock.dataset.tz }).format(new Date()); };
+    tick(); setInterval(tick, 30000);
+    // the wordmark fills once, when it comes into view
+    const word = root.querySelector('.ft-word');
+    if (!word || !('IntersectionObserver' in window)) { root.classList.add('ft-in'); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); root.classList.add('ft-in'); } }, { threshold: 0.4 });
+    io.observe(word);
+  });
+</script>
