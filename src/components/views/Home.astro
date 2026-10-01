@@ -28,30 +28,48 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
 ---
 <Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
 
-  <!-- HERO: the brand voice on a blue block, the real product on the right -->
-  <section class="relative isolate overflow-hidden bg-blue text-white">
-    <Bars class="absolute inset-x-0 bottom-0 -z-10 h-40 md:h-56" animate />
-    <div class="mx-auto grid max-w-6xl gap-12 px-4 pb-16 pt-10 sm:px-6 md:grid-cols-[0.95fr_1.1fr] md:items-center md:pb-24 md:pt-16">
+  <!-- HERO: light, the promise left, the real product on a mint panel right.
+       One orchestrated moment: an order travels from the QR menu to the kitchen to the margin. -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-14 pt-10 sm:px-6 md:grid-cols-[0.9fr_1.1fr] md:items-center md:pt-14 lg:gap-14">
       <div>
-        <h1 class="text-[4.2rem] sm:text-[5.5rem] lg:text-[7.5rem]"><span class="block">{c.hero.h1a}</span><span class="block text-green">{c.hero.h1b}</span></h1>
-        <p class="measure mt-6 text-lg text-white/80">{c.hero.lead}</p>
+        <h1 class="text-[clamp(3.6rem,8.4vw,7rem)]"><span class="block whitespace-nowrap">{c.hero.h1a}</span><span class="block whitespace-nowrap">{c.hero.h1b}</span></h1>
+        <p class="mt-5 max-w-md text-xl leading-snug text-muted">{c.hero.lead}</p>
         <div class="mt-8 flex flex-col gap-3 sm:flex-row">
           <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="px-7 text-lg" />
-          <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 px-7 text-lg hover:border-white">{t.ui.demo}</a>
+          <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-navy/25 px-7 text-lg hover:border-navy">{t.ui.demo}</a>
         </div>
-      </div>
-      <div class="relative mx-auto w-full max-w-2xl pb-10 md:-me-10 md:pb-0">
-        <Device src="/img/caisse.webp" alt={c.hero.shotAlt} w={1600} h={937} eager class="rotate-[-2deg]" />
-        <Device kind="phone" src="/img/menu-qr.webp" alt={c.hero.phoneAlt} w={780} h={1688} eager class="absolute -bottom-2 end-[-4%] w-[30%] rotate-[4deg] md:-bottom-16" />
-        <ul class="pointer-events-none absolute -top-5 start-[-3%] flex flex-col gap-2 text-sm font-semibold sm:-top-6" aria-hidden="true">
-          {c.hero.pills.map((p, i) => <li class={`chat-in w-fit rounded-full px-3.5 py-1.5 shadow-lg ${i === 0 ? 'bg-green text-navy' : i === 1 ? 'bg-paper text-navy' : 'bg-mint text-navy'}`} style={`--d:${600 + i * 250}ms;margin-inline-start:${i * 1.2}rem`}>{p}</li>)}
+        <ul class="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.95rem]">
+          <li>
+            <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:underline">
+              <span class="flex text-[#F5B301]" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-4"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
+              <span><strong class="font-semibold">{CONTACT.googleRating}</strong> {c.hero.rating}</span>
+            </a>
+          </li>
+          <li class="flex items-center gap-2 text-muted"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{c.hero.local}</li>
         </ul>
       </div>
+
+      <div class="relative isolate flex flex-col justify-center overflow-hidden rounded-[2.25rem] bg-mint px-5 pb-12 pt-16 sm:px-8 md:self-stretch md:pb-16 md:pt-20">
+        <Bars class="absolute inset-x-0 bottom-0 -z-10 h-24" color="rgba(5,185,98,0.13)" />
+        <div class="relative pe-[18%]">
+          <Device src="/img/caisse.webp" alt={c.hero.shotAlt} w={1600} h={937} eager />
+          <Device kind="phone" src="/img/menu-qr.webp" alt={c.hero.phoneAlt} w={780} h={1688} eager class="absolute -bottom-8 end-0 w-[30%] rotate-[3deg]" />
+        </div>
+        <ol class="pointer-events-none text-sm font-semibold" aria-label="Commande">
+          {c.hero.flow.map((label, i) => (
+            <li class={`chat-in absolute flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-navy shadow-[0_12px_30px_-12px_rgba(0,30,62,0.45)] ${['bottom-[34%] end-[3%]', 'top-5 start-6', 'bottom-4 start-6'][i]}`} style={`--d:${500 + i * 800}ms`}>
+              <span class={`grid size-7 place-items-center rounded-full ${['bg-blue text-white', 'bg-navy text-green', 'bg-green text-navy'][i]}`}><Icon name={(['qr', 'chef', 'chart'] as const)[i]} class="size-4" /></span>
+              {label}
+            </li>
+          ))}
+        </ol>
+      </div>
     </div>
-    <div class="border-t border-white/10">
-      <dl class="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:grid-cols-3 sm:px-6">
+    <div class="border-y border-line bg-paper">
+      <dl class="mx-auto grid max-w-6xl gap-6 px-4 py-7 sm:grid-cols-3 sm:px-6">
         {c.hero.facts.map(([n, l]) => (
-          <div class="flex items-baseline gap-4"><dt class="display text-6xl text-green">{n}</dt><dd class="max-w-[14rem] text-[0.95rem] leading-snug text-white/75">{l}</dd></div>
+          <div class="flex items-center gap-4"><dt class="display text-6xl text-navy">{n}</dt><dd class="max-w-[14rem] text-[0.95rem] leading-snug text-muted">{l}</dd></div>
         ))}
       </dl>
     </div>

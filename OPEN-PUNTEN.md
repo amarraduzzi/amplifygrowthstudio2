@@ -8,7 +8,7 @@ Alles staat in `src/config.ts` (contact) en `src/i18n/fr.ts` (teksten). Placehol
 | E-mail | config.ts `email` | Voorlopig Gmail, later adres op het eigen domein |
 | Adres en postcode (zelfde als Google Bedrijfsprofiel) | config.ts `street`, `postalCode` | Open |
 | Openingstijden | config.ts `hours` | Open |
-| Link Google Maps en Google Bedrijfsprofiel | config.ts `mapsUrl`, `googleProfileUrl` | Open |
+| Link Google Maps | config.ts `mapsUrl` | Open (Bedrijfsprofiel-link staat erin) |
 | Doorlooptijd installatie | fr.ts (home stap 3, FAQ Systèmes) | Open, alleen invullen als bevestigd |
 | Cases met echte cijfers en toestemming | fr.ts `proof` (home, marketing, restaurants) | Open |
 | Analytics-ID en Search Console | Base.astro | Open (WhatsApp-klikken worden al als event klaargezet) |

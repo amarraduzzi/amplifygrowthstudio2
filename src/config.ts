@@ -25,7 +25,9 @@ export const CONTACT = {
   postalCode: '[CODE POSTAL]',
   country: 'MA',
   mapsUrl: '[LIEN GOOGLE MAPS]',
-  googleProfileUrl: '[LIEN FICHE GOOGLE]',
+  /** Google Business Profile (share link from Amar). Rating shown only as stated: 5,0. */
+  googleProfileUrl: 'https://share.google/4xvWYbcSjUe3S8w2E',
+  googleRating: '5,0',
   hours: '[HORAIRES À COMPLÉTER]',
 };
 

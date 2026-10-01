@@ -33,8 +33,10 @@ export const fr = {
     hero: {
       h1a: 'Gérez mieux.',
       h1b: 'Gagnez plus.',
-      lead: 'Amplify Growth Studio installe la caisse, le suivi des marges et le marketing dont un restaurant a besoin au Maroc. Une équipe à Rabat qui vient chez vous.',
-      pills: ['Bon envoyé en cuisine', 'Commande client à accepter', 'Marge par plat'],
+      lead: 'Caisse, marges et marketing pour restaurants au Maroc. Notre équipe à Rabat passe chez vous.',
+      flow: ['Commande reçue', 'Bon envoyé en cuisine', 'Marge calculée'],
+      rating: 'sur Google',
+      local: 'Équipe basée à Rabat',
       facts: [
         ['0 %', 'de commission sur vos commandes directes'],
         ['3', 'langues pour votre menu : français, arabe, anglais'],
