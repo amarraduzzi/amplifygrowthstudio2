@@ -21,8 +21,8 @@ const schema = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: abs(ROUTES.home[lang]), inLanguage: lang },
   faqSchema(c.faq),
 ].filter(Boolean) as Record<string, unknown>[];
-const ICONS = ['till', 'chef', 'qr', 'chart', 'megaphone'] as const;
-const TILE = ['bg-green text-navy', 'bg-blue text-white', 'bg-mint text-navy', 'bg-navy text-green', 'bg-paper text-navy ring-1 ring-line'];
+const ICONS = ['qr', 'till', 'chef', 'chart', 'megaphone'] as const;
+const TILE = ['bg-blue text-white', 'bg-navy text-green', 'bg-green text-navy', 'bg-navy text-white', 'bg-green-deep text-white'];
 const PLACE_ICONS = ['cup', 'bag', 'store', 'briefcase'] as const;
 const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [1600, 937], cuisine: [1600, 937], marges: [1400, 714], 'menu-qr': [780, 1688] };
 ---
@@ -111,19 +111,28 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
     </div>
   </section>
 
-  <!-- STATEMENT -->
+  <!-- STATEMENT: the second line fills in as you scroll; the five steps get connected by a line that grows with the scroll -->
   <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-    <h2 class="text-center text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[5.5rem]"><span class="block">{c.statement.a}</span><span class="fade-2 block">{c.statement.b}</span></h2>
+    <h2 class="text-center text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[5.5rem]" data-scrub="words">
+      <span class="block">{c.statement.a}</span>
+      <span class="block">{c.statement.b.split(' ').map((w, i) => <><span class="word">{w}</span>{' '}</>)}</span>
+    </h2>
     <p class="mx-auto mt-8 max-w-2xl text-center text-lg text-muted">{c.statement.p}</p>
-    <ul class="mt-14 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+
+    <ol class="relative mx-auto mt-14 grid max-w-md gap-7 lg:max-w-none lg:grid-cols-5 lg:gap-3" data-scrub="steps">
+      <!-- the connecting line: vertical on phones, horizontal on desktop -->
+      <span class="absolute start-[1.375rem] top-[1.375rem] bottom-[1.375rem] w-[3px] -translate-x-1/2 rounded-full bg-line lg:hidden rtl:translate-x-1/2" aria-hidden="true"><span class="flow-y block size-full rounded-full bg-green"></span></span>
+      <span class="absolute top-[1.375rem] hidden h-[3px] -translate-y-1/2 rounded-full bg-line lg:block" style="inset-inline-start:1.375rem;inset-inline-end:calc((100% - 3rem) / 5 - 1.375rem)" aria-hidden="true"><span class="flow-x block size-full rounded-full bg-green"></span></span>
       {c.statement.items.map(([h, p], i) => (
-        <li class="rounded-2xl border border-line bg-paper p-5">
-          <span class={`grid size-11 place-items-center rounded-xl ${TILE[i]}`}><Icon name={ICONS[i]} /></span>
-          <h3 class="mt-4 text-lg">{h}</h3>
-          <p class="mt-1 text-[0.95rem] leading-snug text-muted">{p}</p>
+        <li class="step relative grid grid-cols-[2.75rem_1fr] items-start gap-4 lg:block" style={`--i:${i}`}>
+          <span class={`node relative z-10 grid size-11 place-items-center rounded-full ring-4 ring-chalk transition-all duration-500 ${TILE[i]}`}><Icon name={ICONS[i]} /></span>
+          <div class="lg:mt-5 lg:pe-4">
+            <h3 class="text-xl">{h}</h3>
+            <p class="mt-1 text-[0.95rem] leading-snug text-muted">{p}</p>
+          </div>
         </li>
       ))}
-    </ul>
+    </ol>
   </section>
 
   <!-- TOUR: real screenshots -->

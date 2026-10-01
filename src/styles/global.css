@@ -71,3 +71,17 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
   .bar-rise { animation: bar-rise .9s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); transform-origin: bottom; }
   @keyframes bar-rise { from { transform: scaleY(.1); } }
 }
+
+/* Scroll-linked pieces (data-scrub). --p goes from 0 to 1 while the block passes through the screen.
+   Without JavaScript or with reduced motion everything shows its final state. */
+[data-scrub] { --p: 1; }
+.js [data-scrub] { --p: 0; }
+.word { transition: color .35s ease; }
+.js [data-scrub="words"] .word:not(.on) { color: color-mix(in srgb, currentColor 30%, transparent); }
+.flow-y { transform-origin: top; transform: scaleY(var(--p)); }
+.flow-x { transform-origin: left; transform: scaleX(var(--p)); }
+[dir="rtl"] .flow-x { transform-origin: right; }
+.js .step:not(.on) .node { background: var(--color-paper); color: var(--color-muted); box-shadow: inset 0 0 0 1px var(--color-line); transform: scale(.92); }
+.js .step:not(.on) h3 { color: var(--color-muted); }
+.step h3 { transition: color .4s ease; }
+@media (prefers-reduced-motion: reduce) { .js [data-scrub] { --p: 1; } .js .word, .js .step .node { color: inherit; } }

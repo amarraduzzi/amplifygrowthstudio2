@@ -48,14 +48,14 @@ export const fr = {
     },
     statement: {
       a: 'Votre entreprise n’a pas besoin de plus d’outils.',
-      b: 'Il a besoin d’outils qui se parlent.',
-      p: 'La commande prise à table arrive en cuisine, la vente met à jour votre stock et votre marge, et vos clients reviennent par WhatsApp. Tout est relié.',
+      b: 'Elle a besoin d’outils qui se parlent.',
+      p: 'Suivez une commande : chaque étape alimente la suivante, sans rien ressaisir.',
       items: [
-        ['Caisse', 'Tables, emporter, livraison'],
-        ['Cuisine', 'Bons imprimés ou à l’écran'],
-        ['Menu QR', 'Commande depuis la table'],
-        ['Marges', 'Ce que rapporte chaque plat'],
-        ['Marketing', 'Site, WhatsApp, Google'],
+        ['Menu QR', 'Le client commande depuis sa table.'],
+        ['Caisse', 'La commande arrive à la caisse, prête à encaisser.'],
+        ['Cuisine', 'Le bon part en cuisine, imprimé ou à l’écran.'],
+        ['Marges', 'Le stock et la marge se mettent à jour.'],
+        ['Marketing', 'Le client revient par WhatsApp et Google.'],
       ],
     },
     tour: {

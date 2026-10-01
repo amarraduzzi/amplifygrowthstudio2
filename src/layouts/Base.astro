@@ -41,6 +41,7 @@ const ld = [business, ...crumbs, ...schema];
 <html lang={lang} dir={lang === 'ar' ? 'rtl' : 'ltr'}>
 <head>
   <meta charset="utf-8" />
+  <script is:inline>document.documentElement.classList.add('js')</script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
@@ -77,6 +78,27 @@ const ld = [business, ...crumbs, ...schema];
       hide(true);
       new IntersectionObserver(([e]) => hide(e.isIntersecting || e.boundingClientRect.top > 0)).observe(heroCta);
     }
+    // Scroll-linked blocks: --p from 0 (block enters at the bottom) to 1 (block reaches the upper part of the screen).
+    const scrubs = [...document.querySelectorAll<HTMLElement>('[data-scrub]')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (scrubs.length && !still) {
+      let ticking = false;
+      const update = () => {
+        ticking = false;
+        const vh = innerHeight;
+        for (const el of scrubs) {
+          const r = el.getBoundingClientRect();
+          const span = el.dataset.scrub === 'steps' ? r.height * 0.75 + vh * 0.1 : r.height + vh * 0.35;
+          const p = Math.min(1, Math.max(0, (vh * 0.9 - r.top) / span));
+          el.style.setProperty('--p', p.toFixed(3));
+          const parts = el.dataset.scrub === 'words' ? el.querySelectorAll('.word') : el.querySelectorAll('.step');
+          parts.forEach((w, i) => w.classList.toggle('on', p >= (parts.length === 1 ? 0 : i / (parts.length - 1)) * 0.92 + 0.04));
+        }
+      };
+      addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
+      addEventListener('resize', update);
+      update();
+    } else scrubs.forEach(el => el.querySelectorAll('.word, .step').forEach(w => w.classList.add('on')));
     // WhatsApp clicks are the conversion: send them to analytics once it is added (dataLayer / gtag).
     document.addEventListener('click', (e) => {
       const a = (e.target as HTMLElement).closest('a[data-wa]') as HTMLAnchorElement | null;
