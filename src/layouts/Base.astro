@@ -64,11 +64,19 @@ const ld = [business, ...crumbs, ...schema];
   <main id="main"><slot /></main>
   <Footer lang={lang} />
   <!-- on phones the WhatsApp button stays at the bottom of the screen -->
-  <div class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 p-3 backdrop-blur md:hidden">
+  <div id="sticky-wa" class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 p-3 backdrop-blur transition-transform duration-300 md:hidden">
     <WaButton text={wa} label={t.ui.whatsapp} where={`${page}-sticky`} class="w-full" />
   </div>
   <div class="h-20 md:hidden" aria-hidden="true"></div>
   <script>
+    // Phones: the bottom WhatsApp bar only appears once the hero button has scrolled away (no double button).
+    const heroCta = document.getElementById('hero-cta');
+    const bar = document.getElementById('sticky-wa');
+    if (heroCta && bar && 'IntersectionObserver' in window) {
+      const hide = (h: boolean) => { bar.style.transform = h ? 'translateY(110%)' : ''; bar.inert = h; };
+      hide(true);
+      new IntersectionObserver(([e]) => hide(e.isIntersecting || e.boundingClientRect.top > 0)).observe(heroCta);
+    }
     // WhatsApp clicks are the conversion: send them to analytics once it is added (dataLayer / gtag).
     document.addEventListener('click', (e) => {
       const a = (e.target as HTMLElement).closest('a[data-wa]') as HTMLAnchorElement | null;

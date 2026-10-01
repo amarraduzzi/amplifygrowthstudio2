@@ -5,7 +5,10 @@ const { src, alt, kind = 'tablet', class: cls = '', w, h, eager = false, screenB
 ---
 {kind === 'tablet'
   ? <div class={`rounded-[1.6rem] bg-[#0B1422] p-2.5 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)] ring-1 ring-white/10 ${cls}`}>
-      <img src={src} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" class="block h-auto w-full rounded-[1.1rem]" />
+      <div class="relative">
+        <img src={src} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" class="block h-auto w-full rounded-[1.1rem]" />
+        <slot />
+      </div>
     </div>
   : <div class={`${cls}`}>
       <!-- titanium edge, black bezel, side buttons, Dynamic Island -->

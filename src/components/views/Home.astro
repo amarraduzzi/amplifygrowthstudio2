@@ -31,40 +31,46 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- HERO: light, the promise left, the real product on a mint panel right.
        One orchestrated moment: an order travels from the QR menu to the kitchen to the margin. -->
   <section class="relative">
-    <div class="mx-auto grid max-w-6xl gap-10 px-4 pb-14 pt-10 sm:px-6 md:grid-cols-[1fr_1.05fr] md:items-center md:pt-14 lg:gap-12">
+    <div class="mx-auto grid max-w-6xl gap-8 px-4 pb-14 pt-6 sm:px-6 md:grid-cols-[1fr_1.05fr] md:items-center md:gap-10 md:pt-14 lg:gap-12">
       <div>
-        <h1 class="text-[clamp(3rem,5.6vw,5.4rem)]">{c.hero.h1.map((l, i) => <span class={`block whitespace-nowrap ${i === 2 ? 'text-green-deep' : ''}`}>{l}</span>)}</h1>
-        <p class="mt-5 max-w-xl text-xl leading-snug text-muted">{c.hero.lead}</p>
-        <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-          <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="px-7 text-lg" />
-          <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center justify-center rounded-full border border-navy/25 px-7 text-lg hover:border-navy">{t.ui.demo}</a>
+        <h1 class="text-[clamp(3.1rem,5.6vw,5.4rem)]">{c.hero.h1.map((l, i) => (
+          <span class="block overflow-hidden pb-[0.04em]"><span class={`rise relative inline-block whitespace-nowrap ${i === 2 ? 'text-green-deep' : ''}`} style={`--d:${i * 130}ms`}>{l}{i === 2 && <span class="draw absolute inset-x-0 -bottom-[0.02em] h-[0.07em] origin-left rounded-full bg-green rtl:origin-right" style="--d:650ms" aria-hidden="true"></span>}</span></span>
+        ))}</h1>
+        <p class="fade-up mt-5 max-w-xl text-xl leading-snug text-muted" style="--d:300ms"><span class="sm:hidden">{c.hero.leadShort}</span><span class="hidden sm:inline">{c.hero.lead}</span></p>
+        <div id="hero-cta" class="fade-up mt-7 flex flex-col items-start gap-3 sm:flex-row sm:items-center" style="--d:400ms">
+          <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="w-full px-7 text-lg sm:w-auto" />
+          <a href={SITE.demoUrl} target="_blank" rel="noopener" class="inline-flex items-center px-1 text-lg font-medium underline underline-offset-4 sm:min-h-12 sm:rounded-full sm:border sm:border-navy/25 sm:px-7 sm:font-normal sm:no-underline sm:hover:border-navy">{t.ui.demo}</a>
         </div>
-        <ul class="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2 text-[0.95rem]">
+        <ul class="fade-up mt-6 flex items-center gap-x-5 text-sm sm:gap-x-6 sm:text-[0.95rem]" style="--d:500ms">
           <li>
             <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:underline">
               <span class="flex text-[#F5B301]" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-4"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
               <span><strong class="font-semibold">{CONTACT.googleRating}</strong> {c.hero.rating}</span>
             </a>
           </li>
-          <li class="flex items-center gap-2 text-muted"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{c.hero.local}</li>
+          <li class="flex items-center gap-2 text-muted"><span class="size-2 shrink-0 rounded-full bg-green" aria-hidden="true"></span>{c.hero.local}</li>
         </ul>
       </div>
 
       <div class="relative isolate aspect-[5/4.3] overflow-hidden rounded-[2.25rem] bg-mint">
         <!-- a café counter in Rabat (AI image), behind the real product -->
         <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 768px) 50vw, 100vw"
-          alt="" width="1200" height="900" decoding="async" fetchpriority="low" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
+          alt="" width="1200" height="900" decoding="async" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
         <div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy/10 via-transparent to-navy/30" aria-hidden="true"></div>
         <!-- the devices stand on the counter: same eye level as the photo, contact shadows underneath -->
         <div class="absolute inset-0">
-          <span class="absolute bottom-[10%] end-[8%] h-7 w-[66%] rounded-[50%] bg-black/45 blur-xl" aria-hidden="true"></span>
-          <span class="absolute bottom-[4%] start-[7%] h-5 w-[22%] rounded-[50%] bg-black/50 blur-lg" aria-hidden="true"></span>
-          <Device src="/img/caisse-ticket.webp" alt={c.hero.shotAlt} w={1200} h={878} eager class="absolute bottom-[13%] end-[5%] w-[74%]" />
-          <Device kind="phone" src="/img/menu-liste.webp" alt={c.hero.phoneAlt} w={600} h={1298} eager class="absolute bottom-[6%] start-[5%] w-[25%] -rotate-[4deg]" />
+          <span class="shadow-in absolute bottom-[10%] end-[8%] h-7 w-[66%] rounded-[50%] bg-black/45 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+          <span class="shadow-in absolute bottom-[4%] start-[7%] h-5 w-[22%] rounded-[50%] bg-black/50 blur-lg" style="--d:900ms" aria-hidden="true"></span>
+          <div class="land absolute bottom-[13%] end-[5%] w-[74%]" style="--d:450ms">
+            <Device src="/img/caisse-ticket.webp" alt={c.hero.shotAlt} w={1200} h={878} eager>
+              <span class="glow absolute start-[52.9%] top-[85.9%] h-[9.4%] w-[22.2%] rounded-[0.6rem] ring-[3px] ring-green" style="--d:1700ms" aria-hidden="true"></span>
+            </Device>
+          </div>
+          <div class="drop absolute bottom-[6%] start-[5%] w-[25%]" style="--d:700ms"><Device kind="phone" src="/img/menu-liste.webp" alt={c.hero.phoneAlt} w={600} h={1298} eager class="-rotate-[4deg]" /></div>
         </div>
         <ol class="pointer-events-none text-sm font-semibold" aria-label="Commande">
           {c.hero.flow.map((label, i) => (
-            <li class={`chat-in absolute flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-navy shadow-[0_12px_30px_-12px_rgba(0,30,62,0.45)] ${['top-5 start-5', 'top-[17%] end-5', 'bottom-4 end-5'][i]}`} style={`--d:${500 + i * 800}ms`}>
+            <li class={`chat-in absolute flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-navy shadow-[0_12px_30px_-12px_rgba(0,30,62,0.45)] ${['top-5 start-5', 'top-[17%] end-5', 'bottom-4 end-5'][i]}`} style={`--d:${1200 + i * 550}ms`}>
               <span class="grid size-7 place-items-center rounded-full bg-navy text-xs font-bold text-white">{i + 1}</span>
               <Icon name={(['qr', 'chef', 'chart'] as const)[i]} class="size-4 text-green-deep" />
               {label}
