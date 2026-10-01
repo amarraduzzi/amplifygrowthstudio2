@@ -1,0 +1,102 @@
+---
+// FAQ as a WhatsApp conversation: tap a question, it is "sent", Amplify types, the answer arrives.
+// Your own question goes straight to the real WhatsApp. All answers are in the page (and in the FAQ schema).
+import Mark from './Mark.astro';
+import WaButton from './WaButton.astro';
+import { CONTACT } from '../config';
+import { copy } from '../i18n';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang; wa: string }
+const all = copy(Astro.props.lang);
+const items = all.home.faq;
+const c = all.home.chat;
+---
+<section class="relative mx-auto grid max-w-6xl gap-10 px-4 py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14" data-chatfaq>
+  <div>
+    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{all.ui.faq}</h2>
+    <p class="mt-5 max-w-sm text-lg text-muted">{all.ui.faqCta}</p>
+    <WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-faq" class="mt-6 px-7" />
+  </div>
+
+  <div class="overflow-hidden rounded-[2rem] bg-paper shadow-[0_40px_80px_-40px_rgba(0,30,62,0.45)] ring-1 ring-line">
+    <!-- header -->
+    <div class="flex items-center gap-3 bg-navy px-5 py-3.5 text-white">
+      <span class="grid size-10 place-items-center rounded-full bg-white"><Mark class="h-5 w-7" id="faqchat" /></span>
+      <span class="leading-tight"><span class="block font-semibold">Amplify Growth Studio</span><span class="flex items-center gap-1.5 text-sm text-white/65"><span class="size-2 rounded-full bg-green"></span>{c.status}</span></span>
+    </div>
+
+    <!-- conversation -->
+    <div class="faq-log h-[24rem] space-y-3 overflow-y-auto bg-[#EEF3EF] px-4 py-5 sm:h-[26rem]" aria-live="polite">
+      <p class="w-fit max-w-[85%] rounded-2xl rounded-ss-md bg-white px-3.5 py-2.5 text-[0.95rem] shadow-sm">{c.hello}</p>
+      {items.map(([q, a], i) => (
+        <div class="faq-pair space-y-3" data-pair={i}>
+          <p class="faq-q ms-auto w-fit max-w-[85%] rounded-2xl rounded-se-md bg-mint px-3.5 py-2.5 text-[0.95rem] font-medium">{q}<span class="mt-0.5 block text-end text-[0.7rem] text-green-deep" aria-hidden="true">✓✓</span></p>
+          <p class="faq-typing w-fit rounded-2xl rounded-ss-md bg-white px-4 py-3 shadow-sm" aria-label={c.typing}><span class="dot"></span><span class="dot"></span><span class="dot"></span></p>
+          <p class="faq-a w-fit max-w-[88%] rounded-2xl rounded-ss-md bg-white px-3.5 py-2.5 text-[0.95rem] leading-relaxed shadow-sm">{a}</p>
+        </div>
+      ))}
+    </div>
+
+    <!-- suggestions -->
+    <div class="border-t border-line px-4 pt-3">
+      <p class="faq-more text-xs font-semibold text-muted">{c.more}</p>
+      <div class="snap-row -mx-4 mt-2 flex gap-2 overflow-x-auto px-4 pb-3">
+        {items.map(([q], i) => (
+          <button type="button" class="faq-chip shrink-0 rounded-full bg-chalk px-3.5 py-2 text-sm font-medium ring-1 ring-line transition-colors hover:bg-mint hover:ring-green" data-ask={i}>{q}</button>
+        ))}
+      </div>
+    </div>
+
+    <!-- your own question goes to the real WhatsApp -->
+    <form class="faq-form flex items-center gap-2 border-t border-line bg-chalk px-3 py-3" data-number={CONTACT.whatsapp}>
+      <label class="sr-only" for="faq-input">{c.placeholder}</label>
+      <input id="faq-input" name="q" autocomplete="off" placeholder={c.placeholder} class="min-h-11 flex-1 rounded-full bg-paper px-4 ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-green" />
+      <button type="submit" class="grid size-11 shrink-0 place-items-center rounded-full bg-green text-navy hover:bg-[#04A859]" aria-label={c.send}>
+        <svg viewBox="0 0 24 24" class="size-5 rtl:-scale-x-100" fill="currentColor" aria-hidden="true"><path d="M3.4 20.4 21 12 3.4 3.6l-.01 6.53L15 12 3.39 13.87z"/></svg>
+      </button>
+    </form>
+    <p class="bg-chalk px-4 pb-3 text-xs text-muted">{c.note}</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-chatfaq]').forEach((root) => {
+    const log = root.querySelector<HTMLElement>('.faq-log')!;
+    const pairs = [...root.querySelectorAll<HTMLElement>('[data-pair]')];
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-ask]')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    root.classList.add('faq-live');
+    let busy = false;
+    const down = () => log.scrollTo({ top: log.scrollHeight, behavior: still ? 'auto' : 'smooth' });
+
+    const ask = (i: number) => {
+      if (busy) return;
+      const pair = pairs[i];
+      chips[i].hidden = true;
+      if (chips.every(ch => ch.hidden)) root.querySelector<HTMLElement>('.faq-more')!.hidden = true;
+      log.appendChild(pair);                                  // newest at the bottom, in the order asked
+      pair.classList.add('asked');
+      down();
+      if (still) { pair.classList.add('answered'); down(); return; }
+      busy = true;
+      setTimeout(() => { pair.classList.add('typing'); down(); }, 450);
+      setTimeout(() => { pair.classList.remove('typing'); pair.classList.add('answered'); down(); busy = false; }, 1500);
+    };
+    chips.forEach((ch, i) => ch.addEventListener('click', () => ask(i)));
+
+    // the first question asks itself once the section is on screen
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); setTimeout(() => ask(0), 500); } }, { threshold: 0.5 });
+      io.observe(log);
+    }
+
+    const form = root.querySelector<HTMLFormElement>('.faq-form')!;
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = String(new FormData(form).get('q') ?? '').trim();
+      const text = q || 'Bonjour, j’ai une question sur Amplify.';
+      (window as any).dataLayer?.push({ event: 'whatsapp_click', where: 'home-faq-input', lang: document.documentElement.lang });
+      window.open(`https://wa.me/${form.dataset.number}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    });
+  });
+</script>
