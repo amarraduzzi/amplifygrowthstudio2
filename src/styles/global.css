@@ -85,3 +85,16 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
 .js .step:not(.on) h3 { color: var(--color-muted); }
 .step h3 { transition: color .4s ease; }
 @media (prefers-reduced-motion: reduce) { .js [data-scrub] { --p: 1; } .js .word, .js .step .node { color: inherit; } }
+
+/* Product tour */
+.tour-panel.is-on { animation: tour-in .45s ease both; }
+@keyframes tour-in { from { opacity: 0; transform: translateY(10px) scale(.985); } }
+.tour-tab.running .tour-progress { animation: tour-progress 6.5s linear forwards; }
+@keyframes tour-progress { to { transform: scaleX(1); } }
+.spot-ring { animation: spot-ping 2s cubic-bezier(0,0,.2,1) infinite; }
+@keyframes spot-ping { 75%, 100% { transform: scale(2.2); opacity: 0; } }
+.spot.open .spot-tip { opacity: 1; }
+.spot.open .spot-btn > span:last-child { background: var(--color-paper); }
+.tour-panel.is-on .chat-msg { animation: chat-in .5s cubic-bezier(.2,.7,.2,1) both; animation-delay: .5s; }
+.tour-panel.is-on .chat-msg-2 { animation-delay: 1.6s; }
+@media (prefers-reduced-motion: reduce) { .spot-ring, .tour-panel.is-on, .tour-panel.is-on .chat-msg { animation: none; } }

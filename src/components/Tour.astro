@@ -1,0 +1,138 @@
+---
+// Interactive product tour: tabs + one big device + hotspots to tap. Plays by itself until the visitor takes over.
+import Device from './Device.astro';
+import { copy } from '../i18n';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const t = copy(Astro.props.lang).home.tour;
+---
+<section class="tour bg-blue py-20 text-white md:py-28" data-tour>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="text-center text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{t.h2a}</span><span class="block text-green">{t.h2b}</span></h2>
+    <p class="mx-auto mt-5 max-w-xl text-center text-white/70">{t.p}</p>
+
+    <div class="mt-10 grid gap-6 md:mt-14 lg:grid-cols-[17rem_1fr] lg:gap-10">
+      <!-- tabs: a swipeable row on phones, a list on desktop -->
+      <div class="snap-row -mx-4 flex gap-2 overflow-x-auto px-4 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0" role="tablist" aria-label={t.h2a}>
+        {t.tabs.map((tab, i) => (
+          <button type="button" role="tab" id={`tab-${tab.key}`} aria-controls={`panel-${tab.key}`} aria-selected={i === 0 ? 'true' : 'false'} data-tab={i} data-text={tab.text}
+            class="tour-tab group relative shrink-0 overflow-hidden rounded-2xl px-4 py-3 text-start ring-1 ring-white/15 transition-colors hover:bg-white/5 aria-selected:bg-paper aria-selected:text-navy aria-selected:ring-paper lg:px-5 lg:py-4">
+            <span class="flex items-center gap-3">
+              <span class="display text-xl text-green group-aria-selected:text-green-deep lg:text-2xl">{String(i + 1).padStart(2, '0')}</span>
+              <span class="whitespace-nowrap font-semibold lg:text-lg">{tab.label}</span>
+            </span>
+            <span class="mt-2 hidden text-[0.95rem] leading-snug text-muted lg:group-aria-selected:block">{tab.text}</span>
+            <span class="tour-progress absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-green rtl:origin-right" aria-hidden="true"></span>
+          </button>
+        ))}
+      </div>
+
+      <!-- the stage -->
+      <div class="relative">
+        <div class="relative grid min-h-[17rem] place-items-center overflow-hidden rounded-[2rem] bg-blue-2 px-3 py-8 sm:min-h-[26rem] sm:px-8 lg:min-h-[34rem] lg:py-12">
+          <div class="pointer-events-none absolute inset-0 opacity-60" style="background:radial-gradient(60% 60% at 50% 40%, rgba(5,185,98,.22), transparent 70%)" aria-hidden="true"></div>
+          {t.tabs.map((tab, i) => (
+            <div role="tabpanel" id={`panel-${tab.key}`} aria-labelledby={`tab-${tab.key}`} data-panel={i} class={`tour-panel col-start-1 row-start-1 w-full ${i === 0 ? 'is-on' : ''}`} hidden={i !== 0}>
+              <div class={tab.kind === 'phone' ? 'mx-auto w-[46%] max-w-[15rem] sm:w-56' : 'mx-auto w-full max-w-3xl'}>
+                <Device kind={tab.kind} src={tab.img || undefined} alt={tab.text} w={tab.w} h={tab.h}>
+                  {!tab.img && (
+                    <div slot="screen" class="flex aspect-[9/17] flex-col bg-[#EFEAE2] text-[0.6rem] text-[#111] sm:text-[0.7rem]">
+                      <div class="flex items-center gap-2 bg-[#075E54] px-3 py-2 text-white"><span class="size-5 rounded-full bg-white/30"></span><span class="font-semibold">{t.chat.title}</span></div>
+                      <div class="flex flex-1 flex-col gap-2 p-3">
+                        <div class="chat-msg ms-auto max-w-[85%] rounded-lg rounded-se-none bg-[#D9FDD3] px-2.5 py-2 leading-snug shadow-sm">
+                          {t.chat.order.map((l, k) => <span class={`block ${k === 0 ? 'font-bold' : ''}`}>{l}</span>)}
+                        </div>
+                        <div class="chat-msg chat-msg-2 max-w-[80%] rounded-lg rounded-ss-none bg-white px-2.5 py-2 leading-snug shadow-sm">{t.chat.reply}</div>
+                      </div>
+                    </div>
+                  )}
+                  {tab.spots.map(([x, y, label]) => (
+                    <span class="spot absolute z-10 -translate-x-1/2 -translate-y-1/2" style={`left:${x}%;top:${y}%`}>
+                      <button type="button" class="spot-btn relative block" aria-label={label} aria-expanded="false">
+                        <span class="spot-ring absolute inset-0 rounded-full bg-green/60" aria-hidden="true"></span>
+                        <span class="relative grid size-6 place-items-center rounded-full bg-green text-[0.9rem] font-bold leading-none text-navy shadow-lg ring-2 ring-white sm:size-7">+</span>
+                      </button>
+                      <span class={`spot-tip pointer-events-none absolute top-9 z-20 w-max max-w-[13rem] rounded-xl bg-paper px-3 py-2 text-[0.8rem] font-medium leading-snug text-navy opacity-0 shadow-xl transition-opacity sm:text-sm ${x > 62 ? 'end-0' : x < 38 ? 'start-0' : 'start-1/2 -translate-x-1/2'}`} role="tooltip">{label}</span>
+                    </span>
+                  ))}
+                </Device>
+              </div>
+            </div>
+          ))}
+          <button type="button" class="tour-zoom absolute bottom-3 end-3 grid size-10 place-items-center rounded-full bg-white/10 text-white ring-1 ring-white/20 hover:bg-white/20 lg:hidden" aria-label={t.zoom}>
+            <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </button>
+        </div>
+        <p class="tour-caption mt-4 text-center text-white/80 lg:hidden">{t.tabs[0].text}</p>
+      </div>
+    </div>
+  </div>
+
+  <dialog class="tour-dialog m-auto max-h-[92vh] w-[96vw] max-w-5xl rounded-2xl bg-navy p-2 backdrop:bg-navy/85">
+    <img class="tour-dialog-img block h-auto max-h-[80vh] w-full rounded-xl object-contain" alt="" />
+    <form method="dialog" class="mt-2 flex justify-end"><button class="rounded-full bg-paper px-5 py-2 font-semibold text-navy">{t.close}</button></form>
+  </dialog>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-tour]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-panel]')];
+    const caption = root.querySelector<HTMLElement>('.tour-caption');
+    const texts = tabs.map(tb => tb.dataset.text ?? '');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let current = 0, auto = !still, timer = 0;
+    const DURATION = 6500;
+
+    const closeTips = () => root.querySelectorAll('.spot.open').forEach(s => { s.classList.remove('open'); s.querySelector('button')?.setAttribute('aria-expanded', 'false'); });
+    const show = (i: number, fromUser = false) => {
+      current = i;
+      closeTips();
+      tabs.forEach((tb, k) => { tb.setAttribute('aria-selected', k === i ? 'true' : 'false'); tb.tabIndex = k === i ? 0 : -1; tb.classList.remove('running'); });
+      panels.forEach((p, k) => { p.hidden = k !== i; p.classList.toggle('is-on', k === i); });
+      if (caption) caption.textContent = texts[i];
+      if (fromUser) tabs[i].scrollIntoView({ block: 'nearest', inline: 'center', behavior: still ? 'auto' : 'smooth' });
+      clearTimeout(timer);
+      if (auto) {
+        void tabs[i].offsetWidth; tabs[i].classList.add('running');
+        timer = window.setTimeout(() => show((i + 1) % tabs.length), DURATION);
+      }
+    };
+    const stop = () => { auto = false; clearTimeout(timer); tabs.forEach(tb => tb.classList.remove('running')); };
+
+    tabs.forEach((tb, i) => {
+      tb.addEventListener('click', () => { stop(); show(i, true); });
+      tb.addEventListener('keydown', (e) => {
+        const d = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
+        if (!d) return; e.preventDefault(); stop();
+        const n = (current + d + tabs.length) % tabs.length; show(n, true); tabs[n].focus();
+      });
+    });
+    root.querySelectorAll<HTMLButtonElement>('.spot-btn').forEach((btn) => {
+      const spot = btn.parentElement!;
+      const open = (v: boolean) => { if (v) closeTips(); spot.classList.toggle('open', v); btn.setAttribute('aria-expanded', String(v)); };
+      btn.addEventListener('click', (e) => { e.stopPropagation(); stop(); open(matchMedia('(hover: hover)').matches ? true : !spot.classList.contains('open')); });
+      btn.addEventListener('mouseenter', () => { if (matchMedia('(hover: hover)').matches) open(true); });
+      btn.addEventListener('mouseleave', () => { if (matchMedia('(hover: hover)').matches) open(false); });
+    });
+    root.addEventListener('click', closeTips);
+
+    // phones: open the current screen full size to read it
+    const dialog = root.querySelector<HTMLDialogElement>('.tour-dialog')!;
+    const dImg = root.querySelector<HTMLImageElement>('.tour-dialog-img')!;
+    root.querySelector('.tour-zoom')?.addEventListener('click', (e) => {
+      e.stopPropagation(); stop();
+      const img = panels[current].querySelector('img');
+      if (!img) return;
+      dImg.src = img.currentSrc || img.src; dImg.alt = img.alt;
+      dialog.showModal();
+    });
+    dialog.addEventListener('click', (e) => { if (e.target === dialog) dialog.close(); });
+
+    // start playing only once the section is on screen
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); show(0); } }, { threshold: 0.35 });
+      io.observe(root);
+    }
+  });
+</script>

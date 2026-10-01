@@ -1,7 +1,7 @@
 ---
 // A real screenshot in a tablet frame or an iPhone-style frame.
-interface Props { src: string; alt: string; kind?: 'tablet' | 'phone'; class?: string; w: number; h: number; eager?: boolean; screenBg?: string }
-const { src, alt, kind = 'tablet', class: cls = '', w, h, eager = false, screenBg = '#FAF8F3' } = Astro.props;
+interface Props { src?: string; alt?: string; kind?: 'tablet' | 'phone'; class?: string; w: number; h: number; eager?: boolean; screenBg?: string }
+const { src = '', alt = '', kind = 'tablet', class: cls = '', w, h, eager = false, screenBg = '#FAF8F3' } = Astro.props;
 ---
 {kind === 'tablet'
   ? <div class={`rounded-[1.6rem] bg-[#0B1422] p-2.5 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.6)] ring-1 ring-white/10 ${cls}`}>
@@ -23,7 +23,10 @@ const { src, alt, kind = 'tablet', class: cls = '', w, h, eager = false, screenB
               <span class="flex items-center gap-[0.35em]"><span class="h-[0.7em] w-[1.1em] rounded-[2px] border border-black/80"></span></span>
             </div>
             <span class="absolute start-1/2 top-[0.45em] h-[1.05em] w-[30%] -translate-x-1/2 rounded-full bg-black text-[clamp(5px,0.55vw,9px)] rtl:translate-x-1/2" aria-hidden="true"></span>
-            <img src={src} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" class="block h-auto w-full" />
+            <div class="relative">
+              {src ? <img src={src} alt={alt} width={w} height={h} loading={eager ? 'eager' : 'lazy'} decoding="async" class="block h-auto w-full" /> : <slot name="screen" />}
+              <slot />
+            </div>
           </div>
         </div>
       </div>
