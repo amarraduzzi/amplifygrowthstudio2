@@ -529,24 +529,38 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
   .js [data-mkrep].in .mkr-row { opacity: 1; animation: fade-up .45s var(--d) cubic-bezier(.2,.8,.2,1) both; }
 }
 
-/* Marketing: WhatsApp list section */
-.mkw-gold { color: #001E3E; background: linear-gradient(100deg, #F5B301 0%, #FFE08A 45%, #F5B301 60%, #C98F00 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 100%; filter: drop-shadow(0 2px 0 rgb(0 30 62 / .35)); }
-@media (prefers-reduced-motion: no-preference) { .mkw-gold { animation: mkw-shine 4s linear infinite; } @keyframes mkw-shine { to { background-position: -200% 0; } } }
-.mkw-level { width: 22%; }
-.mkw-stage[data-phase="3"] .mkw-level { width: 92%; background-color: #05B962; }
-.mkw-stage[data-phase="3"] .mkw-dot { background-color: #05B962; }
-.mkw-stage:not([data-phase="0"]) .mkw-av { background-color: #05B962; color: #001E3E; transition-delay: var(--d); }
+
+/* Marketing: WhatsApp list section (dark, gold) */
+.mkw { background: linear-gradient(160deg, #001E3E 0%, #022A33 50%, #03392C 100%); }
+.mkw-gold { background: linear-gradient(100deg, #C98F00 0%, #F5B301 25%, #FFE9A8 45%, #F5B301 60%, #C98F00 100%); background-size: 220% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 6px 24px rgb(245 179 1 / .25)); }
+.mkw-coin { background: radial-gradient(circle at 35% 30%, #FFE9A8, #F5B301 45%, #A87700); box-shadow: 0 0 14px rgb(245 179 1 / .5); opacity: 0; }
+.mkw-wall { background-color: #0B141A; background-image: radial-gradient(rgb(255 255 255 / .045) 1px, transparent 1px); background-size: 14px 14px; }
+.mkw-msg { opacity: 0; transform: translateY(24px) scale(.92); transform-origin: bottom right; transition: opacity .35s, transform .5s cubic-bezier(.3,1.5,.5,1); }
+.mkw-stage[data-phase="1"] .mkw-msg, .mkw-stage[data-phase="2"] .mkw-msg, .mkw-stage[data-phase="3"] .mkw-msg { opacity: 1; transform: none; }
 .mkw-stage[data-phase="2"] .mkw-ticks, .mkw-stage[data-phase="3"] .mkw-ticks { color: #53BDEB; }
-.mkw-reply { opacity: 0; transform: translate(-50%, 6px) scale(.9); transition: opacity .3s, transform .4s cubic-bezier(.3,1.6,.5,1); }
-[dir="rtl"] .mkw-reply { transform: translate(50%, 6px) scale(.9); }
-.mkw-stage[data-phase="3"] .mkw-reply { opacity: 1; transform: translate(-50%, 0) scale(1); transition-delay: var(--r); }
-[dir="rtl"] .mkw-stage[data-phase="3"] .mkw-reply { transform: translate(50%, 0) scale(1); }
-.mkw-p:nth-child(6n+1) .mkw-reply { inset-inline-start: 0; transform: translate(0, 6px) scale(.9); }
-.mkw-stage[data-phase="3"] .mkw-p:nth-child(6n+1) .mkw-reply { transform: none; }
-.mkw-p:nth-child(6n) .mkw-reply { inset-inline-start: auto; inset-inline-end: 0; transform: translate(0, 6px) scale(.9); }
-.mkw-stage[data-phase="3"] .mkw-p:nth-child(6n) .mkw-reply { transform: none; }
+.mkw-caret { display: none; }
+.mkw-stage[data-phase="type"] .mkw-caret, .mkw-stage[data-phase="tap"] .mkw-caret { display: inline-block; }
+.mkw-stage[data-phase="type"] .mkw-ph, .mkw-stage[data-phase="tap"] .mkw-ph { display: none; }
+.mkw-btn { transition: transform .2s, box-shadow .3s; }
+.mkw-stage[data-phase="tap"] .mkw-btn { transform: scale(.82); box-shadow: 0 0 0 8px rgb(0 168 132 / .3); }
+.mkw-toast { opacity: 0; transform: scale(.6) translateY(16px); transition: opacity .3s, transform .55s cubic-bezier(.3,1.6,.5,1); }
+.mkw-stage[data-phase="3"] .mkw-toast { opacity: 1; transform: none; transition-delay: var(--r); }
+.mkw-arc { stroke: #F5B301; stroke-dasharray: 22 100; transition: stroke-dasharray 1.4s cubic-bezier(.2,.8,.2,1) 1s, stroke .6s 1s; }
+.mkw-stage[data-phase="3"] .mkw-arc { stroke: #05B962; stroke-dasharray: 92 100; }
+.mkw-full { display: none; color: #05B962; }
+.mkw-calm { color: #F5B301; }
+.mkw-stage[data-phase="3"] .mkw-full { display: inline; }
+.mkw-stage[data-phase="3"] .mkw-calm { display: none; }
+.mkw-rays { background: conic-gradient(from 0deg, transparent 0 10%, rgb(5 185 98 / .18) 12%, transparent 16% 35%, rgb(245 179 1 / .14) 38%, transparent 42% 60%, rgb(5 185 98 / .16) 63%, transparent 67% 85%, rgb(245 179 1 / .12) 88%, transparent 92%); mask-image: radial-gradient(circle, black 30%, transparent 70%); opacity: 0; transition: opacity 1s; }
+.mkw-stage[data-phase="1"] .mkw-rays, .mkw-stage[data-phase="2"] .mkw-rays, .mkw-stage[data-phase="3"] .mkw-rays { opacity: 1; }
 @media (prefers-reduced-motion: no-preference) {
-  .mkw-stage[data-phase="1"] .mkw-msg { animation: mkw-pop .5s cubic-bezier(.3,1.6,.5,1); }
-  @keyframes mkw-pop { 40% { transform: scale(1.04); box-shadow: 0 0 0 6px rgb(5 185 98 / .3); } }
-  .mkw-stage[data-phase="0"] .mkw-send { animation: mk-tap 1.6s ease-out infinite; }
+  .mkw-gold { animation: mkw-shine 5s linear infinite; }
+  @keyframes mkw-shine { to { background-position: -220% 0; } }
+  .mkw-coin { animation: mkw-coin 9s linear infinite; animation-delay: var(--d); }
+  @keyframes mkw-coin { 0% { transform: translateY(0) rotateY(0); opacity: 0; } 10% { opacity: .55; } 80% { opacity: .35; } 100% { transform: translateY(-900px) rotateY(720deg); opacity: 0; } }
+  .mkw-stage[data-phase="type"] .mkw-caret { animation: caret .8s step-end infinite; }
+  .mkw-rays { animation: mkw-spin 24s linear infinite; }
+  @keyframes mkw-spin { to { transform: rotate(360deg); } }
+  .mkw-phone { animation: pf-float 7s ease-in-out infinite; }
 }
+@media (prefers-reduced-motion: reduce) { .mkw-msg, .mkw-toast { opacity: 1; transform: none; } }
