@@ -1,0 +1,97 @@
+---
+// "Pas de site ? Pour le monde, vous n'existez pas." World Cup 2030: searches arrive in every language.
+// Switch: without a site, the visitor finds nothing to read; with one, menu, languages and a way to come.
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+import { mkFr as c } from '../i18n/marketing-fr';
+const s = c.site;
+---
+<section class="relative isolate overflow-hidden py-24" data-mksite data-mode="with">
+  <span class="mks-2030 display pointer-events-none absolute -end-10 top-6 -z-10 select-none text-[clamp(10rem,30vw,24rem)] leading-none text-transparent [-webkit-text-stroke:2px_#DDE3E0]" aria-hidden="true">2030</span>
+  <div class="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <div>
+      <p class="inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1.5 text-sm font-semibold text-white"><span class="text-green">⚽</span>{s.kicker}</p>
+      <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{s.h2a}</span><span class="block text-green-deep">{s.h2b}</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-muted">{s.p}</p>
+      <!-- the searches -->
+      <ul class="mt-7 flex flex-wrap gap-2" aria-label="Recherches">
+        {s.searches.map(([l, q], i) => <li class="mks-q flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-sm ring-1 ring-line" style={`--d:${i * 140}ms`} lang={l} dir={l === 'ar' ? 'rtl' : 'ltr'}><span class="grid size-6 place-items-center rounded-full bg-chalk text-[0.6rem] font-bold uppercase" dir="ltr">{l}</span>{q}</li>)}
+      </ul>
+      <ul class="mt-8 grid gap-3 sm:grid-cols-2">
+        {s.list.map(([h, p]) => <li class="flex gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span><span class="block font-semibold">{h}</span><span class="text-sm text-muted">{p}</span></span></li>)}
+      </ul>
+      <div class="mt-8"><WaButton text="Bonjour, je voudrais un site pour mon établissement." label={s.cta} where="marketing-site" class="px-7" /></div>
+    </div>
+
+    <!-- what a visitor finds -->
+    <div>
+      <div class="mx-auto mb-4 flex w-fit rounded-full bg-paper p-1 text-sm font-semibold ring-1 ring-line" role="tablist" aria-label="Avec ou sans site">
+        <button type="button" role="tab" class="mks-tab rounded-full px-4 py-2 transition-colors" data-m="without" aria-selected="false">{s.without}</button>
+        <button type="button" role="tab" class="mks-tab rounded-full px-4 py-2 transition-colors" data-m="with" aria-selected="true">{s.with}</button>
+      </div>
+      <div class="relative mx-auto w-[17rem] rounded-[2.6rem] bg-linear-to-b from-[#3A3F47] via-[#1C1F24] to-[#3A3F47] p-2 shadow-[0_50px_90px_-40px_rgba(0,30,62,0.7)] sm:w-[19rem]" aria-hidden="true">
+        <div class="overflow-hidden rounded-[2.2rem] bg-black p-1.5">
+          <div class="relative h-[32rem] overflow-hidden rounded-[1.8rem] bg-white text-navy">
+            <span class="absolute start-1/2 top-2 z-20 h-5 w-20 -translate-x-1/2 rounded-full bg-black"></span>
+            <p class="mx-3 mt-9 flex items-center gap-2 rounded-full bg-chalk px-3 py-2 text-xs"><span class="text-muted">⌕</span><span class="mks-search font-medium" lang="en">restaurant near me</span></p>
+            <!-- without -->
+            <div class="mks-without absolute inset-x-0 top-[4.75rem] px-3 transition-[opacity,transform] duration-500">
+              <div class="rounded-xl p-3 ring-1 ring-line">
+                <p class="font-bold">Votre restaurant</p>
+                <p class="text-xs text-muted">Restaurant · Rabat</p>
+                <ul class="mt-3 space-y-1.5 text-xs">{s.noSite.map(x => <li class="flex items-center gap-2 text-[#C4282D]"><span class="grid size-4 place-items-center rounded-full bg-[#FDE2E2] text-[0.6rem] font-bold">✕</span>{x}</li>)}</ul>
+              </div>
+              <div class="mt-3 rounded-xl bg-chalk p-3 text-xs">
+                <p class="font-semibold">Le touriste passe au suivant.</p>
+                <p class="mt-1 text-muted">Celui qui a un menu en anglais et un bouton « Itinéraire ».</p>
+              </div>
+              <p class="mks-swipe mt-6 text-center text-3xl">👋</p>
+            </div>
+            <!-- with -->
+            <div class="mks-with absolute inset-x-0 top-[4.75rem] bottom-0 overflow-hidden px-3 transition-[opacity,transform] duration-500">
+              <div class="mks-scroll space-y-2.5">
+                <div class="relative h-28 overflow-hidden rounded-xl"><img src="/img/comptoir-760.webp" alt="" width="760" height="570" loading="lazy" class="size-full object-cover" /><span class="absolute inset-0 bg-linear-to-t from-navy/80 to-transparent"></span><p class="display absolute bottom-2 start-3 text-2xl text-white">Votre restaurant</p></div>
+                <div class="flex gap-1.5 text-[0.65rem] font-bold">{['EN', 'FR', 'ع'].map((l, k) => <span class={`rounded-full px-2.5 py-1 ${k === 0 ? 'bg-navy text-white' : 'bg-chalk'}`}>{l}</span>)}<span class="ms-auto rounded-full bg-mint px-2 py-1 text-green-deep">Open now</span></div>
+                <p class="text-xs font-bold">Menu</p>
+                {[['the-menthe', 'Mint tea', '16'], ['cafe-noir', 'Black coffee', '16'], ['crepe-banane', 'Banana crêpe', '35'], ['pizza-margarita', 'Pizza margherita', '65']].map(([img, n, p]) => (
+                  <div class="flex items-center gap-2 rounded-lg bg-chalk p-1.5 text-xs"><img src={`/img/menu/${img}.webp`} alt="" width="600" height="600" loading="lazy" class="size-9 rounded-md object-cover" /><span class="flex-1 font-semibold">{n}</span><span class="font-bold text-green-deep">{p} MAD</span></div>
+                ))}
+                <div class="grid grid-cols-3 gap-1.5 text-[0.62rem] font-bold">
+                  <span class="rounded-lg bg-[#1A73E8] py-2 text-center text-white">Directions</span>
+                  <span class="rounded-lg bg-chalk py-2 text-center">Call</span>
+                  <span class="rounded-lg bg-green py-2 text-center">WhatsApp</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="mt-3 text-center text-xs text-muted">Illustration</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mksite]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.mks-tab')];
+    const search = root.querySelector<HTMLElement>('.mks-search')!;
+    const qs = [...root.querySelectorAll<HTMLElement>('.mks-q')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const set = (m: string) => { root.dataset.mode = m; tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.m === m))); };
+    let auto = !still, timer = 0, k = 0;
+    tabs.forEach(t => t.addEventListener('click', () => { auto = false; set(t.dataset.m!); }));
+    // the search in the phone changes language, and the matching chip lights up
+    const tick = () => {
+      const q = qs[k++ % qs.length];
+      qs.forEach(x => x.classList.toggle('on', x === q));
+      search.textContent = q.textContent!.slice(2).trim();
+      search.setAttribute('lang', q.getAttribute('lang')!); search.setAttribute('dir', q.getAttribute('dir')!);
+      if (auto && k % 3 === 0) set(root.dataset.mode === 'with' ? 'without' : 'with');
+    };
+    if (still) return;
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { root.classList.add('in'); if (!timer) { tick(); timer = window.setInterval(tick, 1800); } }
+      else { clearInterval(timer); timer = 0; }
+    }, { threshold: 0.3 }).observe(root);
+  });
+</script>

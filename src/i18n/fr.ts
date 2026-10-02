@@ -92,7 +92,7 @@ export const fr = {
         order: ['Nouvelle commande', '2 × Pizza Margarita', '1 × Thé à la menthe', 'À emporter, 19h30'],
         reply: 'Merci, c’est noté ! Prête à 19h30.',
       },
-      marketing: ['Marketing', 'Site web, commande WhatsApp, Instagram et fiche Google qui ramènent des clients.'],
+      marketing: ['Marketing', 'Google, dégustations, un vrai concept et un site qui convertit. Des clients à table, pas des vues.'],
     },
     places: {
       h2a: 'Différents métiers.',
@@ -186,8 +186,8 @@ export const fr = {
       },
       marketing: {
         h3: 'Marketing',
-        p: 'Site web, commande WhatsApp, contenu Instagram et référencement local. Plus de clients qui commandent directement chez vous.',
-        list: ['Site et page de commande', 'Commande WhatsApp', 'Fiche Google et avis'],
+        p: 'Du marketing qui se mesure en clients à table, pas en vues : Google, dégustations, actions de quartier, un concept fort et un site qui convertit.',
+        list: ['Google et avis', 'Dégustations et actions terrain', 'Site qui convertit'],
         link: 'Découvrir le marketing',
       },
       products: [['Amplify POS', 'la caisse, dès 199 DH HT / mois'], ['Amplify Profit', 'les marges, dès 249 DH HT / mois']],

@@ -1,50 +1,112 @@
 ---
+// Marketing page. Our view: horeca marketing has to put people at the table, not collect views.
 import Base from '../../layouts/Base.astro';
-import PageHero from '../PageHero.astro';
-import FeatureList from '../FeatureList.astro';
+import MkHero from '../MkHero.astro';
+import MkBeliefs from '../MkBeliefs.astro';
+import MkSite from '../MkSite.astro';
 import Proof from '../Proof.astro';
 import Faq from '../Faq.astro';
-import FinalCta from '../FinalCta.astro';
-import Related from '../Related.astro';
+import WaButton from '../WaButton.astro';
 import { copy } from '../../i18n';
+import { mkFr as c } from '../../i18n/marketing-fr';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
-const c = t.marketing;
-const schema = [serviceSchema(c.hero.h1, c.meta.description, abs(ROUTES.marketing[lang])), faqSchema(c.faq)].filter(Boolean) as Record<string, unknown>[];
+const schema = [serviceSchema(`${c.hero.h1a} ${c.hero.h1b}`, c.meta.description, abs(ROUTES.marketing[lang])), faqSchema(c.faq)].filter(Boolean) as Record<string, unknown>[];
+const ICONS = ['🍽️', '💡', '🚀', '📈'];
 ---
 <Base lang={lang} page="marketing" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
-  <PageHero lang={lang} page="marketing" h1={c.hero.h1} lead={c.hero.lead} wa={c.wa} shot={{ src: '/img/menu-qr.webp', alt: 'Le menu QR sur le téléphone du client', w: 780, h: 1688, kind: 'phone' }} />
+  <MkHero waLabel={t.ui.whatsapp} />
 
-  <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-    <div class="grid gap-6 md:grid-cols-[1fr_2fr] md:gap-12">
-      <h2 class="text-5xl md:text-6xl">{c.services.h2}</h2>
-      <FeatureList items={c.services.items} />
+  <!-- statement -->
+  <section class="border-y border-line bg-paper px-4 py-24 sm:px-6 md:py-32">
+    <h2 class="mx-auto max-w-5xl text-center text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[5rem]" data-scrub="words">
+      <span class="block">{c.statement.a}</span>
+      <span class="block">{c.statement.b.split(' ').map((w, i, a) => <><span class={`word ${i >= a.length - 4 ? 'mk-red' : ''}`}>{w}</span>{' '}</>)}</span>
+    </h2>
+  </section>
+
+  <MkBeliefs />
+
+  <MkSite />
+
+  <!-- visible or sold -->
+  <section class="border-y border-line bg-paper">
+    <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.compare.h2a}</span><span class="block text-green-deep">{c.compare.h2b}</span></h2>
+      <div class="mt-12 overflow-hidden rounded-[2rem] bg-white ring-1 ring-line" data-scrub="steps">
+        <div class="grid grid-cols-[0.8fr_1fr_1fr] border-b border-line text-sm font-bold sm:text-base">
+          <span class="p-4 sm:p-5"></span>
+          <span class="p-4 text-muted sm:p-5">{c.compare.cols[0]}</span>
+          <span class="bg-navy p-4 text-white sm:p-5">{c.compare.cols[1]}</span>
+        </div>
+        {c.compare.rows.map(([k, a, b]) => (
+          <div class="step mkc-row grid grid-cols-[0.8fr_1fr_1fr] border-b border-line text-sm last:border-0 sm:text-base">
+            <span class="p-4 font-semibold sm:p-5">{k}</span>
+            <span class="relative p-4 text-muted sm:p-5"><span class="mkc-a">{a}</span></span>
+            <span class="mkc-b bg-navy p-4 font-semibold text-white sm:p-5"><span class="me-1.5 text-green">✓</span>{b}</span>
+          </div>
+        ))}
+      </div>
     </div>
   </section>
 
-  <section class="border-y border-line bg-paper">
-    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-      <h2 class="text-5xl md:text-6xl">{c.flow.h2}</h2>
-      <ol class="mt-10 grid gap-8 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:items-start md:gap-4">
-        {c.flow.items.map(([h, p], i) => (
-          <>
-            {i > 0 && <li aria-hidden="true" class="hidden pt-5 text-2xl text-green md:block">›</li>}
-            <li>
-              <span class="text-sm font-medium text-green-deep">{i + 1}</span>
-              <h3 class="mt-1 text-xl">{h}</h3>
-              <p class="mt-2 text-muted">{p}</p>
-            </li>
-          </>
-        ))}
-      </ol>
-    </div>
+  <!-- how we work -->
+  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.process.h2a}</span><span class="block text-green-deep">{c.process.h2b}</span></h2>
+    <ol class="relative mt-14 grid gap-5 md:grid-cols-4" data-scrub="steps">
+      <span class="absolute start-6 top-0 bottom-0 w-1 rounded-full bg-line md:start-[12.5%] md:end-[12.5%] md:top-7 md:bottom-auto md:h-1 md:w-auto" aria-hidden="true"><span class="mkp-line absolute rounded-full bg-green"></span></span>
+      {c.process.steps.map(([h, p], i) => (
+        <li class="step mkp-st relative ps-16 md:ps-0 md:text-center">
+          <span class="mkp-dot absolute start-0 top-0 z-10 grid size-14 place-items-center rounded-full bg-paper text-2xl ring-1 ring-line transition-all duration-500 md:relative md:mx-auto">{ICONS[i]}</span>
+          <p class="display mt-0 text-sm text-green-deep md:mt-5">ÉTAPE {i + 1}</p>
+          <h3 class="mt-1 text-xl">{h}</h3>
+          <p class="mt-2 text-muted">{p}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- for all of horeca -->
+  <section class="overflow-hidden border-y border-line bg-navy py-10 text-white" aria-label={c.sectorsH}>
+    <p class="mb-6 text-center text-sm font-semibold text-green">{c.sectorsH}</p>
+    {[0, 1].map(r => (
+      <div class="flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_10%,black_90%,transparent)]">
+        <ul class={`mk-marquee flex shrink-0 gap-3 pe-3 ${r ? 'mk-rev mt-3' : ''}`} aria-hidden={r ? 'true' : undefined}>
+          {[...c.sectors, ...c.sectors].map((x, i) => <li class={`display whitespace-nowrap rounded-full px-5 py-2 text-2xl sm:text-3xl ${(i + r) % 3 === 0 ? 'bg-green text-navy' : 'bg-white/10'}`}>{x}</li>)}
+        </ul>
+      </div>
+    ))}
   </section>
 
   <Proof h2={c.proof.h2} ph={c.proof.ph} />
-  <Related links={[[t.systems.hero.h1, ROUTES.systems[lang]], [t.restaurants.hero.h1, ROUTES.restaurants[lang]], [t.nav.contact, ROUTES.contact[lang]]]} />
-  <Faq lang={lang} items={c.faq} />
-  <FinalCta lang={lang} page="marketing" h2={c.final.h2} p={c.final.p} wa={c.wa} />
+
+  <Faq lang={lang} items={c.faq} wa={c.wa} />
+
+  <!-- final: the room fills -->
+  <section class="px-4 pb-24 sm:px-6" data-mkfin>
+    <div class="mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14 lg:grid-cols-[1.2fr_1fr]">
+      <div>
+        <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.final.h2a}</span><span class="block text-green">{c.final.h2b}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-white/75">{c.final.p}</p>
+        <div class="mt-8"><WaButton text={c.wa} label={c.final.cta} where="marketing-final" class="whitespace-nowrap px-7 text-base sm:px-8 sm:text-lg" /></div>
+      </div>
+      <div class="relative" aria-hidden="true">
+        <div class="mx-auto grid max-w-sm grid-cols-8 gap-2 rounded-[1.5rem] bg-white/5 p-5 ring-1 ring-white/15">
+          {Array.from({ length: 40 }, (_, i) => <span class="mkf-seat aspect-square rounded-full bg-white/10" style={`--d:${(i * 17 % 40) * 55}ms`}></span>)}
+        </div>
+        <p class="mkf-full absolute -end-3 -top-4 rotate-6 rounded-xl bg-green px-4 py-2 text-xl font-black uppercase text-navy shadow-xl">Complet</p>
+      </div>
+    </div>
+  </section>
 </Base>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mkfin]').forEach((root) => {
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { root.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { root.classList.add('in'); io.disconnect(); } }, { threshold: 0.4 });
+    io.observe(root);
+  });
+</script>

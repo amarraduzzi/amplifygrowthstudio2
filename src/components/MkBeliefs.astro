@@ -1,0 +1,92 @@
+---
+// "Cinq convictions." Stacked cards: each one sticks and the next slides over it. Each has a small
+// scene that plays when it arrives on top.
+import { mkFr as c } from '../i18n/marketing-fr';
+const b = c.beliefs;
+const results = ['Votre café', 'Café du coin', 'Coffee & Co'];
+---
+<section id="methode" class="scroll-mt-20 bg-navy py-24 text-white" data-mkb>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <p class="text-sm font-semibold text-green">{b.kicker}</p>
+    <h2 class="mt-2 text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{b.h2a}</span><span class="block text-green">{b.h2b}</span></h2>
+
+    <ol class="mt-14 space-y-6">
+      {b.items.map((it, i) => (
+        <li class="mkb-card grid md:sticky gap-6 overflow-hidden rounded-[2rem] bg-[#0A2A4D] p-6 ring-1 ring-white/10 sm:p-8 md:grid-cols-[1.1fr_1fr] md:items-center md:gap-10" style={`top:${5.5 + i * 0.9}rem;--i:${i}`} data-k={it.k}>
+          <div>
+            <p class="flex items-center gap-3"><span class="display text-6xl text-green sm:text-7xl">{String(i + 1).padStart(2, '0')}</span><span class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-wide">{it.tag}</span></p>
+            <h3 class="mt-4 text-3xl sm:text-4xl">{it.h}</h3>
+            <p class="mt-3 text-white/75 sm:text-lg">{it.p}</p>
+          </div>
+          <div class="mkb-vis relative grid h-56 place-items-center overflow-hidden rounded-[1.5rem] bg-[#F4F6F5] p-4 text-navy sm:h-64" aria-hidden="true">
+            {it.k === 'google' && (
+              <div class="w-full max-w-xs space-y-2 text-sm">
+                <p class="flex items-center gap-2 rounded-full bg-white px-4 py-2.5 shadow-sm"><span class="text-muted">⌕</span><span class="mkb-type overflow-hidden whitespace-nowrap">café près de moi</span><span class="mkb-caret h-4 w-px bg-navy"></span></p>
+                <ol class="relative h-[8.4rem]">
+                  {results.map((r, k) => (
+                    <li class={`mkb-res absolute inset-x-0 flex items-center justify-between rounded-xl bg-white px-3 py-2 shadow-sm ${k === 0 ? 'mkb-you' : ''}`} style={`--from:${[2, 0, 1][k]};--to:${k}`}>
+                      <span class="flex items-center gap-2"><span class={`grid size-6 place-items-center rounded-full text-[0.65rem] font-bold text-white ${k === 0 ? 'bg-green text-navy' : 'bg-[#E5484D]'}`}>{k === 0 ? '★' : '•'}</span><span class="font-semibold">{r}</span></span>
+                      <span class="text-xs text-[#F5B301]">★★★★{k === 0 ? '★' : '☆'}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {it.k === 'go' && (
+              <div class="relative size-full">
+                <span class="absolute inset-0 opacity-60 [background-image:linear-gradient(#DDE3E0_1px,transparent_1px),linear-gradient(90deg,#DDE3E0_1px,transparent_1px)] [background-size:28px_28px]"></span>
+                <svg viewBox="0 0 300 200" class="absolute inset-0 size-full" preserveAspectRatio="none"><path class="mkb-path" d="M50 150 C 120 150, 140 60, 240 55" fill="none" stroke="#05B962" stroke-width="3" stroke-dasharray="7 6" /></svg>
+                <span class="absolute start-[8%] top-[64%] grid size-12 place-items-center rounded-2xl bg-navy text-xl text-white shadow-lg">☕</span>
+                <span class="absolute start-[10%] top-[88%] text-xs font-bold">Chez vous</span>
+                <span class="absolute end-[10%] top-[12%] grid h-20 w-14 grid-cols-2 gap-1 rounded-t-lg bg-[#0A2A4D] p-1.5 shadow-lg">{[0, 1, 2, 3, 4, 5].map(() => <span class="rounded-sm bg-[#F5B301]/80"></span>)}</span>
+                <span class="absolute end-[6%] top-[52%] rounded-full bg-white px-2 py-0.5 text-xs font-bold shadow">Coworking</span>
+                <span class="mkb-bag absolute grid size-9 place-items-center rounded-full bg-green text-base shadow-lg">🥐</span>
+                <span class="mkb-pop absolute end-[24%] top-[4%] rounded-full bg-navy px-2.5 py-1 text-xs font-bold text-white shadow">Dégustation</span>
+              </div>
+            )}
+            {it.k === 'taste' && (
+              <div class="relative">
+                <div class="mkb-inv w-60 rounded-2xl bg-[#FBF7EC] p-4 shadow-xl ring-1 ring-[#E7DCC8] [transform:rotate(-3deg)]">
+                  <p class="text-xs font-bold uppercase tracking-widest text-green-deep">Invitation</p>
+                  <p class="display mt-1 text-3xl leading-none">Un thé offert</p>
+                  <p class="mt-1 text-xs text-muted">Venez goûter notre thé à la menthe maison.</p>
+                  <div class="mt-3 flex items-end justify-between">
+                    <span class="rounded-md bg-white px-2 py-1 font-mono text-xs font-bold ring-1 ring-line">MENTHE-07</span>
+                    <span class="grid size-12 grid-cols-4 gap-0.5 rounded bg-white p-1 ring-1 ring-line">{Array.from({ length: 16 }, (_, k) => <span class={`rounded-[1px] ${[0, 2, 3, 5, 6, 9, 10, 12, 13, 15].includes(k) ? 'bg-navy' : ''}`}></span>)}</span>
+                  </div>
+                </div>
+                <span class="mkb-stamp absolute -end-3 top-1 rotate-12 rounded-xl border-[3px] border-green-deep bg-white/90 px-2.5 py-1 text-center text-sm font-black uppercase leading-tight text-green-deep">Venu ✓<span class="block text-[0.65rem]">et revenu</span></span>
+              </div>
+            )}
+            {it.k === 'concept' && (
+              <div class="grid grid-cols-5 gap-2.5 sm:gap-3">
+                {Array.from({ length: 15 }, (_, k) => (
+                  <span class={`grid size-10 place-items-center rounded-xl text-lg sm:size-11 ${k === 7 ? 'mkb-you2 bg-green text-navy shadow-lg' : 'bg-[#DDE3E0] text-[#9AA7A0]'}`}>{k === 7 ? '★' : '☕'}</span>
+                ))}
+              </div>
+            )}
+            {it.k === 'social' && (
+              <div class="w-56 overflow-hidden rounded-2xl bg-white shadow-xl">
+                <div class="flex items-center gap-2 px-3 py-2 text-xs font-semibold"><span class="size-6 rounded-full bg-linear-to-br from-[#F5B301] to-[#E5484D]"></span>votre.cafe</div>
+                <div class="grid h-24 place-items-center bg-linear-to-br from-navy to-[#0A2A4D] text-center text-white"><p class="display text-2xl leading-none">Soirée<br />dégustation</p></div>
+                <div class="space-y-2 p-3 text-xs">
+                  <p>Jeudi 20h. Places limitées, réservez par WhatsApp.</p>
+                  <p class="mkb-rsv rounded-full bg-green py-1.5 text-center font-bold">Réserver sur WhatsApp</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-mkb]').forEach((root) => {
+    const cards = [...root.querySelectorAll<HTMLElement>('.mkb-card')];
+    if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) { cards.forEach(c => c.classList.add('play')); return; }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) e.target.classList.add('play'); }), { threshold: 0.55 });
+    cards.forEach(c => io.observe(c));
+  });
+</script>
