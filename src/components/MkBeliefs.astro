@@ -1,7 +1,11 @@
 ---
 // "Cinq convictions." Stacked cards: each one sticks and the next slides over it. Each has a small
 // scene that plays when it arrives on top.
-import { mkFr as c } from '../i18n/marketing-fr';
+import { mkOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = mkOf(LG);
 const b = c.beliefs;
 const results = ['Votre café', 'Café du coin', 'Coffee & Co'];
 ---

@@ -8,7 +8,11 @@ import FinalCta from '../FinalCta.astro';
 import Related from '../Related.astro';
 import { signupUrl } from '../../config';
 import { copy } from '../../i18n';
-import { posFr } from '../../i18n/products-fr';
+import { posOf } from '../../i18n/content';
+import { tr, langOf } from '../../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const posFr = posOf(LG);
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 interface Props { lang: Lang }

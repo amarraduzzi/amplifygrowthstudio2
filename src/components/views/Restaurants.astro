@@ -10,7 +10,11 @@ import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import { copy } from '../../i18n';
-import { rsFr as c } from '../../i18n/restaurants-fr';
+import { rsOf } from '../../i18n/content';
+import { tr, langOf } from '../../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = rsOf(LG);
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 interface Props { lang: Lang }

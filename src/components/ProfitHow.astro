@@ -2,12 +2,17 @@
 // "Aucun changement de caisse." Three stations joined by a line that fills as you scroll: photo of the
 // menu, the AI fills the recipes, you see the margins. Below: your current till, or Amplify POS.
 import Icon from './Icon.astro';
-import { profitFr as p, posFr } from '../i18n/products-fr';
+import { posOf, profitOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const p = profitOf(LG);
+const posFr = posOf(LG);
 import { ROUTES, type Lang } from '../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 ---
-<section id="comment" class="scroll-mt-20 border-y border-line bg-paper" data-phow>
+<section id="comment" class="scroll-mt-20 border-y border-line bg-paper" data-phow data-i18n={JSON.stringify({ any: [tt('N’importe quelle caisse'), tt('Vous la gardez telle quelle'), tt('rien à brancher'), tt('Marges calculées depuis vos fiches')], pos: ['Amplify POS', tt('Chaque vente part en direct'), tt('ventes en direct'), tt('Marge réelle du mois, sans rien saisir')] })}>
   <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Aucun changement</span><span class="block text-green-deep">de caisse.</span></h2>
     <p class="mt-4 max-w-2xl text-lg text-muted">{p.how.text}</p>
@@ -63,7 +68,7 @@ const { lang } = Astro.props;
         </li>
       ))}
     </ol>
-    <p class="mt-3 text-xs text-muted">{p.card.example}. Pourcentages : marge par plat.</p>
+    <p class="mt-3 text-xs text-muted">{p.card.example}. {tt('Pourcentages : marge par plat.')}</p>
 
     <!-- your till, or Amplify POS -->
     <div class="hw-sw mt-12 rounded-[2rem] bg-navy p-5 text-white sm:p-8" data-mode="any">
@@ -83,7 +88,7 @@ const { lang } = Astro.props;
           <span class="hw-wire absolute inset-0 rounded-full"></span>
           <span class="hw-dot absolute size-2.5 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
           <span class="hw-dot hw-dot2 absolute size-2.5 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
-          <span class="hw-wlabel absolute start-1/2 top-1/2 ms-4 -translate-y-1/2 whitespace-nowrap text-xs font-semibold text-white/60 sm:ms-0 sm:mt-0 sm:-translate-x-1/2 sm:translate-y-3">rien à brancher</span>
+          <span class="hw-wlabel absolute start-1/2 top-1/2 ms-4 -translate-y-1/2 whitespace-nowrap text-xs font-semibold text-white/60 sm:ms-0 sm:mt-0 sm:-translate-x-1/2 sm:translate-y-3 rtl:sm:translate-x-1/2">rien à brancher</span>
         </div>
         <div class="flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/15">
           <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-green text-lg font-black text-navy">%</span>
@@ -99,7 +104,7 @@ const { lang } = Astro.props;
   document.querySelectorAll<HTMLElement>('[data-phow]').forEach((root) => {
     const sw = root.querySelector<HTMLElement>('.hw-sw')!;
     const tabs = [...root.querySelectorAll<HTMLButtonElement>('.hw-tab')];
-    const T = { any: ['N’importe quelle caisse', 'Vous la gardez telle quelle', 'rien à brancher', 'Marges calculées depuis vos fiches'], pos: ['Amplify POS', 'Chaque vente part en direct', 'ventes en direct', 'Marge réelle du mois, sans rien saisir'] };
+    const T = JSON.parse(root.dataset.i18n!) as { any: string[]; pos: string[] };
     const set = (m: 'any' | 'pos') => {
       sw.dataset.mode = m;
       tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.m === m)));

@@ -2,6 +2,9 @@
 // Contact: three ways to reach us, a message builder with a live WhatsApp preview, and a place to leave
 // a review. Every rating goes to Google (no filtering of bad reviews: Google does not allow it), and a
 // private remark can go to WhatsApp instead.
+import { tr, langOf } from '../../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
 import Base from '../../layouts/Base.astro';
 import Icon from '../Icon.astro';
 import { CONTACT } from '../../config';
@@ -48,7 +51,7 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
   <!-- message builder with live preview -->
   <section class="border-y border-line bg-paper">
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[1.1fr_1fr]">
-      <form id="wa-form" class="space-y-7" data-number={CONTACT.whatsapp}>
+      <form id="wa-form" class="space-y-7" data-number={CONTACT.whatsapp} data-i18n={JSON.stringify({ hi: tt('Bonjour'), me: tt(', je suis {n}'), run: tt('J’ai un {type} à {city}.'), need: tt('Ce qui m’intéresse : {list}.'), other: tt('Autre'), place: tt('établissement') })}>
         <div>
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Votre message,</span><span class="block text-green-deep">prêt en 20 secondes.</span></h2>
           <p class="mt-4 max-w-md text-muted">Il s’écrit à droite pendant que vous remplissez. Rien n’est envoyé avant que vous appuyiez sur envoyer dans WhatsApp.</p>
@@ -56,10 +59,10 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
         <label class="block"><span class="font-semibold">{c.form.name}</span>
           <input name="name" autocomplete="given-name" placeholder="Karim" class="mt-2 min-h-12 w-full rounded-xl bg-white px-4 ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-green" /></label>
         <fieldset><legend class="font-semibold">{c.form.type}</legend>
-          <div class="mt-2 flex flex-wrap gap-2">{types.map((x, i) => <label class="ct-chip cursor-pointer"><input type="radio" name="type" value={x} class="peer sr-only" checked={i === 0} /><span class="block rounded-full bg-white px-4 py-2 font-semibold ring-1 ring-line transition-colors peer-checked:bg-navy peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-green">{x}</span></label>)}</div>
+          <div class="mt-2 flex flex-wrap gap-2">{types.map((x, i) => <label class="ct-chip cursor-pointer"><input type="radio" name="type" value={tt(x)} class="peer sr-only" checked={i === 0} /><span class="block rounded-full bg-white px-4 py-2 font-semibold ring-1 ring-line transition-colors peer-checked:bg-navy peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-green">{x}</span></label>)}</div>
         </fieldset>
         <fieldset><legend class="font-semibold">Ce qui vous intéresse</legend>
-          <div class="mt-2 flex flex-wrap gap-2">{needs.map((x, i) => <label class="cursor-pointer"><input type="checkbox" name="need" value={x} class="peer sr-only" checked={i === 0} /><span class="flex items-center gap-1.5 rounded-full bg-white px-4 py-2 font-semibold ring-1 ring-line transition-colors peer-checked:bg-green peer-checked:ring-green peer-focus-visible:ring-2 peer-focus-visible:ring-navy">{x}</span></label>)}</div>
+          <div class="mt-2 flex flex-wrap gap-2">{needs.map((x, i) => <label class="cursor-pointer"><input type="checkbox" name="need" value={tt(x)} class="peer sr-only" checked={i === 0} /><span class="flex items-center gap-1.5 rounded-full bg-white px-4 py-2 font-semibold ring-1 ring-line transition-colors peer-checked:bg-green peer-checked:ring-green peer-focus-visible:ring-2 peer-focus-visible:ring-navy">{x}</span></label>)}</div>
         </fieldset>
         <label class="block"><span class="font-semibold">{c.form.city}</span>
           <input name="city" value={c.form.cityDefault} autocomplete="address-level2" class="mt-2 min-h-12 w-full rounded-xl bg-white px-4 ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-green" /></label>
@@ -73,7 +76,7 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
         <div class="rounded-[2.8rem] bg-linear-to-b from-[#4A505A] via-[#1C1F24] to-[#4A505A] p-[0.45rem] shadow-[0_50px_100px_-40px_rgba(0,30,62,0.7)]">
           <div class="overflow-hidden rounded-[2.45rem] bg-black p-[0.3rem]">
             <div class="relative flex h-[30rem] flex-col overflow-hidden rounded-[2.15rem] bg-[#ECE5DD] text-[0.8rem] text-navy">
-              <span class="absolute start-1/2 top-2 z-20 h-6 w-[5.5rem] -translate-x-1/2 rounded-full bg-black"></span>
+              <span class="absolute start-1/2 top-2 z-20 h-6 w-[5.5rem] -translate-x-1/2 rounded-full bg-black rtl:translate-x-1/2"></span>
               <div class="flex items-center gap-2.5 bg-[#075E54] px-3 pb-2.5 pt-10 text-white">
                 <span class="grid size-9 place-items-center rounded-full bg-white text-xs font-black text-navy">A</span>
                 <span class="leading-tight"><span class="block font-semibold">Amplify Growth Studio</span><span class="block text-[0.65rem] text-white/70">en ligne</span></span>
@@ -91,7 +94,7 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
   </section>
 
   <!-- leave a review -->
-  <section class="relative isolate overflow-hidden bg-navy py-24 text-white" data-review data-url={CONTACT.reviewUrl} data-wa={CONTACT.whatsapp}>
+  <section class="relative isolate overflow-hidden bg-navy py-24 text-white" data-review data-url={CONTACT.reviewUrl} data-wa={CONTACT.whatsapp} data-i18n={JSON.stringify({ L: ['', tt('Décevant'), tt('Moyen'), tt('Bien'), tt('Très bien'), tt('Excellent !')], msg: tt('Bonjour, une remarque sur Amplify'), note: tt('ma note') })}>
     <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_80%_30%,rgba(245,179,1,.16),transparent_70%),radial-gradient(40%_50%_at_10%_90%,rgba(5,185,98,.18),transparent_70%)]" aria-hidden="true"></span>
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">
       <div>
@@ -133,11 +136,12 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
     const build = () => {
       const d = new FormData(form);
       const name = String(d.get('name') ?? '').trim();
-      const raw = String(d.get('type') ?? 'Restaurant').toLowerCase();
-      const type = raw === 'autre' ? 'établissement' : raw;
+      const I = JSON.parse(form.dataset.i18n!);
+      const raw = String(d.get('type') ?? 'Restaurant');
+      const type = raw === I.other ? I.place : raw.toLowerCase();
       const city = String(d.get('city') ?? '').trim() || 'Rabat';
       const need = d.getAll('need').map(String);
-      return `Bonjour${name ? `, je suis ${name}` : ''}. J’ai un ${type} à ${city}.` + (need.length ? `\nCe qui m’intéresse : ${need.join(', ').toLowerCase()}.` : '');
+      return `${I.hi}${name ? I.me.replace('{n}', name) : ''}. ${I.run.replace('{type}', type).replace('{city}', city)}` + (need.length ? `\n${I.need.replace('{list}', need.join(', ').toLowerCase())}` : '');
     };
     const render = () => { prev.textContent = build(); prev.classList.remove('ct-pop'); void prev.offsetWidth; prev.classList.add('ct-pop'); };
     form.addEventListener('input', render); form.addEventListener('change', render); render();
@@ -153,7 +157,7 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
       const label = root.querySelector<HTMLElement>('.rv-label')!;
       const text = root.querySelector<HTMLTextAreaElement>('.rv-text')!;
       const go = root.querySelector<HTMLButtonElement>('.rv-go')!;
-      const L = ['', 'Décevant', 'Moyen', 'Bien', 'Très bien', 'Excellent !'];
+      const I = JSON.parse(root.dataset.i18n!); const L: string[] = I.L;
       let rating = 0;
       const paint = (n: number) => stars.forEach((s, i) => s.classList.toggle('on', i < n));
       stars.forEach((s, i) => {
@@ -178,7 +182,7 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
       });
       root.querySelector<HTMLAnchorElement>('.rv-private')!.addEventListener('click', (e) => {
         e.preventDefault();
-        const msg = `Bonjour, une remarque sur Amplify${rating ? ` (ma note : ${rating}/5)` : ''} : ${text.value.trim()}`;
+        const msg = `${I.msg}${rating ? ` (${I.note} : ${rating}/5)` : ''} : ${text.value.trim()}`;
         window.open(`https://wa.me/${root.dataset.wa}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
       });
     });

@@ -3,7 +3,11 @@
 // Switch: without a site, the visitor finds nothing to read; with one, menu, languages and a way to come.
 import Icon from './Icon.astro';
 import WaButton from './WaButton.astro';
-import { mkFr as c } from '../i18n/marketing-fr';
+import { mkOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = mkOf(LG);
 const s = c.site;
 ---
 <section class="relative isolate overflow-hidden py-24" data-mksite data-mode="with">
@@ -14,9 +18,11 @@ const s = c.site;
       <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{s.h2a}</span><span class="block text-green-deep">{s.h2b}</span></h2>
       <p class="mt-5 max-w-xl text-lg text-muted">{s.p}</p>
       <!-- the searches -->
+      <x-notr>
       <ul class="mt-7 flex flex-wrap gap-2" aria-label="Recherches">
         {s.searches.map(([l, q], i) => <li class="mks-q flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-sm ring-1 ring-line" style={`--d:${i * 140}ms`} lang={l} dir={l === 'ar' ? 'rtl' : 'ltr'}><span class="grid size-6 place-items-center rounded-full bg-chalk text-[0.6rem] font-bold uppercase" dir="ltr">{l}</span>{q}</li>)}
       </ul>
+      </x-notr>
       <ul class="mt-8 grid gap-3 sm:grid-cols-2">
         {s.list.map(([h, p]) => <li class="flex gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span><span class="block font-semibold">{h}</span><span class="text-sm text-muted">{p}</span></span></li>)}
       </ul>
@@ -36,7 +42,7 @@ const s = c.site;
       <div class="relative mx-auto w-[17rem] rounded-[2.6rem] bg-linear-to-b from-[#3A3F47] via-[#1C1F24] to-[#3A3F47] p-2 shadow-[0_50px_90px_-40px_rgba(0,30,62,0.7)] sm:w-[19rem]" aria-hidden="true">
         <div class="overflow-hidden rounded-[2.2rem] bg-black p-1.5">
           <div class="relative h-[32rem] overflow-hidden rounded-[1.8rem] bg-white text-navy">
-            <span class="absolute start-1/2 top-2 z-20 h-5 w-20 -translate-x-1/2 rounded-full bg-black"></span>
+            <span class="absolute start-1/2 top-2 z-20 h-5 w-20 -translate-x-1/2 rounded-full bg-black rtl:translate-x-1/2"></span>
             <p class="mx-3 mt-9 flex items-center gap-2 rounded-full bg-chalk px-3 py-2 text-xs"><span class="text-muted">⌕</span><span class="mks-search font-medium" lang="en">restaurant near me</span></p>
             <!-- without -->
             <div class="mks-without absolute inset-x-0 top-[4.75rem] px-3 transition-[opacity,transform] duration-500">

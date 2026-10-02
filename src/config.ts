@@ -11,7 +11,7 @@ export const SITE = {
    */
   live: false,
   /** Languages that are finished. A language goes in here only when all its pages exist. */
-  languages: ['fr'] as const,
+  languages: ['fr', 'en', 'ar'] as const,
   /** Live demo menu of the fictional café Dar Nour (supabase/demo/dar-nour.sql). */
   demoMenuUrl: 'https://posamplify.pages.dev/dar-nour',
   /** where "Voir la démo" goes: the live demo section of the POS page on this site */

@@ -3,11 +3,16 @@
 // calculator: tick what you need, see the plan and its price. Nothing else to pay.
 import Icon from './Icon.astro';
 import { signupUrl } from '../config';
-import { posFr } from '../i18n/products-fr';
+import { posOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const posFr = posOf(LG);
 interface Props { lang?: string }
 const lang = Astro.props.lang ?? 'fr';
 const a = posFr.allin;
-const plans = Object.fromEntries(posFr.pricing.plans.map(p => [p.name, p]));
+// plans by position (same order in every language): essentiel, restaurant, profit, controle
+const plans = Object.fromEntries(posFr.pricing.plans.map((p, i) => [['essentiel', 'restaurant', 'profit', 'controle'][i], p]));
 ---
 <div class="grid gap-5 lg:grid-cols-[1.1fr_1fr]" data-pricebuilder data-plans={JSON.stringify(plans)} data-signup={signupUrl(lang)} data-signup-profit={signupUrl(lang, 'profit')}>
   <!-- the anchor -->
@@ -79,7 +84,7 @@ const plans = Object.fromEntries(posFr.pricing.plans.map(p => [p.name, p]));
       empty.classList.toggle('hidden', till || gestion);
       if (!till && !gestion) return;
       // which plan covers the needs
-      const plan = till && gestion ? plans['Contrôle'] : gestion ? plans['Profit'] : (on('multi') || on('qr')) ? plans['Restaurant'] : plans['Essentiel'];
+      const plan = till && gestion ? plans.controle : gestion ? plans.profit : (on('multi') || on('qr')) ? plans.restaurant : plans.essentiel;
       name.textContent = plan.name; text.textContent = plan.text; count(Number(plan.price));
       start.href = !till && gestion ? root.dataset.signupProfit! : root.dataset.signup!;
     };

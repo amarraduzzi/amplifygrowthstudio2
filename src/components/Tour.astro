@@ -59,7 +59,7 @@ const t = copy(Astro.props.lang).home.tour;
                         <span class="spot-ring absolute inset-0 rounded-full bg-green/60" aria-hidden="true"></span>
                         <span class="spot-dot relative grid size-6 place-items-center rounded-full bg-green text-xs font-bold leading-none text-navy shadow-lg ring-2 ring-white sm:size-7">{k + 1}</span>
                       </button>
-                      <span class={`spot-tip pointer-events-none absolute top-9 hidden md:block z-20 w-max max-w-[14rem] rounded-xl bg-paper px-3.5 py-2.5 text-[0.85rem] font-semibold leading-snug text-navy opacity-0 shadow-2xl transition-opacity duration-300 sm:text-[0.95rem] ${x > 62 ? 'end-0' : x < 38 ? 'start-0' : 'start-1/2 -translate-x-1/2'}`} role="tooltip">{label}</span>
+                      <span class={`spot-tip pointer-events-none absolute top-9 hidden md:block z-20 w-max max-w-[14rem] rounded-xl bg-paper px-3.5 py-2.5 text-[0.85rem] font-semibold leading-snug text-navy opacity-0 shadow-2xl transition-opacity duration-300 sm:text-[0.95rem] ${x > 62 ? 'right-0' : x < 38 ? 'left-0' : 'left-1/2 -translate-x-1/2'}`} role="tooltip">{label}</span>
                     </span>
                   </span>
                 ))}

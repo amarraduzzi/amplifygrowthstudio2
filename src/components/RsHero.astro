@@ -3,7 +3,11 @@
 // wrong today in each zone (red). Switch to "Avec Amplify" and every zone turns green with its fix.
 import WaButton from './WaButton.astro';
 import Icon from './Icon.astro';
-import { rsFr as c } from '../i18n/restaurants-fr';
+import { rsOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = rsOf(LG);
 const h = c.hero;
 const Z = Object.fromEntries(h.zones.map(z => [z.k, z]));
 const area: Record<string, string> = { salle: 'sa', cuisine: 'cu', caisse: 'ca', stock: 'st', bureau: 'bu', porte: 'po' };

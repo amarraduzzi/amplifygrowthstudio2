@@ -2,10 +2,13 @@
 // "Un seul bon plat mal calculé coûte plus cher." The visitor sets how often one dish sells and how
 // many dirhams it loses per plate: the loss per month grows next to the 249 DH of Amplify Profit.
 // The visitor's own numbers, no promise of gain.
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
 interface Props { price?: number }
 const { price = 249 } = Astro.props;
 ---
-<div class="pl grid gap-6 rounded-[2rem] bg-navy p-6 text-white sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10" data-ploss data-price={price}>
+<div class="pl grid gap-6 rounded-[2rem] bg-navy p-6 text-white sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10" data-ploss data-price={price} data-i18n={JSON.stringify({ day: tt('jour pour rembourser l’abonnement, avec un seul plat corrigé.'), days: tt('jours pour rembourser l’abonnement, avec un seul plat corrigé.'), cur: tt('DH'), loc: LG === 'en' ? 'en-US' : 'fr-FR' })}>
   <div class="space-y-6">
     <p class="text-sm font-semibold text-green">Faites le calcul avec un seul plat</p>
     <label class="block">
@@ -45,7 +48,8 @@ const { price = 249 } = Astro.props;
     const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
     const price = Number(root.dataset.price) || 249;
     const r1 = $<HTMLInputElement>('.pl-r1'), r2 = $<HTMLInputElement>('.pl-r2');
-    const fmt = (n: number) => `${Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ')} DH`;
+    const I = JSON.parse(root.dataset.i18n!);
+    const fmt = (n: number) => `${Math.round(n).toLocaleString(I.loc).replace(/[\u202f\u00a0]/g, ' ')} ${I.cur}`;
     let shown = 0, raf = 0;
     const count = (to: number) => {
       cancelAnimationFrame(raf);
@@ -60,14 +64,14 @@ const { price = 249 } = Astro.props;
     const fill = (r: HTMLInputElement) => r.style.setProperty('--fill', `${(Number(r.value) - Number(r.min)) / (Number(r.max) - Number(r.min)) * 100}%`);
     const render = () => {
       const a = Number(r1.value), b = Number(r2.value), day = a * b, month = day * 30;
-      $('.pl-v1').textContent = String(a); $('.pl-v2').textContent = `${b} DH`;
+      $('.pl-v1').textContent = String(a); $('.pl-v2').textContent = `${b} ${I.cur}`;
       count(month);
       $('.pl-lossb').textContent = fmt(month);
       const max = Math.max(month, price);
       $('.pl-bar1').style.width = `${month / max * 100}%`; $('.pl-bar2').style.width = `${price / max * 100}%`;
       const days = Math.ceil(price / day);
       $('.pl-days').textContent = String(days);
-      $('.pl-days-t').textContent = `${days > 1 ? 'jours' : 'jour'} pour rembourser l’abonnement, avec un seul plat corrigé.`;
+      $('.pl-days-t').textContent = days > 1 ? I.days : I.day;
       fill(r1); fill(r2);
     };
     r1.addEventListener('input', render); r2.addEventListener('input', render);

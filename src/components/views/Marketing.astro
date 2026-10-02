@@ -10,7 +10,11 @@ import PhotoBand from '../PhotoBand.astro';
 import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import { copy } from '../../i18n';
-import { mkFr as c } from '../../i18n/marketing-fr';
+import { mkOf } from '../../i18n/content';
+import { tr, langOf } from '../../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = mkOf(LG);
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 interface Props { lang: Lang }
@@ -67,7 +71,7 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
       {c.process.steps.map(([h, p], i) => (
         <li class="step mkp-st relative ps-16 md:ps-0 md:text-center">
           <span class="mkp-dot absolute start-0 top-0 z-10 grid size-14 place-items-center rounded-full bg-paper text-2xl ring-1 ring-line transition-all duration-500 md:relative md:mx-auto">{ICONS[i]}</span>
-          <p class="display mt-0 text-sm text-green-deep md:mt-5">ÉTAPE {i + 1}</p>
+          <p class="display mt-0 text-sm text-green-deep md:mt-5">{tt('ÉTAPE')} {i + 1}</p>
           <h3 class="mt-1 text-xl">{h}</h3>
           <p class="mt-2 text-muted">{p}</p>
         </li>

@@ -8,15 +8,19 @@ import FeatureHub from '../FeatureHub.astro';
 import ProductFinal from '../ProductFinal.astro';
 import { signupUrl } from '../../config';
 import { copy } from '../../i18n';
-import { featuresFr as f } from '../../i18n/products-fr';
+import { featuresOf } from '../../i18n/content';
+import { tr, langOf } from '../../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const f = featuresOf(LG);
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
 const total = f.modules.reduce((n, m) => n + m.items.length, 0);
-const title = 'Toutes les fonctionnalités de la caisse | Amplify POS';
-const description = `Les ${total} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.`;
-const wa = 'Bonjour, j’ai une question sur les fonctionnalités d’Amplify.';
+const title = tt('Toutes les fonctionnalités de la caisse | Amplify POS');
+const description = tt('Les {n} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.').replace('{n}', String(total));
+const wa = tt('Bonjour, j’ai une question sur les fonctionnalités d’Amplify.');
 const ICON: Record<string, string> = { pos: 'till', waiter: 'phone', qr: 'qr', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
 const stats = [[f.modules.length, f.hero.stats[0]], [total, f.hero.stats[1]], [2, f.hero.stats[2]]] as [number, [string, string]][];
 const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélité'];
@@ -45,7 +49,7 @@ const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélit�
   </section>
 
   <!-- sticky bar: jump to a module, or search everything -->
-  <nav class="fx-bar sticky top-16 z-30 border-y border-line bg-chalk/95 backdrop-blur" aria-label={f.jump}>
+  <nav data-i18n={JSON.stringify({ one: tt('{n} fonction pour « {q} »'), many: tt('{n} fonctions pour « {q} »'), ask: tt('Bonjour, est-ce qu’Amplify fait : {q} ?') })} class="fx-bar sticky top-16 z-30 border-y border-line bg-chalk/95 backdrop-blur" aria-label={f.jump}>
     <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-2.5 sm:px-6 lg:flex-row lg:items-center">
       <label class="relative flex shrink-0 items-center lg:w-72">
         <Icon name="search" class="pointer-events-none absolute start-3.5 size-4 text-muted" />
@@ -81,7 +85,7 @@ const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélit�
             <p class="mt-3 text-muted">{m.text}</p>
             <p class="fx-prog mt-5 flex items-center gap-3 text-sm font-semibold" aria-hidden="true">
               <span class="h-1.5 w-28 overflow-hidden rounded-full bg-line"><span class="fx-mbar block h-full w-full origin-left rounded-full bg-green rtl:origin-right" style="transform:scaleX(0)"></span></span>
-              <span><span class="fx-seen tabular-nums">0</span> / {m.items.length} fonctions</span>
+              <span><span class="fx-seen tabular-nums">0</span> / {m.items.length} {tt('fonctions')}</span>
             </p>
           </div>
           <div class="grid content-start gap-3 sm:grid-cols-2">
@@ -152,6 +156,7 @@ const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélit�
 
   // search across every feature
   const q = document.querySelector<HTMLInputElement>('.fx-q')!;
+  const I = JSON.parse(bar.dataset.i18n!);
   const info = document.querySelector<HTMLElement>('.fx-search-info')!;
   const none = document.querySelector<HTMLElement>('.fx-none')!;
   const tryRow = document.querySelector<HTMLElement>('.fx-try')!;
@@ -174,9 +179,9 @@ const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélit�
     });
     mods.forEach(m => m.classList.toggle('hidden', !!term && !m.querySelector('.fx-card:not(.hidden)')));
     info.classList.toggle('hidden', !term || !hits); info.classList.toggle('flex', !!term && !!hits);
-    info.querySelector('.fx-res')!.textContent = `${hits} fonction${hits > 1 ? 's' : ''} pour « ${q.value.trim()} »`;
+    info.querySelector('.fx-res')!.textContent = (hits > 1 ? I.many : I.one).replace('{n}', String(hits)).replace('{q}', q.value.trim());
     none.classList.toggle('hidden', !term || !!hits);
-    none.querySelector<HTMLAnchorElement>('.fx-wa')!.href = waLink(`Bonjour, est-ce qu’Amplify fait : ${q.value.trim()} ?`);
+    none.querySelector<HTMLAnchorElement>('.fx-wa')!.href = waLink(I.ask.replace('{q}', q.value.trim()));
     tryRow.classList.toggle('hidden', !!term);
     document.querySelectorAll('.fx-prog').forEach(el => el.classList.toggle('invisible', !!term));
     clearTimeout(jump);

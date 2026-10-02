@@ -15,15 +15,19 @@ import Faq from '../Faq.astro';
 import ProductFinal from '../ProductFinal.astro';
 import { SITE, signupUrl } from '../../config';
 import { copy } from '../../i18n';
-import { posFr as p } from '../../i18n/products-fr';
+import { posOf } from '../../i18n/content';
+import { tr, langOf } from '../../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const p = posOf(LG);
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema } from '../../lib/schema';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
-const title = 'Logiciel de caisse restaurant au Maroc | Amplify POS';
-const description = 'Amplify POS : caisse tactile, menu QR, bons cuisine, rapports X et Z. Fonctionne sans internet. Dès 199 DH HT par mois, 30 jours gratuits.';
-const wa = 'Bonjour, j’ai une question sur Amplify POS.';
+const title = tt('Logiciel de caisse restaurant au Maroc | Amplify POS');
+const description = tt('Amplify POS : caisse tactile, menu QR, bons cuisine, rapports X et Z. Fonctionne sans internet. Dès 199 DH HT par mois, 30 jours gratuits.');
+const wa = tt('Bonjour, j’ai une question sur Amplify POS.');
 const signup = signupUrl(lang);
 const nFeatures = 40;
 const schema = [

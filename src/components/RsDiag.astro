@@ -2,7 +2,11 @@
 // "Qu'est-ce qui vous coûte le plus ?" The visitor taps their problems; the plan builds itself on the
 // right, in the order that usually pays back first, with the tool for each step. The selection is also
 // sent with the WhatsApp message (here and in the final card).
-import { rsFr as c } from '../i18n/restaurants-fr';
+import { rsOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = rsOf(LG);
 import { ROUTES, type Lang } from '../i18n/routes';
 import { waLink } from '../config';
 interface Props { lang: Lang }
@@ -11,7 +15,7 @@ const d = c.diag;
 const P = { pos: ['Amplify POS', 'bg-blue text-white', ROUTES.pos[lang]], profit: ['Amplify Profit', 'bg-green text-navy', ROUTES.profit[lang]], marketing: ['Marketing', 'bg-[#F5B301] text-navy', ROUTES.marketing[lang]] } as const;
 const pre = ['marge', 'commandes'];
 ---
-<section id="diagnostic" class="scroll-mt-20 border-y border-line bg-paper" data-rsdiag data-wa={c.wa}>
+<section id="diagnostic" class="scroll-mt-20 border-y border-line bg-paper" data-rsdiag data-wa={c.wa} data-cost={tt('Ce qui me coûte le plus :')}>
   <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
     <p class="text-sm font-semibold text-green-deep">{d.kicker}</p>
     <h2 class="mt-2 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{d.h2a}</span><span class="block text-green-deep">{d.h2b}</span></h2>
@@ -81,7 +85,7 @@ const pre = ['marge', 'commandes'];
       root.querySelector('.rd-empty')!.classList.toggle('hidden', n > 0);
       send.classList.toggle('pointer-events-none', n === 0); send.classList.toggle('opacity-40', n === 0);
       const list = pains.filter(p => on.has(p.dataset.k)).map(p => `- ${p.textContent!.trim()}`);
-      const text = list.length ? `${base}\nCe qui me coûte le plus :\n${list.join('\n')}` : base;
+      const text = list.length ? `${base}\n${root.dataset.cost}\n${list.join('\n')}` : base;
       send.href = waLink(text);
       document.dispatchEvent(new CustomEvent('rs-diag', { detail: { text, items: pains.filter(p => on.has(p.dataset.k)).map(p => p.textContent!.trim()) } }));
     };

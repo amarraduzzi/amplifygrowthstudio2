@@ -4,7 +4,11 @@
 // replies pop up around the phone and the room gauge goes from calm to full. "Renvoyer" plays it again.
 import Icon from './Icon.astro';
 import WaButton from './WaButton.astro';
-import { mkFr as c } from '../i18n/marketing-fr';
+import { mkOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = mkOf(LG);
 const w = c.wa;
 const toasts = [
   { n: 'Sara', i: 'S', r: w.replies[0], pos: 'start-0 top-[13%] sm:-start-6', bg: '#F5B301' },
@@ -48,7 +52,7 @@ const coins = [[8, 0], [22, 2.5], [37, 5], [55, 1.2], [70, 3.8], [86, 6.2], [94,
             <div class="relative z-10 flex items-center justify-between bg-[#1F2C34] px-6 pb-1 pt-2.5 text-[0.7rem] font-semibold">
               <span>15:10</span><span class="flex items-center gap-1"><span class="flex items-end gap-px">{[3, 5, 7, 9].map(h => <span class="w-[3px] rounded-sm bg-white" style={`height:${h}px`}></span>)}</span><span class="ms-1 h-2.5 w-5 rounded-[3px] border border-white/80 p-px"><span class="block h-full w-3/4 rounded-[1px] bg-white"></span></span></span>
             </div>
-            <span class="absolute start-1/2 top-2 z-20 h-6 w-[5.5rem] -translate-x-1/2 rounded-full bg-black"></span>
+            <span class="absolute start-1/2 top-2 z-20 h-6 w-[5.5rem] -translate-x-1/2 rounded-full bg-black rtl:translate-x-1/2"></span>
             <div class="flex items-center gap-2.5 bg-[#1F2C34] px-3 pb-2.5 pt-1.5">
               <span class="text-lg text-[#00A884]">‹</span>
               <span class="grid size-9 place-items-center rounded-full bg-[#00A884] text-[#0B141A]"><svg viewBox="0 0 24 24" class="size-5" fill="currentColor"><path d="M12 3a9 9 0 0 0-9 9v3h3v-3a6 6 0 0 1 12 0v3h3v-3a9 9 0 0 0-9-9zM4 17h4v4H4zm12 0h4v4h-4z"/></svg></span>

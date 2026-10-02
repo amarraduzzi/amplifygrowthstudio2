@@ -1,7 +1,11 @@
 ---
 // "Chaque employé travaille dans sa langue": a live till (French / Arabic, mirrored right to left)
 // and the guest's QR menu (French / Arabic / English). Switch them yourself, or watch them switch.
-import { posFr } from '../i18n/products-fr';
+import { posOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const posFr = posOf(LG);
 const l = posFr.lang;
 const T = {
   fr: { dir: 'ltr', table: 'Table 4', items: [['Thé à la menthe', '16'], ['Café noir', '32']], total: 'Total', send: 'Envoyer', pay: 'Encaisser', cur: 'MAD', hello: 'Bonjour Sara' },
@@ -40,6 +44,7 @@ const seg = 'lang-btn rounded-full px-4 py-2 text-sm font-semibold transition-co
     </div>
 
     <!-- the till and the phone -->
+    <x-notr>
     <div class="relative sm:pb-12" aria-hidden="true">
       <div class="rounded-[1.6rem] bg-[#0B1422] p-2.5 shadow-[0_40px_80px_-35px_rgba(0,30,62,0.6)] ring-1 ring-black/10 sm:me-10">
         {Object.entries(T).map(([k, t]) => (
@@ -57,7 +62,7 @@ const seg = 'lang-btn rounded-full px-4 py-2 text-sm font-semibold transition-co
                 ))}
                 <li class="lw flex items-center justify-between px-1 pt-1 text-sm text-white/60" style="--d:200ms"><span>{t.total}</span><span class="display text-3xl text-green">48 {t.cur}</span></li>
               </ul>
-              <div class="grid grid-cols-2 gap-2 sm:[padding-right:34%]">
+              <div class="grid grid-cols-2 gap-2 sm:[padding-right:34%] rtl:sm:[padding-right:0] rtl:sm:[padding-left:34%]">
                 <span class="lw grid min-h-11 place-items-center rounded-xl bg-green px-4 text-sm font-bold text-navy" style="--d:250ms">{t.send}</span>
                 <span class="lw grid min-h-11 place-items-center rounded-xl bg-[#2DD4BF] px-4 text-sm font-bold text-navy" style="--d:300ms">{t.pay}</span>
               </div>
@@ -71,7 +76,7 @@ const seg = 'lang-btn rounded-full px-4 py-2 text-sm font-semibold transition-co
         <div class="rounded-[2rem] bg-linear-to-b from-[#3A3F47] via-[#1C1F24] to-[#3A3F47] p-1.5 shadow-2xl">
           <div class="overflow-hidden rounded-[1.7rem] bg-black p-1">
             <div class="relative overflow-hidden rounded-[1.45rem] bg-[#FAF8F3]">
-              <span class="absolute start-1/2 top-1 z-10 h-3 w-14 -translate-x-1/2 rounded-full bg-black"></span>
+              <span class="absolute start-1/2 top-1 z-10 h-3 w-14 -translate-x-1/2 rounded-full bg-black rtl:translate-x-1/2"></span>
               {Object.entries(M).map(([k, m]) => (
                 <div class={`lang-menu px-2.5 pb-3 pt-6 text-navy ${k === 'fr' ? '' : 'hidden'}`} data-lm={k} dir={m.dir} lang={k}>
                   <p class="lw text-[0.7rem] font-bold" style="--d:0ms">{m.cat}</p>
@@ -92,6 +97,7 @@ const seg = 'lang-btn rounded-full px-4 py-2 text-sm font-semibold transition-co
         </div>
       </div>
     </div>
+    </x-notr>
   </div>
 </section>
 

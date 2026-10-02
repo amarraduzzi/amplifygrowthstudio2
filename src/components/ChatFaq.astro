@@ -1,6 +1,9 @@
 ---
 // FAQ as a WhatsApp conversation: tap a question, it is "sent", Amplify types, the answer arrives.
 // Your own question goes straight to the real WhatsApp. All answers are in the page (and in the FAQ schema).
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
 import Mark from './Mark.astro';
 import WaButton from './WaButton.astro';
 import { CONTACT } from '../config';
@@ -11,7 +14,7 @@ const all = copy(Astro.props.lang);
 const items = all.home.faq;
 const c = all.home.chat;
 ---
-<section class="relative mx-auto grid max-w-6xl gap-10 px-4 py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14" data-chatfaq>
+<section class="relative mx-auto grid max-w-6xl gap-10 px-4 py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14" data-chatfaq data-q={tt('Bonjour, j’ai une question sur Amplify.')}>
   <div>
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{all.ui.faq}</h2>
     <p class="mt-5 max-w-sm text-lg text-muted">{all.ui.faqCta}</p>
@@ -94,7 +97,7 @@ const c = all.home.chat;
     form.addEventListener('submit', (e) => {
       e.preventDefault();
       const q = String(new FormData(form).get('q') ?? '').trim();
-      const text = q || 'Bonjour, j’ai une question sur Amplify.';
+      const text = q || root.dataset.q!;
       (window as any).dataLayer?.push({ event: 'whatsapp_click', where: 'home-faq-input', lang: document.documentElement.lang });
       window.open(`https://wa.me/${form.dataset.number}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     });

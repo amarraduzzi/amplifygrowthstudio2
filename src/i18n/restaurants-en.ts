@@ -1,0 +1,74 @@
+// Restaurants page (EN): one partner for the whole place. POS, margins and marketing, starting with
+// what costs the most. Everything here maps to features that exist (see products-en and marketing-en).
+export const rsEn = {
+  meta: {
+    title: 'Digitalise your restaurant or café in Morocco | Amplify',
+    description: 'POS, orders, margins, stock and marketing for restaurants, cafés and snack bars in Morocco. One partner, starting with what costs you the most. Rabat.',
+  },
+  wa: 'Hello, I’d like to digitalise my venue.',
+  hero: {
+    kicker: 'Restaurants, cafés, snack bars',
+    h1a: 'Your restaurant,',
+    h1b: 'finally under control.',
+    lead: 'Orders that reach the kitchen, a till that adds up, margins you can see, and customers who come back. One partner in Rabat, and we start with what costs you the most.',
+    cta: 'Run my assessment',
+    cta2: 'Message us on WhatsApp',
+    modes: ['Today', 'With Amplify'],
+    zones: [
+      { k: 'salle', name: 'Dining room', bad: 'Order misunderstood', good: 'Table ordering on a phone' },
+      { k: 'cuisine', name: 'Kitchen', bad: 'Ticket lost, dish forgotten', good: 'Ticket printed automatically' },
+      { k: 'caisse', name: 'Till', bad: 'The till doesn’t add up', good: 'Blind count, Z report' },
+      { k: 'stock', name: 'Storeroom', bad: 'Stock disappears, nobody knows where', good: 'Sold vs used difference in DH' },
+      { k: 'bureau', name: 'Office', bad: 'Blurry margin', good: 'Margin per dish, break-even' },
+      { k: 'porte', name: 'Entrance', bad: 'Nobody finds you', good: 'At the top of Google' },
+    ],
+  },
+  diag: {
+    kicker: '10-second assessment',
+    h2a: 'What costs you',
+    h2b: 'the most?',
+    p: 'Tap what sounds familiar. Your plan builds itself on the right, in the right order.',
+    empty: 'Choose at least one problem.',
+    plan: 'Your plan',
+    send: 'Send my assessment on WhatsApp',
+    pains: [
+      { k: 'marge', t: 'I don’t know what I really earn', step: 'See your margins', d: 'Recipe cards by AI, food cost per dish, daily break-even.', p: 'profit', o: 1 },
+      { k: 'commandes', t: 'Orders forgotten between the dining room and the kitchen', step: 'Orders without mistakes', d: 'Touchscreen POS, table ordering on a phone, automatic kitchen and bar tickets.', p: 'pos', o: 2 },
+      { k: 'caisse', t: 'The evening till doesn’t add up', step: 'A till that adds up', d: 'Personal codes, discounts behind a manager code, blind count, Z report.', p: 'pos', o: 3 },
+      { k: 'stock', t: 'Stock disappears, nobody knows where', step: 'Stock under control', d: 'Stock count on your phone, purchases in one entry, sold vs used difference in dirhams.', p: 'profit', o: 4 },
+      { k: 'plateformes', t: 'Too many orders go through platforms', step: 'Direct orders', d: 'QR menu at the table and a WhatsApp list of your customers, with no commission.', p: 'marketing', o: 5 },
+      { k: 'google', t: 'Few people find me on Google', step: 'Get found', d: 'A polished Google Business Profile, reviews, a fast website in three languages.', p: 'marketing', o: 6 },
+      { k: 'creux', t: 'The dining room is empty during quiet hours', step: 'Fill the quiet hours', d: 'Tastings, neighbourhood actions and WhatsApp offers to your regulars.', p: 'marketing', o: 7 },
+      { k: 'equipe', t: 'I don’t know who does what on my team', step: 'Your team in numbers', d: 'Clock-in, staff costs, discounts and voids per employee.', p: 'profit', o: 8 },
+    ],
+  },
+  trio: {
+    h2a: 'One partner.',
+    h2b: 'Three tools that talk.',
+    p: 'Every sale at the till feeds your margins. Every marketing action is measured at the till. Nothing to type in twice.',
+    items: [
+      { k: 'pos', name: 'Amplify POS', h: 'The POS', p: 'POS, tables, QR menu, kitchen tickets. Even without internet.', cta: 'See Amplify POS' },
+      { k: 'profit', name: 'Amplify Profit', h: 'The margins', p: 'What each dish costs, what it earns, and the right price.', cta: 'See Amplify Profit' },
+      { k: 'marketing', name: 'Marketing', h: 'The customers', p: 'Google, tastings, WhatsApp and a website that converts.', cta: 'See marketing' },
+    ],
+    flows: ['sales', 'margins', 'measurement'],
+  },
+  types: {
+    h2a: 'Your trade,',
+    h2b: 'your priorities.',
+    items: [
+      { k: 'resto', t: 'Restaurant', pts: ['Table ordering on the waiter’s phone', 'Automatic kitchen and bar tickets', 'Margin per dish and suggested price'] },
+      { k: 'cafe', t: 'Café', pts: ['Fast checkout at the counter', 'Customer list and loyalty points', 'WhatsApp offers during quiet hours'] },
+      { k: 'snack', t: 'Snack bar and fast food', pts: ['Dine-in, takeaway, delivery and Glovo', 'Kitchen display with waiting time', 'Sold vs used stock difference'] },
+      { k: 'the', t: 'Tea room and pastry shop', pts: ['QR menu with photos, in three languages', 'Set menus and extras calculated automatically', 'At the top of Google Maps'] },
+    ],
+  },
+  faq: [
+    ['Where do I start?', 'With what costs you the most. Take the assessment on this page, or describe your situation to us on WhatsApp. Often it’s the margin or order mistakes.'],
+    ['Does it work for a café or a snack bar?', 'Yes. The POS handles the counter, tables, takeaway and delivery. The marketing adapts to your neighbourhood.'],
+    ['My staff prefer Arabic.', 'The POS and the kitchen display are available in French and Arabic. Each employee chooses their language.'],
+    ['Do I have to change everything at once?', 'No. You can start with a single tool, for example Amplify Profit with your current POS, and add the rest later.'],
+    ['Do you come on site?', 'Yes, in Rabat and the surrounding area. We install the POS, import your menu and train your team. Elsewhere in Morocco, message us.'],
+  ] as [string, string][],
+  final: { h2a: 'Let’s start with', h2b: 'your biggest problem.', p: 'One message is enough. We’ll reply with a simple proposal.', cta: 'Message us on WhatsApp', chosen: 'Your assessment will be attached to the message.' },
+};

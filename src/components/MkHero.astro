@@ -3,7 +3,11 @@
 // everyone's way (views climb, hearts fly, the room stays empty) and ours (found on Google, the room fills).
 // It switches by itself until the visitor picks one.
 import WaButton from './WaButton.astro';
-import { mkFr as c } from '../i18n/marketing-fr';
+import { mkOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const c = mkOf(LG);
 interface Props { waLabel: string }
 const { waLabel } = Astro.props;
 // top view of the room: [x %, y %, seats]
@@ -17,7 +21,7 @@ let seatN = 0;
       <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{c.hero.kicker}</p>
       <h1 class="mt-5 text-[clamp(3rem,6.4vw,5.6rem)]">
         <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{c.hero.h1a}</span></span>
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-muted/70" style="--d:220ms">{c.hero.h1b}<span class="mk-strike absolute inset-x-[-2%] top-[52%] h-[0.09em] origin-left rounded-full bg-[#E5484D] rtl:origin-right" aria-hidden="true"></span></span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="mk-h1b rise relative inline-block text-muted/70" style="--d:220ms">{c.hero.h1b}<span class="mk-strike absolute inset-x-[-2%] top-[52%] h-[0.09em] origin-left rounded-full bg-[#E5484D] rtl:origin-right" aria-hidden="true"></span></span></span>
       </h1>
       <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:350ms">{c.hero.lead}</p>
       <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:450ms">
@@ -36,7 +40,7 @@ let seatN = 0;
           <!-- phone -->
           <div class="relative rounded-[1.8rem] bg-linear-to-b from-[#3A3F47] via-[#1C1F24] to-[#3A3F47] p-1.5 shadow-2xl">
             <div class="relative h-[17rem] overflow-hidden rounded-[1.45rem] bg-black sm:h-[20rem]">
-              <span class="absolute start-1/2 top-1.5 z-20 h-3.5 w-12 -translate-x-1/2 rounded-full bg-black"></span>
+              <span class="absolute start-1/2 top-1.5 z-20 h-3.5 w-12 -translate-x-1/2 rounded-full bg-black rtl:translate-x-1/2"></span>
               <!-- A: a reel -->
               <div class="mk-a absolute inset-0 bg-linear-to-b from-[#3B2A4A] via-[#5A3A3A] to-[#2A1F1F] transition-opacity duration-500">
                 <div class="absolute inset-x-3 bottom-14 space-y-1.5">

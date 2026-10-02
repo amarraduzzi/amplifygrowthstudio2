@@ -2,7 +2,11 @@
 // "Le chiffre d'affaires ne dit pas tout." The turnover bar gets eaten by costs as you scroll, until
 // only a question mark is left. Then the three pains, each with its own small scene. No real figures:
 // shares and dishes are illustrations.
-import { profitFr as p } from '../i18n/products-fr';
+import { profitOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const p = profitOf(LG);
 const eaters = [['Achats', 34, '#F5B301'], ['Personnel', 26, '#2DD4BF'], ['Loyer', 14, '#8FB3FF'], ['Pertes', 9, '#E5484D']] as const;
 const dishes = [
   { n: 'Burger maison', sold: 0, prof: 3, ws: 96, wp: 22 },

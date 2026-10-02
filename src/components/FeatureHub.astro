@@ -2,7 +2,11 @@
 // "Tout parle ensemble": the 8 modules around Amplify. One order travels through them, module by
 // module, with a caption. Hover or tap a module to see how many features it holds; click to jump there.
 import Icon from './Icon.astro';
-import { featuresFr as f } from '../i18n/products-fr';
+import { featuresOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const f = featuresOf(LG);
 interface Props { icons: Record<string, string> }
 const { icons } = Astro.props;
 const n = f.modules.length;
@@ -21,7 +25,7 @@ const story = [
   ['money', 'Le résultat du mois avance.'],
 ];
 ---
-<div data-hub data-story={JSON.stringify(story)}>
+<div data-hub data-story={JSON.stringify(story.map(([k, x]) => [k, tt(x)]))}>
 <div class="hub relative mx-auto aspect-square w-full max-w-[32rem]">
   <svg viewBox="0 0 100 100" class="absolute inset-0 size-full" aria-hidden="true">
     <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" class="text-line" stroke-width=".3" stroke-dasharray="1 1.5" />
@@ -30,11 +34,11 @@ const story = [
   <!-- center -->
   <div class="absolute start-1/2 top-1/2 grid size-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-navy text-center text-white shadow-[0_30px_60px_-20px_rgba(0,30,62,0.6)] rtl:translate-x-1/2">
     <span class="hub-pulse absolute inset-0 rounded-full ring-2 ring-green" aria-hidden="true"></span>
-    <span><span class="display block text-[clamp(1.4rem,4.5vw,2.4rem)] leading-none">Amplify</span><span class="mt-0.5 block text-[clamp(0.55rem,1.6vw,0.75rem)] text-white/70">tout parle ensemble</span></span>
+    <span><span dir="ltr" class="hub-word display block text-[clamp(1.4rem,4.5vw,2.4rem)] leading-none">Amplify</span><span class="mt-0.5 block text-[clamp(0.55rem,1.6vw,0.75rem)] text-white/70">tout parle ensemble</span></span>
   </div>
   <!-- modules -->
   {pos.map(m => (
-    <a href={`#${m.key}`} class="hub-node group absolute -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2" style={`left:${m.x}%;top:${m.y}%`} data-k={m.key}>
+    <a href={`#${m.key}`} class="hub-node group absolute -translate-x-1/2 -translate-y-1/2" style={`left:${m.x}%;top:${m.y}%`} data-k={m.key}>
       <span class={`hub-ico grid size-[clamp(2.6rem,9vw,3.8rem)] place-items-center rounded-2xl shadow-lg ring-4 ring-chalk transition-transform duration-300 group-hover:scale-110 ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : m.tag === 'Amplify' ? 'bg-white text-navy ring-line' : 'bg-blue text-white'}`}>
         <Icon name={icons[m.key] as any} class="size-[45%]" />
       </span>
@@ -42,7 +46,7 @@ const story = [
       <span class="hub-count absolute -end-1 -top-1 grid size-6 place-items-center rounded-full bg-navy text-[0.65rem] font-bold text-white ring-2 ring-chalk">{m.items.length}</span>
     </a>
   ))}
-  <span class="hub-dot pointer-events-none absolute size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-green shadow-[0_0_14px_4px_rgba(5,185,98,.6)] rtl:translate-x-1/2" style="left:50%;top:50%" aria-hidden="true"></span>
+  <span class="hub-dot pointer-events-none absolute size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-green shadow-[0_0_14px_4px_rgba(5,185,98,.6)]" style="left:50%;top:50%" aria-hidden="true"></span>
   </div>
 <p class="hub-cap relative mx-auto mt-8 w-fit max-w-[90%] rounded-full bg-paper px-4 py-2 text-center text-sm font-semibold shadow-md ring-1 ring-line " aria-live="polite">{story[0][1]}</p>
 </div>

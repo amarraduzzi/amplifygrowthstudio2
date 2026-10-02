@@ -2,13 +2,17 @@
 // Hero of Amplify Profit: a live recipe card. The price of chicken moves (by itself once, then with the
 // slider) and the cost, food cost and margin recalculate on the spot, with a suggested price when the
 // dish stops paying. Illustration only: tajine poulet citron sold 95 DH TTC (VAT 10 %).
-import { profitFr as p } from '../i18n/products-fr';
+import { profitOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const p = profitOf(LG);
 const BASE = 24, OTHER = 4.2, PRICE = 95;
 const HT = PRICE / 1.1;
-const money = (n: number) => `${n.toFixed(2).replace('.', ',')} DH`;
+const money = (n: number) => `${n.toFixed(2).replace('.', LG === 'en' ? '.' : ',')} ${tt('DH')}`;
 const fc0 = ((BASE + OTHER) / HT) * 100;
 ---
-<figure class="land relative mx-auto w-full max-w-md" style="--d:350ms" data-pcard data-base={BASE} data-other={OTHER} data-ht={HT}>
+<figure class="land relative mx-auto w-full max-w-md" style="--d:350ms" data-pcard data-i18n={JSON.stringify({ chicken: tt('Poulet'), tajine: tt('food cost du tajine'), ok: tt('Toujours rentable.'), sug: tt('Prix conseillé'), cur: tt('DH'), dec: LG === 'en' ? '.' : ',' })} data-base={BASE} data-other={OTHER} data-ht={HT}>
   <div class="pc-card relative rounded-[2rem] bg-paper p-6 shadow-[0_40px_80px_-40px_rgba(0,30,62,0.5)] ring-1 ring-line transition-shadow duration-500 sm:p-8">
     <div class="flex items-start justify-between gap-3">
       <div>
@@ -55,19 +59,20 @@ const fc0 = ((BASE + OTHER) / HT) * 100;
     const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
     const BASE = Number(root.dataset.base), OTHER = Number(root.dataset.other), HT = Number(root.dataset.ht);
     const range = $<HTMLInputElement>('.pc-range');
-    const fr = (n: number, d = 2) => n.toFixed(d).replace('.', ',');
+    const I = JSON.parse(root.dataset.i18n!);
+    const fr = (n: number, d = 2) => n.toFixed(d).replace('.', I.dec);
     const fc0 = (BASE + OTHER) / HT * 100;
     const tone = (fc: number) => fc <= 33 ? 'ok' : fc <= 38 ? 'warn' : 'bad';
     const BG = { ok: '#05B962', warn: '#F5B301', bad: '#E5484D' };
     const render = (x: number) => {
       const chicken = BASE * (1 + x / 100), cost = chicken + OTHER, fc = cost / HT * 100, margin = HT - cost, t = tone(fc);
-      $('.pc-line').textContent = `${fr(chicken)} DH`;
-      $('.pc-cost').textContent = `${fr(cost)} DH`;
+      $('.pc-line').textContent = `${fr(chicken)} ${I.cur}`;
+      $('.pc-cost').textContent = `${fr(cost)} ${I.cur}`;
       $('.pc-fc').textContent = `${fr(fc, 1)} %`;
       $('.pc-fc').style.color = t === 'ok' ? '' : t === 'warn' ? '#B07D00' : '#C4282D';
       $('.pc-fcbar').style.width = `${Math.min(100, fc * 2)}%`;
       $('.pc-fcbar').style.backgroundColor = BG[t];
-      $('.pc-margin').textContent = `${fr(margin)} DH`;
+      $('.pc-margin').textContent = `${fr(margin)} ${I.cur}`;
       $('.pc-mtile').style.backgroundColor = BG[t];
       $('.pc-mtile').style.color = t === 'bad' ? '#fff' : '';
       $('.pc-pct').textContent = `${x > 0 ? '+' : ''}${x} %`;
@@ -80,7 +85,7 @@ const fc0 = ((BASE + OTHER) / HT) * 100;
       alert.style.gridTemplateRows = x === 0 ? '0fr' : '1fr';
       if (x !== 0) {
         const suggest = Math.ceil(cost / 0.32 * 1.1);
-        $('.pc-alert-txt').textContent = `Poulet ${x > 0 ? '+' : ''}${x} % : food cost du tajine ${fr(fc0, 1)} % → ${fr(fc, 1)} %` + (t === 'ok' ? '. Toujours rentable.' : `. Prix conseillé : ${suggest} DH.`);
+        $('.pc-alert-txt').textContent = `${I.chicken} ${x > 0 ? '+' : ''}${x} % : ${I.tajine} ${fr(fc0, 1)} % → ${fr(fc, 1)} %. ` + (t === 'ok' ? I.ok : `${I.sug} : ${suggest} ${I.cur}.`);
       }
       range.style.setProperty('--fill', `${(x + 20) / 60 * 100}%`);
     };

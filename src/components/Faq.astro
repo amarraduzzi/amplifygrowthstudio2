@@ -32,7 +32,7 @@ const n = String(items.length).padStart(2, '0');
         <li class={`faq-item rounded-[1.5rem] bg-paper ring-1 ring-line transition-[background-color,box-shadow] duration-300 ${i === 0 ? 'is-open' : ''}`} style={`--d:${i * 80}ms`}>
           <h3>
             <button type="button" class="flex w-full items-center gap-4 p-5 text-start sm:gap-5 sm:p-6" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`faq-a-${i}`} id={`faq-q-${i}`}>
-              <span class="faq-n display w-9 shrink-0 text-3xl text-muted transition-colors sm:text-4xl" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="faq-n display min-w-9 shrink-0 text-3xl text-muted transition-colors sm:text-4xl" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
               <span class="flex-1 text-lg font-semibold leading-snug sm:text-xl">{q}</span>
               <span class="faq-x grid size-10 shrink-0 place-items-center rounded-full bg-chalk text-navy transition-[transform,background-color] duration-300" aria-hidden="true">
                 <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>

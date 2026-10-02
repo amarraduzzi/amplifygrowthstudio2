@@ -3,7 +3,11 @@
 // Orders keep arriving. Cut internet (or let it cut by itself): the link to the cloud breaks,
 // orders pile up on the till with "en attente". Reconnect: they fly to the cloud one by one.
 import Icon from './Icon.astro';
-import { posFr } from '../i18n/products-fr';
+import { posOf } from '../i18n/content';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const posFr = posOf(LG);
 const c = posFr.offline;
 ---
 <section class="off relative isolate overflow-hidden bg-blue py-20 text-white transition-colors duration-700 md:py-28" data-offline>
@@ -51,9 +55,9 @@ const c = posFr.offline;
       <!-- the link -->
       <div class="relative mx-auto h-20 w-1">
         <span class="off-link absolute inset-0 rounded-full bg-green/40"></span>
-        <span class="off-dot absolute start-1/2 size-2.5 -translate-x-1/2 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
-        <span class="off-dot off-dot2 absolute start-1/2 size-2.5 -translate-x-1/2 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
-        <span class="off-cut absolute start-1/2 top-1/2 grid size-9 -translate-x-1/2 -translate-y-1/2 scale-0 place-items-center rounded-full bg-[#F5B301] text-navy transition-transform duration-300">
+        <span class="off-dot absolute start-1/2 size-2.5 -translate-x-1/2 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)] rtl:translate-x-1/2"></span>
+        <span class="off-dot off-dot2 absolute start-1/2 size-2.5 -translate-x-1/2 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)] rtl:translate-x-1/2"></span>
+        <span class="off-cut absolute start-1/2 top-1/2 grid size-9 -translate-x-1/2 -translate-y-1/2 scale-0 place-items-center rounded-full bg-[#F5B301] text-navy transition-transform duration-300 rtl:translate-x-1/2">
           <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
         </span>
       </div>
@@ -81,7 +85,7 @@ const c = posFr.offline;
     </li>
   </template>
 
-  <script define:vars={{ events: c.events, on: c.on, off: c.off, queued: c.queued, synced: c.synced }}>
+  <script define:vars={{ events: c.events, on: c.on, off: c.off, queued: c.queued, synced: c.synced, cutL: tt('Couper'), restoreL: tt('Rétablir'), waitL: tt('En attente de connexion…') }}>
     const root = document.querySelector('[data-offline]');
     const $ = (s) => root.querySelector(s);
     const list = $('.off-list'), tpl = $('.off-tpl'), sw = $('.off-switch');
@@ -121,8 +125,8 @@ const c = posFr.offline;
       $('.off-track').className = 'off-track relative h-12 w-24 shrink-0 rounded-full transition-colors duration-300 ' + (v ? 'bg-green' : 'bg-white/25');
       $('.off-knob').style.transform = v ? 'translateX(3rem)' : 'translateX(0)';
       $('.off-ico-on').classList.toggle('hidden', !v); $('.off-ico-off').classList.toggle('hidden', v);
-      $('.off-hint').textContent = v ? 'Couper' : 'Rétablir';
-      $('.off-cloud-txt').textContent = v ? synced : 'En attente de connexion…';
+      $('.off-hint').textContent = v ? cutL : restoreL;
+      $('.off-cloud-txt').textContent = v ? synced : waitL;
       if (v) {
         const w = waiting().reverse();
         w.forEach((li, i) => setTimeout(() => {
