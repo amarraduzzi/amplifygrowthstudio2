@@ -6,14 +6,14 @@ import type { Plan } from '../i18n/products-fr';
 interface Props { plans: Plan[]; per: string; choose: string; popular: string; lang?: string }
 const { plans, per, choose, popular, lang = 'fr' } = Astro.props;
 ---
-<div class={`grid gap-4 ${plans.length > 2 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'mx-auto max-w-3xl sm:grid-cols-2'}`}>
-  {plans.map(p => (
-    <div class={`relative flex flex-col rounded-[1.75rem] p-6 ${p.featured ? 'bg-navy text-white ring-2 ring-green' : 'bg-paper ring-1 ring-line'}`}>
+<div data-pricing class={`grid gap-4 ${plans.length > 2 ? 'sm:grid-cols-2 lg:grid-cols-4' : 'mx-auto max-w-3xl sm:grid-cols-2'}`}>
+  {plans.map((p, i) => (
+    <div class={`pr-card relative flex flex-col rounded-[1.75rem] p-6 transition-[transform,box-shadow] duration-300 hover:-translate-y-1.5 hover:shadow-[0_30px_60px_-30px_rgba(0,30,62,0.45)] ${p.featured ? 'pr-feat bg-navy text-white' : 'bg-paper ring-1 ring-line'}`} style={`--d:${i * 110}ms`}>
       {p.featured && <span class="absolute -top-3 start-6 rounded-full bg-green px-3 py-1 text-xs font-bold text-navy">{popular}</span>}
       <p class={`text-sm font-semibold ${p.featured ? 'text-green' : 'text-green-deep'}`}>{p.tag}</p>
       <h3 class="display mt-1 text-[2rem] leading-none">{p.name}</h3>
       <p class={`mt-1 text-[0.95rem] ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.text}</p>
-      <p class="mt-5 flex items-baseline gap-2"><span class="display text-6xl" dir="ltr">{p.price}</span><span class={`text-sm ${p.featured ? 'text-white/60' : 'text-muted'}`}>{per}</span></p>
+      <p class="mt-5 flex items-baseline gap-2"><span class="pr-price display text-6xl tabular-nums" dir="ltr" data-n={p.price}>{p.price}</span><span class={`text-sm ${p.featured ? 'text-white/60' : 'text-muted'}`}>{per}</span></p>
       <ul class="mt-5 flex-1 space-y-2 text-[0.95rem]">
         {p.items.map(it => <li class="flex gap-2"><Icon name="check" class={`mt-0.5 size-4 shrink-0 ${p.featured ? 'text-green' : 'text-green-deep'}`} />{it}</li>)}
       </ul>
@@ -21,3 +21,18 @@ const { plans, per, choose, popular, lang = 'fr' } = Astro.props;
     </div>
   ))}
 </div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pricing]').forEach((root) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { root.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect(); root.classList.add('in');
+      root.querySelectorAll<HTMLElement>('.pr-price').forEach((el, i) => {
+        const to = Number(el.dataset.n), t0 = performance.now() + i * 110;
+        const step = (t: number) => { const k = Math.max(0, Math.min(1, (t - t0) / 900)); el.textContent = String(Math.round(to * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.3 });
+    io.observe(root);
+  });
+</script>

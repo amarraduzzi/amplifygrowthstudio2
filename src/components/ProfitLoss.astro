@@ -1,0 +1,80 @@
+---
+// "Un seul bon plat mal calculé coûte plus cher." The visitor sets how often one dish sells and how
+// many dirhams it loses per plate: the loss per month grows next to the 249 DH of Amplify Profit.
+// The visitor's own numbers, no promise of gain.
+interface Props { price?: number }
+const { price = 249 } = Astro.props;
+---
+<div class="pl grid gap-6 rounded-[2rem] bg-navy p-6 text-white sm:p-8 lg:grid-cols-[1fr_1.1fr] lg:gap-10" data-ploss data-price={price}>
+  <div class="space-y-6">
+    <p class="text-sm font-semibold text-green">Faites le calcul avec un seul plat</p>
+    <label class="block">
+      <span class="flex items-center justify-between font-semibold">Ventes de ce plat par jour<span class="pl-v1 display rounded-lg bg-white/10 px-2.5 py-0.5 text-2xl tabular-nums">25</span></span>
+      <input type="range" min="5" max="80" step="1" value="25" class="pl-r1 pc-range pl-range mt-3 w-full" />
+    </label>
+    <label class="block">
+      <span class="flex items-center justify-between font-semibold">Dirhams perdus par assiette<span class="pl-v2 display rounded-lg bg-white/10 px-2.5 py-0.5 text-2xl tabular-nums">4 DH</span></span>
+      <input type="range" min="1" max="15" step="1" value="4" class="pl-r2 pc-range pl-range mt-3 w-full" />
+      <span class="mt-1.5 block text-sm text-white/60">Prix trop bas, portion trop grande, ingrédient qui a augmenté.</span>
+    </label>
+  </div>
+
+  <div class="rounded-[1.5rem] bg-white/5 p-5 ring-1 ring-white/15 sm:p-6" aria-live="polite">
+    <p class="text-sm text-white/60">Ce plat vous coûte chaque mois</p>
+    <p class="pl-loss display mt-1 text-6xl tabular-nums text-[#FF8A8D] sm:text-7xl">3 000 DH</p>
+    <!-- bars -->
+    <div class="mt-6 space-y-3 text-sm" aria-hidden="true">
+      <div>
+        <p class="flex justify-between"><span>Perte sur ce plat</span><span class="pl-lossb tabular-nums">3 000 DH</span></p>
+        <span class="mt-1 block h-3 overflow-hidden rounded-full bg-white/10"><span class="pl-bar1 block h-full rounded-full bg-[#E5484D] transition-[width] duration-500" style="width:100%"></span></span>
+      </div>
+      <div>
+        <p class="flex justify-between"><span>Amplify Profit</span><span class="tabular-nums">{price} DH</span></p>
+        <span class="mt-1 block h-3 overflow-hidden rounded-full bg-white/10"><span class="pl-bar2 block h-full rounded-full bg-green transition-[width] duration-500" style="width:8%"></span></span>
+      </div>
+    </div>
+    <p class="pl-pay mt-6 flex items-center gap-3 rounded-2xl bg-green px-4 py-3 font-bold text-navy">
+      <span class="pl-days display text-4xl tabular-nums">3</span><span class="pl-days-t leading-tight">jours pour rembourser l’abonnement, avec un seul plat corrigé.</span>
+    </p>
+    <p class="mt-3 text-xs text-white/50">Vos chiffres, sur 30 jours. Un exemple à régler vous-même, pas une promesse de gain.</p>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ploss]').forEach((root) => {
+    const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const price = Number(root.dataset.price) || 249;
+    const r1 = $<HTMLInputElement>('.pl-r1'), r2 = $<HTMLInputElement>('.pl-r2');
+    const fmt = (n: number) => `${Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ')} DH`;
+    let shown = 0, raf = 0;
+    const count = (to: number) => {
+      cancelAnimationFrame(raf);
+      const from = shown, t0 = performance.now();
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / 450); shown = from + (to - from) * (1 - (1 - k) ** 3);
+        $('.pl-loss').textContent = fmt(shown);
+        if (k < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+    const fill = (r: HTMLInputElement) => r.style.setProperty('--fill', `${(Number(r.value) - Number(r.min)) / (Number(r.max) - Number(r.min)) * 100}%`);
+    const render = () => {
+      const a = Number(r1.value), b = Number(r2.value), day = a * b, month = day * 30;
+      $('.pl-v1').textContent = String(a); $('.pl-v2').textContent = `${b} DH`;
+      count(month);
+      $('.pl-lossb').textContent = fmt(month);
+      const max = Math.max(month, price);
+      $('.pl-bar1').style.width = `${month / max * 100}%`; $('.pl-bar2').style.width = `${price / max * 100}%`;
+      const days = Math.ceil(price / day);
+      $('.pl-days').textContent = String(days);
+      $('.pl-days-t').textContent = `${days > 1 ? 'jours' : 'jour'} pour rembourser l’abonnement, avec un seul plat corrigé.`;
+      fill(r1); fill(r2);
+    };
+    r1.addEventListener('input', render); r2.addEventListener('input', render);
+    fill(r1); fill(r2);
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); render(); } }, { threshold: 0.4 });
+      io.observe(root);
+    } else render();
+  });
+</script>

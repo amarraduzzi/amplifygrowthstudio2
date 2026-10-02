@@ -296,7 +296,7 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
   .js [data-final].fin-seen .fin-panel { opacity: 1; transform: none; transition: opacity .7s .3s, transform .9s .3s cubic-bezier(.2,.8,.2,1); }
   .fin-open .fin-panel { animation: fin-pop .6s cubic-bezier(.2,.8,.2,1); }
   @keyframes fin-pop { 40% { box-shadow: 0 0 0 6px rgb(5 185 98 / .25), 0 0 60px rgb(5 185 98 / .35); } }
-  .fin-cta::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / .45) 50%, transparent 70%); transform: translateX(-120%); animation: fin-shine 3.2s 1.5s ease-in-out infinite; }
+  .fin-cta::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / .28) 50%, transparent 60%); transform: translateX(-120%); animation: fin-shine 4.5s 1.5s ease-in-out infinite; }
   @keyframes fin-shine { 35%, 100% { transform: translateX(120%); } }
 }
 
@@ -393,3 +393,21 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
   @keyframes hw-run-y { from { top: 0; } to { top: calc(100% - 10px); } }
 }
 @media (prefers-reduced-motion: reduce) { .hw-dot { animation: none; } }
+
+/* Pricing: cards rise, featured card has a turning green border */
+.pl-range { background: linear-gradient(to right, #05B962 0 var(--fill, 30%), rgb(255 255 255 / .15) var(--fill, 30%)); }
+[dir="rtl"] .pl-range { background: linear-gradient(to left, #05B962 0 var(--fill, 30%), rgb(255 255 255 / .15) var(--fill, 30%)); }
+.pl-range::-webkit-slider-thumb { background: #05B962; border-color: #001E3E; }
+.pl-range::-moz-range-thumb { background: #05B962; border-color: #001E3E; }
+@property --pr-a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+.pr-feat { isolation: isolate; box-shadow: 0 0 0 2px #05B962; }
+.pr-feat::before { content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: inherit; background: conic-gradient(from var(--pr-a), #05B962, #2DD4BF, #001E3E 40%, #001E3E 60%, #05B962); }
+.pr-feat::after { content: ""; position: absolute; inset: 0; z-index: -1; border-radius: inherit; background: #001E3E; }
+@media (prefers-reduced-motion: no-preference) {
+  .pr-feat { box-shadow: none; }
+  .pr-feat::before { animation: pr-turn 5s linear infinite; }
+  @keyframes pr-turn { to { --pr-a: 360deg; } }
+  .js [data-pricing] .pr-card { opacity: 0; transform: translateY(30px); }
+  .js [data-pricing].in .pr-card { opacity: 1; transform: none; transition: opacity .6s var(--d), transform .7s var(--d) cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
+  .js [data-pricing].in .pr-card:hover { transform: translateY(-6px); transition-delay: 0s; }
+}
