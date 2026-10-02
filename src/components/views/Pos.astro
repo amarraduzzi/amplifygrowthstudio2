@@ -5,6 +5,7 @@ import WaButton from '../WaButton.astro';
 import Device from '../Device.astro';
 import Icon from '../Icon.astro';
 import OfflineDemo from '../OfflineDemo.astro';
+import ServiceDay from '../ServiceDay.astro';
 import TryIt from '../TryIt.astro';
 import Pricing from '../Pricing.astro';
 import PriceBuilder from '../PriceBuilder.astro';
@@ -53,7 +54,7 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 
       <div class="relative isolate aspect-[4/3.3] overflow-hidden rounded-[1.75rem] bg-mint lg:aspect-[5/4.4] lg:rounded-[2.25rem]">
         <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 1024px) 50vw, 100vw" alt="" width="1200" height="900" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
-        <div class="absolute inset-0 -z-10 bg-gradient-to-b from-navy/10 via-transparent to-navy/35" aria-hidden="true"></div>
+        <div class="absolute inset-0 -z-10 bg-linear-to-b from-navy/10 via-transparent to-navy/35" aria-hidden="true"></div>
         <!-- the till -->
         <span class="shadow-in absolute bottom-[14%] end-[6%] h-6 w-[60%] rounded-[50%] bg-black/45 blur-xl" style="--d:700ms" aria-hidden="true"></span>
         <div class="land absolute bottom-[17%] end-[4%] w-[68%]" style="--d:400ms">
@@ -95,23 +96,8 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
   <!-- offline -->
   <OfflineDemo />
 
-  <!-- features -->
-  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-    <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.features.title}</h2>
-    <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {p.features.items.map(([h, d], i) => (
-        <li class="rounded-[1.5rem] bg-paper p-6 ring-1 ring-line">
-          <span class={`grid size-11 place-items-center rounded-xl ${['bg-blue text-white', 'bg-green text-navy', 'bg-navy text-green'][i % 3]}`}><Icon name={ICONS[i]} /></span>
-          <h3 class="mt-4 text-xl">{h}</h3>
-          <p class="mt-2 text-muted">{d}</p>
-        </li>
-      ))}
-    </ul>
-    <div class="mt-8 flex flex-wrap items-center gap-4">
-      <a href={ROUTES.features[lang]} class="inline-flex min-h-12 items-center rounded-full bg-navy px-6 font-semibold text-white hover:bg-blue">{p.nav.allCta.replace('{n}', `${nFeatures}+`)}</a>
-      <a href={ROUTES.profit[lang]} class="font-semibold text-green-deep underline underline-offset-4">{p.products.profit.cta}</a>
-    </div>
-  </section>
+  <!-- features: a day of service -->
+  <ServiceDay lang={lang} allCta={p.nav.allCta.replace('{n}', `${nFeatures}+`)} profitCta={p.products.profit.cta} />
 
   <!-- languages -->
   <section class="border-y border-line bg-paper">

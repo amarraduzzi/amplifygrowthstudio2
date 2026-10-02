@@ -63,7 +63,7 @@ const pos = (i: number) => { const a = (-90 + (i * 360) / N) * Math.PI / 180; re
 
     <!-- progress -->
     <div class="loop-steps mt-6 flex gap-1.5" aria-hidden="true">
-      {c.stations.map((_, i) => <span class="h-1 flex-1 overflow-hidden rounded-full bg-white/15"><span class="loop-step block h-full origin-left scale-x-0 bg-green rtl:origin-right" data-step={i}></span></span>)}
+      {c.stations.map((_, i) => <span class="h-1 flex-1 overflow-hidden rounded-full bg-white/15"><span class="loop-step block h-full origin-left bg-green rtl:origin-right" style="transform:scaleX(0)" data-step={i}></span></span>)}
     </div>
   </div>
 </section>

@@ -27,7 +27,7 @@ const routes = [{ key: 'us', items: c.items }, { key: 'self', items: c.self }] a
 
     <div class="mt-8 hidden items-center gap-4 lg:flex" aria-hidden="true">
       <span class="steps-count display text-6xl text-navy">01</span>
-      <span class="h-1 w-40 overflow-hidden rounded-full bg-line"><span class="steps-bar block h-full w-full origin-left scale-x-[0.25] bg-green transition-transform duration-500 rtl:origin-right"></span></span>
+      <span class="h-1 w-40 overflow-hidden rounded-full bg-line"><span class="steps-bar block h-full w-full origin-left bg-green transition-transform duration-500 rtl:origin-right" style="transform:scaleX(0.25)"></span></span>
       <span class="display text-2xl text-muted">04</span>
     </div>
     <div class="mt-8" data-cta="us"><WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-steps" class="px-7" /></div>

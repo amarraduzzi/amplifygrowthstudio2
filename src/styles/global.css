@@ -143,7 +143,7 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
 .step-card.seen .sv { animation: fade-up .5s ease both; animation-delay: var(--d, 0ms); }
 .step-card.seen .bar-up { animation: bar-rise .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); transform-origin: bottom; }
 .step-card.seen .pin-dot { animation: pin .25s ease both; animation-delay: var(--d, 0ms); }
-@keyframes pin { to { background: var(--color-navy); } }
+@keyframes pin { to { background-color: #001E3E; } }
 @media (prefers-reduced-motion: reduce) { .js .step-card:not(.is-on) { opacity: 1; scale: 1; } .js .step-card:not(.seen) .sv, .js .step-card:not(.seen) .bar-up { opacity: 1; } }
 .js .step-card:not(.seen) .scan-line { opacity: 0; }
 .step-card.seen .scan-line { animation: scan 1.8s ease-in-out .2s both; }
@@ -239,3 +239,17 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 .off-fly { animation: off-fly .5s cubic-bezier(.2,.8,.2,1); }
 @keyframes off-fly { 50% { transform: translateY(-6px); background: rgb(5 185 98 / .25); } }
 @media (prefers-reduced-motion: reduce) { .off-dot, .off-new, .off-fly { animation: none; } }
+
+/* A day of service */
+.day-live .day-card:not(.is-on) { opacity: .5; scale: .97; }
+.day-card.is-on { box-shadow: 0 30px 60px -35px rgb(0 30 62 / .45); outline: 2px solid var(--color-green); outline-offset: -2px; }
+.day-live .day-card:not(.seen) :is(.dv, .dv-print) { opacity: 0; }
+.day-card.seen .dv { animation: fade-up .45s ease both; animation-delay: var(--d, 0ms); }
+.day-card.seen .dv-print { animation: ticket-out .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+.day-card.seen .dv-pin { animation: pin-g .2s ease both; animation-delay: var(--d, 0ms); }
+@keyframes pin-g { to { background-color: #05B962; } }
+.dv-tap { transition: background-color .3s ease, color .3s ease, transform .3s ease; transition-delay: var(--d, 0ms); }
+.day-card.seen .dv-tap.tap { background-color: #05B962; color: #001E3E; }
+.day-card.is-on .dv-ring { animation: spot-ping-s 1.2s ease-out 3; }
+@keyframes spot-ping-s { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 10px rgb(5 185 98 / 0); } }
+@media (prefers-reduced-motion: reduce) { .day-live .day-card:not(.is-on) { opacity: 1; scale: 1; } .day-live .day-card:not(.seen) :is(.dv, .dv-print) { opacity: 1; } }

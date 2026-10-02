@@ -23,7 +23,7 @@ const t = copy(Astro.props.lang).home.tour;
             <span class="grid size-7 place-items-center rounded-full bg-white/10 text-xs font-bold text-green group-aria-selected:bg-navy group-aria-selected:text-green">{i + 1}</span>
             <span class="whitespace-nowrap font-semibold">{tab.label}</span>
           </span>
-          <span class="tour-progress absolute inset-x-0 bottom-0 h-[3px] origin-left scale-x-0 bg-green rtl:origin-right" aria-hidden="true"></span>
+          <span class="tour-progress absolute inset-x-0 bottom-0 h-[3px] origin-left bg-green rtl:origin-right" style="transform:scaleX(0)" aria-hidden="true"></span>
         </button>
       ))}
     </div>
