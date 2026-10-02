@@ -16,14 +16,14 @@ const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 
 const trial = signupUrl(lang, page === 'profit' ? 'profit' : undefined);
 ---
 <header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/90 backdrop-blur">
-  <div class="mx-auto flex h-16 max-w-6xl items-center gap-5 px-4 sm:px-6">
+  <div class="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 md:gap-5 sm:px-6">
     <a href={ROUTES.home[lang]} aria-label="Amplify Growth Studio" class="me-auto"><Logo /></a>
     <nav class="hidden items-center gap-5 text-[0.95rem] lg:flex xl:gap-6" aria-label="Navigation">
       {nav.map(n => <a href={n.href} aria-current={active(n.k) ? 'page' : undefined}
         class={`whitespace-nowrap transition-colors hover:text-green-deep ${active(n.k) ? 'font-semibold text-green-deep' : 'text-navy'}`}>{n.label}</a>)}
     </nav>
     {langs.length > 1 && (
-      <details class="lang-dd relative hidden lg:block" data-lang-dd>
+      <details class="lang-dd relative" data-lang-dd>
         <summary class="flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-full px-2.5 text-sm font-semibold text-muted transition-colors hover:bg-paper hover:text-navy [&::-webkit-details-marker]:hidden" aria-label={t.ui.langLabel}>
           <svg viewBox="0 0 24 24" class="size-[1.15rem]" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/></svg>
           <span>{SHORT[lang]}</span>
@@ -53,7 +53,6 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : undefined);
           <a href={loginUrl(lang)} class="grid min-h-12 place-items-center rounded-full border border-navy/25 font-medium">{t.nav.login}</a>
           <a href={trial} class="grid min-h-12 place-items-center rounded-full bg-navy font-medium text-white">{t.nav.trial}</a>
         </div>
-        {langs.length > 1 && <div class="mt-4 grid grid-cols-3 gap-2">{langs.map(l => <a href={ROUTES[page][l]} lang={l} class={`grid min-h-11 place-items-center rounded-full text-sm font-semibold ${l === lang ? 'bg-navy text-white' : 'border border-line'}`}><x-notr>{NAME[l]}</x-notr></a>)}</div>}
       </nav>
     </details>
   </div>
@@ -63,5 +62,9 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : undefined);
   document.querySelectorAll<HTMLDetailsElement>('[data-lang-dd]').forEach((dd) => {
     document.addEventListener('click', (e) => { if (dd.open && !dd.contains(e.target as Node)) dd.open = false; });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') dd.open = false; });
+    // only one of the two open at a time (language menu / phone menu)
+    const other = dd.closest('header')?.querySelector<HTMLDetailsElement>('details:not([data-lang-dd])');
+    dd.addEventListener('toggle', () => { if (dd.open && other) other.open = false; });
+    other?.addEventListener('toggle', () => { if (other.open) dd.open = false; });
   });
 </script>
