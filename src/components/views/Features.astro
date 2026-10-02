@@ -1,8 +1,11 @@
 ---
 // All features (was posamplify.pages.dev/fonctionnalites): every module in detail.
+// Hero: the 8 modules around Amplify with one order travelling through them. Then a sticky bar to jump
+// or search across all features, and each module with its features rising in.
 import Base from '../../layouts/Base.astro';
-import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
+import FeatureHub from '../FeatureHub.astro';
+import ProductFinal from '../ProductFinal.astro';
 import { signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { featuresFr as f } from '../../i18n/products-fr';
@@ -14,61 +17,178 @@ const total = f.modules.reduce((n, m) => n + m.items.length, 0);
 const title = 'Toutes les fonctionnalités de la caisse | Amplify POS';
 const description = `Les ${total} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.`;
 const wa = 'Bonjour, j’ai une question sur les fonctionnalités d’Amplify.';
-const ICON = { pos: 'till', waiter: 'bag', qr: 'qr', margins: 'chart', stock: 'store', team: 'briefcase', money: 'chart', trust: 'check' } as const;
-const stats = [[String(f.modules.length), f.hero.stats[0]], [`${total}`, f.hero.stats[1]], ['2', f.hero.stats[2]]] as [string, [string, string]][];
+const ICON: Record<string, string> = { pos: 'till', waiter: 'phone', qr: 'qr', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
+const stats = [[f.modules.length, f.hero.stats[0]], [total, f.hero.stats[1]], [2, f.hero.stats[2]]] as [number, [string, string]][];
+const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélité'];
 ---
 <Base lang={lang} page="features" title={title} description={description} wa={wa}>
-  <section class="mx-auto max-w-6xl px-4 pb-12 pt-10 sm:px-6 md:pt-16">
-    <h1 class="max-w-4xl text-[clamp(2.8rem,6vw,5.2rem)]"><span class="block">{f.hero.title1}</span><span class="block text-green-deep">{f.hero.title2}</span></h1>
-    <p class="mt-5 max-w-2xl text-lg text-muted md:text-xl">{f.hero.text}</p>
-    <dl class="mt-10 grid max-w-3xl grid-cols-3 gap-3">
-      {stats.map(([n, [l, s]]) => (
-        <div class="rounded-[1.5rem] bg-paper p-4 ring-1 ring-line sm:p-5"><dt class="display text-5xl text-navy sm:text-6xl">{n}</dt><dd class="mt-1 text-sm font-semibold">{l}<span class="block font-normal text-muted">{s}</span></dd></div>
-      ))}
-    </dl>
-    <div class="mt-8 flex flex-wrap gap-3">
-      <a href={signupUrl(lang)} class="inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{f.hero.cta}</a>
-      <a href={`${ROUTES.pos[lang]}#tarifs`} class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">{f.hero.cta2}</a>
-    </div>
-  </section>
-
-  <!-- jump to a module -->
-  <nav class="sticky top-16 z-30 border-y border-line bg-chalk/95 backdrop-blur" aria-label={f.jump}>
-    <div class="snap-row mx-auto flex max-w-6xl gap-2 overflow-x-auto px-4 py-2.5 sm:px-6">
-      {f.modules.map(m => <a href={`#${m.key}`} class="flex shrink-0 items-center gap-2 rounded-full bg-paper px-3.5 py-2 text-sm font-semibold ring-1 ring-line hover:ring-navy"><Icon name={ICON[m.key]} class="size-4 text-green-deep" />{m.title}</a>)}
-    </div>
-  </nav>
-
-  <div class="mx-auto max-w-6xl space-y-20 px-4 py-20 sm:px-6">
-    {f.modules.map((m, mi) => (
-      <section id={m.key} class="scroll-mt-36 grid gap-8 lg:grid-cols-[0.8fr_1.6fr]">
-        <div class="lg:sticky lg:top-36 lg:self-start">
-          <span class={`grid size-14 place-items-center rounded-2xl ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : 'bg-blue text-white'}`}><Icon name={ICON[m.key]} class="size-7" /></span>
-          <p class="mt-5 text-sm font-semibold text-green-deep">{m.tag}, {String(mi + 1).padStart(2, '0')}</p>
-          <h2 class="mt-1 text-[2.4rem] leading-[0.95] sm:text-5xl">{m.title}</h2>
-          <p class="mt-3 text-muted">{m.text}</p>
-        </div>
-        <div class="grid gap-3 sm:grid-cols-2">
-          {m.items.map(([h, p]) => (
-            <article class="rounded-[1.4rem] bg-paper p-5 ring-1 ring-line">
-              <h3 class="flex items-start gap-2 text-lg"><Icon name="check" class="mt-1 size-4 shrink-0 text-green-deep" />{h}</h3>
-              <p class="mt-2 text-[0.95rem] text-muted">{p}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-    ))}
-  </div>
-
-  <section class="px-4 pb-24 sm:px-6">
-    <div class="mx-auto max-w-6xl rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
-      <h2 class="max-w-3xl text-6xl sm:text-7xl">{f.final.title}</h2>
-      <p class="mt-5 max-w-xl text-lg text-white/75">{f.final.text}</p>
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href={signupUrl(lang)} class="inline-flex min-h-12 items-center rounded-full bg-green px-8 text-lg font-semibold text-navy hover:bg-[#04A859]">{f.final.cta}</a>
-        <a href={`${ROUTES.pos[lang]}#tarifs`} class="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 hover:border-white">{f.final.pricing}</a>
-        <WaButton text={wa} label={t.ui.whatsapp} where="features-final" tone="light" class="px-6" />
+  <!-- hero -->
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1fr] lg:gap-6">
+    <div>
+      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{f.hero.kicker}</p>
+      <h1 class="mt-5 text-[clamp(2.7rem,4.8vw,4.3rem)]">
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{f.hero.title1}</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{f.hero.title2}</span></span>
+      </h1>
+      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{f.hero.text}</p>
+      <dl class="fade-up mt-8 grid max-w-lg grid-cols-3 gap-3" style="--d:400ms">
+        {stats.map(([n, [l, s]]) => (
+          <div class="rounded-[1.25rem] bg-paper p-3.5 ring-1 ring-line sm:p-4"><dt class="fx-n display text-5xl text-navy tabular-nums" data-n={n}>{n}</dt><dd class="mt-1 text-sm font-semibold leading-tight">{l}<span class="mt-0.5 block text-xs font-normal text-muted">{s}</span></dd></div>
+        ))}
+      </dl>
+      <div class="fade-up mt-8 flex flex-wrap gap-3" style="--d:500ms">
+        <a href={signupUrl(lang)} class="inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{f.hero.cta}</a>
+        <a href={`${ROUTES.pos[lang]}#tarifs`} class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">{f.hero.cta2}</a>
       </div>
     </div>
+    <div class="fade-up pb-6" style="--d:350ms"><FeatureHub icons={ICON} /></div>
   </section>
+
+  <!-- sticky bar: jump to a module, or search everything -->
+  <nav class="fx-bar sticky top-16 z-30 border-y border-line bg-chalk/95 backdrop-blur" aria-label={f.jump}>
+    <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-2.5 sm:px-6 lg:flex-row lg:items-center">
+      <label class="relative flex shrink-0 items-center lg:w-72">
+        <Icon name="search" class="pointer-events-none absolute start-3.5 size-4 text-muted" />
+        <input type="search" class="fx-q min-h-11 w-full rounded-full bg-paper ps-10 pe-4 text-[0.95rem] ring-1 ring-line placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-green" placeholder={`Chercher parmi ${total} fonctions…`} aria-label={`Chercher parmi ${total} fonctions`} />
+      </label>
+      <div class="fx-pills snap-row flex gap-2 overflow-x-auto">
+        {f.modules.map(m => <a href={`#${m.key}`} data-k={m.key} class="fx-pill flex shrink-0 items-center gap-2 rounded-full bg-paper px-3.5 py-2 text-sm font-semibold ring-1 ring-line transition-colors hover:ring-navy"><Icon name={ICON[m.key] as any} class="size-4 text-green-deep" />{m.title}<span class="fx-pc rounded-full bg-chalk px-1.5 text-xs text-muted">{m.items.length}</span></a>)}
+      </div>
+    </div>
+    <span class="fx-progress absolute inset-x-0 -bottom-px h-0.5 origin-left bg-green rtl:origin-right" style="transform:scaleX(0)" aria-hidden="true"></span>
+  </nav>
+
+  <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6">
+    <div class="fx-search-info mb-10 hidden items-center justify-between gap-4 rounded-2xl bg-mint px-5 py-4 font-semibold" role="status">
+      <span class="fx-res"></span>
+      <button type="button" class="fx-clear text-sm text-green-deep underline underline-offset-4">Tout afficher</button>
+    </div>
+    <p class="fx-try mb-10 flex flex-wrap items-center gap-2 text-sm text-muted">Essayez :
+      {examples.map(x => <button type="button" class="fx-ex rounded-full bg-paper px-3 py-1 font-semibold text-navy ring-1 ring-line hover:ring-green" data-q={x}>{x}</button>)}
+    </p>
+    <p class="fx-none mb-10 hidden rounded-2xl bg-paper p-6 text-center ring-1 ring-line">Rien trouvé. <a href="#" class="fx-wa font-semibold text-green-deep underline underline-offset-4">Demandez-nous sur WhatsApp</a>, la réponse est peut-être oui.</p>
+
+    <div class="space-y-24">
+      {f.modules.map((m, mi) => (
+        <section id={m.key} class="fx-mod scroll-mt-40 grid gap-8 lg:grid-cols-[0.8fr_1.6fr]" data-k={m.key}>
+          <div class="lg:sticky lg:top-40 lg:self-start">
+            <div class="flex items-center gap-4">
+              <span class={`grid size-14 place-items-center rounded-2xl ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : m.tag === 'Amplify' ? 'bg-paper text-navy ring-1 ring-line' : 'bg-blue text-white'}`}><Icon name={ICON[m.key] as any} class="size-7" /></span>
+              <span class="display text-6xl text-line">{String(mi + 1).padStart(2, '0')}</span>
+            </div>
+            <p class="mt-5 text-sm font-semibold text-green-deep">{m.tag}</p>
+            <h2 class="mt-1 text-[2.4rem] leading-[0.95] sm:text-5xl">{m.title}</h2>
+            <p class="mt-3 text-muted">{m.text}</p>
+            <p class="fx-prog mt-5 flex items-center gap-3 text-sm font-semibold" aria-hidden="true">
+              <span class="h-1.5 w-28 overflow-hidden rounded-full bg-line"><span class="fx-mbar block h-full w-full origin-left rounded-full bg-green rtl:origin-right" style="transform:scaleX(0)"></span></span>
+              <span><span class="fx-seen tabular-nums">0</span> / {m.items.length} fonctions</span>
+            </p>
+          </div>
+          <div class="grid content-start gap-3 sm:grid-cols-2">
+            {m.items.map(([h, p], k) => (
+              <article class="fx-card group relative overflow-hidden rounded-[1.4rem] bg-paper p-5 ring-1 ring-line transition-[box-shadow,transform] duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-30px_rgba(0,30,62,0.45)]" style={`--d:${(k % 2) * 90}ms`}>
+                <span class="fx-spot pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" aria-hidden="true"></span>
+                <h3 class="relative flex items-start gap-2.5 text-lg"><span class="fx-ck mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-mint text-green-deep transition-colors duration-500"><Icon name="check" class="size-3.5" /></span><span class="fx-h">{h}</span></h3>
+                <p class="fx-p relative mt-2 text-[0.95rem] text-muted">{p}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  </div>
+
+  <ProductFinal title={f.final.title} text={f.final.text} cta={f.final.cta} href={signupUrl(lang)} wa={wa} waLabel={t.ui.whatsapp} where="features-final"
+    steps={['Compte créé', 'Menu importé depuis une photo', 'Tables et équipe ajoutées', 'Caisse prête à encaisser']} done="Prêt pour le service" />
 </Base>
+
+<script>
+  import { waLink } from '../../config';
+  const bar = document.querySelector<HTMLElement>('.fx-bar')!;
+  const mods = [...document.querySelectorAll<HTMLElement>('.fx-mod')];
+  const pills = [...document.querySelectorAll<HTMLAnchorElement>('.fx-pill')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.fx-card')];
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // stats count up
+  document.querySelectorAll<HTMLElement>('.fx-n').forEach((el, i) => {
+    if (still) return;
+    const to = Number(el.dataset.n), t0 = performance.now() + 500 + i * 150;
+    const step = (t: number) => { const k = Math.max(0, Math.min(1, (t - t0) / 1100)); el.textContent = String(Math.round(to * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
+    el.textContent = '0'; requestAnimationFrame(step);
+  });
+
+  // active module in the bar + reading progress
+  const setActive = (k: string) => pills.forEach(p => {
+    const on = p.dataset.k === k; p.classList.toggle('on', on);
+    if (on) p.parentElement!.scrollTo({ left: p.offsetLeft - 16, behavior: still ? 'auto' : 'smooth' });
+  });
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) setActive((e.target as HTMLElement).dataset.k!); }), { rootMargin: '-40% 0px -55% 0px' });
+    mods.forEach(m => io.observe(m));
+    // cards rise in, and each module counts what you have seen
+    const io2 = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const c = e.target as HTMLElement; c.classList.add('in'); io2.unobserve(c);
+      const mod = c.closest('.fx-mod')!;
+      const all = mod.querySelectorAll('.fx-card'), seen = mod.querySelectorAll('.fx-card.in').length;
+      mod.querySelector('.fx-seen')!.textContent = String(seen);
+      (mod.querySelector('.fx-mbar') as HTMLElement).style.transform = `scaleX(${seen / all.length})`;
+    }), { threshold: 0.35 });
+    cards.forEach(c => io2.observe(c));
+  } else cards.forEach(c => c.classList.add('in'));
+  const progress = document.querySelector<HTMLElement>('.fx-progress')!;
+  const first = mods[0], last = mods[mods.length - 1];
+  const onScroll = () => {
+    const a = first.getBoundingClientRect().top + scrollY - 200, b = last.getBoundingClientRect().bottom + scrollY - innerHeight;
+    progress.style.transform = `scaleX(${Math.min(1, Math.max(0, (scrollY - a) / (b - a)))})`;
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // spotlight follows the mouse on a card
+  cards.forEach(c => c.addEventListener('pointermove', (e) => {
+    const r = c.getBoundingClientRect(); c.style.setProperty('--mx', `${e.clientX - r.left}px`); c.style.setProperty('--my', `${e.clientY - r.top}px`);
+  }));
+
+  // search across every feature
+  const q = document.querySelector<HTMLInputElement>('.fx-q')!;
+  const info = document.querySelector<HTMLElement>('.fx-search-info')!;
+  const none = document.querySelector<HTMLElement>('.fx-none')!;
+  const tryRow = document.querySelector<HTMLElement>('.fx-try')!;
+  const norm = (s: string) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  const src = cards.map(c => ({ c, h: c.querySelector('.fx-h')!.textContent!, p: c.querySelector('.fx-p')!.textContent!, t: norm(c.textContent!) }));
+  const esc = (s: string) => s.replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]!));
+  const mark = (text: string, term: string) => {
+    if (!term) return esc(text);
+    const n = norm(text); let out = '', i = 0, j;
+    while ((j = n.indexOf(term, i)) !== -1) { out += esc(text.slice(i, j)) + '<mark class="fx-mark">' + esc(text.slice(j, j + term.length)) + '</mark>'; i = j + term.length; }
+    return out + esc(text.slice(i));
+  };
+  const run = () => {
+    const term = norm(q.value.trim());
+    let hits = 0;
+    src.forEach(({ c, h, p, t }) => {
+      const ok = !term || t.includes(term); c.classList.toggle('hidden', !ok); if (ok) hits++;
+      c.querySelector('.fx-h')!.innerHTML = mark(h, term); c.querySelector('.fx-p')!.innerHTML = mark(p, term);
+      if (term) c.classList.add('in');
+    });
+    mods.forEach(m => m.classList.toggle('hidden', !!term && !m.querySelector('.fx-card:not(.hidden)')));
+    info.classList.toggle('hidden', !term || !hits); info.classList.toggle('flex', !!term && !!hits);
+    info.querySelector('.fx-res')!.textContent = `${hits} fonction${hits > 1 ? 's' : ''} pour « ${q.value.trim()} »`;
+    none.classList.toggle('hidden', !term || !!hits);
+    none.querySelector<HTMLAnchorElement>('.fx-wa')!.href = waLink(`Bonjour, est-ce qu’Amplify fait : ${q.value.trim()} ?`);
+    tryRow.classList.toggle('hidden', !!term);
+    document.querySelectorAll('.fx-prog').forEach(el => el.classList.toggle('invisible', !!term));
+    clearTimeout(jump);
+    if (term) jump = window.setTimeout(() => {
+      const target = hits ? info : none, top = target.getBoundingClientRect().top - bar.getBoundingClientRect().bottom - 16;
+      if (Math.abs(top) > 40) scrollBy({ top, behavior: still ? 'auto' : 'smooth' });
+    }, 700);
+  };
+  let jump = 0;
+  q.addEventListener('input', run);
+  document.querySelector('.fx-clear')!.addEventListener('click', () => { q.value = ''; run(); q.focus(); });
+  document.querySelectorAll<HTMLButtonElement>('.fx-ex').forEach(b => b.addEventListener('click', () => {
+    q.value = b.dataset.q!; run(); scrollTo({ top: bar.getBoundingClientRect().top + scrollY - 64, behavior: still ? 'auto' : 'smooth' });
+  }));
+</script>

@@ -1,0 +1,82 @@
+---
+// "Tout parle ensemble": the 8 modules around Amplify. One order travels through them, module by
+// module, with a caption. Hover or tap a module to see how many features it holds; click to jump there.
+import Icon from './Icon.astro';
+import { featuresFr as f } from '../i18n/products-fr';
+interface Props { icons: Record<string, string> }
+const { icons } = Astro.props;
+const n = f.modules.length;
+const SHORT: Record<string, string> = { pos: 'Caisse', waiter: 'Serveurs', qr: 'Menu QR', margins: 'Marges', stock: 'Stock', team: 'Équipe', money: 'Charges', trust: 'Sécurité' };
+const pos = f.modules.map((m, i) => {
+  const a = (i / n) * Math.PI * 2 - Math.PI / 2;
+  return { ...m, x: 50 + Math.cos(a) * 40, y: 50 + Math.sin(a) * 40 };
+});
+// one order, module by module (all of it real behaviour of the system)
+const story = [
+  ['qr', 'Table 9 commande un tajine par le QR.'],
+  ['pos', 'La caisse sonne, le bon part en cuisine.'],
+  ['stock', 'Le stock de poulet baisse tout seul.'],
+  ['margins', 'La marge du tajine est comptée.'],
+  ['team', 'Les ventes du serveur montent.'],
+  ['money', 'Le résultat du mois avance.'],
+];
+---
+<div data-hub data-story={JSON.stringify(story)}>
+<div class="hub relative mx-auto aspect-square w-full max-w-[32rem]">
+  <svg viewBox="0 0 100 100" class="absolute inset-0 size-full" aria-hidden="true">
+    <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" class="text-line" stroke-width=".3" stroke-dasharray="1 1.5" />
+    {pos.map(m => <line class="hub-spoke" data-k={m.key} x1="50" y1="50" x2={m.x} y2={m.y} stroke="currentColor" stroke-width=".5" />)}
+  </svg>
+  <!-- center -->
+  <div class="absolute start-1/2 top-1/2 grid size-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-navy text-center text-white shadow-[0_30px_60px_-20px_rgba(0,30,62,0.6)] rtl:translate-x-1/2">
+    <span class="hub-pulse absolute inset-0 rounded-full ring-2 ring-green" aria-hidden="true"></span>
+    <span><span class="display block text-[clamp(1.4rem,4.5vw,2.4rem)] leading-none">Amplify</span><span class="mt-0.5 block text-[clamp(0.55rem,1.6vw,0.75rem)] text-white/70">tout parle ensemble</span></span>
+  </div>
+  <!-- modules -->
+  {pos.map(m => (
+    <a href={`#${m.key}`} class="hub-node group absolute -translate-x-1/2 -translate-y-1/2 rtl:translate-x-1/2" style={`left:${m.x}%;top:${m.y}%`} data-k={m.key}>
+      <span class={`hub-ico grid size-[clamp(2.6rem,9vw,3.8rem)] place-items-center rounded-2xl shadow-lg ring-4 ring-chalk transition-transform duration-300 group-hover:scale-110 ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : m.tag === 'Amplify' ? 'bg-white text-navy ring-line' : 'bg-blue text-white'}`}>
+        <Icon name={icons[m.key] as any} class="size-[45%]" />
+      </span>
+      <span class="absolute start-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap text-[clamp(0.65rem,1.9vw,0.85rem)] font-semibold rtl:translate-x-1/2">{SHORT[m.key]}</span>
+      <span class="hub-count absolute -end-1 -top-1 grid size-6 place-items-center rounded-full bg-navy text-[0.65rem] font-bold text-white ring-2 ring-chalk">{m.items.length}</span>
+    </a>
+  ))}
+  <span class="hub-dot pointer-events-none absolute size-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-green shadow-[0_0_14px_4px_rgba(5,185,98,.6)] rtl:translate-x-1/2" style="left:50%;top:50%" aria-hidden="true"></span>
+  </div>
+<p class="hub-cap relative mx-auto mt-8 w-fit max-w-[90%] rounded-full bg-paper px-4 py-2 text-center text-sm font-semibold shadow-md ring-1 ring-line " aria-live="polite">{story[0][1]}</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-hub]').forEach((root) => {
+    const story: [string, string][] = JSON.parse(root.dataset.story!);
+    const dot = root.querySelector<HTMLElement>('.hub-dot')!;
+    const cap = root.querySelector<HTMLElement>('.hub-cap')!;
+    const node = (k: string) => root.querySelector<HTMLElement>(`.hub-node[data-k="${k}"]`)!;
+    const spoke = (k: string) => root.querySelector<SVGElement>(`.hub-spoke[data-k="${k}"]`);
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let i = 0, timer = 0;
+    const light = (k: string) => {
+      root.querySelectorAll('.hub-node').forEach(n => n.classList.toggle('on', (n as HTMLElement).dataset.k === k));
+      root.querySelectorAll('.hub-spoke').forEach(s => s.classList.toggle('on', (s as SVGElement).dataset.k === k));
+    };
+    const go = () => {
+      const [k, text] = story[i % story.length];
+      const n = node(k);
+      // via the center, then out to the module
+      dot.style.left = '50%'; dot.style.top = '50%';
+      setTimeout(() => { dot.style.left = n.style.left; dot.style.top = n.style.top; }, 450);
+      setTimeout(() => { light(k); cap.classList.remove('cap-in'); void cap.offsetWidth; cap.textContent = text; cap.classList.add('cap-in'); }, 900);
+      i++;
+    };
+    root.querySelectorAll<HTMLElement>('.hub-node').forEach(n => {
+      n.addEventListener('mouseenter', () => { spoke(n.dataset.k!)?.classList.add('hover'); });
+      n.addEventListener('mouseleave', () => { spoke(n.dataset.k!)?.classList.remove('hover'); });
+    });
+    if (still) { light(story[0][0]); return; }
+    const start = () => { if (!timer) { go(); timer = window.setInterval(go, 2300); } };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop()), { threshold: 0.3 }).observe(root);
+    else start();
+  });
+</script>
