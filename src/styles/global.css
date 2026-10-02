@@ -253,3 +253,14 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 .day-card.is-on .dv-ring { animation: spot-ping-s 1.2s ease-out 3; }
 @keyframes spot-ping-s { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 10px rgb(5 185 98 / 0); } }
 @media (prefers-reduced-motion: reduce) { .day-live .day-card:not(.is-on) { opacity: 1; scale: 1; } .day-live .day-card:not(.seen) :is(.dv, .dv-print) { opacity: 1; } }
+
+/* Languages: words drop in when the language changes */
+.lang-in .lw { animation: fade-up .4s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+
+/* Try it: the QR is being scanned, the phone plays the order */
+.qr-scan { top: 0; animation: qr-scan 2.6s ease-in-out infinite alternate; }
+@keyframes qr-scan { from { top: 2%; } to { top: 96%; } }
+.try-s { opacity: 0; transition: opacity .5s ease, transform .5s ease; transform: translateY(8px); }
+[data-try]:not([data-step]) .try-s1, [data-try][data-step="0"] .try-s1, [data-try][data-step="1"] .try-s2, [data-try][data-step="2"] .try-s3 { opacity: 1; transform: none; }
+[data-try][data-step="0"] .try-step:nth-child(1), [data-try][data-step="1"] .try-step:nth-child(2), [data-try][data-step="2"] .try-step:nth-child(3) { background: #001E3E; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .qr-scan { animation: none; top: 50%; } }

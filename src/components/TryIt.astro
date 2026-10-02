@@ -14,7 +14,7 @@ const c = all.home.tryit;
 const qr = await QRCode.toString(SITE.demoMenuUrl, { type: 'svg', margin: 0, color: { dark: '#001E3EFF', light: '#FFFFFF00' } });
 const showReview = !isPlaceholder(REVIEW.text);
 ---
-<section id={Astro.props.id} class="relative isolate scroll-mt-20 overflow-hidden bg-green py-20 text-navy md:py-28">
+<section id={Astro.props.id} data-try class="relative isolate scroll-mt-20 overflow-hidden bg-green py-20 text-navy md:py-28">
   <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32" color="rgba(0,30,62,0.08)" />
   <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">
     <div>
@@ -25,8 +25,25 @@ const showReview = !isPlaceholder(REVIEW.text);
         <a href={SITE.demoMenuUrl} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center gap-2 rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-blue md:hidden">{c.open}</a>
         <a href={signupUrl(Astro.props.lang)} class="inline-flex min-h-12 items-center rounded-full border-2 border-navy px-6 text-lg font-semibold hover:bg-navy hover:text-white">{c.create}</a>
       </div>
+      <ol class="try-steps mt-7 flex flex-wrap gap-2" aria-hidden="true">
+        {['Scannez', 'Choisissez', 'Commandez'].map((x, i) => <li class="try-step flex items-center gap-2 rounded-full bg-white/30 py-1.5 pe-4 ps-1.5 font-semibold transition-colors duration-300"><span class="grid size-7 place-items-center rounded-full bg-navy text-sm text-green">{i + 1}</span>{x}</li>)}
+      </ol>
       <p class="mt-4 text-sm text-navy/60">{c.note}</p>
-      <div class="mx-auto mt-10 w-44 rotate-[3deg] md:hidden"><Device kind="phone" src="/img/menu-fiche.webp" alt="" w={600} h={1298} /></div>
+      <div class="mx-auto mt-10 w-48 rotate-[3deg] md:hidden" aria-hidden="true"><div class="try-phone relative">
+        <Device kind="phone" w={600} h={1298}>
+          <div slot="screen" class="relative aspect-[600/1298] overflow-hidden">
+            <img src="/img/menu-liste.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s1 absolute inset-0 size-full object-cover" />
+            <img src="/img/menu-fiche.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s2 absolute inset-0 size-full object-cover" />
+            <div class="try-s try-s3 absolute inset-0 grid place-items-center bg-[#FAF8F3] p-4 text-center">
+              <div>
+                <span class="mx-auto grid size-14 place-items-center rounded-full bg-green text-navy"><svg viewBox="0 0 24 24" class="size-8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+                <p class="mt-3 text-sm font-bold text-navy">Commande envoyée</p>
+                <p class="mt-1 text-[0.65rem] text-muted">Table 7 · en préparation</p>
+              </div>
+            </div>
+          </div>
+        </Device>
+      </div></div>
 
       {showReview && (
         <figure class="mt-10 max-w-md rounded-2xl bg-white/25 p-6 ring-1 ring-navy/10">
@@ -40,13 +57,45 @@ const showReview = !isPlaceholder(REVIEW.text);
     <!-- desktop: big QR next to the real menu on a phone -->
     <div class="relative hidden items-center justify-center gap-8 md:flex">
       <div class="try-qr rounded-[2rem] bg-paper p-7 text-center text-navy shadow-2xl">
-        <div class="size-52 [&>svg]:size-full" set:html={qr} />
+        <div class="relative size-52">
+          <div class="size-full [&>svg]:size-full" set:html={qr} />
+          <span class="qr-scan pointer-events-none absolute inset-x-[-6%] h-1 rounded-full bg-green shadow-[0_0_16px_4px_rgba(5,185,98,.65)]" aria-hidden="true"></span>
+          <span class="qr-corner absolute -start-2 -top-2 size-6 rounded-ss-lg border-s-4 border-t-4 border-green" aria-hidden="true"></span>
+          <span class="qr-corner absolute -end-2 -top-2 size-6 rounded-se-lg border-e-4 border-t-4 border-green" aria-hidden="true"></span>
+          <span class="qr-corner absolute -bottom-2 -start-2 size-6 rounded-es-lg border-b-4 border-s-4 border-green" aria-hidden="true"></span>
+          <span class="qr-corner absolute -bottom-2 -end-2 size-6 rounded-ee-lg border-b-4 border-e-4 border-green" aria-hidden="true"></span>
+        </div>
         <p class="mt-4 font-semibold">{c.scan}</p>
         <p class="text-xs text-muted" dir="ltr">{SITE.demoMenuUrl.replace('https://', '')}</p>
       </div>
-      <div class="w-48 rotate-[4deg]">
-        <Device kind="phone" src="/img/menu-fiche.webp" alt="" w={600} h={1298} />
-      </div>
+      <div class="w-52 rotate-[4deg]" aria-hidden="true"><div class="try-phone relative">
+        <Device kind="phone" w={600} h={1298}>
+          <div slot="screen" class="relative aspect-[600/1298] overflow-hidden">
+            <img src="/img/menu-liste.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s1 absolute inset-0 size-full object-cover" />
+            <img src="/img/menu-fiche.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s2 absolute inset-0 size-full object-cover" />
+            <div class="try-s try-s3 absolute inset-0 grid place-items-center bg-[#FAF8F3] p-4 text-center">
+              <div>
+                <span class="mx-auto grid size-14 place-items-center rounded-full bg-green text-navy"><svg viewBox="0 0 24 24" class="size-8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
+                <p class="mt-3 text-sm font-bold text-navy">Commande envoyée</p>
+                <p class="mt-1 text-[0.65rem] text-muted">Table 7 · en préparation</p>
+              </div>
+            </div>
+          </div>
+        </Device>
+      </div></div>
     </div>
   </div>
 </section>
+
+<script>
+  // the phone plays the guest's order: menu, product, sent. The steps light up in sync.
+  document.querySelectorAll<HTMLElement>('[data-try]').forEach((root) => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { root.dataset.step = '2'; return; }
+    let i = 0, timer = 0;
+    const tick = () => { root.dataset.step = String(i % 3); i++; };
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !timer) { tick(); timer = window.setInterval(tick, 2600); }
+      else if (!e.isIntersecting) { clearInterval(timer); timer = 0; }
+    }, { threshold: 0.3 }).observe(root);
+  });
+</script>

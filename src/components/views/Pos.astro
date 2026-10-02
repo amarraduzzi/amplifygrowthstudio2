@@ -6,6 +6,7 @@ import Device from '../Device.astro';
 import Icon from '../Icon.astro';
 import OfflineDemo from '../OfflineDemo.astro';
 import ServiceDay from '../ServiceDay.astro';
+import Languages from '../Languages.astro';
 import TryIt from '../TryIt.astro';
 import Pricing from '../Pricing.astro';
 import PriceBuilder from '../PriceBuilder.astro';
@@ -99,20 +100,8 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
   <!-- features: a day of service -->
   <ServiceDay lang={lang} allCta={p.nav.allCta.replace('{n}', `${nFeatures}+`)} profitCta={p.products.profit.cta} />
 
-  <!-- languages -->
-  <section class="border-y border-line bg-paper">
-    <div class="mx-auto grid max-w-6xl items-center gap-8 px-4 py-16 sm:px-6 md:grid-cols-[1.2fr_1fr]">
-      <div>
-        <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl">{p.lang.title}</h2>
-        <p class="mt-4 max-w-lg text-lg text-muted">{p.lang.text}</p>
-      </div>
-      <div class="flex flex-wrap gap-3 md:justify-end" aria-hidden="true">
-        <span class="display rounded-2xl bg-chalk px-6 py-4 text-4xl">Bonjour</span>
-        <span class="rounded-2xl bg-navy px-6 py-4 text-4xl font-bold text-white" lang="ar" dir="rtl">مرحبا</span>
-        <span class="display rounded-2xl bg-green px-6 py-4 text-4xl">Hello</span>
-      </div>
-    </div>
-  </section>
+  <!-- languages: switch the till and the menu yourself -->
+  <Languages />
 
   <!-- live demo -->
   <TryIt lang={lang} id="demo" />

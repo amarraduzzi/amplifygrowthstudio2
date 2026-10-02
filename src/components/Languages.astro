@@ -1,0 +1,119 @@
+---
+// "Chaque employé travaille dans sa langue": a live till (French / Arabic, mirrored right to left)
+// and the guest's QR menu (French / Arabic / English). Switch them yourself, or watch them switch.
+import { posFr } from '../i18n/products-fr';
+const l = posFr.lang;
+const T = {
+  fr: { dir: 'ltr', table: 'Table 4', items: [['Thé à la menthe', '16'], ['Café noir', '32']], total: 'Total', send: 'Envoyer', pay: 'Encaisser', cur: 'MAD', hello: 'Bonjour Sara' },
+  ar: { dir: 'rtl', table: 'طاولة 4', items: [['شاي بالنعناع', '16'], ['قهوة سوداء', '32']], total: 'المجموع', send: 'إرسال', pay: 'تحصيل', cur: 'درهم', hello: 'مرحبا سارة' },
+};
+const M = {
+  fr: { dir: 'ltr', cat: 'Boissons chaudes', items: [['Thé à la menthe', '16 MAD'], ['Café noir', '16 MAD'], ['Cappuccino', '24 MAD']], add: 'Ajouter' },
+  ar: { dir: 'rtl', cat: 'مشروبات ساخنة', items: [['شاي بالنعناع', '16 درهم'], ['قهوة سوداء', '16 درهم'], ['كابوتشينو', '24 درهم']], add: 'أضف' },
+  en: { dir: 'ltr', cat: 'Hot drinks', items: [['Mint tea', '16 MAD'], ['Black coffee', '16 MAD'], ['Cappuccino', '24 MAD']], add: 'Add' },
+};
+const IMG = ['/img/menu/the-menthe.webp', '/img/menu/cafe-noir.webp', '/img/menu/cappuccino.webp'];
+const seg = 'lang-btn rounded-full px-4 py-2 text-sm font-semibold transition-colors aria-pressed:bg-navy aria-pressed:text-white';
+---
+<section class="border-y border-line bg-paper" data-langs>
+  <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+    <div>
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Chaque employé</span><span class="block">travaille dans</span><span class="block text-green-deep">sa langue.</span></h2>
+      <p class="mt-5 max-w-md text-lg text-muted">{l.text}</p>
+      <div class="mt-7 space-y-3">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="w-20 text-sm font-semibold text-muted">Serveur</span>
+          <div class="inline-flex rounded-full bg-chalk p-1 ring-1 ring-line">
+            <button type="button" class={seg} data-till="fr" aria-pressed="true">Français</button>
+            <button type="button" class={seg} data-till="ar" aria-pressed="false" lang="ar">العربية</button>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="w-20 text-sm font-semibold text-muted">Client</span>
+          <div class="inline-flex rounded-full bg-chalk p-1 ring-1 ring-line">
+            <button type="button" class={seg} data-menu="fr" aria-pressed="true">FR</button>
+            <button type="button" class={seg} data-menu="ar" aria-pressed="false" lang="ar">ع</button>
+            <button type="button" class={seg} data-menu="en" aria-pressed="false">EN</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- the till and the phone -->
+    <div class="relative sm:pb-12" aria-hidden="true">
+      <div class="rounded-[1.6rem] bg-[#0B1422] p-2.5 shadow-[0_40px_80px_-35px_rgba(0,30,62,0.6)] ring-1 ring-black/10 sm:me-10">
+        {Object.entries(T).map(([k, t]) => (
+          <div class={`lang-till overflow-hidden rounded-[1.1rem] bg-navy text-white ${k === 'fr' ? '' : 'hidden'}`} data-lt={k} dir={t.dir} lang={k}>
+            <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
+              <span class="font-semibold">{t.table}</span>
+              <span class="rounded-full bg-green/15 px-3 py-1 text-xs font-bold text-green">{t.hello}</span>
+            </div>
+            <div class="space-y-3 p-4">
+              <ul class="space-y-2">
+                {t.items.map(([n, p], i) => (
+                  <li class="lw flex items-center justify-between gap-3 rounded-xl bg-white/5 px-3.5 py-2.5 ring-1 ring-white/10" style={`--d:${i * 90}ms`}>
+                    <span class="whitespace-nowrap"><span class="text-green">{i + 1}×</span> {n}</span><span class="whitespace-nowrap tabular-nums">{p} {t.cur}</span>
+                  </li>
+                ))}
+                <li class="lw flex items-center justify-between px-1 pt-1 text-sm text-white/60" style="--d:200ms"><span>{t.total}</span><span class="display text-3xl text-green">48 {t.cur}</span></li>
+              </ul>
+              <div class="grid grid-cols-2 gap-2 sm:[padding-right:34%]">
+                <span class="lw grid min-h-11 place-items-center rounded-xl bg-green px-4 text-sm font-bold text-navy" style="--d:250ms">{t.send}</span>
+                <span class="lw grid min-h-11 place-items-center rounded-xl bg-[#2DD4BF] px-4 text-sm font-bold text-navy" style="--d:300ms">{t.pay}</span>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- the guest's phone -->
+      <div class="relative mx-auto -mt-6 w-40 rotate-[4deg] sm:absolute sm:-bottom-16 sm:end-0 sm:mx-0 sm:mt-0 sm:w-44">
+        <div class="rounded-[2rem] bg-linear-to-b from-[#3A3F47] via-[#1C1F24] to-[#3A3F47] p-1.5 shadow-2xl">
+          <div class="overflow-hidden rounded-[1.7rem] bg-black p-1">
+            <div class="relative overflow-hidden rounded-[1.45rem] bg-[#FAF8F3]">
+              <span class="absolute start-1/2 top-1 z-10 h-3 w-14 -translate-x-1/2 rounded-full bg-black"></span>
+              {Object.entries(M).map(([k, m]) => (
+                <div class={`lang-menu px-2.5 pb-3 pt-6 text-navy ${k === 'fr' ? '' : 'hidden'}`} data-lm={k} dir={m.dir} lang={k}>
+                  <p class="lw text-[0.7rem] font-bold" style="--d:0ms">{m.cat}</p>
+                  <ul class="mt-2 space-y-1.5">
+                    {m.items.map(([n, p], i) => (
+                      <li class="lw flex items-center gap-2 rounded-lg bg-white p-1.5 shadow-sm" style={`--d:${80 + i * 90}ms`}>
+                        <img src={IMG[i]} alt="" width="600" height="600" loading="lazy" class="size-9 shrink-0 rounded-md object-cover" />
+                        <span class="min-w-0 flex-1 text-[0.6rem] leading-tight"><span class="block truncate font-semibold">{n}</span><span class="text-green-deep">{p}</span></span>
+                        <span class="grid size-5 shrink-0 place-items-center rounded-full bg-green text-[0.6rem] font-bold">+</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p class="lw mt-2 rounded-full bg-green py-1.5 text-center text-[0.65rem] font-bold" style="--d:380ms">{m.add}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-langs]').forEach((root) => {
+    const tillBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-till]')];
+    const menuBtns = [...root.querySelectorAll<HTMLButtonElement>('[data-menu]')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = (sel: string, attr: string, val: string) => root.querySelectorAll<HTMLElement>(sel).forEach(el => {
+      const on = el.dataset[attr] === val; el.classList.toggle('hidden', !on);
+      if (on && !still) { el.classList.remove('lang-in'); void el.offsetWidth; el.classList.add('lang-in'); }
+    });
+    const setTill = (v: string) => { tillBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.till === v))); show('.lang-till', 'lt', v); };
+    const setMenu = (v: string) => { menuBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.menu === v))); show('.lang-menu', 'lm', v); };
+    let auto = !still, timer = 0, step = 0;
+    const seq: [string, string][] = [['ar', 'fr'], ['ar', 'ar'], ['fr', 'en'], ['fr', 'fr']];
+    const stop = () => { auto = false; clearInterval(timer); };
+    tillBtns.forEach(b => b.addEventListener('click', () => { stop(); setTill(b.dataset.till!); }));
+    menuBtns.forEach(b => b.addEventListener('click', () => { stop(); setMenu(b.dataset.menu!); }));
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && auto && !timer) timer = window.setInterval(() => { const [a, b] = seq[step++ % seq.length]; setTill(a); setMenu(b); }, 2400);
+      else if (!e.isIntersecting) { clearInterval(timer); timer = 0; }
+    }, { threshold: 0.4 }).observe(root);
+  });
+</script>
