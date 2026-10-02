@@ -8,6 +8,7 @@ import OfflineDemo from '../OfflineDemo.astro';
 import ServiceDay from '../ServiceDay.astro';
 import Languages from '../Languages.astro';
 import TryIt from '../TryIt.astro';
+import PhotoBand from '../PhotoBand.astro';
 import Pricing from '../Pricing.astro';
 import PriceBuilder from '../PriceBuilder.astro';
 import Faq from '../Faq.astro';
@@ -97,6 +98,8 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 
   <!-- offline -->
   <OfflineDemo />
+
+  <PhotoBand name="pos-service" alt="Le passe d’un restaurant au moment du rush, un serveur emporte les assiettes" kicker="12:30" title="Le rush. La caisse suit." w={1600} h={686} class="pt-24" pos="60% 50%" />
 
   <!-- features: a day of service -->
   <ServiceDay lang={lang} allCta={p.nav.allCta.replace('{n}', `${nFeatures}+`)} profitCta={p.products.profit.cta} />

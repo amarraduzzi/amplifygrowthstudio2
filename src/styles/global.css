@@ -631,3 +631,15 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 .rv-five .rv-star.on { animation: rv-wave .6s calc(var(--i, 0) * 60ms) both; }
 .rv-five .rv-star:nth-child(1) { --i: 0; } .rv-five .rv-star:nth-child(2) { --i: 1; } .rv-five .rv-star:nth-child(3) { --i: 2; } .rv-five .rv-star:nth-child(4) { --i: 3; } .rv-five .rv-star:nth-child(5) { --i: 4; }
 @keyframes rv-wave { 50% { transform: translateY(-8px); } }
+
+/* Photo band: slow parallax with the scroll (--p from data-scrub) */
+.pb-img { transform: scale(1.14) translateY(calc((0.5 - var(--p, .5)) * 7%)); will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .pb-img { transform: none; } }
+.js .pb-band .pb-t { clip-path: inset(0 100% 0 0); transition: clip-path 1s .2s cubic-bezier(.6,0,.2,1); }
+.js .pb-band.in .pb-t { clip-path: inset(0 0 0 0); }
+@media (prefers-reduced-motion: no-preference) { [data-mkfin] .mkf-photo { transform: scale(1.08); transition: transform 6s ease-out; } [data-mkfin].in .mkf-photo { transform: scale(1); } }
+@media (prefers-reduced-motion: no-preference) {
+  .ty-in .ty-img { animation: ty-ken 7s ease-out both; }
+  @keyframes ty-ken { from { transform: scale(1.12); } to { transform: scale(1); } }
+  .play .mkb-photo { animation: ty-ken 6s ease-out both; }
+}

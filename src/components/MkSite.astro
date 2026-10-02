@@ -24,7 +24,11 @@ const s = c.site;
     </div>
 
     <!-- what a visitor finds -->
-    <div>
+    <div class="relative">
+      <div class="absolute inset-x-0 bottom-6 top-20 -z-10 overflow-hidden rounded-[2rem] sm:-inset-x-6" aria-hidden="true">
+        <img src="/img/photos/mk-touriste-1600.webp" srcset="/img/photos/mk-touriste-800.webp 800w, /img/photos/mk-touriste-1600.webp 1536w" sizes="(min-width: 1024px) 600px, 100vw" alt="" width="1536" height="1024" loading="lazy" class="size-full object-cover object-[12%_50%]" />
+        <span class="absolute inset-0 bg-linear-to-r from-navy/10 via-navy/30 to-navy/10"></span>
+      </div>
       <div class="mx-auto mb-4 flex w-fit rounded-full bg-paper p-1 text-sm font-semibold ring-1 ring-line" role="tablist" aria-label="Avec ou sans site">
         <button type="button" role="tab" class="mks-tab rounded-full px-4 py-2 transition-colors" data-m="without" aria-selected="false">{s.without}</button>
         <button type="button" role="tab" class="mks-tab rounded-full px-4 py-2 transition-colors" data-m="with" aria-selected="true">{s.with}</button>

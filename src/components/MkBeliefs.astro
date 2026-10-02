@@ -45,7 +45,9 @@ const results = ['Votre café', 'Café du coin', 'Coffee & Co'];
               </div>
             )}
             {it.k === 'taste' && (
-              <div class="relative">
+              <div class="relative grid size-full place-items-center">
+                <img src="/img/photos/mk-degustation-800.webp" alt="" width="800" height="533" loading="lazy" class="mkb-photo absolute -inset-4 size-[calc(100%+2rem)] max-w-none object-cover" />
+                <span class="absolute -inset-4 bg-navy/25"></span>
                 <div class="mkb-inv w-60 rounded-2xl bg-[#FBF7EC] p-4 shadow-xl ring-1 ring-[#E7DCC8] [transform:rotate(-3deg)]">
                   <p class="text-xs font-bold uppercase tracking-widest text-green-deep">Invitation</p>
                   <p class="display mt-1 text-3xl leading-none">Un thé offert</p>

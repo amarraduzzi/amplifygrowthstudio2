@@ -6,6 +6,7 @@ import MkBeliefs from '../MkBeliefs.astro';
 import MkSite from '../MkSite.astro';
 import MkWhatsApp from '../MkWhatsApp.astro';
 import Proof from '../Proof.astro';
+import PhotoBand from '../PhotoBand.astro';
 import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import { copy } from '../../i18n';
@@ -28,6 +29,8 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
       <span class="block">{c.statement.b.split(' ').map((w, i, a) => <><span class={`word ${i >= a.length - 4 ? 'mk-red' : ''}`}>{w}</span>{' '}</>)}</span>
     </h2>
   </section>
+
+  <PhotoBand name="mk-terrasse" alt="Une terrasse de café pleine à Rabat en fin de journée" kicker="Notre travail" title="Remplir cette terrasse. Le reste suit." class="py-16 md:py-24" pos="50% 60%" />
 
   <MkBeliefs />
 
@@ -112,14 +115,16 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
 
   <!-- final: the room fills -->
   <section class="px-4 pb-24 sm:px-6" data-mkfin>
-    <div class="mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14 lg:grid-cols-[1.2fr_1fr]">
+    <div class="relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14 lg:grid-cols-[1.2fr_1fr]">
+      <img src="/img/photos/mk-salle-pleine-1600.webp" srcset="/img/photos/mk-salle-pleine-800.webp 800w, /img/photos/mk-salle-pleine-1600.webp 1536w" sizes="(min-width: 1152px) 1152px, 100vw" alt="" width="1536" height="1024" loading="lazy" class="mkf-photo absolute inset-0 -z-20 size-full object-cover" />
+      <span class="absolute inset-0 -z-10 bg-linear-to-r from-navy via-navy/85 to-navy/40" aria-hidden="true"></span>
       <div>
         <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.final.h2a}</span><span class="block text-green">{c.final.h2b}</span></h2>
         <p class="mt-5 max-w-xl text-lg text-white/75">{c.final.p}</p>
         <div class="mt-8"><WaButton text={c.wa} label={c.final.cta} where="marketing-final" class="whitespace-nowrap px-7 text-base sm:px-8 sm:text-lg" /></div>
       </div>
       <div class="relative" aria-hidden="true">
-        <div class="mx-auto grid max-w-sm grid-cols-8 gap-2 rounded-[1.5rem] bg-white/5 p-5 ring-1 ring-white/15">
+        <div class="mx-auto grid max-w-sm grid-cols-8 gap-2 rounded-[1.5rem] bg-navy/60 p-5 ring-1 ring-white/15 backdrop-blur-md">
           {Array.from({ length: 40 }, (_, i) => <span class="mkf-seat aspect-square rounded-full bg-white/10" style={`--d:${(i * 17 % 40) * 55}ms`}></span>)}
         </div>
         <p class="mkf-full absolute -end-3 -top-4 rotate-6 rounded-xl bg-green px-4 py-2 text-xl font-black uppercase text-navy shadow-xl">Complet</p>

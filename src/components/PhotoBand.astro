@@ -1,0 +1,26 @@
+---
+// A wide photo with a slow parallax and a short caption. Illustration photos (AI): ambience only,
+// never presented as a real client or the Amplify team.
+interface Props { name: string; alt: string; kicker?: string; title?: string; h?: number; w?: number; class?: string; pos?: string }
+const { name, alt, kicker, title, w = 1536, h = 1024, class: cls = '', pos = '50% 50%' } = Astro.props;
+---
+<section class={`px-4 sm:px-6 ${cls}`}>
+  <figure class="pb-band relative mx-auto h-[22rem] max-w-6xl overflow-hidden rounded-[2rem] sm:h-[28rem] md:h-[32rem] md:rounded-[2.5rem]" data-scrub>
+    <img src={`/img/photos/${name}-1600.webp`} srcset={`/img/photos/${name}-800.webp 800w, /img/photos/${name}-1600.webp ${w}w`} sizes="(min-width: 1152px) 1152px, 100vw" alt={alt} width={w} height={h} loading="lazy" decoding="async" class="pb-img absolute inset-0 size-full object-cover" style={`object-position:${pos}`} />
+    <span class="absolute inset-0 bg-linear-to-t from-navy/85 via-navy/20 to-transparent" aria-hidden="true"></span>
+    {(kicker || title) && (
+      <figcaption class="absolute inset-x-0 bottom-0 p-6 text-white sm:p-10">
+        {kicker && <p class="pb-k inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold backdrop-blur"><span class="size-2 rounded-full bg-green"></span>{kicker}</p>}
+        {title && <p class="pb-t display mt-3 max-w-3xl text-[2.4rem] leading-[0.95] sm:text-6xl">{title}</p>}
+      </figcaption>
+    )}
+  </figure>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.pb-band').forEach((el) => {
+    if (!('IntersectionObserver' in window)) { el.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect(); } }, { threshold: 0.5 });
+    io.observe(el);
+  });
+</script>
