@@ -528,3 +528,25 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
   .js [data-mkrep].in .mkr-msg { opacity: 1; animation: chat-in .5s .2s both; }
   .js [data-mkrep].in .mkr-row { opacity: 1; animation: fade-up .45s var(--d) cubic-bezier(.2,.8,.2,1) both; }
 }
+
+/* Marketing: WhatsApp list section */
+.mkw-gold { color: #001E3E; background: linear-gradient(100deg, #F5B301 0%, #FFE08A 45%, #F5B301 60%, #C98F00 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; background-size: 200% 100%; filter: drop-shadow(0 2px 0 rgb(0 30 62 / .35)); }
+@media (prefers-reduced-motion: no-preference) { .mkw-gold { animation: mkw-shine 4s linear infinite; } @keyframes mkw-shine { to { background-position: -200% 0; } } }
+.mkw-level { width: 22%; }
+.mkw-stage[data-phase="3"] .mkw-level { width: 92%; background-color: #05B962; }
+.mkw-stage[data-phase="3"] .mkw-dot { background-color: #05B962; }
+.mkw-stage:not([data-phase="0"]) .mkw-av { background-color: #05B962; color: #001E3E; transition-delay: var(--d); }
+.mkw-stage[data-phase="2"] .mkw-ticks, .mkw-stage[data-phase="3"] .mkw-ticks { color: #53BDEB; }
+.mkw-reply { opacity: 0; transform: translate(-50%, 6px) scale(.9); transition: opacity .3s, transform .4s cubic-bezier(.3,1.6,.5,1); }
+[dir="rtl"] .mkw-reply { transform: translate(50%, 6px) scale(.9); }
+.mkw-stage[data-phase="3"] .mkw-reply { opacity: 1; transform: translate(-50%, 0) scale(1); transition-delay: var(--r); }
+[dir="rtl"] .mkw-stage[data-phase="3"] .mkw-reply { transform: translate(50%, 0) scale(1); }
+.mkw-p:nth-child(6n+1) .mkw-reply { inset-inline-start: 0; transform: translate(0, 6px) scale(.9); }
+.mkw-stage[data-phase="3"] .mkw-p:nth-child(6n+1) .mkw-reply { transform: none; }
+.mkw-p:nth-child(6n) .mkw-reply { inset-inline-start: auto; inset-inline-end: 0; transform: translate(0, 6px) scale(.9); }
+.mkw-stage[data-phase="3"] .mkw-p:nth-child(6n) .mkw-reply { transform: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .mkw-stage[data-phase="1"] .mkw-msg { animation: mkw-pop .5s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes mkw-pop { 40% { transform: scale(1.04); box-shadow: 0 0 0 6px rgb(5 185 98 / .3); } }
+  .mkw-stage[data-phase="0"] .mkw-send { animation: mk-tap 1.6s ease-out infinite; }
+}
