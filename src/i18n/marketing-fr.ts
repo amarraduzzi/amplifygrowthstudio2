@@ -13,7 +13,7 @@ export const mkFr = {
     lead: 'Restaurant, café, coffee shop, snack ou salon de thé : nous faisons du marketing qui fait entrer des gens. Google d’abord, des idées qui vont chercher le client, et un concept qui ne ressemble à personne.',
     cta: 'Demander un diagnostic',
     cta2: 'Notre méthode',
-    modes: ['Le marketing au Maroc', 'Le marketing Amplify'],
+    modes: ['Le marketing classique au Maroc', 'Le marketing Amplify'],
   },
   statement: {
     a: 'Au Maroc, tout le monde',
@@ -71,7 +71,7 @@ export const mkFr = {
   compare: {
     h2a: 'Visible',
     h2b: 'ou vendu ?',
-    cols: ['Le marketing au Maroc', 'Le marketing Amplify'],
+    cols: ['Le marketing classique au Maroc', 'Le marketing Amplify'],
     rows: [
       ['Objectif', 'Des vues et des likes', 'Des clients qui entrent et reviennent'],
       ['Premier réflexe', 'Une vidéo de plus sur Instagram', 'Être en haut sur Google Maps'],
