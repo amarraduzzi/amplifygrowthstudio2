@@ -44,6 +44,8 @@ export const CONTACT = {
   /** Google Business Profile (share link from Amar). Rating shown only as stated: 5,0. */
   googleProfileUrl: 'https://share.google/4xvWYbcSjUe3S8w2E',
   googleRating: '5,0',
+  /** Link that opens the review form directly. Best: Google Business Profile > "Demander des avis" (g.page/r/.../review). Until then: the profile. */
+  reviewUrl: 'https://share.google/4xvWYbcSjUe3S8w2E',
   hours: '[HORAIRES À COMPLÉTER]',
 };
 

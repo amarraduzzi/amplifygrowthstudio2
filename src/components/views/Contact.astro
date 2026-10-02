@@ -1,64 +1,186 @@
 ---
+// Contact: three ways to reach us, a message builder with a live WhatsApp preview, and a place to leave
+// a review. Every rating goes to Google (no filtering of bad reviews: Google does not allow it), and a
+// private remark can go to WhatsApp instead.
 import Base from '../../layouts/Base.astro';
-import WaButton from '../WaButton.astro';
-import Ph from '../Ph.astro';
-import { CONTACT, isPlaceholder } from '../../config';
+import Icon from '../Icon.astro';
+import { CONTACT } from '../../config';
 import { copy } from '../../i18n';
 import type { Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
 const c = t.contact;
-const f = c.form;
+const types = ['Restaurant', 'Café', 'Snack', 'Salon de thé', 'Autre'];
+const needs = ['La caisse', 'Mes marges', 'Plus de clients', 'Un site web', 'Je ne sais pas encore'];
+const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38a9.9 9.9 0 0 0 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91C21.95 6.45 17.5 2 12.04 2Zm0 18.15c-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 4.54 0 8.24 3.7 8.24 8.24 0 4.55-3.7 8.24-8.24 8.24Z';
 ---
 <Base lang={lang} page="contact" title={c.meta.title} description={c.meta.description} wa={c.wa}>
-  <section class="mx-auto max-w-6xl px-4 pb-12 pt-12 sm:px-6 md:pt-20">
-    <h1 class="text-[3.2rem] sm:text-6xl lg:text-[5.2rem]">{c.hero.h1}</h1>
-    <p class="measure mt-6 text-lg text-muted">{c.hero.lead}</p>
-    <WaButton text={c.wa} label={t.ui.whatsapp} where="contact-hero" class="mt-9 px-7 text-lg" />
+  <!-- hero: three ways -->
+  <section class="mx-auto max-w-6xl px-4 pb-16 pt-8 sm:px-6 md:pt-14">
+    <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-green opacity-60"></span><span class="relative size-2 rounded-full bg-green"></span></span>Rabat, et partout au Maroc</p>
+    <h1 class="mt-5 text-[clamp(3rem,6.4vw,5.6rem)]">
+      <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Parlons de votre</span></span>
+      <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:220ms">établissement.</span></span>
+    </h1>
+    <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:320ms">Le plus rapide, c’est WhatsApp. Vous pouvez aussi nous appeler ou nous écrire. Une vraie personne vous répond.</p>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-[1.4fr_1fr_1fr]">
+      <a href={`https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(c.wa)}`} target="_blank" rel="noopener" data-wa="contact-hero" class="ct-card fade-up group relative flex min-h-56 flex-col justify-between overflow-hidden rounded-[2rem] bg-green p-6 text-navy transition-transform duration-300 hover:-translate-y-1.5 sm:p-7" style="--d:400ms">
+        <svg viewBox="0 0 24 24" class="pointer-events-none absolute -bottom-10 -end-10 size-56 text-white/20 transition-transform duration-500 group-hover:rotate-12" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg>
+        <div class="relative flex items-center justify-between"><span class="text-sm font-bold uppercase tracking-widest">WhatsApp</span><span class="rounded-full bg-navy px-3 py-1 text-xs font-bold text-white">Le plus rapide</span></div>
+        <div class="relative">
+          <p class="ct-bubble mb-4 w-fit max-w-[85%] rounded-2xl rounded-ss-none bg-white px-4 py-2.5 text-sm font-medium shadow-lg">Bonjour 👋 Comment pouvons-nous vous aider ?</p>
+          <p class="display text-4xl sm:text-5xl">Écrire sur WhatsApp</p>
+        </div>
+      </a>
+      <a href={`tel:+${CONTACT.whatsapp}`} class="ct-card fade-up group flex min-h-56 flex-col justify-between rounded-[2rem] bg-navy p-6 text-white transition-transform duration-300 hover:-translate-y-1.5 sm:p-7" style="--d:480ms">
+        <span class="grid size-14 place-items-center rounded-2xl bg-white/10 transition-transform group-hover:rotate-[-12deg]"><svg viewBox="0 0 24 24" class="size-7 text-green" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></span>
+        <div><p class="text-sm font-semibold text-white/60">{c.details.phone}</p><p class="display mt-1 whitespace-nowrap text-[1.8rem]" dir="ltr">{CONTACT.phoneDisplay}</p></div>
+      </a>
+      <a href={`mailto:${CONTACT.email}`} class="ct-card fade-up group flex min-h-56 flex-col justify-between rounded-[2rem] bg-paper p-6 ring-1 ring-line transition-transform duration-300 hover:-translate-y-1.5 sm:p-7" style="--d:560ms">
+        <span class="grid size-14 place-items-center rounded-2xl bg-chalk transition-transform group-hover:rotate-[-12deg]"><svg viewBox="0 0 24 24" class="size-7 text-green-deep" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span>
+        <div class="min-w-0"><p class="text-sm font-semibold text-muted">{c.details.email}</p><p class="mt-1 text-base font-semibold sm:text-lg">{CONTACT.email.split('@')[0]}<wbr />@{CONTACT.email.split('@')[1]}</p></div>
+      </a>
+    </div>
   </section>
 
-  <section class="mx-auto grid max-w-6xl gap-10 px-4 pb-24 sm:px-6 md:grid-cols-[1.2fr_1fr]">
-    <form id="wa-form" class="rounded-[2rem] border border-line bg-paper p-6 md:p-10" data-template={f.template} data-number={CONTACT.whatsapp}>
-      <h2 class="text-4xl md:text-5xl">{f.h2}</h2>
-      <p class="mt-2 text-muted">{f.p}</p>
-      <div class="mt-8 grid gap-5">
-        <label class="grid gap-2"><span class="font-medium">{f.name}</span>
-          <input name="name" required autocomplete="given-name" class="min-h-12 rounded-xl border border-line bg-chalk px-4" /></label>
-        <label class="grid gap-2"><span class="font-medium">{f.type}</span>
-          <select name="type" class="min-h-12 rounded-xl border border-line bg-chalk px-4">{f.types.map(x => <option>{x}</option>)}</select></label>
-        <label class="grid gap-2"><span class="font-medium">{f.city}</span>
-          <input name="city" value={f.cityDefault} autocomplete="address-level2" class="min-h-12 rounded-xl border border-line bg-chalk px-4" /></label>
-        <button type="submit" class="mt-2 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-medium text-navy hover:bg-[#04A859]">{f.send}</button>
-      </div>
-    </form>
+  <!-- message builder with live preview -->
+  <section class="border-y border-line bg-paper">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[1.1fr_1fr]">
+      <form id="wa-form" class="space-y-7" data-number={CONTACT.whatsapp}>
+        <div>
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Votre message,</span><span class="block text-green-deep">prêt en 20 secondes.</span></h2>
+          <p class="mt-4 max-w-md text-muted">Il s’écrit à droite pendant que vous remplissez. Rien n’est envoyé avant que vous appuyiez sur envoyer dans WhatsApp.</p>
+        </div>
+        <label class="block"><span class="font-semibold">{c.form.name}</span>
+          <input name="name" autocomplete="given-name" placeholder="Karim" class="mt-2 min-h-12 w-full rounded-xl bg-white px-4 ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-green" /></label>
+        <fieldset><legend class="font-semibold">{c.form.type}</legend>
+          <div class="mt-2 flex flex-wrap gap-2">{types.map((x, i) => <label class="ct-chip cursor-pointer"><input type="radio" name="type" value={x} class="peer sr-only" checked={i === 0} /><span class="block rounded-full bg-white px-4 py-2 font-semibold ring-1 ring-line transition-colors peer-checked:bg-navy peer-checked:text-white peer-focus-visible:ring-2 peer-focus-visible:ring-green">{x}</span></label>)}</div>
+        </fieldset>
+        <fieldset><legend class="font-semibold">Ce qui vous intéresse</legend>
+          <div class="mt-2 flex flex-wrap gap-2">{needs.map((x, i) => <label class="cursor-pointer"><input type="checkbox" name="need" value={x} class="peer sr-only" checked={i === 0} /><span class="flex items-center gap-1.5 rounded-full bg-white px-4 py-2 font-semibold ring-1 ring-line transition-colors peer-checked:bg-green peer-checked:ring-green peer-focus-visible:ring-2 peer-focus-visible:ring-navy">{x}</span></label>)}</div>
+        </fieldset>
+        <label class="block"><span class="font-semibold">{c.form.city}</span>
+          <input name="city" value={c.form.cityDefault} autocomplete="address-level2" class="mt-2 min-h-12 w-full rounded-xl bg-white px-4 ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-green" /></label>
+        <button type="submit" class="flex min-h-14 w-full items-center justify-center gap-2.5 rounded-full bg-green px-7 text-lg font-semibold text-navy transition-transform hover:scale-[1.01] hover:bg-[#04A859] sm:w-auto">
+          <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true"><path fill="currentColor" d={WA_PATH} /></svg>{c.form.send}
+        </button>
+      </form>
 
-    <div>
-      <h2 class="text-4xl md:text-5xl">{c.details.h2}</h2>
-      <dl class="mt-6 divide-y divide-line border-y border-line">
-        <div class="py-4"><dt class="text-sm text-muted">{c.details.phone}</dt><dd><a href={`tel:+${CONTACT.whatsapp}`} dir="ltr" class="text-lg hover:text-green-deep">{CONTACT.phoneDisplay}</a></dd></div>
-        <div class="py-4"><dt class="text-sm text-muted">{c.details.email}</dt><dd><a href={`mailto:${CONTACT.email}`} class="text-lg hover:text-green-deep">{CONTACT.email}</a></dd></div>
-        <div class="py-4"><dt class="text-sm text-muted">{c.details.address}</dt><dd class="text-lg"><Ph value={CONTACT.street} />, {CONTACT.city}</dd></div>
-        <div class="py-4"><dt class="text-sm text-muted">{c.details.hours}</dt><dd class="text-lg"><Ph value={CONTACT.hours} /></dd></div>
-      </dl>
-      {isPlaceholder(CONTACT.mapsUrl)
-        ? <p class="mt-5"><Ph value={CONTACT.mapsUrl} /></p>
-        : <a href={CONTACT.mapsUrl} target="_blank" rel="noopener" class="mt-5 inline-block font-medium text-green-deep underline underline-offset-4">{c.details.map}</a>}
+      <!-- live preview -->
+      <div class="mx-auto w-full max-w-[19rem]" aria-hidden="true">
+        <div class="rounded-[2.8rem] bg-linear-to-b from-[#4A505A] via-[#1C1F24] to-[#4A505A] p-[0.45rem] shadow-[0_50px_100px_-40px_rgba(0,30,62,0.7)]">
+          <div class="overflow-hidden rounded-[2.45rem] bg-black p-[0.3rem]">
+            <div class="relative flex h-[30rem] flex-col overflow-hidden rounded-[2.15rem] bg-[#ECE5DD] text-[0.8rem] text-navy">
+              <span class="absolute start-1/2 top-2 z-20 h-6 w-[5.5rem] -translate-x-1/2 rounded-full bg-black"></span>
+              <div class="flex items-center gap-2.5 bg-[#075E54] px-3 pb-2.5 pt-10 text-white">
+                <span class="grid size-9 place-items-center rounded-full bg-white text-xs font-black text-navy">A</span>
+                <span class="leading-tight"><span class="block font-semibold">Amplify Growth Studio</span><span class="block text-[0.65rem] text-white/70">en ligne</span></span>
+              </div>
+              <div class="flex flex-1 flex-col justify-end gap-2 p-3 [background-image:radial-gradient(rgb(0_0_0/.04)_1px,transparent_1px)] [background-size:14px_14px]">
+                <p class="w-fit max-w-[85%] rounded-lg rounded-ss-none bg-white px-3 py-2 shadow-sm">Bonjour 👋 Comment pouvons-nous vous aider ?</p>
+                <p class="ct-prev ms-auto w-fit max-w-[88%] whitespace-pre-line rounded-lg rounded-se-none bg-[#DCF8C6] px-3 py-2 shadow-sm"></p>
+              </div>
+              <div class="flex items-center gap-2 bg-[#ECE5DD] px-2 pb-4"><span class="flex-1 rounded-full bg-white px-3 py-2 text-muted">Message</span><span class="grid size-9 place-items-center rounded-full bg-[#075E54] text-white"><svg viewBox="0 0 24 24" class="size-4" fill="currentColor"><path d="M3 20.5 21 12 3 3.5 3 10l12 2-12 2z"/></svg></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- leave a review -->
+  <section class="relative isolate overflow-hidden bg-navy py-24 text-white" data-review data-url={CONTACT.reviewUrl} data-wa={CONTACT.whatsapp}>
+    <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_80%_30%,rgba(245,179,1,.16),transparent_70%),radial-gradient(40%_50%_at_10%_90%,rgba(5,185,98,.18),transparent_70%)]" aria-hidden="true"></span>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">
+      <div>
+        <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/20"><span class="text-[#F5B301]">★</span>Vous travaillez avec nous ?</p>
+        <h2 class="mt-5 text-[2.8rem] leading-[0.92] sm:text-6xl lg:text-7xl"><span class="block">Votre avis</span><span class="rv-gold block">compte double.</span></h2>
+        <p class="mt-5 max-w-md text-lg text-white/75">Un avis honnête aide un autre restaurateur à choisir, et nous aide à nous améliorer. Bon ou moins bon, il va directement sur Google.</p>
+        <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="mt-8 inline-flex items-center gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 ring-1 ring-white/15 hover:bg-white/10">
+          <span class="grid size-10 place-items-center rounded-xl bg-white font-black text-[#4285F4]">G</span>
+          <span><span class="flex items-center gap-1.5 font-bold"><span class="display text-2xl">{CONTACT.googleRating}</span><span class="text-[#F5B301]">★★★★★</span></span><span class="block text-xs text-white/60">Nos avis sur Google</span></span>
+        </a>
+      </div>
+
+      <div class="rounded-[2rem] bg-white p-6 text-navy shadow-[0_50px_100px_-40px_rgba(0,0,0,.7)] sm:p-8">
+        <p class="font-semibold">Votre note</p>
+        <div class="rv-stars mt-2 flex gap-1.5" role="radiogroup" aria-label="Votre note sur 5">
+          {[1, 2, 3, 4, 5].map(n => (
+            <button type="button" role="radio" aria-checked="false" aria-label={`${n} étoile${n > 1 ? 's' : ''}`} class="rv-star grid size-12 place-items-center rounded-xl transition-transform hover:scale-110 sm:size-14" data-n={n}>
+              <svg viewBox="0 0 24 24" class="size-10 sm:size-12"><path d="M12 2.8l2.8 5.7 6.3.9-4.6 4.4 1.1 6.2L12 17l-5.6 3 1.1-6.2L2.9 9.4l6.3-.9z" fill="currentColor" stroke-linejoin="round" /></svg>
+            </button>
+          ))}
+        </div>
+        <p class="rv-label mt-2 h-6 font-semibold text-green-deep" aria-live="polite"></p>
+        <label class="mt-4 block"><span class="font-semibold">Votre avis <span class="font-normal text-muted">(facultatif)</span></span>
+          <textarea class="rv-text mt-2 min-h-28 w-full rounded-xl bg-chalk p-4 ring-1 ring-line focus:outline-none focus:ring-2 focus:ring-green" placeholder="Ce qui a changé pour vous, ce que vous avez aimé, ce qu’on peut faire mieux…"></textarea></label>
+        <div class="mt-3 flex flex-wrap gap-2">{['Équipe à l’écoute', 'Caisse simple', 'Plus de clients', 'Rapide'].map(x => <button type="button" class="rv-tag rounded-full bg-chalk px-3 py-1.5 text-sm font-semibold ring-1 ring-line hover:ring-green">+ {x}</button>)}</div>
+        <button type="button" class="rv-go mt-6 flex min-h-14 w-full items-center justify-center gap-2.5 rounded-full bg-navy px-6 text-base sm:text-lg font-semibold text-white transition-[transform,opacity] hover:scale-[1.01] disabled:pointer-events-none disabled:opacity-40" disabled>
+          <span class="grid size-7 place-items-center rounded-full bg-white text-sm font-black text-[#4285F4]">G</span>Publier mon avis sur Google
+        </button>
+        <p class="rv-done mt-3 hidden rounded-xl bg-mint px-4 py-3 text-sm font-semibold">✓ Votre texte est copié. Sur Google, choisissez vos étoiles et collez-le. Merci !</p>
+        <p class="mt-4 text-center text-sm text-muted">Une remarque à nous dire en privé ? <a href="#" class="rv-private font-semibold text-green-deep underline underline-offset-4">Écrivez-nous sur WhatsApp</a></p>
+      </div>
     </div>
   </section>
 
   <script>
-    // Builds the WhatsApp message from three fields. Nothing is sent to a server.
+    // Message builder: the WhatsApp preview follows the form. Nothing goes to a server.
     const form = document.getElementById('wa-form') as HTMLFormElement;
+    const prev = document.querySelector<HTMLElement>('.ct-prev')!;
+    const build = () => {
+      const d = new FormData(form);
+      const name = String(d.get('name') ?? '').trim();
+      const raw = String(d.get('type') ?? 'Restaurant').toLowerCase();
+      const type = raw === 'autre' ? 'établissement' : raw;
+      const city = String(d.get('city') ?? '').trim() || 'Rabat';
+      const need = d.getAll('need').map(String);
+      return `Bonjour${name ? `, je suis ${name}` : ''}. J’ai un ${type} à ${city}.` + (need.length ? `\nCe qui m’intéresse : ${need.join(', ').toLowerCase()}.` : '');
+    };
+    const render = () => { prev.textContent = build(); prev.classList.remove('ct-pop'); void prev.offsetWidth; prev.classList.add('ct-pop'); };
+    form.addEventListener('input', render); form.addEventListener('change', render); render();
     form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const d = new FormData(form);
-      const text = (form.dataset.template ?? '')
-        .replace('{name}', String(d.get('name') ?? '').trim())
-        .replace('{type}', String(d.get('type') ?? '').toLowerCase())
-        .replace('{city}', String(d.get('city') ?? '').trim() || 'Rabat');
       (window as any).dataLayer?.push({ event: 'whatsapp_click', where: 'contact-form', lang: document.documentElement.lang });
-      window.open(`https://wa.me/${form.dataset.number}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+      window.open(`https://wa.me/${form.dataset.number}?text=${encodeURIComponent(build())}`, '_blank', 'noopener');
+    });
+
+    // Review: every rating goes to Google. The text is copied so the visitor can paste it there.
+    document.querySelectorAll<HTMLElement>('[data-review]').forEach((root) => {
+      const stars = [...root.querySelectorAll<HTMLButtonElement>('.rv-star')];
+      const label = root.querySelector<HTMLElement>('.rv-label')!;
+      const text = root.querySelector<HTMLTextAreaElement>('.rv-text')!;
+      const go = root.querySelector<HTMLButtonElement>('.rv-go')!;
+      const L = ['', 'Décevant', 'Moyen', 'Bien', 'Très bien', 'Excellent !'];
+      let rating = 0;
+      const paint = (n: number) => stars.forEach((s, i) => s.classList.toggle('on', i < n));
+      stars.forEach((s, i) => {
+        s.addEventListener('mouseenter', () => paint(i + 1));
+        s.addEventListener('click', () => {
+          rating = i + 1; paint(rating); label.textContent = L[rating];
+          stars.forEach((x, j) => x.setAttribute('aria-checked', String(j === i)));
+          s.classList.remove('pop'); void s.offsetWidth; s.classList.add('pop');
+          if (rating === 5) root.classList.add('rv-five'); else root.classList.remove('rv-five');
+          go.disabled = false;
+        });
+      });
+      root.querySelector('.rv-stars')!.addEventListener('mouseleave', () => paint(rating));
+      root.querySelectorAll<HTMLButtonElement>('.rv-tag').forEach(b => b.addEventListener('click', () => {
+        const w = b.textContent!.replace('+ ', '').trim();
+        text.value = text.value.trim() ? `${text.value.trim()} ${w}.` : `${w}.`; text.focus();
+      }));
+      go.addEventListener('click', async () => {
+        const body = text.value.trim();
+        if (body) { try { await navigator.clipboard.writeText(body); root.querySelector('.rv-done')!.classList.remove('hidden'); } catch { /* clipboard blocked: the visitor types on Google */ } }
+        window.open(root.dataset.url!, '_blank', 'noopener');
+      });
+      root.querySelector<HTMLAnchorElement>('.rv-private')!.addEventListener('click', (e) => {
+        e.preventDefault();
+        const msg = `Bonjour, une remarque sur Amplify${rating ? ` (ma note : ${rating}/5)` : ''} : ${text.value.trim()}`;
+        window.open(`https://wa.me/${root.dataset.wa}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
+      });
     });
   </script>
 </Base>

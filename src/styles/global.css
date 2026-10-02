@@ -614,3 +614,20 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 }
 .ty-prog { width: 0; }
 .ty-tab[aria-selected="true"] { background: #001E3E; color: #fff; --tw-ring-color: #001E3E; }
+
+/* Contact */
+.ct-pop { animation: ct-pop .3s cubic-bezier(.3,1.5,.5,1); }
+@keyframes ct-pop { from { transform: scale(.97); } }
+@media (prefers-reduced-motion: no-preference) {
+  .ct-bubble { animation: chat-in .5s 1s both; }
+  .ct-card:hover .ct-bubble { animation: ct-wiggle .5s; }
+  @keyframes ct-wiggle { 30% { transform: rotate(-3deg); } 60% { transform: rotate(2deg); } }
+}
+.rv-gold { background: linear-gradient(100deg, #C98F00, #F5B301 30%, #FFE9A8 50%, #F5B301 70%, #C98F00); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.rv-star { color: #DDE3E0; }
+.rv-star.on { color: #F5B301; filter: drop-shadow(0 4px 10px rgb(245 179 1 / .45)); }
+.rv-star.pop svg { animation: rv-pop .45s cubic-bezier(.3,1.8,.5,1); }
+@keyframes rv-pop { 40% { transform: scale(1.35) rotate(-10deg); } }
+.rv-five .rv-star.on { animation: rv-wave .6s calc(var(--i, 0) * 60ms) both; }
+.rv-five .rv-star:nth-child(1) { --i: 0; } .rv-five .rv-star:nth-child(2) { --i: 1; } .rv-five .rv-star:nth-child(3) { --i: 2; } .rv-five .rv-star:nth-child(4) { --i: 3; } .rv-five .rv-star:nth-child(5) { --i: 4; }
+@keyframes rv-wave { 50% { transform: translateY(-8px); } }
