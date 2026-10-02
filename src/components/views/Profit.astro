@@ -8,6 +8,8 @@ import Faq from '../Faq.astro';
 import ProductFinal from '../ProductFinal.astro';
 import ProfitCard from '../ProfitCard.astro';
 import ProfitPains from '../ProfitPains.astro';
+import ProfitFeatures from '../ProfitFeatures.astro';
+import ProfitHow from '../ProfitHow.astro';
 import { SITE, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { profitFr as p, posFr, type Plan } from '../../i18n/products-fr';
@@ -57,38 +59,10 @@ const schema = [
   <ProfitPains />
 
   <!-- what you get -->
-  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-    <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.features.title}</h2>
-    <ul class="mt-12 grid gap-4 sm:grid-cols-2">
-      {p.features.items.map(([h, d, ready]) => (
-        <li class="flex gap-4 rounded-[1.5rem] bg-paper p-6 ring-1 ring-line">
-          <span class={`mt-0.5 grid size-8 shrink-0 place-items-center rounded-full ${ready ? 'bg-green text-navy' : 'bg-chalk text-muted'}`}><Icon name="check" class="size-4" /></span>
-          <div>
-            <h3 class="flex flex-wrap items-center gap-2 text-xl">{h}{!ready && <span class="rounded-full bg-[#FFF4D6] px-2.5 py-0.5 text-xs font-bold text-[#6B4E00]">{p.features.soon}</span>}</h3>
-            <p class="mt-1.5 text-muted">{d}</p>
-          </div>
-        </li>
-      ))}
-    </ul>
-  </section>
+  <ProfitFeatures />
 
   <!-- how it works -->
-  <section id="comment" class="scroll-mt-20 border-y border-line bg-paper">
-    <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.how.title}</h2>
-      <p class="mt-4 max-w-2xl text-lg text-muted">{p.how.text}</p>
-      <ol class="mt-12 grid gap-4 md:grid-cols-3">
-        {p.how.steps.map(([h, d], i) => (
-          <li class="rounded-[1.5rem] bg-chalk p-6">
-            <span class="display text-6xl text-green-deep">{String(i + 1).padStart(2, '0')}</span>
-            <h3 class="mt-3 text-xl">{h}</h3>
-            <p class="mt-2 text-muted">{d}</p>
-          </li>
-        ))}
-      </ol>
-      <p class="mt-8 flex gap-3 rounded-2xl bg-mint p-5 font-medium"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green-deep" />{p.how.together} <a href={ROUTES.pos[lang]} class="whitespace-nowrap font-semibold text-green-deep underline underline-offset-4">{posFr.products.pos.name}</a></p>
-    </div>
-  </section>
+  <ProfitHow lang={lang} />
 
   <!-- pricing -->
   <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6">

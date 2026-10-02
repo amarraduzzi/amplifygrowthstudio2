@@ -1,0 +1,118 @@
+---
+// "Aucun changement de caisse." Three stations joined by a line that fills as you scroll: photo of the
+// menu, the AI fills the recipes, you see the margins. Below: your current till, or Amplify POS.
+import Icon from './Icon.astro';
+import { profitFr as p, posFr } from '../i18n/products-fr';
+import { ROUTES, type Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+---
+<section id="comment" class="scroll-mt-20 border-y border-line bg-paper" data-phow>
+  <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Aucun changement</span><span class="block text-green-deep">de caisse.</span></h2>
+    <p class="mt-4 max-w-2xl text-lg text-muted">{p.how.text}</p>
+
+    <ol class="relative mt-14 grid gap-5 md:grid-cols-3" data-scrub="steps">
+      <!-- the line -->
+      <span class="absolute start-[16.6%] end-[16.6%] top-[5.5rem] hidden h-1 rounded-full bg-line md:block" aria-hidden="true">
+        <span class="hw-line absolute inset-y-0 start-0 rounded-full bg-green"></span>
+      </span>
+      {p.how.steps.map(([h, d], i) => (
+        <li class="step hw-st relative flex flex-col rounded-[1.75rem] bg-chalk p-5 transition-all duration-500">
+          <div class="hw-vis relative z-10 grid h-44 place-items-center overflow-hidden rounded-2xl bg-white ring-1 ring-line" aria-hidden="true">
+            {i === 0 && (
+              <div class="relative w-[78%]">
+                <div class="rounded-lg bg-[#F3E9D2] p-3 font-serif text-[0.7rem] italic text-navy shadow-md [transform:rotate(-2deg)]">
+                  <p class="text-center font-bold not-italic">MENU</p>
+                  <p class="flex justify-between"><span>Harira</span><span>25</span></p>
+                  <p class="flex justify-between"><span>Tajine poulet</span><span>95</span></p>
+                  <p class="flex justify-between"><span>Couscous</span><span>85</span></p>
+                </div>
+                <!-- viewfinder -->
+                {['start-0 top-0 border-s-[3px] border-t-[3px] rounded-ss-lg', 'end-0 top-0 border-e-[3px] border-t-[3px] rounded-se-lg', 'start-0 bottom-0 border-s-[3px] border-b-[3px] rounded-es-lg', 'end-0 bottom-0 border-e-[3px] border-b-[3px] rounded-ee-lg'].map(c => <span class={`hw-vf absolute -m-2 size-5 border-green ${c}`}></span>)}
+                <span class="hw-flash pointer-events-none absolute -inset-4 rounded-xl bg-white"></span>
+              </div>
+            )}
+            {i === 1 && (
+              <div class="w-[84%] space-y-1.5 text-[0.7rem] text-navy">
+                <p class="font-bold">Tajine poulet</p>
+                {[['Poulet', '300 g', '24,00'], ['Citron confit', '50 g', '0,40'], ['Olives', '30 g', '1,20']].map(([a, b, c], k) => (
+                  <p class="hw-l flex items-center justify-between rounded-md bg-chalk px-2 py-1.5" style={`--d:${k * 220}ms`}>
+                    <span>{a} <span class="text-muted">{b}</span></span>
+                    <span class="flex items-center gap-1"><span class="rounded bg-[#FFF4D6] px-1 text-[0.55rem] font-bold text-[#6B4E00]">estimé</span>{c}</span>
+                  </p>
+                ))}
+                <p class="hw-l flex items-center gap-1 font-semibold text-green-deep" style="--d:700ms"><span>✦</span>Rempli par l’IA</p>
+              </div>
+            )}
+            {i === 2 && (
+              <div class="w-[84%] space-y-2 text-[0.7rem] text-navy">
+                {[['Pizza margarita', 76, '#05B962'], ['Tajine poulet', 65, '#F5B301'], ['Burger maison', 56, '#E5484D']].map(([a, w, c], k) => (
+                  <div>
+                    <p class="flex justify-between font-semibold"><span>{a}</span><span class="hw-pct" style={`color:${c === '#05B962' ? '#008A47' : c === '#F5B301' ? '#9A6B00' : '#C4282D'}`}>{w} %</span></p>
+                    <span class="mt-1 block h-2 overflow-hidden rounded-full bg-chalk"><span class="hw-bar block h-full rounded-full" style={`--w:${w}%;background:${c};--d:${k * 180}ms`}></span></span>
+                  </div>
+                ))}
+                <p class="hw-l rounded-md bg-[#FFF4D6] px-2 py-1 font-semibold text-[#6B4E00]" style="--d:700ms">Burger : prix conseillé 90 DH</p>
+              </div>
+            )}
+          </div>
+          <span class="hw-num display mt-5 text-6xl text-muted/40 transition-colors duration-500">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="mt-2 text-xl">{h}</h3>
+          <p class="mt-2 text-muted">{d}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-3 text-xs text-muted">{p.card.example}. Pourcentages : marge par plat.</p>
+
+    <!-- your till, or Amplify POS -->
+    <div class="hw-sw mt-12 rounded-[2rem] bg-navy p-5 text-white sm:p-8" data-mode="any">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <div class="inline-flex rounded-full bg-white/10 p-1 text-sm font-semibold" role="tablist" aria-label="Avec quelle caisse ?">
+          <button type="button" role="tab" class="hw-tab whitespace-nowrap rounded-full px-3 py-2 text-[0.8rem] transition-colors sm:px-4 sm:text-sm" data-m="any" aria-selected="true">Votre caisse actuelle</button>
+          <button type="button" role="tab" class="hw-tab whitespace-nowrap rounded-full px-3 py-2 text-[0.8rem] transition-colors sm:px-4 sm:text-sm" data-m="pos" aria-selected="false">Avec Amplify POS</button>
+        </div>
+        <a href={ROUTES.pos[lang]} class="text-sm font-semibold text-green underline underline-offset-4">Découvrir {posFr.products.pos.name}</a>
+      </div>
+      <div class="mt-8 grid items-center gap-4 sm:grid-cols-[1fr_auto_1fr]" aria-hidden="true">
+        <div class="flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/15">
+          <span class="hw-till grid size-12 shrink-0 place-items-center rounded-xl bg-white/15 transition-colors duration-500"><Icon name="till" class="size-6" /></span>
+          <span><span class="hw-t1 block font-semibold">N’importe quelle caisse</span><span class="hw-t2 block text-sm text-white/60">Vous la gardez telle quelle</span></span>
+        </div>
+        <div class="relative mx-auto h-12 w-1 sm:h-1 sm:w-28">
+          <span class="hw-wire absolute inset-0 rounded-full"></span>
+          <span class="hw-dot absolute size-2.5 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
+          <span class="hw-dot hw-dot2 absolute size-2.5 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
+          <span class="hw-wlabel absolute start-1/2 top-1/2 ms-4 -translate-y-1/2 whitespace-nowrap text-xs font-semibold text-white/60 sm:ms-0 sm:mt-0 sm:-translate-x-1/2 sm:translate-y-3">rien à brancher</span>
+        </div>
+        <div class="flex items-center gap-3 rounded-2xl bg-white/5 p-4 ring-1 ring-white/15">
+          <span class="grid size-12 shrink-0 place-items-center rounded-xl bg-green text-lg font-black text-navy">%</span>
+          <span><span class="block font-semibold">Amplify Profit</span><span class="hw-p2 block text-sm text-white/60">Marges calculées depuis vos fiches</span></span>
+        </div>
+      </div>
+      <p class="hw-note mt-6 flex gap-3 text-white/80"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green" /><span class="hw-n1">{p.how.text.split('. ')[0]}.</span><span class="hw-n2 hidden">{p.how.together}</span></p>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-phow]').forEach((root) => {
+    const sw = root.querySelector<HTMLElement>('.hw-sw')!;
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.hw-tab')];
+    const T = { any: ['N’importe quelle caisse', 'Vous la gardez telle quelle', 'rien à brancher', 'Marges calculées depuis vos fiches'], pos: ['Amplify POS', 'Chaque vente part en direct', 'ventes en direct', 'Marge réelle du mois, sans rien saisir'] };
+    const set = (m: 'any' | 'pos') => {
+      sw.dataset.mode = m;
+      tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.m === m)));
+      const [a, b, c, d] = T[m];
+      sw.querySelector('.hw-t1')!.textContent = a; sw.querySelector('.hw-t2')!.textContent = b;
+      sw.querySelector('.hw-wlabel')!.textContent = c; sw.querySelector('.hw-p2')!.textContent = d;
+      sw.querySelector('.hw-n1')!.classList.toggle('hidden', m === 'pos'); sw.querySelector('.hw-n2')!.classList.toggle('hidden', m === 'any');
+    };
+    let timer = 0, auto = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    tabs.forEach(t => t.addEventListener('click', () => { auto = false; clearInterval(timer); set(t.dataset.m as 'any' | 'pos'); }));
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && auto && !timer) timer = window.setInterval(() => set(sw.dataset.mode === 'any' ? 'pos' : 'any'), 3200);
+      else if (!e.isIntersecting) { clearInterval(timer); timer = 0; }
+    }, { threshold: 0.5 }).observe(sw);
+  });
+</script>

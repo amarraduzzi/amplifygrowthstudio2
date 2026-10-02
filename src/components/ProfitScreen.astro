@@ -1,0 +1,79 @@
+---
+// One small screen of the Amplify Profit app, per feature. Illustrations: dishes and figures are examples.
+interface Props { v: number }
+const { v } = Astro.props;
+const row = 'ps flex items-center justify-between rounded-lg bg-white px-2.5 py-2 shadow-sm';
+---
+<div class="ps-screen flex h-full flex-col gap-1.5 p-3 text-[0.68rem] leading-tight text-navy">
+  {v === 0 && <>
+    <p class="ps font-bold">Fiche technique · Harira</p>
+    {[['Lentilles', '60 g'], ['Pois chiches', '40 g'], ['Tomates', '80 g'], ['Viande', '50 g'], ['Coriandre, épices', '10 g']].map(([a, b], k) => (
+      <p class={row} style={`--d:${150 + k * 180}ms`}><span>{a}</span><span class="font-semibold">{b}</span></p>
+    ))}
+    <p class="ps mt-auto flex items-center justify-center gap-1 rounded-full bg-navy py-1.5 font-bold text-white" style="--d:1150ms"><span class="text-green">✦</span>Rempli par l’IA. Ajustez.</p>
+  </>}
+  {v === 1 && <>
+    <p class="ps font-bold">Vos plats</p>
+    {[['Pizza margarita', '24 %', '#05B962'], ['Salade niçoise', '28 %', '#05B962'], ['Tajine poulet', '35 %', '#F5B301'], ['Pastilla', '37 %', '#F5B301'], ['Burger maison', '44 %', '#E5484D']].map(([a, b, c], k) => (
+      <p class={row} style={`--d:${150 + k * 160}ms`}><span class="flex items-center gap-1.5"><span class="size-2 rounded-full" style={`background:${c}`}></span>{a}</span><span class="font-bold" style={`color:${c === '#05B962' ? '#008A47' : c === '#F5B301' ? '#9A6B00' : '#C4282D'}`}>{b}</span></p>
+    ))}
+    <p class="ps mt-auto text-center text-[0.6rem] text-muted" style="--d:1000ms">Food cost par plat</p>
+  </>}
+  {v === 2 && <>
+    <p class="ps font-bold">Burger maison</p>
+    <div class="ps rounded-xl bg-white p-3 text-center shadow-sm" style="--d:150ms">
+      <p class="text-muted">Prix actuel</p><p class="display text-2xl line-through decoration-[#E5484D] decoration-2">65 DH</p>
+    </div>
+    <p class="ps text-center text-lg" style="--d:450ms">↓</p>
+    <div class="ps rounded-xl bg-green p-3 text-center" style="--d:650ms">
+      <p class="font-semibold">Prix conseillé</p><p class="display text-4xl">90 DH</p>
+    </div>
+    <p class="ps mt-auto text-center text-[0.6rem] text-muted" style="--d:900ms">Objectif food cost 32 %, arrondi au dirham</p>
+  </>}
+  {v === 3 && <>
+    <div class="ps relative overflow-hidden rounded-xl bg-[#F3E9D2] p-2.5 font-serif italic shadow-sm" style="--d:100ms">
+      <p class="text-center font-bold not-italic">MENU</p>
+      <p class="flex justify-between"><span>Harira</span><span>25</span></p>
+      <p class="flex justify-between"><span>Tajine poulet</span><span>95</span></p>
+      <p class="flex justify-between"><span>Couscous</span><span>85</span></p>
+      <span class="ps-scan pointer-events-none absolute inset-x-1 h-0.5 rounded bg-green shadow-[0_0_10px_2px_rgba(5,185,98,.6)]"></span>
+    </div>
+    {[['Harira', '25 DH'], ['Tajine poulet', '95 DH'], ['Couscous', '85 DH']].map(([a, b], k) => (
+      <p class={row} style={`--d:${1100 + k * 200}ms`}><span class="flex items-center gap-1.5"><span class="text-green-deep">✓</span>{a}</span><span class="font-semibold">{b}</span></p>
+    ))}
+  </>}
+  {v === 4 && <>
+    <p class="ps flex items-center justify-between font-bold">Facture fournisseur<span class="rounded-full bg-[#FFF4D6] px-1.5 py-0.5 text-[0.55rem] text-[#6B4E00]">Bientôt</span></p>
+    <div class="ps relative overflow-hidden rounded-lg bg-white p-2.5 font-serif italic shadow-sm [transform:rotate(-1.5deg)]" style="--d:150ms">
+      <p>Poulet 10 kg ... 290</p><p>Huile 5 L ... 95</p><p>Tomates 6 kg ... 42</p>
+      <span class="ps-scan pointer-events-none absolute inset-x-1 h-0.5 rounded bg-green shadow-[0_0_10px_2px_rgba(5,185,98,.6)]"></span>
+    </div>
+    <p class="ps flex items-center gap-2 rounded-lg bg-[#FFF4D6] px-2.5 py-2 font-semibold text-[#6B4E00]" style="--d:1200ms">! Poulet : 25 → 29 DH / kg</p>
+  </>}
+  {v === 5 && <>
+    <p class="ps font-bold">Inventaire du soir</p>
+    {[['Poulet', '−1,2 kg', '−35 DH'], ['Huile', '−0,4 L', '−8 DH'], ['Fromage', '0', '0 DH']].map(([a, b, c], k) => (
+      <p class={row} style={`--d:${150 + k * 200}ms`}><span>{a}</span><span class={`font-bold ${b === '0' ? 'text-green-deep' : 'text-[#C4282D]'}`}>{b} · {c}</span></p>
+    ))}
+    <div class="ps mt-auto rounded-xl bg-navy p-2.5 text-white" style="--d:900ms"><p class="text-white/60">Écart total</p><p class="display text-2xl text-[#FF8A8D]">−43 DH</p></div>
+  </>}
+  {v === 6 && <>
+    <p class="ps font-bold">Point mort du jour</p>
+    <div class="ps rounded-xl bg-white p-3 shadow-sm" style="--d:150ms">
+      <p class="text-muted">Chiffre à faire</p><p class="display text-3xl">4 600 DH</p>
+      <div class="mt-2 h-2.5 overflow-hidden rounded-full bg-line"><span class="ps-fill block h-full rounded-full bg-green" style="--w:72%"></span></div>
+      <p class="mt-1 flex justify-between text-[0.6rem] text-muted"><span>Aujourd’hui 3 310 DH</span><span>72 %</span></p>
+    </div>
+    {[['Loyer', '1 100'], ['Salaires', '1 650'], ['Charges', '450']].map(([a, b], k) => (
+      <p class={row} style={`--d:${600 + k * 150}ms`}><span>{a}</span><span class="font-semibold">{b} DH / jour</span></p>
+    ))}
+    <p class="ps text-center text-[0.55rem] text-muted" style="--d:1100ms">Avec un food cost de 30 %</p>
+  </>}
+  {v === 7 && <>
+    <p class="ps font-bold">Équipe · cette semaine</p>
+    <div class="ps rounded-xl bg-white p-3 shadow-sm" style="--d:150ms"><p class="text-muted">Personnel / chiffre d’affaires</p><p class="display text-3xl">27 %</p></div>
+    {[['Sara', '38 h', '1 remise'], ['Karim', '41 h', '4 annulations'], ['Youssef', '35 h', '0']].map(([a, b, c], k) => (
+      <p class={row} style={`--d:${450 + k * 170}ms`}><span class="font-semibold">{a}</span><span class="text-muted">{b}</span><span class={c.startsWith('4') ? 'font-bold text-[#C4282D]' : ''}>{c}</span></p>
+    ))}
+  </>}
+</div>

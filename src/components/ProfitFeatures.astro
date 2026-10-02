@@ -1,0 +1,90 @@
+---
+// "Un contrôleur de gestion dans votre poche." Desktop: the list on the left, a phone on the right that
+// stays in view and shows each feature as you scroll (or click). Mobile: swipe through the phones.
+import ProfitScreen from './ProfitScreen.astro';
+import { profitFr as p } from '../i18n/products-fr';
+const items = p.features.items;
+const ICON = ['✦', '●', 'DH', '▣', '✎', 'kg', '↗', '☺'];
+---
+<section class="relative overflow-hidden py-24" data-pfeat>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Un contrôleur de gestion</span><span class="block text-green-deep">dans votre poche.</span></h2>
+      <p class="hidden items-center gap-3 lg:flex" aria-hidden="true"><span class="pf-count display text-6xl tabular-nums text-navy">01</span><span class="display text-2xl text-muted">/ {String(items.length).padStart(2, '0')}</span></p>
+    </div>
+
+    <!-- desktop -->
+    <div class="mt-12 hidden gap-14 lg:grid lg:grid-cols-[1fr_20rem]">
+      <ol class="space-y-2">
+        {items.map(([h, d, ready], i) => (
+          <li class="pf-item" data-i={i}>
+            <button type="button" class="flex w-full items-start gap-4 rounded-[1.25rem] p-4 text-start lg:py-5 ring-1 ring-transparent transition-all duration-300 hover:bg-paper">
+              <span class="pf-ico grid size-11 shrink-0 place-items-center rounded-xl bg-paper text-sm font-black text-muted ring-1 ring-line transition-colors duration-300" aria-hidden="true">{ICON[i]}</span>
+              <span class="min-w-0">
+                <span class="flex flex-wrap items-center gap-2 text-xl font-semibold">{h}{!ready && <span class="rounded-full bg-[#FFF4D6] px-2.5 py-0.5 text-xs font-bold text-[#6B4E00]">{p.features.soon}</span>}</span>
+                <span class="pf-d grid transition-[grid-template-rows,opacity] duration-500"><span class="overflow-hidden"><span class="block pt-1 text-muted">{d}</span></span></span>
+              </span>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <div class="relative">
+        <div class="sticky top-28">
+          <div class="pf-phone relative mx-auto w-[18rem] rounded-[2.6rem] bg-linear-to-b from-[#3A3F47] via-[#1C1F24] to-[#3A3F47] p-2 shadow-[0_50px_90px_-40px_rgba(0,30,62,0.7)]" aria-hidden="true">
+            <div class="overflow-hidden rounded-[2.2rem] bg-black p-1.5">
+              <div class="relative h-[30rem] overflow-hidden rounded-[1.8rem] bg-[#F4F6F5] [&_.ps-screen]:gap-2 [&_.ps-screen]:text-[0.8rem] [&_.ps]:py-2.5">
+                <div class="flex items-center justify-between px-6 pt-2.5 text-[0.6rem] font-semibold"><span>9:41</span><span class="h-2 w-3.5 rounded-[2px] border border-black/70"></span></div>
+                <span class="absolute start-1/2 top-2 h-5 w-20 -translate-x-1/2 rounded-full bg-black"></span>
+                <div class="mt-3 flex items-center gap-2 border-b border-line px-3 pb-2.5">
+                  <span class="grid size-6 place-items-center rounded-md bg-green text-[0.6rem] font-black text-navy">A</span>
+                  <span class="text-[0.7rem] font-bold">Amplify Profit</span>
+                </div>
+                <div class="relative h-[calc(100%-4.5rem)]">
+                  {items.map((_, i) => <div class={`pf-screen absolute inset-0 ${i === 0 ? 'on' : ''}`} data-s={i}><ProfitScreen v={i} /></div>)}
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="mt-3 text-center text-xs text-muted">{p.card.example}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- mobile: swipe -->
+    <div class="snap-row -mx-4 mt-10 flex gap-4 overflow-x-auto px-4 pb-4 lg:hidden">
+      {items.map(([h, d, ready], i) => (
+        <article class="w-[82%] shrink-0 rounded-[1.75rem] bg-paper p-4 ring-1 ring-line">
+          <div class="pf-mscreen overflow-hidden rounded-[1.4rem] bg-[#F4F6F5] ring-[6px] ring-[#1C1F24]" aria-hidden="true"><div class="h-[17rem]"><ProfitScreen v={i} /></div></div>
+          <p class="mt-4 text-sm font-bold text-green-deep">{String(i + 1).padStart(2, '0')} / {String(items.length).padStart(2, '0')}</p>
+          <h3 class="mt-1 flex flex-wrap items-center gap-2 text-xl">{h}{!ready && <span class="rounded-full bg-[#FFF4D6] px-2.5 py-0.5 text-xs font-bold text-[#6B4E00]">{p.features.soon}</span>}</h3>
+          <p class="mt-1.5 text-muted">{d}</p>
+        </article>
+      ))}
+    </div>
+    <p class="mt-2 text-sm text-muted lg:hidden">Faites glisser pour voir les {items.length} outils. {p.card.example}.</p>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pfeat]').forEach((root) => {
+    const items = [...root.querySelectorAll<HTMLElement>('.pf-item')];
+    const screens = [...root.querySelectorAll<HTMLElement>('.pf-screen')];
+    const count = root.querySelector<HTMLElement>('.pf-count');
+    let cur = -1;
+    const set = (i: number) => {
+      if (i === cur) return; cur = i;
+      items.forEach((li, k) => li.classList.toggle('is-on', k === i));
+      screens.forEach((s, k) => { s.classList.toggle('on', k === i); if (k === i) { s.classList.remove('play'); void s.offsetWidth; s.classList.add('play'); } });
+      if (count) count.textContent = String(i + 1).padStart(2, '0');
+    };
+    set(0);
+    items.forEach((li, i) => li.querySelector('button')!.addEventListener('click', () => set(i)));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) set(items.indexOf(e.target as HTMLElement)); }), { rootMargin: '-45% 0px -50% 0px' });
+      items.forEach(li => io.observe(li));
+      // mobile cards play their screen when they come into view
+      const io2 = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) (e.target as HTMLElement).classList.add('play'); }), { threshold: 0.6 });
+      root.querySelectorAll('.pf-mscreen').forEach(el => io2.observe(el));
+    } else root.querySelectorAll('.pf-mscreen').forEach(el => el.classList.add('play'));
+  });
+</script>
