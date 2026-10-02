@@ -1,0 +1,104 @@
+---
+// Hero of Amplify Profit: a live recipe card. The price of chicken moves (by itself once, then with the
+// slider) and the cost, food cost and margin recalculate on the spot, with a suggested price when the
+// dish stops paying. Illustration only: tajine poulet citron sold 95 DH TTC (VAT 10 %).
+import { profitFr as p } from '../i18n/products-fr';
+const BASE = 24, OTHER = 4.2, PRICE = 95;
+const HT = PRICE / 1.1;
+const money = (n: number) => `${n.toFixed(2).replace('.', ',')} DH`;
+const fc0 = ((BASE + OTHER) / HT) * 100;
+---
+<figure class="land relative mx-auto w-full max-w-md" style="--d:350ms" data-pcard data-base={BASE} data-other={OTHER} data-ht={HT}>
+  <div class="pc-card relative rounded-[2rem] bg-paper p-6 shadow-[0_40px_80px_-40px_rgba(0,30,62,0.5)] ring-1 ring-line transition-shadow duration-500 sm:p-8">
+    <div class="flex items-start justify-between gap-3">
+      <div>
+        <p class="text-sm font-semibold text-green-deep">{p.card.label}</p>
+        <p class="display mt-1 text-[2rem] sm:text-4xl">{p.card.dish}</p>
+      </div>
+    </div>
+    <ul class="mt-5 divide-y divide-line border-y border-line text-[0.95rem]">
+      {p.card.lines.map(([a, q, c], k) => (
+        <li class={`fade-up flex items-center justify-between py-2.5 ${k === 0 ? 'pc-chicken -mx-2 rounded-lg px-2 transition-colors duration-500' : ''}`} style={`--d:${600 + k * 160}ms`}>
+          <span>{a}{q && <span class="ms-2 text-muted">{q}</span>}{k === 0 && <span class="pc-delta ms-2 hidden rounded-full px-1.5 py-0.5 text-xs font-bold"></span>}</span>
+          <span class={`tabular-nums ${k === 0 ? 'pc-line font-semibold' : ''}`}>{c} DH</span>
+        </li>
+      ))}
+    </ul>
+    <dl class="mt-5 grid grid-cols-2 gap-3">
+      <div class="fade-up rounded-2xl bg-chalk p-3" style="--d:1300ms"><dt class="text-xs font-semibold opacity-70">{p.card.cost}</dt><dd class="pc-cost display whitespace-nowrap text-[1.7rem] tabular-nums sm:text-3xl">{money(BASE + OTHER)}</dd></div>
+      <div class="fade-up rounded-2xl bg-chalk p-3" style="--d:1420ms"><dt class="text-xs font-semibold opacity-70">{p.card.price}</dt><dd class="display whitespace-nowrap text-[1.7rem] sm:text-3xl">{money(PRICE)}</dd></div>
+      <div class="fade-up rounded-2xl bg-chalk p-3" style="--d:1540ms"><dt class="text-xs font-semibold opacity-70">{p.card.fc}</dt><dd class="pc-fc display whitespace-nowrap text-[1.7rem] tabular-nums sm:text-3xl transition-colors">{fc0.toFixed(1).replace('.', ',')} %</dd>
+        <span class="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-line"><span class="pc-fcbar block h-full rounded-full bg-green transition-[width,background-color] duration-300" style={`width:${fc0 * 2}%`}></span></span></div>
+      <div class="pc-mtile fade-up rounded-2xl bg-green p-3 text-navy transition-colors duration-500" style="--d:1660ms"><dt class="text-xs font-semibold opacity-70">{p.card.margin}</dt><dd class="pc-margin display whitespace-nowrap text-[1.7rem] tabular-nums sm:text-3xl">{money(HT - BASE - OTHER)}</dd></div>
+    </dl>
+
+    <!-- the alert -->
+    <div class="pc-alert grid grid-rows-[0fr] transition-[grid-template-rows] duration-500">
+      <div class="overflow-hidden"><p class="mt-4 flex gap-2 rounded-2xl bg-[#FFF4D6] p-3 text-sm font-medium text-[#6B4E00]"><span aria-hidden="true">!</span><span class="pc-alert-txt"></span></p></div>
+    </div>
+
+    <!-- the slider -->
+    <div class="fade-up mt-5 rounded-2xl bg-chalk p-4" style="--d:1900ms">
+      <label class="flex items-center justify-between text-sm font-semibold" for="pc-range">
+        <span>Prix du poulet cette semaine</span>
+        <span class="pc-pct rounded-full bg-white px-2 py-0.5 tabular-nums">0 %</span>
+      </label>
+      <input id="pc-range" type="range" min="-20" max="40" step="1" value="0" class="pc-range mt-3 w-full" aria-describedby="pc-hint" />
+      <p id="pc-hint" class="pc-hint mt-1 flex justify-between text-xs text-muted"><span>−20 %</span><span class="pc-try font-semibold text-green-deep">Faites glisser</span><span>+40 %</span></p>
+    </div>
+  </div>
+  <figcaption class="mt-3 text-center text-xs text-muted">{p.card.example}</figcaption>
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pcard]').forEach((root) => {
+    const $ = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const BASE = Number(root.dataset.base), OTHER = Number(root.dataset.other), HT = Number(root.dataset.ht);
+    const range = $<HTMLInputElement>('.pc-range');
+    const fr = (n: number, d = 2) => n.toFixed(d).replace('.', ',');
+    const fc0 = (BASE + OTHER) / HT * 100;
+    const tone = (fc: number) => fc <= 33 ? 'ok' : fc <= 38 ? 'warn' : 'bad';
+    const BG = { ok: '#05B962', warn: '#F5B301', bad: '#E5484D' };
+    const render = (x: number) => {
+      const chicken = BASE * (1 + x / 100), cost = chicken + OTHER, fc = cost / HT * 100, margin = HT - cost, t = tone(fc);
+      $('.pc-line').textContent = `${fr(chicken)} DH`;
+      $('.pc-cost').textContent = `${fr(cost)} DH`;
+      $('.pc-fc').textContent = `${fr(fc, 1)} %`;
+      $('.pc-fc').style.color = t === 'ok' ? '' : t === 'warn' ? '#B07D00' : '#C4282D';
+      $('.pc-fcbar').style.width = `${Math.min(100, fc * 2)}%`;
+      $('.pc-fcbar').style.backgroundColor = BG[t];
+      $('.pc-margin').textContent = `${fr(margin)} DH`;
+      $('.pc-mtile').style.backgroundColor = BG[t];
+      $('.pc-mtile').style.color = t === 'bad' ? '#fff' : '';
+      $('.pc-pct').textContent = `${x > 0 ? '+' : ''}${x} %`;
+      const d = $('.pc-delta');
+      d.classList.toggle('hidden', x === 0);
+      d.textContent = `${x > 0 ? '▲ +' : '▼ '}${x} %`;
+      d.className = `pc-delta ms-2 rounded-full px-1.5 py-0.5 text-xs font-bold ${x === 0 ? 'hidden' : x > 0 ? 'bg-[#FDE2E2] text-[#C4282D]' : 'bg-mint text-green-deep'}`;
+      $('.pc-chicken').style.backgroundColor = x === 0 ? '' : x > 0 ? 'rgb(229 72 77 / .07)' : 'rgb(5 185 98 / .08)';
+      const alert = $('.pc-alert');
+      alert.style.gridTemplateRows = x === 0 ? '0fr' : '1fr';
+      if (x !== 0) {
+        const suggest = Math.ceil(cost / 0.32 * 1.1);
+        $('.pc-alert-txt').textContent = `Poulet ${x > 0 ? '+' : ''}${x} % : food cost du tajine ${fr(fc0, 1)} % → ${fr(fc, 1)} %` + (t === 'ok' ? '. Toujours rentable.' : `. Prix conseillé : ${suggest} DH.`);
+      }
+      range.style.setProperty('--fill', `${(x + 20) / 60 * 100}%`);
+    };
+    let touched = false;
+    range.addEventListener('input', () => { touched = true; root.classList.add('pc-used'); render(Number(range.value)); });
+    render(0);
+    // plays once by itself: this week the chicken goes up 15 %
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setTimeout(() => {
+      if (touched) return;
+      const t0 = performance.now();
+      const step = (t: number) => {
+        if (touched) return;
+        const k = Math.min(1, (t - t0) / 1400), x = Math.round(15 * (1 - (1 - k) ** 3));
+        range.value = String(x); render(x);
+        if (k < 1) requestAnimationFrame(step); else root.classList.add('pc-hint-on');
+      };
+      requestAnimationFrame(step);
+    }, 2600);
+    else { range.value = '15'; render(15); }
+  });
+</script>

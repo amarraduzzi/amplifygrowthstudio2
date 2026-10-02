@@ -299,3 +299,42 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
   .fin-cta::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / .45) 50%, transparent 70%); transform: translateX(-120%); animation: fin-shine 3.2s 1.5s ease-in-out infinite; }
   @keyframes fin-shine { 35%, 100% { transform: translateX(120%); } }
 }
+
+/* Amplify Profit hero card: the chicken slider */
+.pc-range { -webkit-appearance: none; appearance: none; height: 8px; border-radius: 999px; background: linear-gradient(to right, #05B962 0 var(--fill, 33%), #DDE3E0 var(--fill, 33%)); outline: none; cursor: pointer; }
+[dir="rtl"] .pc-range { background: linear-gradient(to left, #05B962 0 var(--fill, 33%), #DDE3E0 var(--fill, 33%)); }
+.pc-range::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: #001E3E; border: 4px solid #fff; box-shadow: 0 2px 8px rgb(0 30 62 / .35); }
+.pc-range::-moz-range-thumb { width: 26px; height: 26px; border-radius: 50%; background: #001E3E; border: 4px solid #fff; box-shadow: 0 2px 8px rgb(0 30 62 / .35); }
+.pc-range:focus-visible { box-shadow: 0 0 0 3px rgb(5 185 98 / .4); }
+@media (prefers-reduced-motion: no-preference) {
+  .pc-hint-on:not(.pc-used) .pc-range::-webkit-slider-thumb { animation: pc-ping 1.6s ease-out infinite; }
+  .pc-hint-on:not(.pc-used) .pc-try { animation: dot 1.6s infinite; }
+  @keyframes pc-ping { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 14px rgb(5 185 98 / 0); } }
+}
+.pc-used .pc-try { visibility: hidden; }
+
+/* Amplify Profit pains: the eaten turnover bar and three scenes */
+.pn-eat { width: var(--w); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.js .pn-eat:not(.on) { width: 0; }
+.js .pn-q { opacity: clamp(0, calc(var(--p) * 2 - 1), 1); }
+.pn-dish { top: calc(var(--s) * 1.65rem); }
+.pn-dish .pn-bar { width: var(--ws); background-color: #8FB3FF; }
+.pn-rank[data-mode="prof"] .pn-dish { top: calc(var(--r) * 1.65rem); }
+.pn-rank[data-mode="prof"] .pn-dish .pn-bar { width: var(--wp); background-color: #05B962; }
+.pn-rank[data-mode="sold"] .pn-tab[data-t="sold"], .pn-rank[data-mode="prof"] .pn-tab[data-t="prof"] { background: #fff; color: #001E3E; }
+.pn-tab { transition: background-color .3s, color .3s; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .pn-card { opacity: 0; transform: translateY(30px); transition: opacity .7s var(--d, 0ms), transform .7s var(--d, 0ms) cubic-bezier(.2,.8,.2,1), background-color .5s; }
+  .js .pn-card.in { opacity: 1; transform: none; }
+  .js .pn-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .js .in .pn-line { stroke-dashoffset: 0; transition: stroke-dashoffset 1.6s .4s cubic-bezier(.4,0,.2,1); }
+  .js .pn-gap, .js .pn-tag { opacity: 0; }
+  .js .in .pn-gap { opacity: 1; transition: opacity .8s 1.6s; }
+  .js .in .pn-tag { opacity: 1; animation: chat-in .5s 2s both; }
+  .js .pn-n { opacity: 0; }
+  .js .in .pn-n { animation: fade-up .5s var(--d) both; opacity: 1; }
+  .js .pn-x { transform: scaleX(0); }
+  .js .in .pn-x { transform: scaleX(1); transition: transform .35s var(--d) cubic-bezier(.6,0,.2,1); }
+  .js .pn-stamp { opacity: 0; transform: rotate(-8deg) scale(2.2); }
+  .js .in .pn-stamp { opacity: 1; transform: rotate(-8deg) scale(1); transition: opacity .2s 2.6s, transform .45s 2.6s cubic-bezier(.3,1.6,.5,1); }
+}

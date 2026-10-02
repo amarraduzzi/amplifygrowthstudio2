@@ -1,0 +1,114 @@
+---
+// "Le chiffre d'affaires ne dit pas tout." The turnover bar gets eaten by costs as you scroll, until
+// only a question mark is left. Then the three pains, each with its own small scene. No real figures:
+// shares and dishes are illustrations.
+import { profitFr as p } from '../i18n/products-fr';
+const eaters = [['Achats', 34, '#F5B301'], ['Personnel', 26, '#2DD4BF'], ['Loyer', 14, '#8FB3FF'], ['Pertes', 9, '#E5484D']] as const;
+const dishes = [
+  { n: 'Burger maison', sold: 0, prof: 3, ws: 96, wp: 22 },
+  { n: 'Tajine poulet', sold: 1, prof: 2, ws: 80, wp: 45 },
+  { n: 'Pizza margarita', sold: 2, prof: 0, ws: 62, wp: 92 },
+  { n: 'Salade niçoise', sold: 3, prof: 1, ws: 40, wp: 70 },
+];
+const notes = ['poulet 300 g = ? DH', 'huile, épices… ?', '24 + 0,4 + 1,2 + 2,6 =', 'prix de vente ?'];
+---
+<section class="relative isolate overflow-hidden bg-blue py-20 text-white md:py-28" data-pains>
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl">
+      <span class="block">Le chiffre d’affaires</span><span class="block text-green">ne dit pas tout.</span>
+    </h2>
+
+    <!-- the bar that gets eaten -->
+    <div class="mt-12" data-scrub="steps" aria-hidden="true">
+      <div class="flex items-end justify-between text-sm font-semibold">
+        <span>Chiffre d’affaires</span>
+        <span class="pn-left text-white/60">100 %</span>
+      </div>
+      <div class="relative mt-3 h-16 overflow-hidden rounded-2xl bg-green sm:h-20">
+        <div class="absolute inset-0 flex flex-row-reverse">
+          {eaters.map(([l, w, c]) => (
+            <span class="step pn-eat grid h-full place-items-center overflow-hidden whitespace-nowrap text-xs font-bold text-navy sm:text-sm" style={`--w:${w}%;background:${c}`}><span class="hidden px-1 sm:inline">{l}</span></span>
+          ))}
+        </div>
+        <span class="pn-q absolute inset-y-0 start-3 flex items-center text-sm font-bold text-navy sm:start-5 sm:text-base"><span class="display text-3xl sm:hidden">?</span><span class="hidden sm:inline">Ce qui reste ?</span></span>
+      </div>
+      <ul class="mt-3 flex flex-wrap gap-x-4 gap-y-1.5 text-xs font-semibold sm:hidden">
+        <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-sm bg-green"></span>Ce qui reste ?</li>
+        {eaters.map(([l, , c]) => <li class="flex items-center gap-1.5"><span class="size-2.5 rounded-sm" style={`background:${c}`}></span>{l}</li>)}
+      </ul>
+      <p class="mt-3 text-sm text-white/60">Faites défiler : chaque dépense mange une part. Ce qui reste, c’est votre marge. Combien exactement ?</p>
+    </div>
+
+    <ul class="mt-14 grid gap-4 md:grid-cols-3">
+      {p.pains.items.map(([h, d], i) => (
+        <li class="pn-card flex flex-col rounded-[1.5rem] bg-white/5 p-6 ring-1 ring-white/15 transition-colors duration-500 hover:bg-white/[0.08]" style={`--d:${i * 120}ms`}>
+          <div class="pn-vis relative h-44 overflow-hidden rounded-2xl bg-navy/60 p-4 ring-1 ring-white/10" aria-hidden="true">
+            {i === 0 && (
+              <div class="h-full">
+                <div class="flex flex-wrap gap-1.5 text-[0.65rem] font-bold">
+                  <span class="rounded-full bg-[#E5484D]/20 px-2 py-0.5 text-[#FF8A8D]">Poulet ▲</span>
+                  <span class="rounded-full bg-[#E5484D]/20 px-2 py-0.5 text-[#FF8A8D]">Huile ▲</span>
+                  <span class="rounded-full bg-green/20 px-2 py-0.5 text-green">Tomates ▼</span>
+                </div>
+                <svg viewBox="0 0 200 90" class="mt-2 h-[calc(100%-1.75rem)] w-full overflow-visible" preserveAspectRatio="none">
+                  <path class="pn-gap" d="M0 30 L200 30 L200 34 L160 42 L120 52 L80 60 L40 68 L0 72 Z" fill="rgb(5 185 98 / .15)" />
+                  <path d="M0 30 H200" stroke="#05B962" stroke-width="2.5" stroke-dasharray="6 5" fill="none" />
+                  <path class="pn-line" d="M0 72 L40 68 L80 60 L120 52 L160 42 L200 34" stroke="#F5B301" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" pathLength="1" />
+                  <text x="2" y="24" fill="#05B962" font-size="10" font-weight="700">Votre prix de vente</text>
+                  <text x="2" y="86" fill="#F5B301" font-size="10" font-weight="700">Vos achats</text>
+                </svg>
+                <span class="pn-tag absolute bottom-[38%] end-4 rounded-md bg-white px-1.5 py-0.5 text-[0.6rem] font-bold text-navy">marge ↓</span>
+              </div>
+            )}
+            {i === 1 && (
+              <div class="pn-rank h-full" data-mode="sold">
+                <div class="inline-flex rounded-full bg-white/10 p-0.5 text-[0.65rem] font-bold">
+                  <span class="pn-tab rounded-full px-2.5 py-1" data-t="sold">Plus vendus</span>
+                  <span class="pn-tab rounded-full px-2.5 py-1" data-t="prof">Plus rentables</span>
+                </div>
+                <ol class="relative mt-3 h-[6.5rem]">
+                  {dishes.map((x) => (
+                    <li class="pn-dish absolute inset-x-0 flex items-center gap-2 text-[0.7rem] transition-[top] duration-700 ease-[cubic-bezier(.2,.8,.2,1)]" style={`--s:${x.sold};--r:${x.prof};--ws:${x.ws}%;--wp:${x.wp}%`}>
+                      <span class="w-24 shrink-0 truncate">{x.n}</span>
+                      <span class="h-2.5 flex-1 overflow-hidden rounded-full bg-white/10"><span class="pn-bar block h-full rounded-full transition-[width,background-color] duration-700"></span></span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
+            {i === 2 && (
+              <div class="pn-note relative h-full rounded-lg bg-[#FBF7EC] px-3 pt-2 text-navy [background-image:repeating-linear-gradient(transparent_0,transparent_21px,#D8E3F0_21px,#D8E3F0_22px)]">
+                <ul class="space-y-0 font-serif text-[0.8rem] italic leading-[22px]">
+                  {notes.map((n, k) => <li class="pn-n relative w-fit" style={`--d:${300 + k * 350}ms`}>{n}<span class="pn-x absolute inset-x-0 top-1/2 h-0.5 origin-left rounded bg-[#E5484D]" style={`--d:${1800 + k * 150}ms`}></span></li>)}
+                </ul>
+                <span class="pn-stamp absolute bottom-3 end-3 rotate-[-8deg] rounded-xl border-[3px] border-green-deep bg-white/80 px-2.5 py-1 text-center text-[0.7rem] font-black uppercase leading-tight text-green-deep">Fiche prête<span class="block text-base">en 2 min</span></span>
+              </div>
+            )}
+          </div>
+          <span class="display mt-5 text-5xl text-green">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="mt-2 text-xl">{h}</h3>
+          <p class="mt-2 text-white/70">{d}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pains]').forEach((root) => {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cards = [...root.querySelectorAll<HTMLElement>('.pn-card')];
+    const rank = root.querySelector<HTMLElement>('.pn-rank');
+    const setMode = (m: string) => rank && (rank.dataset.mode = m);
+    let timer = 0;
+    if (still || !('IntersectionObserver' in window)) { cards.forEach(c => c.classList.add('in')); return; }
+    const io = new IntersectionObserver((es) => es.forEach(e => {
+      const c = e.target as HTMLElement;
+      if (e.isIntersecting) {
+        c.classList.add('in');
+        if (c.contains(rank) && !timer) timer = window.setInterval(() => setMode(rank!.dataset.mode === 'sold' ? 'prof' : 'sold'), 2600);
+      } else if (c.contains(rank)) { clearInterval(timer); timer = 0; }
+    }), { threshold: 0.45 });
+    cards.forEach(c => io.observe(c));
+  });
+</script>
