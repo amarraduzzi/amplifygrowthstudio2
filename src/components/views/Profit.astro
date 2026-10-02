@@ -5,6 +5,7 @@ import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import Pricing from '../Pricing.astro';
 import Faq from '../Faq.astro';
+import ProductFinal from '../ProductFinal.astro';
 import { SITE, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { profitFr as p, posFr, type Plan } from '../../i18n/products-fr';
@@ -125,16 +126,8 @@ const schema = [
     <div class="mt-12"><Pricing plans={plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.best} lang={lang} /></div>
   </section>
 
-  <Faq lang={lang} items={p.faq.items} />
+  <Faq lang={lang} items={p.faq.items} wa={wa} />
 
-  <section class="px-4 pb-24 sm:px-6">
-    <div class="mx-auto max-w-6xl rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
-      <h2 class="max-w-3xl text-6xl sm:text-7xl">{p.final.title}</h2>
-      <p class="mt-5 max-w-xl text-lg text-white/75">{p.final.text}</p>
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a href={signupUrl(lang, 'profit')} class="inline-flex min-h-12 items-center rounded-full bg-green px-8 text-lg font-semibold text-navy hover:bg-[#04A859]">{p.final.cta}</a>
-        <WaButton text={wa} label={t.ui.whatsapp} where="profit-final" tone="light" class="px-6" />
-      </div>
-    </div>
-  </section>
+  <ProductFinal title={p.final.title} text={p.final.text} cta={p.final.cta} href={signupUrl(lang, 'profit')} wa={wa} waLabel={t.ui.whatsapp} where="profit-final"
+    steps={['Compte créé', 'Carte importée en photo', 'Coûts estimés par l’IA', 'Premières marges visibles']} done="Vos marges sont prêtes" />
 </Base>

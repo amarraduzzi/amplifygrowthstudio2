@@ -1,24 +1,78 @@
 ---
+// Questions fréquentes: a numbered list that opens smoothly, one answer at a time. The big counter on
+// the left follows the open question, and a WhatsApp bubble "is typing" for anything not covered.
 import Ph from './Ph.astro';
+import WaButton from './WaButton.astro';
 import { copy } from '../i18n';
 import type { Lang } from '../i18n/routes';
-interface Props { lang: Lang; items: string[][] }
-const { lang, items } = Astro.props;
+interface Props { lang: Lang; items: string[][]; wa?: string }
+const { lang, items, wa = 'Bonjour, j’ai une question.' } = Astro.props;
 const t = copy(lang);
+const n = String(items.length).padStart(2, '0');
 ---
-<section class="mx-auto max-w-6xl px-4 py-20 sm:px-6" aria-labelledby="faq">
-  <div class="grid gap-10 md:grid-cols-[1fr_2fr]">
-    <h2 id="faq" class="text-5xl md:text-6xl">{t.ui.faq}</h2>
-    <div class="divide-y divide-line border-y border-line">
-      {items.map(([q, a]) => (
-        <details class="group py-5">
-          <summary class="flex cursor-pointer list-none items-start justify-between gap-6 text-lg font-medium">
-            {q}
-            <span class="mt-1 grid size-7 shrink-0 place-items-center rounded-full border border-line transition-transform group-open:rotate-45" aria-hidden="true">+</span>
-          </summary>
-          <p class="measure mt-3 text-muted"><Ph value={a} /></p>
-        </details>
-      ))}
+<section class="mx-auto max-w-6xl px-4 py-24 sm:px-6" aria-labelledby="faq" data-faq>
+  <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
+    <div class="lg:sticky lg:top-28 lg:self-start">
+      <h2 id="faq" class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{t.ui.faq}</h2>
+      <p class="mt-6 hidden items-end gap-3 lg:flex" aria-hidden="true">
+        <span class="faq-count display text-[7rem] leading-[0.8] text-green-deep tabular-nums">01</span>
+        <span class="display pb-1 text-3xl text-muted">/ {n}</span>
+      </p>
+      <!-- the WhatsApp bubble -->
+      <div class="faq-wa mt-8 hidden max-w-xs rounded-[1.5rem] bg-paper p-4 ring-1 ring-line lg:block">
+        <div class="flex items-center gap-2 text-sm font-semibold"><span class="grid size-8 place-items-center rounded-full bg-green text-navy">A</span>Amplify<span class="ms-auto text-xs font-normal text-green-deep">en ligne</span></div>
+        <p class="faq-typing mt-3 inline-flex gap-1 rounded-xl rounded-ss-none bg-chalk px-3 py-2.5" aria-hidden="true">{[0, 1, 2].map(i => <span class="size-1.5 rounded-full bg-navy/60" style={`animation:dot 1.2s ${i * .15}s infinite`}></span>)}</p>
+        <p class="faq-msg mt-3 hidden w-fit rounded-xl rounded-ss-none bg-chalk px-3 py-2 text-sm">{t.ui.faqCta}</p>
+        <div class="mt-3"><WaButton text={wa} label={t.ui.whatsapp} where="faq" class="w-full text-sm" /></div>
+      </div>
     </div>
+
+    <ol class="space-y-3">
+      {items.map(([q, a], i) => (
+        <li class={`faq-item rounded-[1.5rem] bg-paper ring-1 ring-line transition-[background-color,box-shadow] duration-300 ${i === 0 ? 'is-open' : ''}`} style={`--d:${i * 80}ms`}>
+          <h3>
+            <button type="button" class="flex w-full items-center gap-4 p-5 text-start sm:gap-5 sm:p-6" aria-expanded={i === 0 ? 'true' : 'false'} aria-controls={`faq-a-${i}`} id={`faq-q-${i}`}>
+              <span class="faq-n display w-9 shrink-0 text-3xl text-muted transition-colors sm:text-4xl" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              <span class="flex-1 text-lg font-semibold leading-snug sm:text-xl">{q}</span>
+              <span class="faq-x grid size-10 shrink-0 place-items-center rounded-full bg-chalk text-navy transition-[transform,background-color] duration-300" aria-hidden="true">
+                <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              </span>
+            </button>
+          </h3>
+          <div class="faq-a grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(.2,.8,.2,1)]" id={`faq-a-${i}`} role="region" aria-labelledby={`faq-q-${i}`}>
+            <div class="overflow-hidden">
+              <p class="faq-p measure px-5 pb-6 text-[1.05rem] text-muted sm:ps-[5.75rem] sm:pe-20"><Ph value={a} /></p>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
   </div>
+  <div class="mt-8 lg:hidden"><WaButton text={wa} label={t.ui.faqCta} where="faq" class="w-full text-[0.95rem]" /></div>
 </section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-faq]').forEach((root) => {
+    const items = [...root.querySelectorAll<HTMLElement>('.faq-item')];
+    const count = root.querySelector<HTMLElement>('.faq-count');
+    const open = (i: number) => {
+      const wasOpen = items[i].classList.contains('is-open');
+      items.forEach((li, k) => {
+        const on = k === i && !wasOpen;
+        li.classList.toggle('is-open', on);
+        li.querySelector('button')!.setAttribute('aria-expanded', String(on));
+      });
+      if (count && !wasOpen) { count.textContent = String(i + 1).padStart(2, '0'); count.classList.remove('faq-flip'); void count.offsetWidth; count.classList.add('faq-flip'); }
+    };
+    items.forEach((li, i) => li.querySelector('button')!.addEventListener('click', () => open(i)));
+    // the list rises in, then the bubble stops typing and answers
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return;
+        root.classList.add('faq-seen'); io.disconnect();
+        setTimeout(() => { root.querySelector('.faq-typing')?.classList.add('hidden'); root.querySelector('.faq-msg')?.classList.remove('hidden'); root.querySelector('.faq-msg')?.classList.add('chat-in'); }, 1800);
+      }, { threshold: 0.25 });
+      io.observe(root);
+    } else root.classList.add('faq-seen');
+  });
+</script>

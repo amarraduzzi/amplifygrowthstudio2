@@ -264,3 +264,38 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 [data-try]:not([data-step]) .try-s1, [data-try][data-step="0"] .try-s1, [data-try][data-step="1"] .try-s2, [data-try][data-step="2"] .try-s3 { opacity: 1; transform: none; }
 [data-try][data-step="0"] .try-step:nth-child(1), [data-try][data-step="1"] .try-step:nth-child(2), [data-try][data-step="2"] .try-step:nth-child(3) { background: #001E3E; color: #fff; }
 @media (prefers-reduced-motion: reduce) { .qr-scan { animation: none; top: 50%; } }
+
+/* FAQ: numbered list that opens smoothly */
+.faq-a { grid-template-rows: 0fr; }
+.faq-item.is-open .faq-a { grid-template-rows: 1fr; }
+.faq-item.is-open { background-color: #fff; box-shadow: 0 24px 50px -30px rgb(0 30 62 / .35), inset 4px 0 0 #05B962; }
+[dir="rtl"] .faq-item.is-open { box-shadow: 0 24px 50px -30px rgb(0 30 62 / .35), inset -4px 0 0 #05B962; }
+.faq-item.is-open .faq-n { color: #05B962; }
+.faq-item.is-open .faq-x { transform: rotate(135deg); background-color: #05B962; }
+.faq-item:hover .faq-x { background-color: #CFF5E1; }
+.faq-item.is-open:hover .faq-x { background-color: #05B962; }
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-faq] .faq-item { opacity: 0; transform: translateY(24px); transition: opacity .6s, transform .6s cubic-bezier(.2,.8,.2,1), background-color .3s, box-shadow .3s; transition-delay: var(--d, 0ms), var(--d, 0ms), 0s, 0s; }
+  .js [data-faq].faq-seen .faq-item { opacity: 1; transform: none; }
+  .faq-item.is-open .faq-p { animation: fade-up .5s .12s cubic-bezier(.2,.8,.2,1) both; }
+  .faq-flip { animation: faq-flip .45s cubic-bezier(.2,.8,.2,1); }
+  @keyframes faq-flip { from { opacity: 0; transform: translateY(30%); } }
+}
+
+/* Final card: mouse light, words rise, setup ticks off */
+.fin-light { background: radial-gradient(520px circle at var(--mx, 75%) var(--my, 40%), rgb(5 185 98 / .22), transparent 60%); transition: background .2s; }
+.fin-step.is-done { background-color: rgb(5 185 98 / .12); box-shadow: inset 0 0 0 1px rgb(5 185 98 / .35); }
+.fin-step.is-done .fin-dot { background-color: #05B962; border-color: #05B962; transform: scale(1.08); }
+.fin-step.is-done .fin-dot svg { opacity: 1; }
+.fin-done { opacity: .25; filter: grayscale(1); transition: opacity .5s, filter .5s, transform .5s cubic-bezier(.2,.8,.2,1.4); }
+.fin-open .fin-done { opacity: 1; filter: none; transform: scale(1.03); }
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-final] .fin-w { transform: translateY(105%); }
+  .js [data-final].fin-seen .fin-w { transform: none; transition: transform .7s cubic-bezier(.2,.8,.2,1); transition-delay: var(--d, 0ms); }
+  .js [data-final] .fin-panel { opacity: 0; transform: translateY(30px) rotate(1.5deg); }
+  .js [data-final].fin-seen .fin-panel { opacity: 1; transform: none; transition: opacity .7s .3s, transform .9s .3s cubic-bezier(.2,.8,.2,1); }
+  .fin-open .fin-panel { animation: fin-pop .6s cubic-bezier(.2,.8,.2,1); }
+  @keyframes fin-pop { 40% { box-shadow: 0 0 0 6px rgb(5 185 98 / .25), 0 0 60px rgb(5 185 98 / .35); } }
+  .fin-cta::after { content: ""; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / .45) 50%, transparent 70%); transform: translateX(-120%); animation: fin-shine 3.2s 1.5s ease-in-out infinite; }
+  @keyframes fin-shine { 35%, 100% { transform: translateX(120%); } }
+}
