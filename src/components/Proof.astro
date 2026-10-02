@@ -1,11 +1,14 @@
 ---
-// Real cases only. Until one is confirmed, a visible placeholder.
+// Real cases only. As long as the text is still a [PLACEHOLDER], the section is not shown at all.
 import Ph from './Ph.astro';
 interface Props { h2: string; ph: string; p?: string }
 const { h2, ph, p } = Astro.props;
+const real = !/^\s*\[.*\]\s*$/.test(ph);
 ---
+{real && (
 <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6">
   <h2 class="text-5xl md:text-6xl">{h2}</h2>
   {p && <p class="measure mt-3 text-muted">{p}</p>}
-  <div class="mt-8 rounded-3xl border-2 border-dashed border-line p-8 md:p-12"><Ph value={ph} /></div>
+  <div class="mt-8 rounded-3xl bg-paper p-8 ring-1 ring-line md:p-12"><Ph value={ph} /></div>
 </section>
+)}

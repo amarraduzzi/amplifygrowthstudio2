@@ -93,6 +93,16 @@ export const mkFr = {
   },
   sectors: ['Restaurant', 'Café', 'Coffee shop', 'Snack', 'Salon de thé', 'Pâtisserie', 'Boulangerie', 'Glacier', 'Food truck', 'Brunch', 'Fast-food', 'Rooftop'],
   sectorsH: 'Pour toute la restauration',
+  report: {
+    h2a: 'Chaque mois,',
+    h2b: 'des chiffres. Pas des likes.',
+    p: 'Vous recevez sur WhatsApp un rapport simple : ce que chaque action a ramené, ce qu’on garde, ce qu’on arrête.',
+    title: 'Rapport du mois · Votre café',
+    rows: [['Appels depuis Google', '+18 %'], ['Itinéraires demandés', '+24 %'], ['Invitations utilisées', '41 / 100'], ['Clients revenus avec le code', '17']],
+    keep: 'On garde : dégustation au coworking',
+    stop: 'On arrête : flyers au feu rouge',
+    note: 'Exemple de rapport. Les chiffres sont fictifs.',
+  },
   proof: { h2: 'Un cas concret', ph: '[CAS MARKETING À AJOUTER : action menée, période, clients venus, citation du client]' },
   faq: [
     ['Vous ne faites pas d’Instagram ?', 'Si, mais à sa place. Le contenu montre votre concept et garde le lien avec vos habitués. Nous ne payons pas pour des vues qui ne passent jamais la porte.'],

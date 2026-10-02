@@ -523,3 +523,8 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 .mkc-a { text-decoration: line-through 2px transparent; transition: text-decoration-color .4s; }
 .mkc-row.on .mkc-a { text-decoration-color: #E5484D; }
 @media (max-width: 639px) { .mk-tab { font-size: .75rem; padding-inline: .7rem; } }
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-mkrep] .mkr-msg, .js [data-mkrep] .mkr-row { opacity: 0; }
+  .js [data-mkrep].in .mkr-msg { opacity: 1; animation: chat-in .5s .2s both; }
+  .js [data-mkrep].in .mkr-row { opacity: 1; animation: fade-up .45s var(--d) cubic-bezier(.2,.8,.2,1) both; }
+}
