@@ -16,7 +16,7 @@ export const mkFr = {
     modes: ['Le marketing classique au Maroc', 'Le marketing Amplify'],
   },
   statement: {
-    a: 'Au Maroc, tout le monde',
+    a: 'Au Maroc, beaucoup',
     b: 'fait les mêmes vidéos, achète les mêmes pubs, fête les mêmes 100 000 vues. Et la salle reste vide.',
   },
   beliefs: {
