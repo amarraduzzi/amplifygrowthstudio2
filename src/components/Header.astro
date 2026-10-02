@@ -11,6 +11,8 @@ const nav = (['pos', 'profit', 'marketing', 'restaurants', 'contact'] as const).
 const active = (k: string) => k === page || (k === 'pos' && page === 'features');
 const langs = liveLanguages();
 const LABEL: Record<Lang, string> = { fr: 'FR', ar: 'عربي', en: 'EN' };
+const SHORT: Record<Lang, string> = { fr: 'FR', ar: 'ع', en: 'EN' };
+const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 'English' };
 const trial = signupUrl(lang, page === 'profit' ? 'profit' : undefined);
 ---
 <header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/90 backdrop-blur">
@@ -21,10 +23,21 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : undefined);
         class={`whitespace-nowrap transition-colors hover:text-green-deep ${active(n.k) ? 'font-semibold text-green-deep' : 'text-navy'}`}>{n.label}</a>)}
     </nav>
     {langs.length > 1 && (
-      <div class="hidden items-center gap-1 text-sm lg:flex" aria-label={t.ui.langLabel}>
-        {langs.map(l => <a href={ROUTES[page][l]} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}
-          class={`rounded-md px-2 py-1 ${l === lang ? 'bg-navy text-white' : 'text-muted hover:text-navy'}`}>{LABEL[l]}</a>)}
-      </div>
+      <details class="lang-dd relative hidden lg:block" data-lang-dd>
+        <summary class="flex min-h-11 cursor-pointer list-none items-center gap-1.5 rounded-full px-2.5 text-sm font-semibold text-muted transition-colors hover:bg-paper hover:text-navy [&::-webkit-details-marker]:hidden" aria-label={t.ui.langLabel}>
+          <svg viewBox="0 0 24 24" class="size-[1.15rem]" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/></svg>
+          <span>{SHORT[lang]}</span>
+          <svg viewBox="0 0 24 24" class="lang-chev size-3.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </summary>
+        <ul class="absolute end-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl bg-paper p-1.5 shadow-[0_20px_50px_-15px_rgba(0,30,62,0.35)] ring-1 ring-line">
+          {langs.map(l => (
+            <li><a href={ROUTES[page][l]} hreflang={l} lang={l} aria-current={l === lang ? 'true' : undefined}
+              class={`flex items-center justify-between rounded-xl px-3 py-2.5 text-[0.95rem] ${l === lang ? 'bg-chalk font-semibold text-navy' : 'text-navy hover:bg-chalk'}`}>
+              <x-notr>{NAME[l]}</x-notr>{l === lang && <svg viewBox="0 0 24 24" class="size-4 text-green-deep" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12l4 4 10-10"/></svg>}
+            </a></li>
+          ))}
+        </ul>
+      </details>
     )}
     <a href={loginUrl(lang)} class="hidden whitespace-nowrap text-[0.95rem] text-muted hover:text-navy md:block">{t.nav.login}</a>
     <a href={trial} class="hidden min-h-11 items-center whitespace-nowrap rounded-full bg-navy px-5 text-[0.95rem] font-medium text-white hover:bg-blue md:inline-flex">{t.nav.trial}</a>
@@ -40,8 +53,15 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : undefined);
           <a href={loginUrl(lang)} class="grid min-h-12 place-items-center rounded-full border border-navy/25 font-medium">{t.nav.login}</a>
           <a href={trial} class="grid min-h-12 place-items-center rounded-full bg-navy font-medium text-white">{t.nav.trial}</a>
         </div>
-        {langs.length > 1 && <div class="mt-4 flex gap-2">{langs.map(l => <a href={ROUTES[page][l]} lang={l} class={`rounded-md px-3 py-2 ${l === lang ? 'bg-navy text-white' : 'border border-line'}`}>{LABEL[l]}</a>)}</div>}
+        {langs.length > 1 && <div class="mt-4 grid grid-cols-3 gap-2">{langs.map(l => <a href={ROUTES[page][l]} lang={l} class={`grid min-h-11 place-items-center rounded-full text-sm font-semibold ${l === lang ? 'bg-navy text-white' : 'border border-line'}`}><x-notr>{NAME[l]}</x-notr></a>)}</div>}
       </nav>
     </details>
   </div>
 </header>
+<script>
+  // language menu: closes on outside click and on Escape
+  document.querySelectorAll<HTMLDetailsElement>('[data-lang-dd]').forEach((dd) => {
+    document.addEventListener('click', (e) => { if (dd.open && !dd.contains(e.target as Node)) dd.open = false; });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') dd.open = false; });
+  });
+</script>

@@ -651,3 +651,4 @@ x-notr { display: contents; }
 [dir="rtl"] .ft-word { font-family: "Archivo Variable", sans-serif; font-stretch: 62%; font-weight: 800; line-height: .8; }
 [dir="rtl"] .mk-strike { display: none; } [dir="rtl"] .mk-h1b { text-decoration: line-through 0.08em #E5484D; }
 [dir="rtl"] .hub-word { font-family: "Archivo Variable", sans-serif; font-stretch: 62%; font-weight: 800; text-transform: uppercase; line-height: .9; }
+.lang-dd[open] .lang-chev { transform: rotate(180deg); }
