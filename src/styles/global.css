@@ -220,3 +220,22 @@ html:not(.js) .loop-steps, .loop-static .loop-steps, html:not(.js) .loop-comet, 
 .hero-print > div { animation: ticket-out .9s cubic-bezier(.2,.8,.2,1) 1.8s both; }
 @keyframes ticket-out { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
 @media (prefers-reduced-motion: reduce) { .hero-print .pr-line, .hero-print > div { animation: none; } }
+
+/* Offline demo */
+.off.is-off { background: #071C38; }
+.off.is-off .off-flash { opacity: 1; }
+.off.is-off .off-h2b { color: #F5B301; }
+.off.is-off .off-banner { grid-template-rows: 1fr; }
+.off.is-off .off-link { background: repeating-linear-gradient(to bottom, rgb(245 179 1 / .6) 0 6px, transparent 6px 12px); }
+.off.is-off .off-dot { display: none; }
+.off.is-off .off-cut { transform: translate(-50%, -50%) scale(1); }
+.off.is-off .off-cloud { background: rgb(255 255 255 / .12); color: rgb(255 255 255 / .6); }
+.off.is-off .off-till { box-shadow: 0 0 0 2px #F5B301, 0 40px 80px -30px rgba(0,0,0,.7); }
+.off-dot { animation: off-flow 1.6s linear infinite; top: 100%; }
+.off-dot2 { animation-delay: .8s; }
+@keyframes off-flow { from { top: 100%; opacity: 0; } 15% { opacity: 1; } 85% { opacity: 1; } to { top: 0; opacity: 0; } }
+.off-new { animation: off-new .45s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes off-new { from { opacity: 0; transform: translateY(-14px) scale(.97); } }
+.off-fly { animation: off-fly .5s cubic-bezier(.2,.8,.2,1); }
+@keyframes off-fly { 50% { transform: translateY(-6px); background: rgb(5 185 98 / .25); } }
+@media (prefers-reduced-motion: reduce) { .off-dot, .off-new, .off-fly { animation: none; } }

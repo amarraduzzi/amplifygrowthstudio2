@@ -1,64 +1,151 @@
 ---
-// Interactive: switch internet off, orders keep coming and wait; switch it back on, everything syncs.
+// "Coupez internet, le service continue": a live till between the restaurant and the cloud.
+// Orders keep arriving. Cut internet (or let it cut by itself): the link to the cloud breaks,
+// orders pile up on the till with "en attente". Reconnect: they fly to the cloud one by one.
 import Icon from './Icon.astro';
 import { posFr } from '../i18n/products-fr';
 const c = posFr.offline;
 ---
-<section class="relative isolate overflow-hidden bg-blue py-20 text-white md:py-28" data-offline>
-  <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr]">
+<section class="off relative isolate overflow-hidden bg-blue py-20 text-white transition-colors duration-700 md:py-28" data-offline>
+  <div class="off-flash pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-700" style="background:radial-gradient(60% 50% at 70% 50%, rgba(245,179,1,.16), transparent 70%)" aria-hidden="true"></div>
+  <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.95fr_1.05fr]">
     <div>
-      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{c.title}</h2>
-      <p class="mt-5 max-w-md text-lg text-white/80">{c.text}</p>
-      <button type="button" class="off-switch mt-8 inline-flex items-center gap-4 rounded-full bg-white/10 py-2 pe-6 ps-2 ring-1 ring-white/20" role="switch" aria-checked="true">
-        <span class="off-track relative h-9 w-16 rounded-full bg-green transition-colors"><span class="off-knob absolute start-1 top-1 size-7 rounded-full bg-white shadow transition-transform"></span></span>
-        <span class="text-lg font-semibold">{c.internet} : <span class="off-state">{c.on}</span></span>
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl">
+        <span class="block">Coupez internet.</span>
+        <span class="off-h2b block text-green transition-colors duration-500">Le service continue.</span>
+      </h2>
+      <p class="mt-5 max-w-md text-lg text-white/80">Commandes, bons cuisine et encaissements restent sur la caisse et partent tout seuls au retour de la connexion. Sans doublon, sans rien perdre.</p>
+
+      <!-- the big switch -->
+      <button type="button" class="off-switch group mt-8 flex w-full max-w-md items-center gap-4 rounded-[1.5rem] bg-white/5 p-3 text-start ring-1 ring-white/15 transition-colors hover:bg-white/10" role="switch" aria-checked="true">
+        <span class="off-track relative h-12 w-24 shrink-0 rounded-full bg-green transition-colors duration-300">
+          <span class="off-knob absolute start-1.5 top-1.5 grid size-9 place-items-center rounded-full bg-white text-navy shadow-lg transition-transform duration-300">
+            <svg viewBox="0 0 24 24" class="off-ico-on size-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.3a10 10 0 0 1 13 0M9 15.8a5 5 0 0 1 6 0M12 19.5h.01"/></svg>
+            <svg viewBox="0 0 24 24" class="off-ico-off hidden size-5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.3a10 10 0 0 1 13 0M9 15.8a5 5 0 0 1 6 0M12 19.5h.01M3 3l18 18"/></svg>
+          </span>
+        </span>
+        <span>
+          <span class="block text-sm text-white/60">{c.internet}</span>
+          <span class="off-state display block text-3xl">{c.on}</span>
+        </span>
+        <span class="off-hint ms-auto me-2 hidden whitespace-nowrap text-sm font-semibold text-green sm:block">Couper</span>
       </button>
+
+      <dl class="mt-6 grid max-w-sm grid-cols-2 gap-3">
+        <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10"><dt class="text-sm text-white/60">Commandes prises</dt><dd class="off-count display text-5xl">0</dd></div>
+        <div class="rounded-2xl bg-white/5 p-4 ring-1 ring-white/10"><dt class="text-sm text-white/60">{c.queued.charAt(0).toUpperCase() + c.queued.slice(1)}</dt><dd class="off-queue display text-5xl text-white/40">0</dd></div>
+      </dl>
     </div>
-    <div class="rounded-[2rem] bg-navy p-5 ring-1 ring-white/10 sm:p-7">
-      <div class="flex items-center justify-between text-sm">
-        <span class="font-semibold">Amplify POS</span>
-        <span class="off-pill flex items-center gap-1.5 rounded-full bg-green/15 px-3 py-1 font-bold text-green"><span class="size-2 rounded-full bg-current"></span><span class="off-pill-text">{c.on}</span></span>
+
+    <!-- the till, the link, the cloud -->
+    <div class="relative" aria-hidden="true">
+      <!-- cloud -->
+      <div class="relative mx-auto flex w-fit items-center gap-3 rounded-2xl bg-white/5 px-4 py-3 ring-1 ring-white/15">
+        <span class="off-cloud grid size-11 place-items-center rounded-xl bg-green text-navy transition-colors duration-500">
+          <svg viewBox="0 0 24 24" class="size-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a5 5 0 1 1 .9-9.9A6 6 0 0 1 19 10a4 4 0 0 1-1 8z"/></svg>
+        </span>
+        <span><span class="block text-sm font-semibold">Vos données</span><span class="off-cloud-txt text-xs text-white/60">{c.synced}</span></span>
+        <span class="off-burst pointer-events-none absolute -end-2 -top-2 grid size-7 scale-0 place-items-center rounded-full bg-green text-navy transition-transform duration-300"><Icon name="check" class="size-4" /></span>
       </div>
-      <ul class="off-list mt-5 space-y-2" aria-live="polite"></ul>
-      <p class="off-synced mt-4 hidden items-center gap-2 text-sm font-semibold text-green"><Icon name="check" class="size-4" />{c.synced}</p>
+
+      <!-- the link -->
+      <div class="relative mx-auto h-20 w-1">
+        <span class="off-link absolute inset-0 rounded-full bg-green/40"></span>
+        <span class="off-dot absolute start-1/2 size-2.5 -translate-x-1/2 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
+        <span class="off-dot off-dot2 absolute start-1/2 size-2.5 -translate-x-1/2 rounded-full bg-green shadow-[0_0_10px_3px_rgba(5,185,98,.6)]"></span>
+        <span class="off-cut absolute start-1/2 top-1/2 grid size-9 -translate-x-1/2 -translate-y-1/2 scale-0 place-items-center rounded-full bg-[#F5B301] text-navy transition-transform duration-300">
+          <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </span>
+      </div>
+
+      <!-- the till -->
+      <div class="off-till rounded-[1.75rem] bg-[#0B1422] p-2.5 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.7)] ring-1 ring-white/10 transition-shadow duration-500">
+        <div class="overflow-hidden rounded-[1.2rem] bg-navy">
+          <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
+            <span class="flex items-center gap-2 text-sm font-semibold"><span class="grid size-6 place-items-center rounded-md bg-green text-navy"><Icon name="till" class="size-4" /></span>Amplify POS</span>
+            <span class="off-pill flex items-center gap-1.5 rounded-full bg-green/15 px-3 py-1 text-xs font-bold text-green"><span class="size-2 rounded-full bg-current"></span><span class="off-pill-text">{c.on}</span></span>
+          </div>
+          <div class="off-banner grid grid-rows-[0fr] bg-[#F5B301] text-navy transition-[grid-template-rows] duration-500">
+            <p class="overflow-hidden px-4 text-sm font-semibold"><span class="block py-2">Hors ligne : tout reste sur la caisse.</span></p>
+          </div>
+          <ul class="off-list h-[17.5rem] space-y-2 overflow-hidden p-3 sm:h-[19rem]"></ul>
+        </div>
+      </div>
     </div>
   </div>
+
   <template class="off-tpl">
-    <li class="off-item flex items-center justify-between rounded-xl bg-white/5 px-4 py-3 text-[0.95rem] ring-1 ring-white/10">
-      <span class="off-text"></span>
-      <span class="off-badge rounded-lg px-2 py-0.5 text-xs font-bold"></span>
+    <li class="off-item flex items-center justify-between gap-3 rounded-xl bg-white/5 px-4 py-3 text-[0.95rem] ring-1 ring-white/10 transition-colors duration-300">
+      <span class="flex min-w-0 items-center gap-2.5"><span class="off-kind grid size-7 shrink-0 place-items-center rounded-lg bg-white/10 text-xs"></span><span class="off-text truncate"></span></span>
+      <span class="off-badge shrink-0 rounded-lg px-2 py-0.5 text-xs font-bold"></span>
     </li>
   </template>
-  <script define:vars={{ events: c.events, on: c.on, off: c.off, queued: c.queued }}>
+
+  <script define:vars={{ events: c.events, on: c.on, off: c.off, queued: c.queued, synced: c.synced }}>
     const root = document.querySelector('[data-offline]');
-    const list = root.querySelector('.off-list'), tpl = root.querySelector('.off-tpl');
-    const sw = root.querySelector('.off-switch'), synced = root.querySelector('.off-synced');
-    let online = true, k = 0, timer = 0;
-    const badge = (li, ok) => { const b = li.querySelector('.off-badge'); b.textContent = ok ? '✓' : queued; b.className = 'off-badge rounded-lg px-2 py-0.5 text-xs font-bold ' + (ok ? 'bg-green/20 text-green' : 'bg-[#F5B301] text-[#001E3E]'); li.dataset.ok = ok ? '1' : ''; };
+    const $ = (s) => root.querySelector(s);
+    const list = $('.off-list'), tpl = $('.off-tpl'), sw = $('.off-switch');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let online = true, k = 0, total = 0, timer = 0, auto = !still, autoTimers = [];
+    const ICON = ['T4', 'B', 'T7', 'C', 'DH', 'E'];
+    const waiting = () => [...list.children].filter(li => !li.dataset.ok);
+    const badge = (li, ok) => {
+      const b = li.querySelector('.off-badge');
+      b.textContent = ok ? '✓' : queued;
+      b.className = 'off-badge shrink-0 rounded-lg px-2 py-0.5 text-xs font-bold ' + (ok ? 'bg-green/20 text-green' : 'bg-[#F5B301] text-[#001E3E]');
+      li.dataset.ok = ok ? '1' : '';
+      li.classList.toggle('ring-[#F5B301]/40', !ok);
+    };
+    const counters = () => {
+      $('.off-count').textContent = total;
+      const q = waiting().length;
+      const el = $('.off-queue'); el.textContent = q;
+      el.className = 'off-queue display text-5xl ' + (q ? 'text-[#F5B301]' : 'text-white/40');
+    };
     const add = () => {
       const li = tpl.content.firstElementChild.cloneNode(true);
-      li.querySelector('.off-text').textContent = events[k++ % events.length];
-      badge(li, online); li.classList.add('chat-in');
-      list.prepend(li); while (list.children.length > 5) list.lastElementChild.remove();
-      synced.classList.add('hidden'); synced.classList.remove('flex');
+      const i = k++ % events.length;
+      li.querySelector('.off-text').textContent = events[i];
+      li.querySelector('.off-kind').textContent = ICON[i];
+      badge(li, online); li.classList.add('off-new');
+      list.prepend(li); while (list.children.length > 6) list.lastElementChild.remove();
+      total++; counters();
     };
     const set = (v) => {
       online = v;
+      root.classList.toggle('is-off', !v);
       sw.setAttribute('aria-checked', String(v));
-      root.querySelector('.off-state').textContent = v ? on : off;
-      root.querySelector('.off-pill-text').textContent = v ? on : off;
-      root.querySelector('.off-pill').className = 'off-pill flex items-center gap-1.5 rounded-full px-3 py-1 font-bold ' + (v ? 'bg-green/15 text-green' : 'bg-[#F5B301]/20 text-[#F5B301]');
-      root.querySelector('.off-track').className = 'off-track relative h-9 w-16 rounded-full transition-colors ' + (v ? 'bg-green' : 'bg-white/25');
-      root.querySelector('.off-knob').style.transform = v ? 'translateX(1.75rem)' : 'translateX(0)';
+      $('.off-state').textContent = v ? on : off;
+      $('.off-pill-text').textContent = v ? on : off;
+      $('.off-pill').className = 'off-pill flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold ' + (v ? 'bg-green/15 text-green' : 'bg-[#F5B301]/20 text-[#F5B301]');
+      $('.off-track').className = 'off-track relative h-12 w-24 shrink-0 rounded-full transition-colors duration-300 ' + (v ? 'bg-green' : 'bg-white/25');
+      $('.off-knob').style.transform = v ? 'translateX(3rem)' : 'translateX(0)';
+      $('.off-ico-on').classList.toggle('hidden', !v); $('.off-ico-off').classList.toggle('hidden', v);
+      $('.off-hint').textContent = v ? 'Couper' : 'Rétablir';
+      $('.off-cloud-txt').textContent = v ? synced : 'En attente de connexion…';
       if (v) {
-        const waiting = [...list.children].filter(li => !li.dataset.ok);
-        waiting.reverse().forEach((li, i) => setTimeout(() => { badge(li, true); if (i === waiting.length - 1) { synced.classList.remove('hidden'); synced.classList.add('flex'); } }, 350 * (i + 1)));
+        const w = waiting().reverse();
+        w.forEach((li, i) => setTimeout(() => {
+          li.classList.add('off-fly'); badge(li, true); counters();
+          setTimeout(() => li.classList.remove('off-fly'), 500);
+          if (i === w.length - 1) { const b = $('.off-burst'); b.style.transform = 'scale(1)'; setTimeout(() => (b.style.transform = ''), 1200); }
+        }, 380 * (i + 1)));
       }
     };
-    sw.addEventListener('click', () => set(!online));
+    const stopAuto = () => { auto = false; autoTimers.forEach(clearTimeout); };
+    sw.addEventListener('click', () => { stopAuto(); set(!online); });
     set(true);
     for (let i = 0; i < 3; i++) add();
-    const start = () => { if (!timer) timer = setInterval(add, 2200); };
-    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else { clearInterval(timer); timer = 0; } }).observe(root);
+    // the demo plays by itself once: cut after a few orders, reconnect a bit later
+    const play = () => {
+      if (!auto) return;
+      autoTimers.push(setTimeout(() => auto && set(false), 3500));
+      autoTimers.push(setTimeout(() => auto && set(true), 10500));
+    };
+    let played = false;
+    const start = () => { if (!timer) timer = setInterval(add, 1800); if (!played) { played = true; play(); } };
+    const stopTimer = () => { clearInterval(timer); timer = 0; };
+    if ('IntersectionObserver' in window) new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stopTimer()), { threshold: 0.35 }).observe(root);
+    else start();
   </script>
 </section>
