@@ -49,6 +49,19 @@ export const CONTACT = {
   hours: '[HORAIRES À COMPLÉTER]',
 };
 
+/**
+ * Pricing rules shown on the site.
+ * - Yearly: pay 10 months, get 12 ("2 mois offerts").
+ * - On-site installation in Rabat: one-off price with a monthly plan, free with a yearly plan.
+ * - Launch offer: free on-site installation for the first N venues in Rabat. Set launchFreeInstall to 0
+ *   (or false) when they are taken, and the offer disappears from the site.
+ */
+export const OFFER = {
+  yearPaidMonths: 10,
+  installRabat: 490,
+  launchFreeInstall: 10,
+};
+
 export const isPlaceholder = (v: string) => /^\[.*\]$/.test(v.trim());
 export const waLink = (text: string) => `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
 

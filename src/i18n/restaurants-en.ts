@@ -68,7 +68,7 @@ export const rsEn = {
     ['Does it work for a café or a snack bar?', 'Yes. The POS handles the counter, tables, takeaway and delivery. The marketing adapts to your neighbourhood.'],
     ['My staff prefer Arabic.', 'The POS and the kitchen display are available in French and Arabic. Each employee chooses their language.'],
     ['Do I have to change everything at once?', 'No. You can start with a single tool, for example Amplify Profit with your current POS, and add the rest later.'],
-    ['Do you come on site?', 'Yes, in Rabat and the surrounding area. We install the POS, import your menu and train your team. Elsewhere in Morocco, message us.'],
+    ['Do you come on site?', 'In Rabat and the surrounding area, yes: we install the POS, import your menu and train your team on site. Elsewhere in Morocco, we do all of this with you on a video call.'],
   ] as [string, string][],
   final: { h2a: 'Let’s start with', h2b: 'your biggest problem.', p: 'One message is enough. We’ll reply with a simple proposal.', cta: 'Message us on WhatsApp', chosen: 'Your assessment will be attached to the message.' },
 };

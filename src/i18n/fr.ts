@@ -16,10 +16,10 @@ export const fr = {
     langLabel: 'Langue',
     chatYou: 'Vous',
     chatUs: 'Amplify',
-    chatReply: 'Bonjour, avec plaisir. Dites-nous où se trouve votre établissement, on passe vous voir.',
+    chatReply: 'Bonjour, avec plaisir. Dites-nous où se trouve votre établissement, à Rabat on passe vous voir, ailleurs on s’appelle en vidéo.',
     chatNote: 'Le bouton ouvre WhatsApp avec ce message. Vous pouvez le modifier avant l’envoi.',
     faqCta: 'Une autre question ? Posez-la sur WhatsApp.',
-    footerTagline: 'Systèmes et marketing pour les entreprises au Maroc. Une équipe à Rabat qui passe chez vous.',
+    footerTagline: 'Systèmes et marketing pour les entreprises au Maroc. Sur place à Rabat, en vidéo partout au Maroc.',
     footer: {
       cols: { products: 'Produits', services: 'Services', company: 'Amplify', contact: 'Nous joindre' },
       pricing: 'Tarifs',
@@ -35,16 +35,16 @@ export const fr = {
   home: {
     meta: {
       title: 'Amplify Growth Studio, systèmes et marketing à Rabat',
-      description: 'Caisse, suivi des marges et marketing qui vend, pour restaurants et cafés au Maroc. Une équipe à Rabat qui vient chez vous. Écrivez-nous sur WhatsApp.',
+      description: 'Caisse, suivi des marges et marketing qui vend, pour restaurants et cafés au Maroc. Sur place à Rabat, en vidéo partout au Maroc. Écrivez-nous sur WhatsApp.',
     },
     wa: 'Bonjour, je souhaite en savoir plus sur Amplify pour mon restaurant.',
     hero: {
       h1: ['Votre entreprise.', 'Plus simple.', 'Plus rentable.'],
-      lead: 'Systèmes et marketing pour les entreprises au Maroc, en commençant par la restauration. Notre équipe à Rabat passe chez vous.',
-      leadShort: 'Systèmes et marketing au Maroc. Notre équipe à Rabat passe chez vous.',
+      lead: 'Systèmes et marketing pour les entreprises au Maroc, en commençant par la restauration. Sur place à Rabat, en vidéo partout au Maroc.',
+      leadShort: 'Systèmes et marketing au Maroc. Sur place à Rabat, en vidéo ailleurs.',
       flow: ['Commande reçue', 'Bon envoyé en cuisine', 'Marge calculée'],
       flowShort: ['Commande reçue', 'En cuisine', 'Marge calculée'],
-      trial: 'Essai gratuit 30 jours',
+      trial: 'Essai gratuit 14 jours',
       rating: 'sur Google',
       local: 'Équipe basée à Rabat',
       facts: [
@@ -129,9 +129,9 @@ export const fr = {
       h2b: 'c’est simple.',
       p: 'Vous parlez à des personnes, pas à un logiciel. Voici comment ça se passe.',
       items: [
-        { h: 'On se rencontre', p: 'Nous passons dans votre établissement et regardons comment vous travaillez aujourd’hui.', you: 'Vous : un rendez-vous', visual: 'meet' },
+        { h: 'On se rencontre', p: 'À Rabat, nous passons dans votre établissement. Ailleurs au Maroc, on se voit en appel vidéo. Nous regardons comment vous travaillez aujourd’hui.', you: 'Vous : un rendez-vous', visual: 'meet' },
         { h: 'On installe', p: 'Caisse, menu, site ou campagne : nous configurons tout, avec votre carte et vos prix.', you: 'Vous : rien, on s’en occupe', visual: 'setup' },
-        { h: 'On forme votre équipe', p: 'Chaque employé reçoit son code personnel. Nous formons l’équipe sur place, jusqu’à ce que chacun soit à l’aise.', you: 'Vous : réunir l’équipe', visual: 'pin' },
+        { h: 'On forme votre équipe', p: 'Chaque employé reçoit son code personnel. Nous formons l’équipe, sur place à Rabat ou en vidéo, jusqu’à ce que chacun soit à l’aise.', you: 'Vous : réunir l’équipe', visual: 'pin' },
         { h: 'On suit vos chiffres', p: 'Ensuite, nous restons joignables sur WhatsApp et regardons vos résultats avec vous.', you: 'Vous : décider avec de vrais chiffres', visual: 'chart' },
       ] as { h: string; p: string; you: string; visual: 'meet' | 'setup' | 'pin' | 'chart' }[],
       routes: ['Avec nous', 'Seul, en 5 minutes'],
@@ -139,7 +139,7 @@ export const fr = {
         { h: 'Créez votre compte', p: 'En 5 minutes, sans carte bancaire. Votre restaurant et votre caisse sont prêts.', you: 'Vous : un e-mail et un mot de passe', visual: 'signup' },
         { h: 'Photographiez votre carte', p: 'L’IA lit vos plats, vos prix et vos catégories. Vous corrigez si besoin.', you: 'Vous : une photo de votre menu', visual: 'photo' },
         { h: 'Imprimez vos QR codes', p: 'Chaque table a son QR code. La caisse s’ouvre sur un PC, une tablette ou un téléphone.', you: 'Vous : imprimer et poser', visual: 'qr' },
-        { h: '30 jours pour essayer', p: 'Vous testez en vrai service. Sans engagement : vous continuez seulement si ça vous convient.', you: 'Vous : décider après 30 jours', visual: 'chart' },
+        { h: '14 jours pour essayer', p: 'Vous testez en vrai service. Sans engagement : vous continuez seulement si ça vous convient.', you: 'Vous : décider après 14 jours', visual: 'chart' },
       ] as { h: string; p: string; you: string; visual: 'signup' | 'photo' | 'qr' | 'chart' }[],
       selfCta: 'Créer mon restaurant',
       selfNote: 'Sans carte bancaire. Sans engagement.',
@@ -193,8 +193,8 @@ export const fr = {
       products: [['Amplify POS', 'la caisse, dès 199 DH HT / mois'], ['Amplify Profit', 'les marges, dès 249 DH HT / mois']],
     },
     faq: [
-      ['Combien ça coûte ?', 'Les systèmes ont des prix publics : Amplify POS dès 199 DH HT par mois, Amplify Profit dès 249 DH HT, avec 30 jours gratuits et sans engagement. Pour un site ou le marketing, demandez un devis sur WhatsApp.'],
-      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Nous formons votre équipe à l’installation.'],
+      ['Combien ça coûte ?', 'Les systèmes ont des prix publics : Amplify POS dès 199 DH HT par mois, Amplify Profit dès 249 DH HT, avec 14 jours gratuits et sans engagement. Pour un site ou le marketing, demandez un devis sur WhatsApp.'],
+      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Nous formons votre équipe, sur place à Rabat ou en vidéo.'],
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. La gestion des marges, du stock et de l’équipe fonctionne aussi sans notre caisse.'],
       ['Vous travaillez seulement à Rabat ?', 'Notre équipe est à Rabat. Pour le reste du Maroc, écrivez-nous et nous voyons ensemble comment faire.'],      ['Faut-il acheter du matériel ?', 'Non. Un PC, une tablette ou un téléphone avec Chrome suffit pour la caisse. Pour imprimer les tickets, une imprimante ticket standard.'],
       ['Mes données m’appartiennent ?', 'Oui. Vous exportez vos ventes quand vous voulez, et l’abonnement est sans engagement.'],
@@ -231,7 +231,7 @@ export const fr = {
       },
       self: {
         h3: 'Commencez seul',
-        p: 'Votre restaurant prêt en 5 minutes. 30 jours gratuits, sans carte bancaire, sans engagement.',
+        p: 'Votre restaurant prêt en 5 minutes. 14 jours gratuits, sans carte bancaire, sans engagement.',
         steps: ['Créez votre compte', 'Photographiez votre carte', 'Imprimez vos QR codes'],
         cta: 'Créer mon restaurant',
         login: 'Déjà client ? Se connecter',
@@ -253,7 +253,7 @@ export const fr = {
       from: 'Dès',
       per: 'DH HT / mois',
       discover: 'Découvrir',
-      trial: '30 jours gratuits',
+      trial: '14 jours gratuits',
     },
     hero: {
       h1: 'Logiciel de caisse et de gestion pour restaurants au Maroc',
@@ -297,7 +297,7 @@ export const fr = {
       ],
     },
     faq: [
-      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Chaque employé a son code personnel. Nous formons votre équipe à l’installation.'],
+      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Chaque employé a son code personnel. Nous formons votre équipe, sur place à Rabat ou en vidéo.'],
       ['Que se passe-t-il si internet coupe ?', 'La caisse continue de prendre et d’encaisser les commandes. Tout se synchronise dès que la connexion revient.'],
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. Amplify Profit (marges, stock, équipe, charges) fonctionne aussi seul, sans notre caisse.'],
       ['Combien ça coûte ?', 'Le prix dépend de votre établissement et des modules choisis. Demandez un devis sur WhatsApp, la réponse est rapide.'],

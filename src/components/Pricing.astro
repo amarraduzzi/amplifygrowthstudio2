@@ -1,7 +1,12 @@
 ---
 // Plans with a trial link each. Prices come from the product copy.
 import Icon from './Icon.astro';
-import { signupUrl } from '../config';
+import { signupUrl, OFFER } from '../config';
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const yearly = (p: string) => Number(p) * OFFER.yearPaidMonths;
+const fmtN = (n: number) => LG === 'en' ? n.toLocaleString('en-US') : LG === 'ar' ? String(n) : n.toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
 import type { Plan } from '../i18n/products-fr';
 interface Props { plans: Plan[]; per: string; choose: string; popular: string; lang?: string }
 const { plans, per, choose, popular, lang = 'fr' } = Astro.props;
@@ -13,22 +18,41 @@ const { plans, per, choose, popular, lang = 'fr' } = Astro.props;
       <p class={`text-sm font-semibold ${p.featured ? 'text-green' : 'text-green-deep'}`}>{p.tag}</p>
       <h3 class="display mt-1 text-[2rem] leading-none">{p.name}</h3>
       <p class={`mt-1 text-[0.95rem] ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.text}</p>
-      <p class="mt-5 flex items-baseline gap-2"><span class="pr-price display text-6xl tabular-nums" dir="ltr" data-n={p.price}>{p.price}</span><span class={`text-sm ${p.featured ? 'text-white/60' : 'text-muted'}`}>{per}</span></p>
+      <p class="mt-5 flex items-baseline gap-2"><span class="pr-price display text-6xl tabular-nums" dir="ltr" data-n={p.price} data-y={Math.round(yearly(p.price) / 12)}>{p.price}</span><span class={`text-sm ${p.featured ? 'text-white/60' : 'text-muted'}`}>{per}</span></p>
+      <p class={`pr-sub mt-1 min-h-[2.5em] text-xs leading-snug ${p.featured ? 'text-white/60' : 'text-muted'}`}>
+        <span class="pr-m">{tt('Sans engagement, résiliable chaque mois.')}</span>
+        <span class="pr-y hidden"><span class={`font-semibold ${p.featured ? 'text-green' : 'text-green-deep'}`}>{tt('{n} DH par an').replace('{n}', fmtN(yearly(p.price)))}</span> · {tt('au lieu de {n} DH').replace('{n}', fmtN(Number(p.price) * 12))}</span>
+      </p>
       <ul class="mt-5 flex-1 space-y-2 text-[0.95rem]">
         {p.items.map(it => <li class="flex gap-2"><Icon name="check" class={`mt-0.5 size-4 shrink-0 ${p.featured ? 'text-green' : 'text-green-deep'}`} />{it}</li>)}
       </ul>
-      <a href={signupUrl(lang, p.product === 'profit' ? 'profit' : undefined)} class={`mt-6 grid min-h-12 place-items-center rounded-full font-semibold ${p.featured ? 'bg-green text-navy hover:bg-[#04A859]' : 'border border-navy/25 hover:border-navy'}`}>{choose}</a>
+      <a href={signupUrl(lang, p.product === 'profit' ? 'profit' : undefined)} class={`pr-go mt-6 grid min-h-12 place-items-center rounded-full font-semibold ${p.featured ? 'bg-green text-navy hover:bg-[#04A859]' : 'border border-navy/25 hover:border-navy'}`}>{choose}</a>
     </div>
   ))}
 </div>
 
 <script>
+  // monthly / yearly: the prices count to the monthly equivalent of the yearly plan
+  document.addEventListener('amp-billing', (e) => {
+    const year = (e as CustomEvent).detail === 'year';
+    (window as any).__ampYear = year;
+    document.querySelectorAll<HTMLElement>('[data-pricing]').forEach((root) => {
+      root.querySelectorAll<HTMLElement>('.pr-price').forEach((el) => {
+        const from = Number(el.textContent), to = Number(year ? el.dataset.y : el.dataset.n), t0 = performance.now();
+        const step = (t: number) => { const k = Math.min(1, (t - t0) / 500); el.textContent = String(Math.round(from + (to - from) * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
+        requestAnimationFrame(step);
+      });
+      root.querySelectorAll('.pr-m').forEach(x => x.classList.toggle('hidden', year));
+      root.querySelectorAll('.pr-y').forEach(x => x.classList.toggle('hidden', !year));
+      root.querySelectorAll<HTMLAnchorElement>('.pr-go').forEach(a => { const u = new URL(a.href); year ? u.searchParams.set('facturation', 'annuel') : u.searchParams.delete('facturation'); a.href = u.toString(); });
+    });
+  });
   document.querySelectorAll<HTMLElement>('[data-pricing]').forEach((root) => {
     if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) { root.classList.add('in'); return; }
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return; io.disconnect(); root.classList.add('in');
       root.querySelectorAll<HTMLElement>('.pr-price').forEach((el, i) => {
-        const to = Number(el.dataset.n), t0 = performance.now() + i * 110;
+        const to = Number((window as any).__ampYear ? el.dataset.y : el.dataset.n), t0 = performance.now() + i * 110;
         const step = (t: number) => { const k = Math.max(0, Math.min(1, (t - t0) / 900)); el.textContent = String(Math.round(to * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
         requestAnimationFrame(step);
       });

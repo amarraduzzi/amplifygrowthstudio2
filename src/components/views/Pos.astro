@@ -11,6 +11,8 @@ import TryIt from '../TryIt.astro';
 import PhotoBand from '../PhotoBand.astro';
 import Pricing from '../Pricing.astro';
 import PriceBuilder from '../PriceBuilder.astro';
+import BillingToggle from '../BillingToggle.astro';
+import InstallInfo from '../InstallInfo.astro';
 import Faq from '../Faq.astro';
 import ProductFinal from '../ProductFinal.astro';
 import { SITE, signupUrl } from '../../config';
@@ -26,7 +28,7 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
 const title = tt('Logiciel de caisse restaurant au Maroc | Amplify POS');
-const description = tt('Amplify POS : caisse tactile, menu QR, bons cuisine, rapports X et Z. Fonctionne sans internet. Dès 199 DH HT par mois, 30 jours gratuits.');
+const description = tt('Amplify POS : caisse tactile, menu QR, bons cuisine, rapports X et Z. Fonctionne sans internet. Dès 199 DH HT par mois, 14 jours gratuits.');
 const wa = tt('Bonjour, j’ai une question sur Amplify POS.');
 const signup = signupUrl(lang);
 const nFeatures = 40;
@@ -93,7 +95,7 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
     <!-- three facts -->
     <div class="border-y border-line bg-paper">
       <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
-        {[['199', 'DH HT / mois, tout compris'], ['30', 'jours gratuits, sans carte bancaire'], ['0', 'coupure de service si internet tombe']].map(([n, l]) => (
+        {[['199', 'DH HT / mois, tout compris'], ['14', 'jours gratuits, sans carte bancaire'], ['0', 'coupure de service si internet tombe']].map(([n, l]) => (
           <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
         ))}
       </ul>
@@ -118,8 +120,10 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
   <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6">
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.pricing.title}</h2>
     <p class="mt-4 max-w-2xl text-muted">{p.pricing.note}</p>
-    <div class="mt-12"><PriceBuilder lang={lang} /></div>
+    <div class="mt-8"><BillingToggle /></div>
+    <div class="mt-8"><PriceBuilder lang={lang} /></div>
     <div class="mt-5"><Pricing plans={p.pricing.plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.popular} lang={lang} /></div>
+    <div class="mt-5"><InstallInfo /></div>
   </section>
 
   <Faq lang={lang} items={p.faq.items} wa={wa} />

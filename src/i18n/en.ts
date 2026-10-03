@@ -16,10 +16,10 @@ export const en: Copy = {
     langLabel: 'Language',
     chatYou: 'You',
     chatUs: 'Amplify',
-    chatReply: 'Hello, happy to help. Tell us where your business is and we’ll come and see you.',
+    chatReply: 'Hello, happy to help. Tell us where your business is: in Rabat we come and see you, elsewhere we meet on a video call.',
     chatNote: 'The button opens WhatsApp with this message. You can edit it before sending.',
     faqCta: 'Another question? Ask us on WhatsApp.',
-    footerTagline: 'Systems and marketing for businesses in Morocco. A team in Rabat that comes to you.',
+    footerTagline: 'Systems and marketing for businesses in Morocco. On site in Rabat, by video across Morocco.',
     footer: {
       cols: { products: 'Products', services: 'Services', company: 'Amplify', contact: 'Get in touch' },
       pricing: 'Pricing',
@@ -35,16 +35,16 @@ export const en: Copy = {
   home: {
     meta: {
       title: 'Amplify Growth Studio, systems and marketing in Rabat',
-      description: 'POS, margin tracking and marketing that sells, for restaurants and cafés in Morocco. A team in Rabat that comes to you. Message us on WhatsApp.',
+      description: 'POS, margin tracking and marketing that sells, for restaurants and cafés in Morocco. On site in Rabat, by video across Morocco. Message us on WhatsApp.',
     },
     wa: 'Hello, I’d like to know more about Amplify for my restaurant.',
     hero: {
       h1: ['Your business.', 'Simpler.', 'More profitable.'],
-      lead: 'Systems and marketing for businesses in Morocco, starting with food and hospitality. Our team in Rabat comes to you.',
-      leadShort: 'Systems and marketing in Morocco. Our team in Rabat comes to you.',
+      lead: 'Systems and marketing for businesses in Morocco, starting with food and hospitality. On site in Rabat, by video across Morocco.',
+      leadShort: 'Systems and marketing in Morocco. On site in Rabat, by video elsewhere.',
       flow: ['Order received', 'Ticket sent to the kitchen', 'Margin calculated'],
       flowShort: ['Order received', 'In the kitchen', 'Margin calculated'],
-      trial: '30-day free trial',
+      trial: '14-day free trial',
       rating: 'on Google',
       local: 'Team based in Rabat',
       facts: [
@@ -129,9 +129,9 @@ export const en: Copy = {
       h2b: 'is simple.',
       p: 'You talk to people, not software. Here’s how it works.',
       items: [
-        { h: 'We meet', p: 'We visit your venue and look at how you work today.', you: 'You: one meeting', visual: 'meet' },
+        { h: 'We meet', p: 'In Rabat we visit your venue. Elsewhere in Morocco we meet on a video call. We look at how you work today.', you: 'You: one meeting', visual: 'meet' },
         { h: 'We set up', p: 'POS, menu, website or campaign: we configure everything, with your menu and your prices.', you: 'You: nothing, we handle it', visual: 'setup' },
-        { h: 'We train your team', p: 'Every employee gets a personal code. We train the team on site until everyone is comfortable.', you: 'You: bring the team together', visual: 'pin' },
+        { h: 'We train your team', p: 'Every employee gets a personal code. We train the team, on site in Rabat or by video, until everyone is comfortable.', you: 'You: bring the team together', visual: 'pin' },
         { h: 'We follow your numbers', p: 'After that, we stay reachable on WhatsApp and review your results with you.', you: 'You: decide with real numbers', visual: 'chart' },
       ] as { h: string; p: string; you: string; visual: 'meet' | 'setup' | 'pin' | 'chart' }[],
       routes: ['With us', 'On your own, in 5 minutes'],
@@ -139,7 +139,7 @@ export const en: Copy = {
         { h: 'Create your account', p: 'In 5 minutes, no credit card. Your restaurant and your POS are ready.', you: 'You: an email and a password', visual: 'signup' },
         { h: 'Photograph your menu', p: 'AI reads your dishes, prices and categories. You correct anything if needed.', you: 'You: a photo of your menu', visual: 'photo' },
         { h: 'Print your QR codes', p: 'Each table gets its own QR code. The POS opens on a PC, a tablet or a phone.', you: 'You: print and place', visual: 'qr' },
-        { h: '30 days to try it', p: 'Test it during real service. No commitment: you only continue if it works for you.', you: 'You: decide after 30 days', visual: 'chart' },
+        { h: '14 days to try it', p: 'Test it during real service. No commitment: you only continue if it works for you.', you: 'You: decide after 14 days', visual: 'chart' },
       ] as { h: string; p: string; you: string; visual: 'signup' | 'photo' | 'qr' | 'chart' }[],
       selfCta: 'Create my restaurant',
       selfNote: 'No credit card. No commitment.',
@@ -193,8 +193,8 @@ export const en: Copy = {
       products: [['Amplify POS', 'the POS, from 199 DH excl. VAT / month'], ['Amplify Profit', 'your margins, from 249 DH excl. VAT / month']],
     },
     faq: [
-      ['How much does it cost?', 'Our systems have public prices: Amplify POS from 199 DH excl. VAT per month, Amplify Profit from 249 DH excl. VAT, with 30 days free and no commitment. For a website or marketing, ask for a quote on WhatsApp.'],
-      ['Will my team find their way around?', 'The POS is in French and Arabic, with big buttons. We train your team during setup.'],
+      ['How much does it cost?', 'Our systems have public prices: Amplify POS from 199 DH excl. VAT per month, Amplify Profit from 249 DH excl. VAT, with 14 days free and no commitment. For a website or marketing, ask for a quote on WhatsApp.'],
+      ['Will my team find their way around?', 'The POS is in French and Arabic, with big buttons. We train your team, on site in Rabat or by video.'],
       ['Can I keep my current POS?', 'Yes. Margin, stock and team management also works without our POS.'],
       ['Do you only work in Rabat?', 'Our team is in Rabat. For the rest of Morocco, message us and we’ll work out how together.'],      ['Do I need to buy hardware?', 'No. A PC, tablet or phone with Chrome is enough for the POS. To print receipts, a standard receipt printer.'],
       ['Is my data mine?', 'Yes. You export your sales whenever you like, and the subscription has no commitment.'],
@@ -231,7 +231,7 @@ export const en: Copy = {
       },
       self: {
         h3: 'Start on your own',
-        p: 'Your restaurant ready in 5 minutes. 30 days free, no credit card, no commitment.',
+        p: 'Your restaurant ready in 5 minutes. 14 days free, no credit card, no commitment.',
         steps: ['Create your account', 'Photograph your menu', 'Print your QR codes'],
         cta: 'Create my restaurant',
         login: 'Already a customer? Log in',
@@ -253,7 +253,7 @@ export const en: Copy = {
       from: 'From',
       per: 'DH excl. VAT / month',
       discover: 'Discover',
-      trial: '30 days free',
+      trial: '14 days free',
     },
     hero: {
       h1: 'POS and management software for restaurants in Morocco',
@@ -297,7 +297,7 @@ export const en: Copy = {
       ],
     },
     faq: [
-      ['Will my team find their way around?', 'The POS is in French and Arabic, with big buttons. Every employee has a personal code. We train your team during setup.'],
+      ['Will my team find their way around?', 'The POS is in French and Arabic, with big buttons. Every employee has a personal code. We train your team, on site in Rabat or by video.'],
       ['What happens if the internet goes down?', 'The POS keeps taking orders and payments. Everything syncs as soon as the connection is back.'],
       ['Can I keep my current POS?', 'Yes. Amplify Profit (margins, stock, team, costs) also works on its own, without our POS.'],
       ['How much does it cost?', 'The price depends on your venue and the modules you choose. Ask for a quote on WhatsApp, we reply quickly.'],

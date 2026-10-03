@@ -1,0 +1,24 @@
+---
+// Monthly / yearly switch above the prices. Pricing cards and the price calculator listen to it.
+import { tr, langOf } from '../i18n/t';
+import { OFFER } from '../config';
+const tt = tr(langOf(Astro.url));
+const gift = 12 - OFFER.yearPaidMonths;
+---
+<div class="flex flex-wrap items-center gap-3" data-billing>
+  <div class="relative inline-flex rounded-full bg-paper p-1 font-semibold ring-1 ring-line" role="radiogroup" aria-label={tt('Facturation')}>
+    <button type="button" role="radio" aria-checked="true" data-b="month" class="bl-opt rounded-full px-5 py-2.5 transition-colors">{tt('Mensuel')}</button>
+    <button type="button" role="radio" aria-checked="false" data-b="year" class="bl-opt flex items-center gap-2 rounded-full px-5 py-2.5 transition-colors">{tt('Annuel')}<span class="bl-gift rounded-full bg-green px-2 py-0.5 text-xs font-bold text-navy">{tt('{n} mois offerts').replace('{n}', String(gift))}</span></button>
+  </div>
+  <p class="bl-hint text-sm text-muted">{tt('Payez 10 mois, profitez de 12.')}</p>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-billing]').forEach((root) => {
+    const opts = [...root.querySelectorAll<HTMLButtonElement>('.bl-opt')];
+    opts.forEach(o => o.addEventListener('click', () => {
+      opts.forEach(x => x.setAttribute('aria-checked', String(x === o)));
+      document.dispatchEvent(new CustomEvent('amp-billing', { detail: o.dataset.b }));
+    }));
+  });
+</script>

@@ -11,6 +11,7 @@ import ProfitPains from '../ProfitPains.astro';
 import ProfitFeatures from '../ProfitFeatures.astro';
 import ProfitHow from '../ProfitHow.astro';
 import ProfitLoss from '../ProfitLoss.astro';
+import BillingToggle from '../BillingToggle.astro';
 import { SITE, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { posOf, profitOf } from '../../i18n/content';
@@ -26,7 +27,7 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
 const title = tt('Marge et food cost restaurant au Maroc | Amplify Profit');
-const description = tt('Amplify Profit calcule le coût et la marge de chaque plat, et le bon prix de vente. Avec votre caisse actuelle. 30 jours gratuits, sans engagement.');
+const description = tt('Amplify Profit calcule le coût et la marge de chaque plat, et le bon prix de vente. Avec votre caisse actuelle. 14 jours gratuits, sans engagement.');
 const wa = tt('Bonjour, j’ai une question sur Amplify Profit.');
 // illustration: tajine poulet citron, 95 DH TTC (VAT 10 %)
 const COST = 28.2, PRICE = 95, HT = PRICE / 1.1;
@@ -76,7 +77,8 @@ const schema = [
     <h2 class="max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Un seul bon plat mal calculé</span><span class="block text-[#C4282D]">coûte plus cher.</span></h2>
     <p class="mt-4 max-w-2xl text-lg text-muted">{tt('Plus cher que l’abonnement. Faites le calcul vous-même.')} {p.pricing.note}</p>
     <div class="mt-12"><ProfitLoss /></div>
-    <div class="mt-14"><Pricing plans={plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.best} lang={lang} /></div>
+    <div class="mt-14 flex justify-center"><BillingToggle /></div>
+    <div class="mt-6"><Pricing plans={plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.best} lang={lang} /></div>
   </section>
 
   <Faq lang={lang} items={p.faq.items} wa={wa} />

@@ -68,7 +68,7 @@ export const rsFr = {
     ['Ça marche pour un café ou un snack ?', 'Oui. La caisse gère le comptoir, les tables, l’emporter et la livraison. Le marketing s’adapte à votre quartier.'],
     ['Mes employés préfèrent l’arabe.', 'La caisse et l’écran cuisine existent en français et en arabe. Chaque employé choisit sa langue.'],
     ['Je dois tout changer d’un coup ?', 'Non. Vous pouvez commencer par un seul outil, par exemple Amplify Profit avec votre caisse actuelle, et ajouter le reste plus tard.'],
-    ['Vous venez sur place ?', 'Oui, à Rabat et autour. Nous installons la caisse, importons votre carte et formons votre équipe. Ailleurs au Maroc, écrivez-nous.'],
+    ['Vous venez sur place ?', 'À Rabat et autour, oui : nous installons la caisse, importons votre carte et formons votre équipe sur place. Ailleurs au Maroc, nous faisons tout cela avec vous en appel vidéo.'],
   ] as [string, string][],
   final: { h2a: 'Commençons par', h2b: 'votre plus gros problème.', p: 'Un message suffit. Nous vous répondons avec une proposition simple.', cta: 'Écrire sur WhatsApp', chosen: 'Votre diagnostic sera joint au message.' },
 };

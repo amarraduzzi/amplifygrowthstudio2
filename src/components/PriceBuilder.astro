@@ -2,7 +2,7 @@
 // "Dès 199 DH, tout compris": one big price, the included features as pills, and a small
 // calculator: tick what you need, see the plan and its price. Nothing else to pay.
 import Icon from './Icon.astro';
-import { signupUrl } from '../config';
+import { signupUrl, OFFER } from '../config';
 import { posOf } from '../i18n/content';
 import { tr, langOf } from '../i18n/t';
 const LG = langOf(Astro.url);
@@ -14,7 +14,7 @@ const a = posFr.allin;
 // plans by position (same order in every language): essentiel, restaurant, profit, controle
 const plans = Object.fromEntries(posFr.pricing.plans.map((p, i) => [['essentiel', 'restaurant', 'profit', 'controle'][i], p]));
 ---
-<div class="grid gap-5 lg:grid-cols-[1.1fr_1fr]" data-pricebuilder data-plans={JSON.stringify(plans)} data-signup={signupUrl(lang)} data-signup-profit={signupUrl(lang, 'profit')}>
+<div class="grid gap-5 lg:grid-cols-[1.1fr_1fr]" data-pricebuilder data-months={OFFER.yearPaidMonths} data-plans={JSON.stringify(plans)} data-signup={signupUrl(lang)} data-signup-profit={signupUrl(lang, 'profit')}>
   <!-- the anchor -->
   <div class="relative overflow-hidden rounded-[2rem] bg-navy p-7 text-white sm:p-10">
     <p class="text-sm font-semibold text-green">Amplify POS</p>
@@ -77,6 +77,9 @@ const plans = Object.fromEntries(posFr.pricing.plans.map((p, i) => [['essentiel'
       const step = (t: number) => { const k = Math.min(1, (t - t0) / 450); price.textContent = String(Math.round(from + (to - from) * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
       requestAnimationFrame(step); shown = to;
     };
+    let year = false;
+    document.addEventListener('amp-billing', (e) => { year = (e as CustomEvent).detail === 'year'; update(); });
+    const months = Number(root.dataset.months) || 10;
     const update = () => {
       const on = (k: string) => (form.elements.namedItem(k) as HTMLInputElement).checked;
       const till = on('caisse') || on('multi') || on('qr');
@@ -85,7 +88,7 @@ const plans = Object.fromEntries(posFr.pricing.plans.map((p, i) => [['essentiel'
       if (!till && !gestion) return;
       // which plan covers the needs
       const plan = till && gestion ? plans.controle : gestion ? plans.profit : (on('multi') || on('qr')) ? plans.restaurant : plans.essentiel;
-      name.textContent = plan.name; text.textContent = plan.text; count(Number(plan.price));
+      name.textContent = plan.name; text.textContent = plan.text; count(year ? Math.round(Number(plan.price) * months / 12) : Number(plan.price));
       start.href = !till && gestion ? root.dataset.signupProfit! : root.dataset.signup!;
     };
     form.addEventListener('change', update);
