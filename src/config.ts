@@ -4,7 +4,7 @@
 export const SITE = {
   name: 'Amplify Growth Studio',
   /** The real address. Canonical, hreflang, sitemap and schema all come from this. */
-  url: 'https://amplifygrowthstudio.com',
+  url: 'https://www.amplifygrowthstudio.com',
   /**
    * false while the site only lives on amplifygrowthstudio2.pages.dev: no indexing,
    * so Google does not find a copy before the real domain is live. Set to true on launch day.
