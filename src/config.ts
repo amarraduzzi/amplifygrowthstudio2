@@ -9,7 +9,7 @@ export const SITE = {
    * false while the site only lives on amplifygrowthstudio2.pages.dev: no indexing,
    * so Google does not find a copy before the real domain is live. Set to true on launch day.
    */
-  live: false,
+  live: true,
   /** Languages that are finished. A language goes in here only when all its pages exist. */
   languages: ['fr', 'en', 'ar'] as const,
   /** Live demo menu of the fictional café Dar Nour (supabase/demo/dar-nour.sql). */
