@@ -13,7 +13,7 @@ export const SITE = {
   /** Languages that are finished. A language goes in here only when all its pages exist. */
   languages: ['fr', 'en', 'ar'] as const,
   /** Live demo menu of the fictional café Dar Nour (supabase/demo/dar-nour.sql). */
-  demoMenuUrl: 'https://posamplify.pages.dev/dar-nour',
+  demoMenuUrl: 'https://menu.amplifygrowthstudio.com/dar-nour',
   /** where "Voir la démo" goes: the live demo section of the POS page on this site */
   demoUrl: '/amplify-pos/#demo',
 };
@@ -23,8 +23,8 @@ export const SITE = {
  * app.amplifygrowthstudio.com and menu.amplifygrowthstudio.com. Change them here only.
  */
 export const APPS = {
-  admin: 'https://amplify-admin.pages.dev',
-  menu: 'https://posamplify.pages.dev',
+  admin: 'https://app.amplifygrowthstudio.com',
+  menu: 'https://menu.amplifygrowthstudio.com',
 };
 /** Start the free trial. product 'profit' = Amplify Profit alone. */
 export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit') =>

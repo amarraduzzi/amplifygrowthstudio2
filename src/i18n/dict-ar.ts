@@ -395,7 +395,7 @@ export const dictAr: Record<string, string> = {
   "ne dit pas tout.": "لا يقول كل شيء.",
   "ne s’arrête jamais.": "لا يتوقف أبدًا.",
   "noindex, nofollow": "noindex, nofollow",
-  "posamplify.pages.dev/dar-nour": "posamplify.pages.dev/dar-nour",
+  "menu.amplifygrowthstudio.com/dar-nour": "menu.amplifygrowthstudio.com/dar-nour",
   "poulet 300 g = ? DH": "دجاج 300 غ = ؟ درهم",
   "prix de vente ?": "سعر البيع؟",
   "prof": "prof",
