@@ -336,6 +336,8 @@ export const featuresEn = {
         ['Daily break-even', 'The revenue you need each opening day to avoid losing money, and where you stand today.'],
         ['Evening briefing', 'A summary of the day in plain language: what worked, what got stuck, what to do tomorrow.'],
         ['Export for your accountant', 'Your sales in one file your accountant can read, whenever you want.'],
+        ['Live on your phone', 'Today’s revenue against last week at the same hour, open orders, staff on duty, and what deserves a look: big discounts, dishes removed after the kitchen, cash taken out, low stock.'],
+        ['Z report on WhatsApp', 'After closing, the till sends the Z report to the owner on WhatsApp in one tap: revenue, payments, discounts and cash difference.'],
       ],
     },
     {

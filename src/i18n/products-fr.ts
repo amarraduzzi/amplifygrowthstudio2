@@ -339,6 +339,8 @@ export const featuresFr = {
         ['Point mort par jour', 'Le chiffre d’affaires à faire chaque jour d’ouverture pour ne pas perdre d’argent, et où vous en êtes aujourd’hui.'],
         ['Briefing du soir', 'Le résumé de la journée en langage simple : ce qui a marché, ce qui a coincé, quoi faire demain.'],
         ['Export pour le comptable', 'Vos ventes en un fichier lisible par votre comptable, quand vous voulez.'],
+        ['En direct sur votre téléphone', 'Chiffre du jour comparé à la semaine dernière à la même heure, commandes ouvertes, équipe présente, et ce qui mérite un regard : grosses remises, plats retirés après la cuisine, sorties de caisse, stock bas.'],
+        ['Rapport Z sur WhatsApp', 'Après la clôture, la caisse envoie le rapport Z au patron sur WhatsApp en un geste : chiffre, paiements, remises et écart de caisse.'],
       ],
     },
     {
