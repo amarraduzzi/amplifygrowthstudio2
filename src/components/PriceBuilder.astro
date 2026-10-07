@@ -14,7 +14,7 @@ const a = posFr.allin;
 // plans by position (same order in every language): essentiel, restaurant, profit, controle
 const plans = Object.fromEntries(posFr.pricing.plans.map((p, i) => [['essentiel', 'restaurant', 'profit', 'controle'][i], p]));
 ---
-<div class="grid gap-5 lg:grid-cols-[1.1fr_1fr]" data-pricebuilder data-months={OFFER.yearPaidMonths} data-plans={JSON.stringify(plans)} data-signup={signupUrl(lang)} data-signup-profit={signupUrl(lang, 'profit')}>
+<div class="grid gap-5 lg:grid-cols-[1.1fr_1fr]" data-pricebuilder data-months={OFFER.yearPaidMonths} data-plans={JSON.stringify(plans)} data-signup={signupUrl(lang)} data-signup-profit={signupUrl(lang, 'profit')} data-signup-pos={signupUrl(lang, 'pos')}>
   <!-- the anchor -->
   <div class="relative overflow-hidden rounded-[2rem] bg-navy p-7 text-white sm:p-10">
     <p class="text-sm font-semibold text-green">Amplify POS</p>
@@ -89,7 +89,7 @@ const plans = Object.fromEntries(posFr.pricing.plans.map((p, i) => [['essentiel'
       // which plan covers the needs
       const plan = till && gestion ? plans.controle : gestion ? plans.profit : (on('multi') || on('qr')) ? plans.restaurant : plans.essentiel;
       name.textContent = plan.name; text.textContent = plan.text; count(year ? Math.round(Number(plan.price) * months / 12) : Number(plan.price));
-      start.href = !till && gestion ? root.dataset.signupProfit! : root.dataset.signup!;
+      start.href = !till && gestion ? root.dataset.signupProfit! : till && !gestion ? root.dataset.signupPos! : root.dataset.signup!;
     };
     form.addEventListener('change', update);
     update();

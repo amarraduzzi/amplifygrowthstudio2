@@ -52,7 +52,7 @@ const schema = [serviceSchema(`${h.h1a} ${h.h1b}`, c.meta.description, abs(ROUTE
           <p class="mt-6 flex items-baseline gap-2"><span class={`text-sm ${pr.dark ? 'text-white/60' : 'text-muted'}`}>{h.from}</span><span class="display text-5xl" dir="ltr">{pr.price}</span><span class={`text-sm ${pr.dark ? 'text-white/60' : 'text-muted'}`}>{h.per}</span></p>
           <div class="mt-6 flex flex-wrap gap-3">
             <a href={ROUTES[pr.key][lang]} class={`inline-flex min-h-12 items-center rounded-full px-6 font-semibold ${pr.dark ? 'bg-green text-navy hover:bg-[#04A859]' : 'bg-navy text-white hover:bg-blue'}`}>{h.discover} {pr.data.name}</a>
-            <a href={signupUrl(lang, pr.key === 'profit' ? 'profit' : undefined)} class={`inline-flex min-h-12 items-center rounded-full border px-6 ${pr.dark ? 'border-white/30 hover:border-white' : 'border-navy/25 hover:border-navy'}`}>{h.trial}</a>
+            <a href={signupUrl(lang, pr.key === 'profit' ? 'profit' : pr.key === 'pos' ? 'pos' : undefined)} class={`inline-flex min-h-12 items-center rounded-full border px-6 ${pr.dark ? 'border-white/30 hover:border-white' : 'border-navy/25 hover:border-navy'}`}>{h.trial}</a>
           </div>
         </div>
       </article>

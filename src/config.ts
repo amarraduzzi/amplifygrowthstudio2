@@ -26,9 +26,9 @@ export const APPS = {
   admin: 'https://app.amplifygrowthstudio.com',
   menu: 'https://menu.amplifygrowthstudio.com',
 };
-/** Start the free trial. product 'profit' = Amplify Profit alone. */
+/** Start the free trial. product 'pos' or 'profit' = that one alone; nothing = both (Contrôle). */
 export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit') =>
-  `${APPS.admin}/?inscription=1&lang=${lang}${product === 'profit' ? '&produit=profit' : ''}`;
+  `${APPS.admin}/?inscription=1&lang=${lang}${product ? `&produit=${product}` : ''}`;
 export const loginUrl = (lang = 'fr') => `${APPS.admin}/?lang=${lang}`;
 
 export const CONTACT = {

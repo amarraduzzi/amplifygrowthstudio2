@@ -26,7 +26,7 @@ const { plans, per, choose, popular, lang = 'fr' } = Astro.props;
       <ul class="mt-5 flex-1 space-y-2 text-[0.95rem]">
         {p.items.map(it => <li class="flex gap-2"><Icon name="check" class={`mt-0.5 size-4 shrink-0 ${p.featured ? 'text-green' : 'text-green-deep'}`} />{it}</li>)}
       </ul>
-      <a href={signupUrl(lang, p.product === 'profit' ? 'profit' : undefined)} class={`pr-go mt-6 grid min-h-12 place-items-center rounded-full font-semibold ${p.featured ? 'bg-green text-navy hover:bg-[#04A859]' : 'border border-navy/25 hover:border-navy'}`}>{choose}</a>
+      <a href={signupUrl(lang, p.product)} class={`pr-go mt-6 grid min-h-12 place-items-center rounded-full font-semibold ${p.featured ? 'bg-green text-navy hover:bg-[#04A859]' : 'border border-navy/25 hover:border-navy'}`}>{choose}</a>
     </div>
   ))}
 </div>
