@@ -70,3 +70,6 @@ export const REVIEW = {
   text: '[TEXTE ORIGINAL DE L’AVIS GOOGLE]',
   author: 'B N',
 };
+
+/** Restaurant websites (site.amplifygrowthstudio.com): shown on the site once they are live. */
+export const SITES_LIVE = false;

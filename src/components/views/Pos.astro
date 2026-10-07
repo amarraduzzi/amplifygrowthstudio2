@@ -15,7 +15,10 @@ import BillingToggle from '../BillingToggle.astro';
 import InstallInfo from '../InstallInfo.astro';
 import Faq from '../Faq.astro';
 import ProductFinal from '../ProductFinal.astro';
-import { SITE, signupUrl } from '../../config';
+import OwnChannels from '../OwnChannels.astro';
+import OwnerLive from '../OwnerLive.astro';
+import OwnSite from '../OwnSite.astro';
+import { SITE, SITES_LIVE, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { posOf } from '../../i18n/content';
 import { tr, langOf } from '../../i18n/t';
@@ -105,13 +108,21 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
   <!-- offline -->
   <OfflineDemo />
 
+  <!-- own channels: online ordering, bookings, waitlist, kiosk -->
+  <OwnChannels />
+
   <PhotoBand name="pos-service" alt="Le passe d’un restaurant au moment du rush, un serveur emporte les assiettes" kicker="12:30" title="Le rush. La caisse suit." w={1600} h={686} class="pt-24" pos="60% 50%" />
 
   <!-- features: a day of service -->
   <ServiceDay lang={lang} allCta={p.nav.allCta.replace('{n}', `${nFeatures}+`)} profitCta={p.products.profit.cta} />
 
+  <!-- the owner, away from the restaurant -->
+  <OwnerLive />
+
   <!-- languages: switch the till and the menu yourself -->
   <Languages />
+
+  {SITES_LIVE && <OwnSite />}
 
   <!-- live demo -->
   <TryIt lang={lang} id="demo" />

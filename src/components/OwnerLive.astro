@@ -1,0 +1,43 @@
+---
+// "Tout voir, même de loin": the owner's live view on the phone, the Z report on WhatsApp after
+// closing, and the customer display at the till. Real screenshots of demo café Dar Nour.
+import Device from './Device.astro';
+import Icon from './Icon.astro';
+const points = [
+  ['chart', 'En direct sur votre téléphone', 'Le chiffre du jour comparé à la semaine dernière à la même heure, les commandes ouvertes et l’équipe présente.'],
+  ['search', 'Ce qui mérite un regard', 'Grosses remises, plat retiré après la cuisine, sortie de caisse, stock bas : signalés le jour même, avec le nom de l’employé.'],
+  ['phone', 'Le rapport Z sur WhatsApp', 'Après la clôture, un geste et le patron reçoit le chiffre, les paiements et l’écart de caisse.'],
+  ['till', 'L’écran client', 'Le client voit sa commande, le total et la monnaie à rendre. En français et en arabe. Moins de discussions, moins d’erreurs.'],
+] as const;
+---
+<section class="relative overflow-hidden" data-ol>
+  <div class="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[1.05fr_1fr] lg:items-center">
+    <!-- the till's customer display, the owner's phone and the Z on WhatsApp -->
+    <div class="relative order-2 aspect-[1/0.95] lg:order-1" aria-hidden="true">
+      <div class="oc-rv absolute start-0 top-[6%] w-[80%]" style="--d:100ms"><Device src="/img/n-display.webp" alt="" w={1200} h={878} /></div>
+      <div class="oc-rv oc-drop absolute bottom-0 end-[2%] w-[36%]" style="--d:300ms"><Device kind="phone" src="/img/n-live.webp" alt="" w={600} h={1298} class="rotate-[4deg]" /></div>
+      <div class="oc-rv oc-pop absolute bottom-[4%] start-[2%] w-[56%] max-w-[19rem] rounded-2xl rounded-bl-sm bg-[#DCF8C6] p-3 font-sans text-[0.62rem] leading-snug text-[#111B21] shadow-xl sm:text-[0.78rem]" style="--d:700ms">
+        <p class="font-bold">Dar Nour · Rapport Z</p>
+        <p>Chiffre d’affaires : 8 450 DH (112 tickets)</p>
+        <p>· Espèces : 5 120 DH</p>
+        <p>· Carte : 3 330 DH</p>
+        <p>Remises : 180 DH</p>
+        <p>Écart de caisse : 0 DH ✅</p>
+        <p class="mt-1 text-end text-[0.55rem] text-[#667781] sm:text-[0.65rem]">23:42 ✓✓</p>
+      </div>
+      <p class="oc-rv absolute -top-1 end-0 rounded-full bg-paper px-3 py-1 text-[0.65rem] font-semibold text-muted ring-1 ring-line sm:text-xs" style="--d:900ms">Exemple d’illustration</p>
+    </div>
+    <div class="order-1 lg:order-2">
+      <h2 class="oc-rv text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Tout voir.</span><span class="block text-green-deep">Même de loin.</span></h2>
+      <p class="oc-rv mt-5 max-w-md text-lg text-muted" style="--d:80ms">Vous n’êtes pas au restaurant ? Votre téléphone vous dit comment se passe le service, et ce qui doit être vérifié.</p>
+      <ul class="mt-8 space-y-5">
+        {points.map(([i, h, x], k) => (
+          <li class="oc-rv flex gap-4" style={`--d:${120 + k * 90}ms`}>
+            <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-paper text-green-deep ring-1 ring-line"><Icon name={i} class="size-5" /></span>
+            <div><p class="font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,104 @@
+---
+// "Vos commandes, votre marge": own online ordering, bookings, waitlist and kiosk, with real
+// screenshots (demo café Dar Nour) and a calculator where the visitor enters their own numbers.
+import Device from './Device.astro';
+import Icon from './Icon.astro';
+const chips = [['bag', 'Commande en ligne'], ['check', 'Réservations'], ['users', 'File d’attente'], ['till', 'Borne de commande']] as const;
+const points = [
+  ['Votre lien, vos clients', 'À emporter et en livraison depuis Instagram, Google ou WhatsApp. Les commandes arrivent dans la caisse, avec le numéro du client.'],
+  ['Réservations sans coup de fil', 'Le client choisit une heure où il reste de la place. L’accueil confirme depuis la caisse.'],
+  ['La file d’attente sur le téléphone', 'Un QR à l’entrée : le client voit sa place et reçoit un message quand sa table est prête.'],
+  ['Une borne qui prend les commandes', 'Le client commande seul, reçoit un numéro et paie à la caisse. Vos serveurs gagnent du temps.'],
+];
+---
+<section class="oc relative overflow-hidden bg-navy text-white" data-oc>
+  <div class="pointer-events-none absolute -end-40 -top-40 size-[36rem] rounded-full bg-green/20 blur-3xl" aria-hidden="true"></div>
+  <div class="mx-auto grid max-w-6xl gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+    <div class="relative">
+      <p class="oc-rv inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/15"><span class="size-2 rounded-full bg-green"></span>Nouveau</p>
+      <h2 class="oc-rv mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]" style="--d:80ms"><span class="block">Vos commandes.</span><span class="block">Votre marge.</span><span class="block text-green">0 % de commission.</span></h2>
+      <p class="oc-rv mt-5 max-w-md text-lg text-white/75" style="--d:160ms">Vos clients commandent, réservent et font la queue chez vous, pas sur une plateforme. Tout arrive dans la même caisse.</p>
+      <ul class="oc-rv mt-6 flex flex-wrap gap-2" style="--d:240ms">
+        {chips.map(([i, l]) => <li class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-2 text-sm font-semibold ring-1 ring-white/10"><Icon name={i} class="size-4 text-green" />{l}</li>)}
+      </ul>
+    </div>
+
+    <!-- the kiosk, the guest's order and a booking -->
+    <div class="relative aspect-[1/0.92]" aria-hidden="true">
+      <div class="oc-rv oc-land absolute end-0 top-[4%] w-[86%]" style="--d:100ms">
+        <Device src="/img/n-kiosk.webp" alt="" w={1200} h={879} />
+      </div>
+      <div class="oc-rv oc-drop absolute bottom-0 start-0 w-[34%]" style="--d:300ms"><Device kind="phone" src="/img/n-order.webp" alt="" w={600} h={1298} screenBg="#0E0D0B" class="-rotate-[5deg]" /></div>
+      <div class="oc-rv oc-drop absolute bottom-[3%] start-[31%] w-[31%]" style="--d:450ms"><Device kind="phone" src="/img/n-book.webp" alt="" w={600} h={1298} screenBg="#0E0D0B" class="rotate-[3deg]" /></div>
+      <p class="oc-rv oc-pop absolute end-[3%] top-0 flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-bold text-navy shadow-xl sm:text-sm" style="--d:800ms">
+        <span class="grid size-6 place-items-center rounded-full bg-navy text-green sm:size-7"><Icon name="check" class="size-3.5 sm:size-4" /></span>Commande à emporter reçue
+      </p>
+      <p class="oc-rv oc-pop absolute bottom-[30%] end-[2%] rounded-2xl bg-white px-3.5 py-2 text-center text-navy shadow-xl" style="--d:1000ms">
+        <span class="block text-[0.6rem] font-bold uppercase tracking-[0.2em] text-muted">Borne</span><span class="display block text-3xl leading-none">N° 12</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="mx-auto grid max-w-6xl gap-4 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+    {points.map(([h, x], i) => (
+      <div class="oc-rv rounded-3xl bg-white/[0.06] p-6 ring-1 ring-white/10" style={`--d:${i * 90}ms`}>
+        <p class="font-semibold">{h}</p><p class="mt-2 text-sm leading-relaxed text-white/70">{x}</p>
+      </div>
+    ))}
+  </div>
+
+  <!-- calculator: the visitor's own numbers -->
+  <div class="mx-auto max-w-6xl px-4 pb-24 pt-6 sm:px-6">
+    <div class="oc-rv grid gap-8 rounded-[2rem] bg-white p-6 text-navy shadow-[0_40px_80px_-40px_rgba(0,0,0,0.6)] md:grid-cols-[1.2fr_1fr] md:p-10" data-calc>
+      <div>
+        <h3 class="text-[1.9rem] font-semibold leading-tight sm:text-[2.4rem]">Combien vous coûtent les plateformes ?</h3>
+        <p class="mt-2 text-muted">Entrez vos chiffres. Le calcul se fait sur votre téléphone, rien n’est envoyé.</p>
+        <div class="mt-6 space-y-5">
+          <label class="block"><span class="flex justify-between text-sm font-semibold"><span>Commandes par mois via les plateformes</span><b class="tabular-nums" data-out="n"></b></span>
+            <input type="range" min="20" max="2000" step="10" value="300" data-in="n" class="oc-range mt-2 w-full" /></label>
+          <label class="block"><span class="flex justify-between text-sm font-semibold"><span>Panier moyen (DH)</span><b class="tabular-nums" data-out="b"></b></span>
+            <input type="range" min="40" max="500" step="5" value="120" data-in="b" class="oc-range mt-2 w-full" /></label>
+          <label class="block"><span class="flex justify-between text-sm font-semibold"><span>Commission de votre contrat (%)</span><b class="tabular-nums" data-out="c"></b></span>
+            <input type="range" min="5" max="40" step="1" value="25" data-in="c" class="oc-range mt-2 w-full" /></label>
+        </div>
+      </div>
+      <div class="flex flex-col justify-center rounded-3xl bg-chalk p-6 md:p-8">
+        <p class="text-sm font-semibold text-muted">Commission payée chaque mois</p>
+        <p class="display mt-1 text-5xl text-[#C2410C] tabular-nums sm:text-6xl" data-out="m"></p>
+        <p class="mt-3 text-sm font-semibold text-muted">Sur une année</p>
+        <p class="display text-3xl tabular-nums" data-out="y"></p>
+        <p class="mt-5 flex items-center gap-2 rounded-2xl bg-green/15 px-4 py-3 font-semibold text-green-deep"><Icon name="check" class="size-5" />Sur votre propre commande en ligne : 0 DH de commission.</p>
+        <p class="mt-3 text-xs text-muted">Exemple calculé avec vos chiffres. Avec votre propre commande en ligne, la livraison reste à organiser de votre côté.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .js .oc-rv:not(.seen) { opacity: 0; transform: translateY(18px); }
+  .oc-rv.seen { animation: oc-in .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+  .oc-drop.seen { animation-name: oc-drop; }
+  .oc-pop.seen { animation-name: oc-pop; }
+  @keyframes oc-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes oc-drop { from { opacity: 0; transform: translateY(60px) rotate(-3deg); } to { opacity: 1; transform: none; } }
+  @keyframes oc-pop { 0% { opacity: 0; transform: scale(.6); } 70% { transform: scale(1.06); } 100% { opacity: 1; transform: none; } }
+  .oc-range { accent-color: #05B962; height: 1.5rem; }
+  @media (prefers-reduced-motion: reduce) { .js .oc-rv:not(.seen), .oc-rv.seen { opacity: 1; transform: none; animation: none; } }
+</style>
+<script>
+  document.querySelectorAll<HTMLElement>('[data-oc], [data-ol], [data-os]').forEach(root => {
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+    root.querySelectorAll('.oc-rv').forEach(n => io.observe(n));
+  });
+  document.querySelectorAll<HTMLElement>('[data-calc]').forEach(c => {
+    const ar = document.documentElement.lang === 'ar';
+    const fmt = (v: number) => `${String(Math.round(v)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ')} ${ar ? 'درهم' : 'DH'}`;
+    const val = (k: string) => Number((c.querySelector(`[data-in="${k}"]`) as HTMLInputElement).value);
+    const out = (k: string, s: string) => { const el = c.querySelector(`[data-out="${k}"]`); if (el) el.textContent = s; };
+    const run = () => {
+      const n = val('n'), b = val('b'), p = val('c'), m = n * b * p / 100;
+      out('n', String(n)); out('b', fmt(b)); out('c', `${p} %`); out('m', fmt(m)); out('y', fmt(m * 12));
+    };
+    c.querySelectorAll('input').forEach(i => i.addEventListener('input', run)); run();
+  });
+</script>
