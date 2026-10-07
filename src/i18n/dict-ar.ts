@@ -226,6 +226,7 @@ export const dictAr: Record<string, string> = {
   "Marketing": "التسويق",
   "Marrakech": "مراكش",
   "Menu": "القائمة",
+  "En ligne": "عبر الإنترنت",
   "Menu QR": "قائمة QR",
   "Menu importé depuis une photo": "القائمة مستوردة من صورة",
   "Mes marges": "هوامش ربحي",

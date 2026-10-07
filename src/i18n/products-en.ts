@@ -82,8 +82,8 @@ export const posEn = {
       items: ['Customer invoices with ICE', 'Google review QR on every receipt', 'QR menu in French, Arabic and English', 'Works without internet', 'Updates and backups', 'Guided setup by video', 'WhatsApp support with a real person', 'No commitment'],
     },
     plans: [
-      { name: 'Essential', tag: 'Amplify POS', price: '199', text: 'For cafés and snack bars.', product: 'pos', items: ['1 POS', 'View-only QR menu', 'Kitchen and bar tickets', 'X and Z reports', 'French and Arabic'] },
-      { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'For restaurants with table service.', product: 'pos', items: ['Unlimited POS stations', 'QR ordering at the table', 'Tables, zones and transfers', 'Takeaway, delivery, Glovo', 'Works offline'] },
+      { name: 'Essential', tag: 'Amplify POS', price: '199', text: 'For cafés and snack bars.', product: 'pos', items: ['1 POS', 'View-only QR menu', 'Kitchen and bar tickets', 'X and Z reports', 'French and Arabic', 'Bookings and waitlist', 'Happy hours and promo codes'] },
+      { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'For restaurants with table service.', product: 'pos', items: ['Unlimited POS stations', 'QR ordering at the table', 'Tables, zones and transfers', 'Takeaway, delivery, Glovo', 'Works offline', 'Commission-free online ordering', 'Ordering kiosk'] },
       { name: 'Profit', tag: 'Amplify Profit', price: '249', text: 'With your current POS.', items: ['Recipe cards by AI', 'Food cost and margin per dish', 'Suggested price', 'Import your menu from a photo'], product: 'profit' },
       { name: 'Control', tag: 'POS + Profit', price: '499', text: 'All of Restaurant and all of Profit.', items: ['All of Restaurant', 'All of Profit', 'Real margins from the POS', 'AI evening briefing'], featured: true },
     ] as Plan[],
@@ -212,9 +212,9 @@ export const featuresEn = {
   nav: { back: 'Home', pricing: 'Pricing', profit: 'Amplify Profit', login: 'Log in', cta: 'Free trial' },
   hero: {
     kicker: 'All features',
-    title1: 'The most complete system',
+    title1: 'The all-in-one system',
     title2: 'for your restaurant.',
-    text: 'POS, table ordering, QR menu, margins, stock, team, costs. Everything works together, in French and Arabic, and it’s all included in the subscription.',
+    text: 'POS, QR menu, commission-free online ordering, bookings, promotions, live stock, margins, planning and team. Everything works together, in French and Arabic.',
     stats: [['modules', 'connected to each other'], ['features', 'included, no paid add-ons'], ['languages', 'French and Arabic everywhere, QR menu in English too']] as [string, string][],
     cta: 'Try it free for 14 days',
     cta2: 'See pricing',
@@ -242,6 +242,9 @@ export const featuresEn = {
         ['Cash float and cash out', 'Morning float, paying a supplier from the till, bank deposit: expected cash always stays accurate.'],
         ['Personal codes', 'Each employee logs in with their own code. Automatic lock after a few minutes of inactivity.'],
         ['Arabic or French, per employee', 'Each employee picks their language on the POS. Kitchen tickets and receipts stay in the restaurant’s language.'],
+        ['Customer display', 'A tablet or second screen facing the guest shows the order live, the total, then the cash received and the change. In French and Arabic.'],
+        ['House accounts', 'Regulars pay later: a limit per guest, an up-to-date balance, a statement to print or send.'],
+        ['Happy hours and promo codes', '-30% on drinks from 3 to 6 pm, a WELCOME10 code: applied automatically, at the till and online, and shown on the receipt.'],
       ],
     },
     {
@@ -268,6 +271,20 @@ export const featuresEn = {
       ],
     },
     {
+      key: 'online', tag: 'Amplify POS', title: 'Online ordering and bookings',
+      text: 'Your own take-away and delivery orders, without commission, and tables booked from your link.',
+      items: [
+        ['Online ordering without commission', 'Take-away and delivery from your link, on Instagram, Google and WhatsApp. No commission per order.'],
+        ['Pick-up time, delivery area and fees', 'The guest picks "as soon as possible" or a time. Minimum order, delivery fee, free above an amount, shared location.'],
+        ['Pause in one tap', 'Kitchen overloaded? Pause online orders for 15 or 30 minutes from the till.'],
+        ['Confirmation on WhatsApp', 'The till sets the pick-up time and prepares the WhatsApp message to the guest, with a tracking link.'],
+        ['Online bookings', 'Guests only book times with room left. The host confirms, seats or marks no-shows from the till.'],
+        ['Waitlist', 'A QR at the door: guests join, see their place, and get a message when their table is ready.'],
+        ['Ordering kiosk', 'A tablet at the entrance: guests order by themselves, get a number and pay at the till.'],
+        ['Menus by time of day and Ramadan', 'Breakfast in the morning, a Ftour menu at sunset: a category only shows at the hours and dates you choose.'],
+      ],
+    },
+    {
       key: 'margins', tag: 'Amplify Profit', title: 'Margins and recipe cards',
       text: 'What each dish really costs, what it earns you, and the right selling price.',
       items: [
@@ -289,6 +306,9 @@ export const featuresEn = {
         ['Real-time stock', 'Last count + purchases − what was sold (or your average usage without a POS). With the days of stock remaining.'],
         ['Purchase advice', 'What to buy for the coming days, rounded the way you actually buy (half a kilo, a full crate), with the budget.'],
         ['Order list via WhatsApp', 'The list goes to your supplier in one tap. After the purchase, everything is prefilled: you confirm the real prices.'],
+        ['Stock linked to sales, live', 'Every sale deducts the recipe ingredients, options included. A dish turns "sold out" by itself when an ingredient runs out.'],
+        ['Supplier purchase orders', 'A purchase order from the buying advice, sent on WhatsApp. On delivery, stock and prices update, with an alert when a price goes up.'],
+        ['Recorded waste', 'A product thrown away or broken is recorded from the till, with the reason, and counts in the differences.'],
       ],
     },
     {
@@ -302,6 +322,9 @@ export const featuresEn = {
         ['“Watch this” alert', 'When an employee lets far more money slip than the rest of the team, you get notified.'],
         ['Till difference per close', 'The blind count of every close, linked to the manager who did it.'],
         ['Log of every action', 'Changes to prices, menu, hours, discounts, voids: who, what, when. Nothing gets erased.'],
+        ['Weekly planning', 'Who works when, with the planned cost against the expected revenue, day by day. Copy last week in one click and send it to the WhatsApp group.'],
+        ['Late arrivals', 'A clock-in more than 10 minutes after the planned start is flagged.'],
+        ['Tip sharing', 'The tips of a period shared by clocked hours or equally, saved once.'],
       ],
     },
     {
@@ -325,6 +348,7 @@ export const featuresEn = {
         ['Guided setup', 'By video anywhere in Morocco: we check your menu, connect the printer and train your team with you. In Rabat we can also come on site.'],
         ['WhatsApp support', 'A real person who knows your restaurant.'],
         ['No commitment', 'Monthly subscription, cancel anytime. Export your data whenever you want.'],
+        ['Several restaurants', 'The figures of each restaurant side by side, and the menu copied from one to another, each keeping its own prices if you want.'],
       ],
     },
   ] as FeatureModule[],

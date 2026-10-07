@@ -226,6 +226,7 @@ export const dictEn: Record<string, string> = {
   "Marketing": "Marketing",
   "Marrakech": "Marrakech",
   "Menu": "Menu",
+  "En ligne": "Online",
   "Menu QR": "QR menu",
   "Menu importé depuis une photo": "Menu imported from a photo",
   "Mes marges": "My margins",

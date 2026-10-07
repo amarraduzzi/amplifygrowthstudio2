@@ -10,7 +10,7 @@ const f = featuresOf(LG);
 interface Props { icons: Record<string, string> }
 const { icons } = Astro.props;
 const n = f.modules.length;
-const SHORT: Record<string, string> = { pos: 'Caisse', waiter: 'Serveurs', qr: 'Menu QR', margins: 'Marges', stock: 'Stock', team: 'Équipe', money: 'Charges', trust: 'Sécurité' };
+const SHORT: Record<string, string> = { pos: 'Caisse', waiter: 'Serveurs', qr: 'Menu QR', online: 'En ligne', margins: 'Marges', stock: 'Stock', team: 'Équipe', money: 'Charges', trust: 'Sécurité' };
 const pos = f.modules.map((m, i) => {
   const a = (i / n) * Math.PI * 2 - Math.PI / 2;
   return { ...m, x: 50 + Math.cos(a) * 40, y: 50 + Math.sin(a) * 40 };

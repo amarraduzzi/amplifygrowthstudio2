@@ -85,8 +85,8 @@ export const posFr = {
       items: ['Factures clients avec ICE', 'QR avis Google sur chaque ticket', 'Menu QR en français, arabe et anglais', 'Fonctionne sans internet', 'Mises à jour et sauvegardes', 'Installation guidée en vidéo', 'Support WhatsApp avec un vrai interlocuteur', 'Sans engagement'],
     },
     plans: [
-      { name: 'Essentiel', tag: 'Amplify POS', price: '199', text: 'Pour les cafés et snacks.', product: 'pos', items: ['1 caisse', 'Menu QR consultation', 'Bons cuisine et bar', 'Rapports X et Z', 'Français et arabe'] },
-      { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'Pour les restaurants avec service.', product: 'pos', items: ['Caisses illimitées', 'Commande QR à table', 'Tables, zones et transferts', 'À emporter, livraison, Glovo', 'Fonctionne hors ligne'] },
+      { name: 'Essentiel', tag: 'Amplify POS', price: '199', text: 'Pour les cafés et snacks.', product: 'pos', items: ['1 caisse', 'Menu QR consultation', 'Bons cuisine et bar', 'Rapports X et Z', 'Français et arabe', 'Réservations et file d’attente', 'Happy hours et codes promo'] },
+      { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'Pour les restaurants avec service.', product: 'pos', items: ['Caisses illimitées', 'Commande QR à table', 'Tables, zones et transferts', 'À emporter, livraison, Glovo', 'Fonctionne hors ligne', 'Commande en ligne sans commission', 'Borne de commande'] },
       { name: 'Profit', tag: 'Amplify Profit', price: '249', text: 'Avec votre caisse actuelle.', items: ['Fiches techniques par l’IA', 'Food cost et marge par plat', 'Prix conseillé', 'Import de votre carte en photo'], product: 'profit' },
       { name: 'Contrôle', tag: 'POS + Profit', price: '499', text: 'Tout Restaurant et tout Profit.', items: ['Tout Restaurant', 'Tout Profit', 'Marges réelles depuis la caisse', 'Briefing du soir avec l’IA'], featured: true },
     ] as Plan[],
@@ -215,9 +215,9 @@ export const featuresFr = {
   nav: { back: 'Accueil', pricing: 'Tarifs', profit: 'Amplify Profit', login: 'Se connecter', cta: 'Essai gratuit' },
   hero: {
     kicker: 'Toutes les fonctionnalités',
-    title1: 'Le système le plus complet',
+    title1: 'Le système tout-en-un',
     title2: 'pour votre restaurant.',
-    text: 'Caisse, commande à table, menu QR, marges, stock, équipe, charges. Tout parle ensemble, en français et en arabe, et tout est compris dans l’abonnement.',
+    text: 'Caisse, menu QR, commande en ligne sans commission, réservations, promotions, stock en direct, marges, planning et équipe. Tout parle ensemble, en français et en arabe.',
     stats: [['modules', 'reliés entre eux'], ['fonctions', 'incluses, sans option payante'], ['langues', 'français et arabe partout, menu QR aussi en anglais']] as [string, string][],
     cta: 'Essayer 14 jours gratuitement',
     cta2: 'Voir les tarifs',
@@ -245,6 +245,9 @@ export const featuresFr = {
         ['Fond de caisse et sorties', 'Fond du matin, paiement d’un fournisseur depuis la caisse, dépôt en banque : les espèces attendues restent justes.'],
         ['Codes personnels', 'Chaque employé entre avec son code. Verrouillage automatique après quelques minutes sans activité.'],
         ['Arabe ou français, par employé', 'Chaque employé choisit sa langue sur la caisse. Les bons cuisine et les tickets restent dans la langue du restaurant.'],
+        ['Écran client', 'Une tablette ou un 2e écran tourné vers le client affiche la commande en direct, le total, puis le montant reçu et la monnaie à rendre. En français et en arabe.'],
+        ['Ardoise client', 'Les habitués paient plus tard : plafond par client, solde à jour, relevé à imprimer ou à envoyer.'],
+        ['Happy hours et codes promo', '-30 % sur les boissons de 15 h à 18 h, un code BIENVENUE10 : appliqués tout seuls, à la caisse comme en ligne, et visibles sur le ticket.'],
       ],
     },
     {
@@ -271,6 +274,20 @@ export const featuresFr = {
       ],
     },
     {
+      key: 'online', tag: 'Amplify POS', title: 'Commande en ligne et réservations',
+      text: 'Vos propres commandes à emporter et en livraison, sans commission, et vos tables réservées depuis votre lien.',
+      items: [
+        ['Commande en ligne sans commission', 'À emporter et en livraison depuis votre lien, sur Instagram, Google et WhatsApp. Aucune commission par commande.'],
+        ['Heure de retrait, zone et frais de livraison', 'Le client choisit « dès que possible » ou une heure. Minimum de commande, frais de livraison, gratuit à partir d’un montant, position partagée.'],
+        ['Pause en un geste', 'Trop de monde en cuisine ? Mettez les commandes en ligne en pause 15 ou 30 minutes depuis la caisse.'],
+        ['Confirmation par WhatsApp', 'La caisse donne l’heure de retrait et prépare le message WhatsApp au client, avec son lien de suivi.'],
+        ['Réservations en ligne', 'Le client réserve uniquement aux heures où il reste de la place. L’accueil confirme, installe ou note les absences depuis la caisse.'],
+        ['File d’attente', 'Un QR à l’entrée : le client s’inscrit, voit sa place, et reçoit le message quand sa table est prête.'],
+        ['Borne de commande', 'Une tablette à l’entrée : le client commande seul, reçoit un numéro et paie à la caisse.'],
+        ['Menus selon l’heure et Ramadan', 'Petit-déjeuner le matin, menu Ftour au coucher du soleil : une catégorie n’apparaît qu’aux heures et aux dates choisies.'],
+      ],
+    },
+    {
       key: 'margins', tag: 'Amplify Profit', title: 'Marges et fiches techniques',
       text: 'Ce que coûte vraiment chaque plat, ce qu’il vous rapporte, et le bon prix de vente.',
       items: [
@@ -292,6 +309,9 @@ export const featuresFr = {
         ['Stock en temps réel', 'Dernier comptage + achats − ce qui est vendu (ou votre consommation moyenne sans caisse). Avec les jours de stock restants.'],
         ['Conseil d’achat', 'Ce qu’il faut acheter pour les prochains jours, arrondi comme on achète (demi-kilo, caisse entière), avec le budget.'],
         ['Liste de commande par WhatsApp', 'La liste part au fournisseur en un geste. Après l’achat, tout est prérempli : vous confirmez les vrais prix.'],
+        ['Stock lié aux ventes, en direct', 'Chaque vente déduit les ingrédients de la recette, options comprises. Un plat passe « épuisé » tout seul quand il manque un ingrédient.'],
+        ['Bons de commande fournisseurs', 'Un bon de commande depuis le conseil d’achat, envoyé par WhatsApp. À la réception, le stock et les prix se mettent à jour, avec une alerte si un prix monte.'],
+        ['Pertes déclarées', 'Un produit jeté ou cassé se déclare depuis la caisse, avec le motif, et compte dans les écarts.'],
       ],
     },
     {
@@ -305,6 +325,9 @@ export const featuresFr = {
         ['Alerte « à surveiller »', 'Quand un employé laisse partir bien plus d’argent que le reste de l’équipe, vous êtes prévenu.'],
         ['Écart de caisse par clôture', 'Le comptage à l’aveugle de chaque clôture, rattaché au manager qui l’a faite.'],
         ['Journal de toutes les actions', 'Modifications de prix, de menu, d’heures, remises, annulations : qui, quoi, quand. Rien ne s’efface.'],
+        ['Planning de la semaine', 'Qui travaille quand, avec le coût prévu face au chiffre attendu, jour par jour. Reprendre la semaine précédente en un clic et l’envoyer au groupe WhatsApp.'],
+        ['Retards', 'Une arrivée pointée plus de 10 minutes après le début prévu est signalée.'],
+        ['Partage des pourboires', 'Les pourboires de la période partagés selon les heures pointées ou à parts égales, enregistrés une seule fois.'],
       ],
     },
     {
@@ -328,6 +351,7 @@ export const featuresFr = {
         ['Installation guidée', 'En vidéo partout au Maroc : nous vérifions votre carte, branchons l’imprimante et formons votre équipe avec vous. À Rabat, nous pouvons aussi venir sur place.'],
         ['Support WhatsApp', 'Un vrai interlocuteur qui connaît votre restaurant.'],
         ['Sans engagement', 'Abonnement mensuel, résiliable à tout moment. Vos données s’exportent quand vous voulez.'],
+        ['Plusieurs restaurants', 'Les chiffres de chaque restaurant côte à côte, et la carte copiée d’un restaurant à l’autre, chacun gardant ses prix s’il le veut.'],
       ],
     },
   ] as FeatureModule[],
