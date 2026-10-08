@@ -320,44 +320,121 @@ const schema = [
     </ol>
   </section>
 
-  <!-- what is included -->
-  <section class="border-y border-line bg-paper" data-as>
+  <!-- what is included: a bento of small live scenes -->
+  <section class="relative overflow-hidden border-y border-line bg-paper" data-as data-bento>
     <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
       <h2 class="as-rv max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Tout ce qu’un client cherche</span><span class="block text-green-deep">avant de venir.</span></h2>
-      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {included.map(([i, h, x], k) => (
-          <div class="as-rv rounded-3xl bg-chalk p-6 ring-1 ring-line" style={`--d:${(k % 3) * 90}ms`}>
-            <Icon name={i} class="size-6 text-green-deep" /><p class="mt-3 text-lg font-semibold">{h}</p><p class="mt-1 leading-relaxed text-muted">{x}</p>
+      <div class="mt-12 grid gap-4 lg:grid-cols-6 lg:grid-rows-[auto_auto_auto]" aria-hidden="true">
+        <!-- Google -->
+        <div class="as-rv relative overflow-hidden rounded-[2rem] bg-navy p-7 text-white lg:col-span-4">
+          <div class="pointer-events-none absolute -end-20 -top-20 size-72 rounded-full bg-green/20 blur-3xl"></div>
+          <p class="relative text-2xl font-semibold">Trouvé sur Google</p>
+          <p class="relative mt-1 max-w-md text-white/70">Votre carte, vos horaires et votre adresse, lisibles par Google et par Google Maps.</p>
+          <div class="relative mt-6 rounded-2xl bg-white p-4 text-navy shadow-xl">
+            <p class="flex items-center gap-2 text-sm text-muted"><svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><span data-typer={tt('café brunch Agdal|meilleur msemen Rabat|tajine ouvert maintenant')}></span><span class="caret">|</span></p>
+            <div class="bn-hit mt-3 flex items-center gap-3 rounded-xl bg-chalk p-3">
+              <span class="grid size-10 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="store" class="size-5" /></span>
+              <span class="min-w-0 flex-1"><b class="block">Dar Nour</b><span class="block truncate text-sm text-muted">darnour.ma · Carte · Itinéraire · Appeler</span></span>
+              <span class="rounded-full bg-green/15 px-2.5 py-1 text-xs font-bold text-green-deep">N° 1</span>
+            </div>
           </div>
-        ))}
+        </div>
+        <!-- the phone, scrolling through the menu -->
+        <div class="as-rv relative flex flex-col overflow-hidden rounded-[2rem] bg-green p-7 text-navy lg:col-span-2 lg:row-span-2" style="--d:90ms">
+          <p class="text-2xl font-semibold">Parfait sur téléphone</p>
+          <p class="mt-1">Appeler, l’itinéraire, la carte, commander : au pouce.</p>
+          <div class="mx-auto mt-6 w-[62%] max-w-[13rem] flex-1 lg:w-[78%]">
+            <div class="rounded-[2rem] bg-[#0B1422] p-1.5 shadow-[0_30px_60px_-25px_rgba(0,30,62,0.7)]">
+              <div class="relative aspect-[390/780] overflow-hidden rounded-[1.6rem] bg-white">
+                <img src="/img/s-phone-long.webp" alt="" width="500" height="3333" loading="lazy" decoding="async" class="bn-scroll absolute inset-x-0 top-0 w-full" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- prices that change -->
+        <div class="as-rv rounded-[2rem] bg-chalk p-7 ring-1 ring-line lg:col-span-2" style="--d:120ms">
+          <p class="text-xl font-semibold">Votre carte à jour</p>
+          <p class="mt-1 text-sm text-muted">Un prix change dans votre espace, le site suit.</p>
+          <div class="mt-5 rounded-2xl bg-paper p-4 ring-1 ring-line">
+            <p class="flex items-baseline gap-2"><x-notr>Thé à la menthe</x-notr><span class="flex-1 border-b border-dotted border-navy/25"></span>
+              <span class="bn-price relative inline-block h-6 w-24 overflow-hidden whitespace-nowrap text-end font-bold tabular-nums"><span class="absolute inset-x-0 top-0">16 DH</span><span class="absolute inset-x-0 top-full text-green-deep">18 DH</span></span></p>
+            <p class="bn-toast mt-3 inline-flex items-center gap-1.5 rounded-full bg-green px-3 py-1 text-xs font-bold text-navy"><Icon name="check" class="size-3.5" />Mis à jour sur le site</p>
+          </div>
+        </div>
+        <!-- three languages -->
+        <div class="as-rv rounded-[2rem] bg-chalk p-7 ring-1 ring-line lg:col-span-2" style="--d:160ms">
+          <p class="text-xl font-semibold">Trois langues</p>
+          <p class="mt-1 text-sm text-muted">Les touristes comme les habitués lisent dans leur langue.</p>
+          <x-notr><div class="bn-words mt-5 h-16 overflow-hidden" dir="ltr"><div class="bn-words-in display text-[3.2rem] text-green-deep">{['La carte', 'Menu', 'القائمة', 'La carte'].map(w => <p class="block h-16 overflow-hidden whitespace-nowrap" style={`line-height:4rem;${w === 'القائمة' ? "font-family:'Readex Pro Variable',sans-serif;font-weight:700" : ''}`}>{w}</p>)}</div></div></x-notr>
+        </div>
+        <!-- open now, on Moroccan time -->
+        <div class="as-rv relative overflow-hidden rounded-[2rem] bg-[#001E3E] p-7 text-white lg:col-span-3" style="--d:90ms">
+          <p class="text-xl font-semibold">Ouvert ou fermé, en direct</p>
+          <p class="mt-1 text-sm text-white/65">Calculé à l’heure du Maroc, à chaque visite.</p>
+          <div class="mt-6 flex items-end justify-between gap-4">
+            <p class="display text-6xl tabular-nums" data-clock dir="ltr">12:00</p>
+            <p class="mb-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 font-semibold"><span class="bn-dot size-2.5 rounded-full bg-green"></span><span data-open>Ouvert maintenant</span></p>
+          </div>
+          <p class="mt-2 text-xs text-white/40">Exemple : ouvert de 08:00 à 23:00.</p>
+        </div>
+        <!-- your name, your domain -->
+        <div class="as-rv rounded-[2rem] bg-chalk p-7 ring-1 ring-line lg:col-span-3" style="--d:130ms">
+          <p class="text-xl font-semibold">À votre nom</p>
+          <p class="mt-1 text-sm text-muted">Votre logo, vos photos, et votre propre domaine si vous le souhaitez.</p>
+          <div class="mt-6 flex items-center gap-3 rounded-full bg-navy px-5 py-3 text-white" dir="ltr">
+            <span class="flex gap-1.5"><span class="size-2.5 rounded-full bg-[#FF5F57]"></span><span class="size-2.5 rounded-full bg-[#FEBC2E]"></span><span class="size-2.5 rounded-full bg-[#28C840]"></span></span>
+            <span class="flex-1 truncate font-medium">https://<span class="text-green" data-typer="www.dar-nour.ma|www.chez-karim.ma|www.le-patio-rabat.ma"></span><span class="caret">|</span></span>
+          </div>
+          <div class="mt-4 flex gap-2">{['#1E5B4F', '#C9A15A', '#2540C9', '#C2410C', '#16181D'].map((c, i) => <span class="bn-sw size-8 rounded-full ring-2 ring-white" style={`background:${c};--i:${i}`}></span>)}</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- pricing -->
-  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6" data-as>
-    <h2 class="as-rv max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Moins cher qu’un flyer.</span><span class="block text-green-deep">Visible toute l’année.</span></h2>
-    <p class="as-rv mt-4 max-w-2xl text-lg text-muted" style="--d:80ms">Un seul abonnement. Hébergement, mises à jour et sécurité compris.</p>
-    <div class="mt-12 grid gap-5 lg:grid-cols-2">
-      <div class="as-rv flex flex-col rounded-[2rem] bg-paper p-8 ring-1 ring-line">
-        <p class="text-lg font-semibold">Je le fais moi-même</p>
-        <p class="mt-1 text-muted">Une photo de votre carte, une photo de votre salle, un style. Dix minutes suffisent.</p>
-        <p class="mt-6 flex items-end gap-2"><span class="display text-6xl tabular-nums">{OFFER.siteMonthly}</span><span class="pb-2 font-semibold">DH / mois</span></p>
-        <p class="text-sm text-muted">Création gratuite. 14 jours offerts.</p>
-        <ul class="mt-6 flex-1 space-y-2.5">{['Votre carte importée depuis une photo', 'Les trois styles, à changer quand vous voulez', 'Commandes sur WhatsApp', 'Français, arabe, anglais'].map(x => <li class="flex items-start gap-2.5"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green-deep" />{x}</li>)}</ul>
-        <a href={signup} class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-navy/90">Créer mon site gratuitement</a>
+  <!-- pricing: the receipt prints itself -->
+  <section id="tarifs" class="relative scroll-mt-20 overflow-hidden bg-navy text-white" data-as>
+    <div class="pointer-events-none absolute -start-40 bottom-0 size-[36rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
+    <div class="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
+      <div>
+        <h2 class="as-rv text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Moins cher qu’un flyer.</span><span class="block text-green">Visible toute l’année.</span></h2>
+        <p class="as-rv mt-5 max-w-lg text-lg text-white/75" style="--d:80ms">Un flyer finit à la poubelle. Votre site travaille pour vous chaque jour, sur Google, sur Instagram et sur WhatsApp.</p>
+        <div class="as-rv mt-8 flex flex-wrap gap-3" style="--d:140ms">
+          <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-pricing" class="cta-glow inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Je veux mon site à 250 DH</a>
+        </div>
+        <!-- doing it yourself -->
+        <div class="as-rv mt-10 rounded-[1.8rem] bg-white/[0.06] p-6 ring-1 ring-white/15" style="--d:200ms">
+          <div class="flex flex-wrap items-end justify-between gap-4">
+            <div><p class="font-semibold">Je le fais moi-même</p><p class="text-sm text-white/65">Une photo de votre carte, un style. Dix minutes.</p></div>
+            <p class="display text-5xl leading-none">0 <span class="text-2xl">DH</span></p>
+          </div>
+          <p class="mt-3 text-sm text-white/65">Création gratuite, 14 jours offerts, puis {OFFER.siteMonthly} DH par mois.</p>
+          <a href={signup} class="mt-4 inline-flex min-h-11 items-center rounded-full border border-white/30 px-5 font-semibold hover:border-white">Créer mon site gratuitement</a>
+        </div>
       </div>
-      <div class="as-rv relative flex flex-col rounded-[2rem] bg-navy p-8 text-white lg:order-first" style="--d:120ms">
-        <p class="absolute end-6 top-6 rounded-full bg-green px-3 py-1 text-sm font-bold text-navy">Offre de lancement</p>
-        <p class="text-lg font-semibold">On le fait pour vous</p>
-        <p class="mt-1 max-w-sm text-white/70">Envoyez-nous votre carte et vos photos sur WhatsApp. Nous vous rendons un site prêt.</p>
-        <p class="mt-6 flex items-end gap-2"><span class="display text-[5.5rem] leading-none text-green tabular-nums">{OFFER.siteSetup}</span><span class="pb-2 font-semibold">DH, une fois</span></p>
-        <p class="text-sm text-white/60">Puis {OFFER.siteMonthly} DH par mois.</p>
-        <ul class="mt-6 flex-1 space-y-2.5 text-white/85">{['Votre carte saisie par nous, à partir d’une photo', 'Jusqu’à 10 photos mises en valeur', 'Les trois langues relues', 'Une série de corrections comprise'].map(x => <li class="flex items-start gap-2.5"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green" />{x}</li>)}</ul>
-        <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-pricing" class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Demander sur WhatsApp</a>
+      <!-- the receipt -->
+      <div class="as-rv relative mx-auto w-full max-w-sm" style="--d:120ms" data-receipt>
+        <div class="relative z-10 h-6 rounded-full bg-[#0B1422] shadow-[inset_0_-3px_0_rgba(255,255,255,.08)] ring-1 ring-white/10"></div>
+        <div class="-mt-3 overflow-hidden px-3">
+          <div class="rc-paper relative bg-[#FFFDF8] px-4 pb-8 pt-8 font-mono text-[0.78rem] sm:px-6 sm:text-[0.92rem] text-[#1B1B1B] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.7)]" dir="ltr">
+            <span class="rc-badge absolute -end-2 -top-1 z-20 rotate-[10deg] rounded-full bg-green px-3 py-1 font-sans text-xs font-bold text-navy">Offre de lancement</span>
+            <p class="rc-line text-center font-sans text-lg font-bold" style="--l:0">AMPLIFY SITE</p>
+            <p class="rc-line text-center text-xs text-[#6B6B6B]" style="--l:1">On le fait pour vous</p>
+            <p class="rc-line my-3 border-t border-dashed border-[#1B1B1B]/30" style="--l:2"></p>
+            {[['Site créé pour vous', '250,00'], ['Carte depuis une photo', 'inclus'], ['Jusqu’à 10 photos', 'inclus'], ['3 langues relues', 'inclus'], ['1 série de corrections', 'inclus'], ['Commandes WhatsApp', 'inclus']].map(([k, v], i) => (
+              <p class="rc-line flex gap-2 py-0.5" style={`--l:${i + 3}`}><span>{k}</span><span class="flex-1 overflow-hidden whitespace-nowrap text-[#1B1B1B]/30">........................................</span><span class={v === 'inclus' ? 'text-green-deep' : ''}>{v}</span></p>
+            ))}
+            <p class="rc-line my-3 border-t border-dashed border-[#1B1B1B]/30" style="--l:9"></p>
+            <p class="rc-line flex items-end justify-between" style="--l:10"><span class="font-sans text-lg font-bold">TOTAL</span><span class="font-sans"><span class="display text-6xl leading-none text-navy">250</span> <b>DH</b></span></p>
+            <p class="rc-line mt-1 text-end text-xs text-[#6B6B6B]" style="--l:11">une seule fois, puis 100 DH / mois</p>
+            <p class="rc-line mt-5 text-center text-xs text-[#6B6B6B]" style="--l:12">Merci et bon service</p>
+            <div class="rc-line mt-3 flex h-10 items-end justify-center gap-[2px]" style="--l:13">{Array.from({ length: 44 }, (_, i) => <span class="bg-[#1B1B1B]" style={`width:${[1, 2, 1, 3, 1, 1, 2][i % 7]}px;height:${i % 5 ? 100 : 80}%`}></span>)}</div>
+          </div>
+        </div>
       </div>
     </div>
-    <p class="as-rv mt-5 flex flex-wrap items-center gap-2 rounded-2xl bg-paper px-5 py-4 ring-1 ring-line"><Icon name="store" class="size-5 text-green-deep" /><b>Votre propre domaine</b><span class="text-muted">Vous avez déjà un domaine, par exemple www.monrestaurant.ma ? Nous le relions à votre site : {OFFER.siteDomain} DH, une seule fois.</span></p>
+    <div class="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+      <p class="as-rv flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl bg-white/[0.06] px-5 py-4 ring-1 ring-white/10"><Icon name="store" class="size-5 text-green" /><b>Votre propre domaine</b><span class="text-white/70">Vous avez déjà un domaine, par exemple www.monrestaurant.ma ? Nous le relions à votre site : {OFFER.siteDomain} DH, une seule fois.</span></p>
+    </div>
   </section>
 
   <!-- the next step: the till -->
@@ -464,6 +541,37 @@ const schema = [
   [data-search].play .ai-q { animation: as-in .5s both; animation-delay: .3s; }
   [data-search].play .ai-typing { animation: typing-in-out 1.6s ease both; animation-delay: .9s; }
   [data-search].play .ai-a { animation: as-in .6s cubic-bezier(.2,.8,.2,1) both; animation-delay: 2.5s; }
+  /* bento scenes */
+  .bn-scroll { animation: bn-scroll 16s ease-in-out infinite alternate; }
+  @keyframes bn-scroll { 0%, 8% { transform: translateY(0); } 92%, 100% { transform: translateY(calc(-100% + 100cqh)); } }
+  [data-bento] .aspect-\[390\/780\] { container-type: size; }
+  .bn-price > span { transition: transform .5s cubic-bezier(.2,.8,.2,1); animation: bn-flip 6s infinite; }
+  @keyframes bn-flip { 0%, 45% { transform: none; } 50%, 95% { transform: translateY(-100%); } 100% { transform: none; } }
+  .bn-toast { animation: bn-toast 6s infinite; }
+  @keyframes bn-toast { 0%, 48% { opacity: 0; transform: translateY(6px); } 54%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+  .bn-words-in { animation: bn-words 7.5s cubic-bezier(.7,0,.3,1) infinite; }
+  @keyframes bn-words { 0%, 26% { transform: translateY(0); } 33%, 59% { transform: translateY(-4rem); } 66%, 92% { transform: translateY(-8rem); } 100% { transform: translateY(-12rem); } }
+  .bn-dot { box-shadow: 0 0 0 0 rgba(5,185,98,.7); animation: ping 1.6s ease-out infinite; }
+  .bn-dot.off { background: #F47171; box-shadow: none; animation: none; }
+  .bn-sw { animation: bn-sw 5s ease-in-out infinite; animation-delay: calc(var(--i) * .25s); }
+  @keyframes bn-sw { 0%, 70%, 100% { transform: none; } 80% { transform: translateY(-8px) scale(1.12); } }
+  .bn-hit { animation: bn-hit 4.5s ease-in-out infinite; }
+  @keyframes bn-hit { 0%, 55% { box-shadow: 0 0 0 0 rgba(5,185,98,0); } 65% { box-shadow: 0 0 0 4px rgba(5,185,98,.45); } 100% { box-shadow: 0 0 0 0 rgba(5,185,98,0); } }
+  /* receipt */
+  .rc-paper { --zz: 10px; -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--zz) 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / var(--zz) 100%; }
+  .js [data-receipt] .rc-paper { transform: translateY(-101%); }
+  [data-receipt].seen .rc-paper { animation: rc-print 2.6s steps(26, end) .2s forwards; }
+  @keyframes rc-print { to { transform: none; } }
+  .js [data-receipt] .rc-line { opacity: 0; }
+  [data-receipt].seen .rc-line { animation: as-in .35s ease both; animation-delay: calc(.4s + var(--l) * .17s); }
+  .rc-badge { opacity: 0; }
+  [data-receipt].seen .rc-badge { animation: rc-stamp .5s cubic-bezier(.2,1.6,.4,1) 3s both; }
+  @keyframes rc-stamp { from { opacity: 0; transform: rotate(10deg) scale(2.4); } to { opacity: 1; transform: rotate(10deg) scale(1); } }
+  @media (prefers-reduced-motion: reduce) {
+    .bn-scroll, .bn-price > span, .bn-toast, .bn-words-in, .bn-dot, .bn-sw, .bn-hit { animation: none; }
+    .bn-toast { opacity: 1; }
+    .js [data-receipt] .rc-paper, .js [data-receipt] .rc-line, .rc-badge { transform: none; opacity: 1; animation: none !important; }
+  }
   @media (prefers-reduced-motion: reduce) {
     .price-stamp, .cta-glow, .mq-track, .caret { animation: none; }
     .bar { height: var(--h); transition: none; }
@@ -478,7 +586,7 @@ const schema = [
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
-  document.querySelectorAll('.as-rv, [data-chat], [data-bars]').forEach(n => io.observe(n));
+  document.querySelectorAll('.as-rv, [data-chat], [data-bars], [data-receipt]').forEach(n => io.observe(n));
   // numbers that count up when they come into view
   const fmtN = (v: number, dec: number) => v.toFixed(dec).replace('.', document.documentElement.lang === 'en' ? '.' : ',');
   const cio = new IntersectionObserver(es => es.forEach(e => {
@@ -490,6 +598,30 @@ const schema = [
     requestAnimationFrame(step);
   }), { threshold: 0.6 });
   document.querySelectorAll('[data-count]').forEach(n => cio.observe(n));
+  // small typers that cycle through a few texts
+  document.querySelectorAll<HTMLElement>('[data-typer]').forEach(el => {
+    const words = (el.dataset.typer ?? '').split('|'); el.textContent = words[0];
+    if (still) return;
+    let w = 0, i = words[0].length, back = false, pause = 0;
+    setInterval(() => {
+      if (pause) { pause--; return; }
+      const word = words[w];
+      if (!back) { i++; if (i > word.length) { back = true; pause = 30; return; } }
+      else { i--; if (i < 0) { back = false; w = (w + 1) % words.length; i = 0; pause = 4; return; } }
+      el.textContent = words[w].slice(0, Math.max(0, i));
+    }, 60);
+  });
+  // the live clock in Morocco, and open or closed for 08:00 to 23:00
+  document.querySelectorAll<HTMLElement>('[data-clock]').forEach(el => {
+    const card = el.closest('div')!.parentElement!, label = card.querySelector<HTMLElement>('[data-open]')!, dot = card.querySelector<HTMLElement>('.bn-dot')!;
+    const open = label.textContent, closed = document.documentElement.lang === 'ar' ? 'مغلق الآن' : document.documentElement.lang === 'en' ? 'Closed now' : 'Fermé maintenant';
+    const tick = () => {
+      const hm = new Intl.DateTimeFormat('en-GB', { timeZone: 'Africa/Casablanca', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
+      el.textContent = hm; const on = hm >= '08:00' && hm < '23:00';
+      label.textContent = on ? open : closed; dot.classList.toggle('off', !on);
+    };
+    tick(); setInterval(tick, 15000);
+  });
   // the search types itself, the results and the AI answer follow; again each time it comes back into view
   document.querySelectorAll<HTMLElement>('[data-search]').forEach(root => {
     const typed = root.querySelector<HTMLElement>('[data-type]')!, full = typed.textContent ?? '';
