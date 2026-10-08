@@ -55,17 +55,29 @@ const schema = [
   <section class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-8 sm:px-6 lg:grid-cols-[1fr_1.15fr] lg:pt-14">
     <div>
       <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Amplify Site</p>
-      <h1 class="mt-5 text-[clamp(2.7rem,5vw,4.8rem)]">
+      <h1 class="mt-5 text-[clamp(2.5rem,4.3vw,4.1rem)]">
         <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Un vrai site</span></span>
         <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:160ms">pour votre restaurant.</span></span>
         <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:260ms">En ligne ce soir.</span></span>
       </h1>
-      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:340ms">Votre carte en photo, vos horaires, l’itinéraire et un bouton pour commander sur WhatsApp. Envoyez une photo de votre menu, le site se construit tout seul.</p>
-      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:420ms">
-        <a href={signup} class="inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Créer mon site gratuitement</a>
-        <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-hero" class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">On le fait pour vous</a>
+      <p class="fade-up mt-4 max-w-xl text-lg text-muted" style="--d:340ms">Votre carte, vos photos, vos horaires, l’itinéraire et les commandes sur WhatsApp. Sur Google, sur le téléphone, en trois langues.</p>
+      <!-- the price, impossible to miss -->
+      <div class="fade-up relative mt-6 inline-flex flex-wrap items-center gap-x-6 gap-y-3 rounded-[1.8rem] bg-navy py-4 pe-7 ps-6 sm:flex-nowrap text-white shadow-[0_30px_60px_-30px_rgba(0,30,62,0.7)]" style="--d:420ms" data-price>
+        <span class="price-stamp absolute -end-4 -top-5 rotate-[8deg] rounded-full bg-green px-3.5 py-1.5 text-sm font-bold text-navy shadow-lg">Offre de lancement</span>
+        <div>
+          <p class="text-sm font-semibold text-white/60">Nous créons votre site</p>
+          <p class="display flex items-baseline gap-2 leading-none"><span class="text-[4.2rem] text-green tabular-nums sm:text-[4.8rem]" data-count={OFFER.siteSetup}>{OFFER.siteSetup}</span><span class="text-3xl">DH</span></p>
+        </div>
+        <div class="border-white/15 text-white/80 sm:border-s sm:ps-6">
+          <p class="text-lg font-semibold text-white">une seule fois</p>
+          <p>puis {OFFER.siteMonthly} DH par mois</p>
+          <p class="text-sm text-white/55">hébergement compris, sans engagement</p>
+        </div>
       </div>
-      <p class="fade-up mt-3 text-sm text-muted" style="--d:480ms">14 jours gratuits, puis {OFFER.siteMonthly} DH par mois. Sans engagement.</p>
+      <div class="fade-up mt-5 flex flex-wrap items-center gap-3" style="--d:500ms">
+        <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-hero" class="cta-glow inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Je veux mon site à 250 DH</a>
+        <a href={signup} class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">Ou le créer moi-même, gratuitement</a>
+      </div>
     </div>
 
     <!-- the site on a laptop, the phone menu, and orders arriving on WhatsApp, one after the other -->
@@ -87,6 +99,115 @@ const schema = [
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- a band that keeps moving: what 250 DH buys -->
+  <div class="mq relative overflow-hidden border-y border-navy bg-navy py-4 text-white" aria-hidden="true">
+    <div class="mq-track flex w-max gap-10 whitespace-nowrap">
+      {[0, 1].map(() => ['Votre site à 250 DH', 'Prêt en quelques jours', 'Sur Google', 'Français, arabe, anglais', 'Commandes sur WhatsApp', 'Itinéraire en un clic', 'Votre carte toujours à jour'].map((x, i) => <span class="display flex items-center gap-10 text-2xl sm:text-3xl"><span class={i === 0 ? 'text-green' : ''}>{x}</span><span class="text-green">✦</span></span>))}
+    </div>
+  </div>
+
+  <!-- 2030: why a website now -->
+  <section class="relative overflow-hidden bg-[#001E3E] text-white" data-as data-y2030>
+    <div class="pointer-events-none absolute -end-40 -top-40 size-[40rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
+      <p class="as-rv inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/15"><span class="size-2 rounded-full bg-green"></span>Maroc 2030</p>
+      <h2 class="as-rv mt-5 max-w-4xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl" style="--d:80ms"><span class="block">Le monde arrive.</span><span class="block text-green">Il vous cherchera sur Google.</span></h2>
+      <p class="as-rv mt-6 max-w-2xl text-lg text-white/75" style="--d:160ms">Un touriste ne connaît pas votre rue. Avant de venir, il cherche sur Google ou demande à une IA. Ce qu’il trouve en ligne décide s’il pousse votre porte ou celle d’à côté.</p>
+      <div class="mt-14 grid gap-5 lg:grid-cols-[1.25fr_1fr]">
+        <!-- tourists: 2025 to the 2030 goal -->
+        <div class="as-rv rounded-[2rem] bg-white/[0.06] p-7 ring-1 ring-white/10 sm:p-9" data-bars>
+          <p class="font-semibold text-white/70">Touristes au Maroc, par an</p>
+          <div class="mt-8 flex items-end gap-6 sm:gap-10">
+            <div class="flex h-full flex-1 flex-col justify-end">
+              <p class="display whitespace-nowrap text-3xl sm:text-5xl"><span data-count="19.8" data-dec="1">19,8</span> M</p>
+              <div class="mt-3 flex h-36 items-end"><div class="bar w-full rounded-t-2xl bg-white/25" style="--h:76%"></div></div>
+              <p class="mt-3 text-sm text-white/60">2025, un record (+14 %)</p>
+            </div>
+            <div class="flex h-full flex-1 flex-col justify-end">
+              <p class="display whitespace-nowrap text-3xl text-green sm:text-5xl"><span data-count="26">26</span> M</p>
+              <div class="mt-3 flex h-36 items-end"><div class="bar w-full rounded-t-2xl bg-green" style="--h:100%; --bd:300ms"></div></div>
+              <p class="mt-3 text-sm text-white/60">2030, l’objectif du Maroc</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid gap-5">
+          <div class="as-rv flex flex-col items-start gap-3 rounded-[2rem] bg-green p-7 text-navy sm:flex-row sm:items-center sm:gap-5" style="--d:120ms">
+            <span class="display text-6xl leading-none">2030</span>
+            <p class="text-lg font-semibold leading-snug">La Coupe du monde, coorganisée par le Maroc, l’Espagne et le Portugal.</p>
+          </div>
+          <div class="as-rv rounded-[2rem] bg-white/[0.06] p-7 ring-1 ring-white/10" style="--d:200ms">
+            <p class="display text-5xl text-green">3 langues</p>
+            <p class="mt-2 text-white/75">Votre carte en français, en arabe et en anglais. Le visiteur la lit dans sa langue, avant même d’arriver.</p>
+          </div>
+        </div>
+      </div>
+      <p class="mt-6 text-xs text-white/40">Sources : chiffres du ministère du Tourisme repris par la presse marocaine, janvier 2026 ; objectif national de 26 millions de touristes en 2030.</p>
+    </div>
+  </section>
+
+  <!-- searched on Google, asked to an AI: what each one finds -->
+  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6" data-as data-search>
+    <h2 class="as-rv max-w-4xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Sans site, Google et l’IA</span><span class="block text-green-deep">n’ont rien à dire sur vous.</span></h2>
+    <p class="as-rv mt-5 max-w-2xl text-lg text-muted" style="--d:100ms">Google et les assistants IA répondent avec ce qu’ils trouvent en ligne. Votre site leur donne votre carte, vos prix, vos horaires et votre adresse, dans un format qu’ils lisent.</p>
+    <div class="mt-12 grid gap-5 lg:grid-cols-2" aria-hidden="true">
+      <!-- a search -->
+      <div class="as-rv overflow-hidden rounded-[2rem] bg-paper ring-1 ring-line">
+        <div class="border-b border-line p-5">
+          <div class="flex items-center gap-3 rounded-full bg-chalk px-4 py-3 ring-1 ring-line">
+            <svg viewBox="0 0 24 24" class="size-5 text-muted" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <span class="flex-1 font-medium"><span data-type="tajine près de moi ouvert maintenant">tajine près de moi ouvert maintenant</span><span class="caret">|</span></span>
+          </div>
+        </div>
+        <div class="space-y-3 p-5">
+          <div class="sr-res rounded-2xl bg-chalk p-4 ring-2 ring-green" style="--i:0">
+            <div class="flex items-start gap-3">
+              <img src="/img/n-site-phone.webp" alt="" class="size-14 rounded-xl object-cover object-top" width="56" height="56" loading="lazy" />
+              <div class="min-w-0 flex-1">
+                <p class="font-semibold">Dar Nour</p>
+                <p class="text-sm text-muted"><span class="font-semibold text-green-deep">Ouvert</span> · jusqu’à 23:00 · Agdal, Rabat</p>
+                <p class="mt-1 text-sm text-muted">Tajine poulet citron, msemen, jus pressés</p>
+              </div>
+            </div>
+            <div class="mt-3 flex flex-wrap gap-2 text-xs font-semibold">{['Site web', 'Carte', 'Itinéraire', 'Appeler'].map(x => <span class="rounded-full bg-navy px-3 py-1.5 text-white">{x}</span>)}</div>
+          </div>
+          {[0, 1].map(i => (
+            <div class="sr-res rounded-2xl p-4 opacity-60 ring-1 ring-line" style={`--i:${i + 1}`}>
+              <p class="font-semibold">{i ? 'Café sans site' : 'Restaurant sans site'}</p>
+              <p class="text-sm text-muted">Horaires non communiqués · Pas de carte</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <!-- an AI assistant -->
+      <div class="as-rv flex flex-col overflow-hidden rounded-[2rem] bg-navy text-white" style="--d:120ms">
+        <div class="flex items-center gap-2 border-b border-white/10 p-5 font-semibold"><span class="grid size-8 place-items-center rounded-full bg-green text-navy">✦</span>Assistant IA</div>
+        <div class="flex flex-1 flex-col justify-end gap-3 p-5">
+          <p class="ai-q ms-auto max-w-[85%] rounded-2xl rounded-se-none bg-white/15 px-4 py-3">Où manger un bon tajine à Rabat ce soir ?</p>
+          <p class="ai-typing inline-flex w-fit gap-1 rounded-2xl bg-white/10 px-4 py-3">{[0, 1, 2].map(i => <span class="size-1.5 rounded-full bg-white/70" style={`animation:dot 1.2s ${i * .15}s infinite`}></span>)}</p>
+          <div class="ai-a max-w-[92%] rounded-2xl rounded-ss-none bg-white px-4 py-3 text-navy">
+            <p>D’après son site, <b>Dar Nour</b> à Agdal est ouvert jusqu’à 23:00. Leur tajine poulet citron est à 95 DH, et l’on peut commander sur WhatsApp.</p>
+            <p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-chalk px-3 py-1 text-xs font-semibold text-green-deep">darnour.ma</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="as-rv mt-4 text-sm text-muted">Illustration avec le café de démonstration Dar Nour.</p>
+    <!-- what Google itself says -->
+    <div class="mt-14 grid gap-4 md:grid-cols-3">
+      {[
+        ['Des informations complètes', 'Google l’écrit lui-même : les établissements avec des informations complètes et exactes ont plus de chances d’apparaître dans les recherches locales.'],
+        ['Des liens vers vous', 'Pour juger si un lieu est connu, Google regarde entre autres combien de sites parlent de lui et combien d’avis il a. Votre site est le premier de ces liens.'],
+        ['La langue de Google', 'Votre site décrit votre restaurant, votre carte et vos horaires en données structurées (schema.org), le format que les moteurs de recherche savent lire.'],
+      ].map(([h, x], i) => (
+        <div class="as-rv rounded-3xl bg-paper p-6 ring-1 ring-line" style={`--d:${i * 90}ms`}>
+          <p class="display text-4xl text-green-deep">0{i + 1}</p>
+          <p class="mt-2 text-lg font-semibold">{h}</p><p class="mt-1 leading-relaxed text-muted">{x}</p>
+        </div>
+      ))}
+    </div>
+    <p class="mt-4 text-sm text-muted">Source : Google, « Améliorer votre classement local sur Google ». Un site ne garantit pas une place précise : il donne à Google ce qu’il demande.</p>
   </section>
 
   <!-- from a photo of the menu to the site: the scan line reads the card, the site fills itself -->
@@ -226,11 +347,11 @@ const schema = [
         <ul class="mt-6 flex-1 space-y-2.5">{['Votre carte importée depuis une photo', 'Les trois styles, à changer quand vous voulez', 'Commandes sur WhatsApp', 'Français, arabe, anglais'].map(x => <li class="flex items-start gap-2.5"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green-deep" />{x}</li>)}</ul>
         <a href={signup} class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-navy/90">Créer mon site gratuitement</a>
       </div>
-      <div class="as-rv relative flex flex-col rounded-[2rem] bg-navy p-8 text-white" style="--d:120ms">
+      <div class="as-rv relative flex flex-col rounded-[2rem] bg-navy p-8 text-white lg:order-first" style="--d:120ms">
         <p class="absolute end-6 top-6 rounded-full bg-green px-3 py-1 text-sm font-bold text-navy">Offre de lancement</p>
         <p class="text-lg font-semibold">On le fait pour vous</p>
         <p class="mt-1 max-w-sm text-white/70">Envoyez-nous votre carte et vos photos sur WhatsApp. Nous vous rendons un site prêt.</p>
-        <p class="mt-6 flex items-end gap-2"><span class="display text-6xl tabular-nums">{OFFER.siteSetup}</span><span class="pb-2 font-semibold">DH, une fois</span></p>
+        <p class="mt-6 flex items-end gap-2"><span class="display text-[5.5rem] leading-none text-green tabular-nums">{OFFER.siteSetup}</span><span class="pb-2 font-semibold">DH, une fois</span></p>
         <p class="text-sm text-white/60">Puis {OFFER.siteMonthly} DH par mois.</p>
         <ul class="mt-6 flex-1 space-y-2.5 text-white/85">{['Votre carte saisie par nous, à partir d’une photo', 'Jusqu’à 10 photos mises en valeur', 'Les trois langues relues', 'Une série de corrections comprise'].map(x => <li class="flex items-start gap-2.5"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green" />{x}</li>)}</ul>
         <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-pricing" class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Demander sur WhatsApp</a>
@@ -322,6 +443,32 @@ const schema = [
   [data-chat].seen .chat-typing { animation: typing-in-out 1.2s ease both; animation-delay: var(--d); }
   @keyframes typing-in-out { 0% { opacity: 0; } 15%, 85% { opacity: 1; } 100% { opacity: 0; height: 0; padding: 0; margin: 0; } }
 
+  /* price */
+  .price-stamp { animation: wobble 3.5s ease-in-out infinite; }
+  @keyframes wobble { 0%, 100% { transform: rotate(8deg) scale(1); } 50% { transform: rotate(-4deg) scale(1.08); } }
+  .cta-glow { box-shadow: 0 0 0 0 rgba(5,185,98,.55); animation: glow 2.4s ease-out infinite; }
+  @keyframes glow { 70%, 100% { box-shadow: 0 0 0 16px rgba(5,185,98,0); } }
+  /* marquee */
+  .mq-track { animation: mq 32s linear infinite; }
+  [dir="rtl"] .mq-track { animation-name: mq-rtl; }
+  @keyframes mq { to { transform: translateX(-50%); } }
+  @keyframes mq-rtl { to { transform: translateX(50%); } }
+  /* 2030 bars */
+  .bar { height: 0; transition: height 1.4s cubic-bezier(.2,.8,.2,1); transition-delay: var(--bd, 0ms); }
+  [data-bars].seen .bar { height: var(--h); }
+  /* the search and the AI answer */
+  .caret { animation: blink 1s steps(1) infinite; color: #05B962; margin-inline-start: 1px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .sr-res, .ai-q, .ai-a, .ai-typing { opacity: 0; transform: translateY(12px); }
+  [data-search].play .sr-res { animation: as-in .6s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(1.9s + var(--i) * .18s); }
+  [data-search].play .ai-q { animation: as-in .5s both; animation-delay: .3s; }
+  [data-search].play .ai-typing { animation: typing-in-out 1.6s ease both; animation-delay: .9s; }
+  [data-search].play .ai-a { animation: as-in .6s cubic-bezier(.2,.8,.2,1) both; animation-delay: 2.5s; }
+  @media (prefers-reduced-motion: reduce) {
+    .price-stamp, .cta-glow, .mq-track, .caret { animation: none; }
+    .bar { height: var(--h); transition: none; }
+    .sr-res, .ai-q, .ai-a { opacity: 1; transform: none; animation: none !important; } .ai-typing { display: none; }
+  }
   @media (prefers-reduced-motion: reduce) {
     .js .as-rv:not(.seen), .as-rv.seen, .chat-in, .site-row, .wa-body p { opacity: 1; transform: none; animation: none; }
     .hero-float, .wa-ping, .scan-arrow { animation: none; }
@@ -331,7 +478,31 @@ const schema = [
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
-  document.querySelectorAll('.as-rv, [data-chat]').forEach(n => io.observe(n));
+  document.querySelectorAll('.as-rv, [data-chat], [data-bars]').forEach(n => io.observe(n));
+  // numbers that count up when they come into view
+  const fmtN = (v: number, dec: number) => v.toFixed(dec).replace('.', document.documentElement.lang === 'en' ? '.' : ',');
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; cio.unobserve(e.target);
+    const el = e.target as HTMLElement, to = Number(el.dataset.count), dec = Number(el.dataset.dec ?? 0);
+    if (still) { el.textContent = fmtN(to, dec); return; }
+    const t0 = performance.now(), dur = 1400;
+    const step = (now: number) => { const k = Math.min(1, (now - t0) / dur), v = to * (1 - Math.pow(1 - k, 3)); el.textContent = fmtN(v, dec); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }), { threshold: 0.6 });
+  document.querySelectorAll('[data-count]').forEach(n => cio.observe(n));
+  // the search types itself, the results and the AI answer follow; again each time it comes back into view
+  document.querySelectorAll<HTMLElement>('[data-search]').forEach(root => {
+    const typed = root.querySelector<HTMLElement>('[data-type]')!, full = typed.textContent ?? '';
+    if (still) { root.classList.add('play'); return; }
+    let timer: number | undefined;
+    new IntersectionObserver(([e]) => {
+      window.clearInterval(timer);
+      if (!e.isIntersecting) { root.classList.remove('play'); return; }
+      root.classList.remove('play'); void root.offsetWidth; root.classList.add('play');
+      let i = 0; typed.textContent = '';
+      timer = window.setInterval(() => { typed.textContent = full.slice(0, ++i); if (i >= full.length) window.clearInterval(timer); }, 45);
+    }, { threshold: 0.35 }).observe(root);
+  });
   const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
   const visible = (el: Element, cb: (on: boolean) => void) => new IntersectionObserver(([e]) => cb(e.isIntersecting), { threshold: 0.25 }).observe(el);
 
