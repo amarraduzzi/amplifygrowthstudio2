@@ -2,13 +2,14 @@
 // "Pas de site ? Pour le monde, vous n'existez pas." World Cup 2030: searches arrive in every language.
 // Switch: without a site, the visitor finds nothing to read; with one, menu, languages and a way to come.
 import Icon from './Icon.astro';
-import WaButton from './WaButton.astro';
 import { mkOf } from '../i18n/content';
 import { tr, langOf } from '../i18n/t';
 const LG = langOf(Astro.url);
 const tt = tr(LG);
 const c = mkOf(LG);
 const s = c.site;
+import { ROUTES } from '../i18n/routes';
+import { OFFER } from '../config';
 ---
 <section class="relative isolate overflow-hidden py-24" data-mksite data-mode="with">
   <span class="mks-2030 display pointer-events-none absolute -end-10 top-6 -z-10 select-none text-[clamp(10rem,30vw,24rem)] leading-none text-transparent [-webkit-text-stroke:2px_#DDE3E0]" aria-hidden="true">2030</span>
@@ -26,7 +27,10 @@ const s = c.site;
       <ul class="mt-8 grid gap-3 sm:grid-cols-2">
         {s.list.map(([h, p]) => <li class="flex gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span><span class="block font-semibold">{h}</span><span class="text-sm text-muted">{p}</span></span></li>)}
       </ul>
-      <div class="mt-8"><WaButton text="Bonjour, je voudrais un site pour mon établissement." label={s.cta} where="marketing-site" class="px-7" /></div>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a href={ROUTES.site[LG]} class="group inline-flex min-h-12 items-center gap-2 rounded-full bg-green px-7 text-lg font-semibold text-navy transition-transform hover:scale-[1.03] hover:bg-[#04A859]">{tt('Découvrir Amplify Site')}<span aria-hidden="true" class="transition-transform group-hover:translate-x-1 rtl:rotate-180">→</span></a>
+        <p class="text-sm font-semibold text-muted">{tt('Votre site dès')} <span class="text-green-deep">{OFFER.siteSetup} DH</span></p>
+      </div>
     </div>
 
     <!-- what a visitor finds -->

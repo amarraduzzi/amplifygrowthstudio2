@@ -679,4 +679,6 @@ export const dictEn: Record<string, string> = {
   "Une serveuse prend une commande sur la caisse tactile pendant un service de midi, le bon sort de l’imprimante": "A waitress takes an order on the touch till during lunch service, the ticket comes out of the printer",
   "Un service, un seul système": "One service, one system",
   "La salle sert. La caisse compte.": "The floor serves. The till counts.",
+  "Découvrir Amplify Site": "Discover Amplify Site",
+  "Votre site dès": "Your website from",
 };

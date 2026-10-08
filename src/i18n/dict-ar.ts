@@ -679,4 +679,6 @@ export const dictAr: Record<string, string> = {
   "Une serveuse prend une commande sur la caisse tactile pendant un service de midi, le bon sort de l’imprimante": "نادلة تأخذ طلبا على الصندوق اللمسي خلال خدمة الغداء، والوصل يخرج من الطابعة",
   "Un service, un seul système": "خدمة واحدة، نظام واحد",
   "La salle sert. La caisse compte.": "القاعة تخدم. والصندوق يحسب.",
+  "Découvrir Amplify Site": "اكتشفوا Amplify Site",
+  "Votre site dès": "موقعكم ابتداء من",
 };
