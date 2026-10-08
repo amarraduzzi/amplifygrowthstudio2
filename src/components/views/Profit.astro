@@ -12,6 +12,7 @@ import ProfitFeatures from '../ProfitFeatures.astro';
 import ProfitHow from '../ProfitHow.astro';
 import ProfitLoss from '../ProfitLoss.astro';
 import BillingToggle from '../BillingToggle.astro';
+import PhotoBand from '../PhotoBand.astro';
 import { SITE, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { posOf, profitOf } from '../../i18n/content';
@@ -66,10 +67,30 @@ const schema = [
   <!-- the problem -->
   <ProfitPains />
 
+  <PhotoBand name="pf-soir" alt={tt('Un patron de restaurant fait ses comptes seul au comptoir, tard le soir')} kicker={tt('23:40, après le service')} title={tt('Le service est fini. La vraie question commence.')} w={1376} h={768} class="py-16 md:py-20" pos="70% 50%" />
+
   <!-- what you get -->
   <ProfitFeatures />
 
   <!-- how it works -->
+  <!-- costs to the gram -->
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 md:grid-cols-[0.9fr_1.1fr]">
+    <figure class="pfc relative overflow-hidden rounded-[2rem]">
+      <img src="/img/pf-chef.webp" alt={tt('Un chef pèse le poulet et les citrons confits d’un tajine sur une balance de cuisine')} width="896" height="1200" loading="lazy" decoding="async" class="pfc-img aspect-[4/5] h-auto w-full object-cover" />
+      <figcaption class="pfc-tag absolute bottom-5 start-5 end-5 rounded-2xl bg-white/95 p-4 text-navy shadow-xl backdrop-blur" aria-hidden="true">
+        <p class="text-xs font-semibold text-muted">{tt('Fiche technique')} · <x-notr>Tajine poulet citron</x-notr></p>
+        <div class="mt-2 space-y-1 text-sm">
+          {[['Poulet', '350 g', '9,80'], ['Citron confit', '40 g', '0,90'], ['Olives', '30 g', '1,20']].map(([n, q, c], i) => <p class="pfc-row flex justify-between gap-3" style={`--i:${i}`}><span>{tt(n)} <span class="text-muted">{q}</span></span><b class="tabular-nums">{c} DH</b></p>)}
+        </div>
+      </figcaption>
+    </figure>
+    <div>
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Chaque gramme')}</span><span class="block text-green-deep">{tt('a un prix.')}</span></h2>
+      <p class="mt-5 max-w-lg text-lg text-muted">{tt('Vos fiches techniques au gramme près, remplies par l’IA à partir de votre carte. Vous corrigez ce qui ne va pas, et le coût de chaque plat se calcule tout seul.')}</p>
+      <p class="mt-3 max-w-lg text-lg text-muted">{tt('Un fournisseur augmente le poulet ? Vous le voyez sur la facture, et vous savez quels plats en souffrent.')}</p>
+    </div>
+  </section>
+
   <ProfitHow lang={lang} />
 
   <!-- pricing -->
@@ -86,3 +107,18 @@ const schema = [
   <ProductFinal title={p.final.title} text={p.final.text} cta={p.final.cta} href={signupUrl(lang, 'profit')} wa={wa} waLabel={t.ui.whatsapp} where="profit-final"
     steps={['Compte créé', 'Carte importée en photo', 'Coûts estimés par l’IA', 'Premières marges visibles']} done="Vos marges sont prêtes" />
 </Base>
+
+<style is:global>
+  .pfc-img { transform: scale(1.1); transition: transform 2.6s cubic-bezier(.2,.8,.2,1); }
+  .pfc.seen .pfc-img { transform: scale(1); }
+  .js .pfc-tag { opacity: 0; transform: translateY(16px); }
+  .pfc.seen .pfc-tag { animation: pfc-in .6s cubic-bezier(.2,.8,.2,1) .6s both; }
+  .js .pfc-row { opacity: 0; }
+  .pfc.seen .pfc-row { animation: pfc-in .4s ease both; animation-delay: calc(1s + var(--i) * .2s); }
+  @keyframes pfc-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .pfc-img { transform: none; transition: none; } .js .pfc-tag, .js .pfc-row { opacity: 1; transform: none; } .pfc.seen .pfc-tag, .pfc.seen .pfc-row { animation: none; } }
+</style>
+<script>
+  const pfc = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); pfc.unobserve(e.target); } }), { threshold: 0.3 });
+  document.querySelectorAll('.pfc').forEach(n => pfc.observe(n));
+</script>
