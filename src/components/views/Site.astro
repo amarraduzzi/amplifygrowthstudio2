@@ -1,0 +1,241 @@
+---
+// Amplify Site: the restaurant website sold on its own (sign-up ?produit=site, or made by us).
+// Real screenshots of the demo café Dar Nour in the three styles. French inline; EN and AR come
+// from the dictionaries (middleware). Prices: OFFER in config.ts.
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import Device from '../Device.astro';
+import Faq from '../Faq.astro';
+import WaButton from '../WaButton.astro';
+import ProductFinal from '../ProductFinal.astro';
+import { SITE, OFFER, signupUrl, waLink } from '../../config';
+import { copy } from '../../i18n';
+import { tr, langOf } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = copy(lang);
+const tt = tr(langOf(Astro.url));
+const title = tt('Site web pour restaurant au Maroc | Amplify Site');
+const description = tt('Un beau site pour votre restaurant ou votre café, avec votre carte, vos photos et les commandes sur WhatsApp. 14 jours gratuits, puis 100 DH par mois.');
+const wa = tt('Bonjour, j’ai une question sur Amplify Site.');
+const doneForYou = tt('Bonjour, je veux que vous créiez le site de mon restaurant (offre à 250 DH).');
+const signup = signupUrl(lang, 'site');
+const styles = [
+  { k: 'riad', name: 'Riad', img: '/img/s-riad.webp', url: 'darnour.ma', text: 'Arches, zellige et une carte à l’ancienne. Pour une cuisine marocaine ou un lieu de caractère.' },
+  { k: 'nuit', name: 'Nuit', img: '/img/s-nuit.webp', url: 'darnour.ma', text: 'Plein écran, comme au cinéma. Une grande photo ou une vidéo, vos plats en bande défilante.' },
+  { k: 'moderne', name: 'Moderne', img: '/img/s-moderne.webp', url: 'darnour.ma', text: 'Clair et net, en grandes cartes photo. Pour un snack, un brunch ou une chaîne.' },
+];
+const included = [
+  ['search', 'Trouvé sur Google', 'Votre carte, vos horaires et votre adresse sont lisibles par Google, avec les informations que Google Maps attend.'],
+  ['phone', 'Parfait sur téléphone', 'Appeler, trouver l’itinéraire, voir la carte ou commander : tout se fait au pouce.'],
+  ['cup', 'Votre carte à jour', 'Vous changez un prix ou un plat dans votre espace, le site suit tout de suite.'],
+  ['users', 'Français, arabe, anglais', 'Les touristes comme les habitués lisent votre carte dans leur langue.'],
+  ['check', 'Ouvert ou fermé, en direct', 'Vos horaires du jour et un badge « ouvert maintenant », calculés à l’heure du Maroc.'],
+  ['store', 'À votre nom', 'Votre logo, vos photos, et votre propre domaine si vous le souhaitez.'],
+] as const;
+const faq = ([
+  ['Faut-il un nom de domaine ?', 'Non. Votre site est en ligne tout de suite sur une adresse Amplify. Si vous avez déjà un domaine, nous le relions à votre site pour 150 DH, une seule fois.'],
+  ['Comment se passent les commandes sur WhatsApp ?', 'Le client choisit ses plats sur votre site, puis WhatsApp s’ouvre avec sa commande déjà écrite : les plats, le total, son prénom et le mode (à emporter, livraison ou sur place). Vous la recevez comme un message normal. Aucune commission.'],
+  ['Je peux changer de style ou de photos plus tard ?', 'Oui, à tout moment, depuis votre espace. Le style, les photos, les textes et la carte se changent en quelques clics.'],
+  ['Comment payer ?', 'Par virement ou CashPlus. Nous activons votre site dès réception. Pas de carte bancaire demandée pour l’essai.'],
+  ['Que comprend l’offre à 250 DH ?', 'Nous créons votre site pour vous : la carte à partir d’une photo, jusqu’à 10 photos, les trois langues et une série de corrections. Ensuite, 100 DH par mois comme pour tout le monde.'],
+  ['Et si j’arrête ?', 'Sans engagement. Si l’abonnement n’est pas renouvelé, votre site se met en pause. Vous pouvez le relancer quand vous voulez, tout est gardé.'],
+]).map(([q, a]) => [tt(q), tt(a)]);
+const schema = [
+  { '@context': 'https://schema.org', '@type': 'Service', name: 'Amplify Site', serviceType: tt('Site web pour restaurant'), areaServed: 'MA', url: abs(ROUTES.site[lang]), description,
+    offers: [{ '@type': 'Offer', name: tt('Abonnement mensuel'), price: String(OFFER.siteMonthly), priceCurrency: 'MAD' }, { '@type': 'Offer', name: tt('Création par Amplify'), price: String(OFFER.siteSetup), priceCurrency: 'MAD' }],
+    provider: { '@id': `${SITE.url}/#business` } },
+  faqSchema(faq),
+].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="site" title={title} description={description} wa={wa} schema={schema}>
+  <!-- hero -->
+  <section class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-8 sm:px-6 lg:grid-cols-[1fr_1.15fr] lg:pt-14">
+    <div>
+      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Amplify Site</p>
+      <h1 class="mt-5 text-[clamp(2.7rem,5vw,4.8rem)]">
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Un vrai site</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:160ms">pour votre restaurant.</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:260ms">En ligne ce soir.</span></span>
+      </h1>
+      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:340ms">Votre carte en photo, vos horaires, l’itinéraire et un bouton pour commander sur WhatsApp. Envoyez une photo de votre menu, le site se construit tout seul.</p>
+      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:420ms">
+        <a href={signup} class="inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Créer mon site gratuitement</a>
+        <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-hero" class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">On le fait pour vous</a>
+      </div>
+      <p class="fade-up mt-3 text-sm text-muted" style="--d:480ms">14 jours gratuits, puis {OFFER.siteMonthly} DH par mois. Sans engagement.</p>
+    </div>
+
+    <!-- the site on a laptop, the phone menu, and the order arriving on WhatsApp -->
+    <div class="relative pb-10 lg:pb-16" aria-hidden="true">
+      <div class="as-rv overflow-hidden rounded-[1.2rem] bg-[#0B1422] shadow-[0_40px_80px_-35px_rgba(0,30,62,0.6)] ring-1 ring-black/10" style="--d:120ms">
+        <div class="flex items-center gap-2 px-4 py-2.5"><span class="size-2.5 rounded-full bg-[#FF5F57]"></span><span class="size-2.5 rounded-full bg-[#FEBC2E]"></span><span class="size-2.5 rounded-full bg-[#28C840]"></span>
+          <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
+        <img src="/img/s-riad.webp" alt="" width="1600" height="1000" fetchpriority="high" decoding="async" class="block h-auto w-full" />
+      </div>
+      <div class="as-rv as-drop absolute -bottom-2 start-[-4%] w-[30%] max-w-[13rem]" style="--d:380ms"><Device kind="phone" src="/img/s-phone-menu.webp" alt="" w={600} h={1298} screenBg="#EFE3D1" class="-rotate-[4deg]" /></div>
+      <div dir="ltr" class="as-rv as-pop absolute -bottom-4 end-[2%] w-[56%] max-w-[19rem] rounded-2xl bg-[#E7FFDB] p-3.5 text-[0.8rem] leading-snug text-[#111B21] shadow-[0_24px_50px_-20px_rgba(0,30,62,0.55)] ring-1 ring-black/5 sm:text-sm" style="--d:900ms">
+        <p class="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#128C7E]"><svg viewBox="0 0 24 24" class="size-3.5" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2z"/></svg>Nouvelle commande</p>
+        <x-notr><p>Bonjour Dar Nour, je souhaite commander :</p><p class="mt-1">2 × Café noir<br />1 × Chocolat chaud<br />1 × Double expresso</p><p class="mt-1 font-semibold">Total : 56 DH · À emporter</p></x-notr>
+        <p class="mt-1 text-end text-[0.65rem] text-[#667781]">12:41 ✓✓</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- three styles: the visitor switches and sees the same café in each -->
+  <section class="relative overflow-hidden bg-navy text-white" data-styles>
+    <div class="pointer-events-none absolute -start-40 top-20 size-[34rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
+    <div class="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
+      <div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
+        <h2 class="as-rv max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trois styles.</span><span class="block text-green">Aucun ne ressemble à un modèle.</span></h2>
+        <div class="as-rv flex flex-wrap gap-2" role="tablist" aria-label="Style" style="--d:120ms">
+          {styles.map((s, i) => <button type="button" role="tab" data-style={s.k} aria-selected={i === 0 ? 'true' : 'false'} class="st-tab min-h-11 rounded-full px-5 font-semibold ring-1 ring-white/20 transition-colors">{s.name}</button>)}
+        </div>
+      </div>
+      <div class="as-rv relative mt-10" style="--d:180ms">
+        <div class="overflow-hidden rounded-[1.4rem] bg-[#0B1422] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
+          <div class="flex items-center gap-2 px-4 py-3"><span class="size-3 rounded-full bg-[#FF5F57]"></span><span class="size-3 rounded-full bg-[#FEBC2E]"></span><span class="size-3 rounded-full bg-[#28C840]"></span>
+            <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
+          <div class="relative aspect-[16/10]">
+            {styles.map((s, i) => <img src={s.img} alt={tt('Le site de Dar Nour, style') + ' ' + s.name} width="1600" height="1000" loading="lazy" decoding="async" data-shot={s.k} class={`st-shot absolute inset-0 h-full w-full object-cover object-top ${i === 0 ? 'on' : ''}`} />)}
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 grid gap-3 md:grid-cols-3">
+        {styles.map((s, i) => <p data-desc={s.k} class={`st-desc rounded-2xl p-4 text-white/70 ring-1 ring-white/10 transition ${i === 0 ? 'on' : ''}`}><b class="block text-white">{s.name}</b>{s.text}</p>)}
+      </div>
+      <p class="mt-6 text-sm text-white/50">Captures réelles du café de démonstration Dar Nour.</p>
+    </div>
+  </section>
+
+  <!-- WhatsApp orders, in three steps -->
+  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6" data-as>
+    <div class="max-w-3xl">
+      <h2 class="as-rv text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Pas de caisse ?</span><span class="block text-green-deep">Les commandes arrivent sur WhatsApp.</span></h2>
+      <p class="as-rv mt-5 text-lg text-muted" style="--d:100ms">Le client remplit son panier sur votre site. Vous recevez une commande claire, déjà écrite. Pas d’application à installer, 0 % de commission.</p>
+    </div>
+    <ol class="mt-14 grid gap-10 md:grid-cols-3">
+      {[
+        ['Le client choisit ses plats', 'Avec les photos, les prix et les formats. Il ajoute au panier d’un seul geste.', '/img/s-phone-menu.webp'],
+        ['Il envoie en un clic', 'Prénom, à emporter, livraison ou sur place : WhatsApp s’ouvre avec le message prêt.', '/img/s-phone-wa.webp'],
+        ['Vous recevez la commande', 'Les plats, les quantités et le total. Vous répondez comme d’habitude.', ''],
+      ].map(([h, x, img], i) => (
+        <li class="as-rv" style={`--d:${i * 120}ms`}>
+          <div class="mx-auto w-[72%] max-w-[15rem]">
+            {img ? <Device kind="phone" src={img} alt="" w={600} h={1298} screenBg="#EFE3D1" /> : (
+              <div class="rounded-[2.2rem] bg-[#0B1422] p-2 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]" aria-hidden="true">
+                <div dir="ltr" class="flex aspect-[600/1298] flex-col overflow-hidden rounded-[1.8rem] bg-[#EFEAE2]">
+                  <div class="flex items-center gap-2 bg-[#008069] px-3 pb-2.5 pt-6 text-white"><span class="grid size-7 place-items-center rounded-full bg-white/25 text-xs font-bold">Y</span><span class="text-sm font-semibold">Yassine</span></div>
+                  <div class="flex flex-1 flex-col justify-end gap-2 p-2.5 text-[0.72rem] leading-snug text-[#111B21]">
+                    <div class="ms-auto max-w-[88%] rounded-lg rounded-se-none bg-[#D9FDD3] p-2 shadow-sm"><x-notr>Bonjour Dar Nour, je souhaite commander :<br /><br />2 × Café noir (22,40 DH)<br />1 × Chocolat chaud (16,80 DH)<br />1 × Double expresso (16,80 DH)<br /><br />Total : 56 DH<br />À emporter<br />Nom : Yassine</x-notr><span class="mt-1 block text-end text-[0.6rem] text-[#667781]">12:41 ✓✓</span></div>
+                    <div class="max-w-[70%] rounded-lg rounded-ss-none bg-white p-2 shadow-sm"><x-notr>C’est noté, prêt dans 10 minutes.</x-notr><span class="mt-1 block text-end text-[0.6rem] text-[#667781]">12:42</span></div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <p class="mt-6 flex items-baseline gap-3"><span class="display text-4xl text-green-deep tabular-nums">{i + 1}</span><span class="text-xl font-semibold">{h}</span></p>
+          <p class="mt-2 text-muted">{x}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- what is included -->
+  <section class="border-y border-line bg-paper" data-as>
+    <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+      <h2 class="as-rv max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Tout ce qu’un client cherche</span><span class="block text-green-deep">avant de venir.</span></h2>
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {included.map(([i, h, x], k) => (
+          <div class="as-rv rounded-3xl bg-chalk p-6 ring-1 ring-line" style={`--d:${(k % 3) * 90}ms`}>
+            <Icon name={i} class="size-6 text-green-deep" /><p class="mt-3 text-lg font-semibold">{h}</p><p class="mt-1 leading-relaxed text-muted">{x}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- pricing -->
+  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-24 sm:px-6" data-as>
+    <h2 class="as-rv max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Moins cher qu’un flyer.</span><span class="block text-green-deep">Visible toute l’année.</span></h2>
+    <p class="as-rv mt-4 max-w-2xl text-lg text-muted" style="--d:80ms">Un seul abonnement. Hébergement, mises à jour et sécurité compris.</p>
+    <div class="mt-12 grid gap-5 lg:grid-cols-2">
+      <div class="as-rv flex flex-col rounded-[2rem] bg-paper p-8 ring-1 ring-line">
+        <p class="text-lg font-semibold">Je le fais moi-même</p>
+        <p class="mt-1 text-muted">Une photo de votre carte, une photo de votre salle, un style. Dix minutes suffisent.</p>
+        <p class="mt-6 flex items-end gap-2"><span class="display text-6xl tabular-nums">{OFFER.siteMonthly}</span><span class="pb-2 font-semibold">DH / mois</span></p>
+        <p class="text-sm text-muted">Création gratuite. 14 jours offerts.</p>
+        <ul class="mt-6 flex-1 space-y-2.5">{['Votre carte importée depuis une photo', 'Les trois styles, à changer quand vous voulez', 'Commandes sur WhatsApp', 'Français, arabe, anglais'].map(x => <li class="flex items-start gap-2.5"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green-deep" />{x}</li>)}</ul>
+        <a href={signup} class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-navy/90">Créer mon site gratuitement</a>
+      </div>
+      <div class="as-rv relative flex flex-col rounded-[2rem] bg-navy p-8 text-white" style="--d:120ms">
+        <p class="absolute end-6 top-6 rounded-full bg-green px-3 py-1 text-sm font-bold text-navy">Offre de lancement</p>
+        <p class="text-lg font-semibold">On le fait pour vous</p>
+        <p class="mt-1 max-w-sm text-white/70">Envoyez-nous votre carte et vos photos sur WhatsApp. Nous vous rendons un site prêt.</p>
+        <p class="mt-6 flex items-end gap-2"><span class="display text-6xl tabular-nums">{OFFER.siteSetup}</span><span class="pb-2 font-semibold">DH, une fois</span></p>
+        <p class="text-sm text-white/60">Puis {OFFER.siteMonthly} DH par mois.</p>
+        <ul class="mt-6 flex-1 space-y-2.5 text-white/85">{['Votre carte saisie par nous, à partir d’une photo', 'Jusqu’à 10 photos mises en valeur', 'Les trois langues relues', 'Une série de corrections comprise'].map(x => <li class="flex items-start gap-2.5"><Icon name="check" class="mt-0.5 size-5 shrink-0 text-green" />{x}</li>)}</ul>
+        <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-pricing" class="mt-8 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Demander sur WhatsApp</a>
+      </div>
+    </div>
+    <p class="as-rv mt-5 flex flex-wrap items-center gap-2 rounded-2xl bg-paper px-5 py-4 ring-1 ring-line"><Icon name="store" class="size-5 text-green-deep" /><b>Votre propre domaine</b><span class="text-muted">Vous avez déjà un domaine, par exemple www.monrestaurant.ma ? Nous le relions à votre site : {OFFER.siteDomain} DH, une seule fois.</span></p>
+  </section>
+
+  <!-- the next step: the till -->
+  <section class="px-4 sm:px-6" data-as>
+    <div class="as-rv mx-auto grid max-w-6xl items-center gap-6 rounded-[2rem] bg-mint/60 p-8 ring-1 ring-green/20 md:grid-cols-[1fr_auto] md:p-10">
+      <div>
+        <p class="text-2xl font-semibold">Le jour où vous voulez plus</p>
+        <p class="mt-2 max-w-2xl text-muted">Avec Amplify POS, les commandes de votre site arrivent directement en caisse et en cuisine, avec le QR à table, la livraison et les réservations. Votre site reste le même.</p>
+      </div>
+      <a href={ROUTES.pos[lang]} class="inline-flex min-h-12 items-center justify-center rounded-full border border-navy/25 bg-chalk px-6 text-lg font-semibold hover:border-navy">Découvrir Amplify POS</a>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} wa={wa} />
+
+  <ProductFinal title={tt('Votre site, en ligne ce soir.')} text={tt('Envoyez une photo de votre carte. Choisissez un style. Partagez le lien.')} cta={tt('Créer mon site gratuitement')} href={signup} wa={wa} waLabel={t.ui.whatsapp} where="site-final"
+    steps={['Compte créé', 'Carte importée en photo', 'Style choisi', 'Site en ligne'].map(tt)} done={tt('Votre site est en ligne')} secs={540} />
+</Base>
+
+<style is:global>
+  .js .as-rv:not(.seen) { opacity: 0; transform: translateY(18px); }
+  .as-rv.seen { animation: as-in .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+  .as-drop.seen { animation-name: as-drop; }
+  .as-pop.seen { animation-name: as-pop; }
+  @keyframes as-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+  @keyframes as-drop { from { opacity: 0; transform: translateY(50px) rotate(-3deg); } to { opacity: 1; transform: none; } }
+  @keyframes as-pop { 0% { opacity: 0; transform: translateY(16px) scale(.9); } 70% { transform: scale(1.03); } 100% { opacity: 1; transform: none; } }
+  .st-tab[aria-selected="true"] { background: #05B962; color: #001E3E; box-shadow: none; }
+  .st-tab[aria-selected="false"]:hover { background: rgba(255,255,255,.08); }
+  .st-shot { opacity: 0; transition: opacity .6s ease, transform 1.2s cubic-bezier(.2,.8,.2,1); transform: scale(1.02); }
+  .st-shot.on { opacity: 1; transform: none; }
+  .st-desc.on { background: rgba(255,255,255,.08); color: rgba(255,255,255,.9); box-shadow: inset 0 0 0 1px rgba(5,185,98,.6); }
+  @media (prefers-reduced-motion: reduce) { .js .as-rv:not(.seen), .as-rv.seen { opacity: 1; transform: none; animation: none; } .st-shot { transition: none; } }
+</style>
+<script>
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
+  document.querySelectorAll('.as-rv').forEach(n => io.observe(n));
+  // the style switcher: tabs, then it moves on by itself until the visitor picks one
+  document.querySelectorAll<HTMLElement>('[data-styles]').forEach(root => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-style]')];
+    const pick = (k: string) => {
+      tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.style === k)));
+      root.querySelectorAll<HTMLElement>('[data-shot]').forEach(i => i.classList.toggle('on', i.dataset.shot === k));
+      root.querySelectorAll<HTMLElement>('[data-desc]').forEach(i => i.classList.toggle('on', i.dataset.desc === k));
+    };
+    let auto: number | undefined;
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    tabs.forEach(b => b.addEventListener('click', () => { window.clearInterval(auto); pick(b.dataset.style!); }));
+    if (!still) {
+      const seen = new IntersectionObserver(([e]) => {
+        window.clearInterval(auto);
+        if (e.isIntersecting) auto = window.setInterval(() => { const i = tabs.findIndex(b => b.getAttribute('aria-selected') === 'true'); pick(tabs[(i + 1) % tabs.length].dataset.style!); }, 3800);
+      }, { threshold: 0.4 });
+      seen.observe(root);
+      tabs.forEach(b => b.addEventListener('click', () => seen.disconnect(), { once: true }));
+    }
+  });
+</script>

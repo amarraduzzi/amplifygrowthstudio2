@@ -27,7 +27,7 @@ export const APPS = {
   menu: 'https://menu.amplifygrowthstudio.com',
 };
 /** Start the free trial. product 'pos' or 'profit' = that one alone; nothing = both (Contrôle). */
-export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit') =>
+export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit' | 'site') =>
   `${APPS.admin}/?inscription=1&lang=${lang}${product ? `&produit=${product}` : ''}`;
 export const loginUrl = (lang = 'fr') => `${APPS.admin}/?lang=${lang}`;
 
@@ -60,6 +60,10 @@ export const OFFER = {
   yearPaidMonths: 10,
   installRabat: 490,
   launchFreeInstall: 10,
+  /** Amplify Site: monthly subscription, "we make it for you" (launch offer), connecting an own domain */
+  siteMonthly: 100,
+  siteSetup: 250,
+  siteDomain: 150,
 };
 
 export const isPlaceholder = (v: string) => /^\[.*\]$/.test(v.trim());
@@ -72,4 +76,4 @@ export const REVIEW = {
 };
 
 /** Restaurant websites (site.amplifygrowthstudio.com): shown on the site once they are live. */
-export const SITES_LIVE = false;
+export const SITES_LIVE = true;
