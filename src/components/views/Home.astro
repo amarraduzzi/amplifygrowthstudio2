@@ -3,6 +3,8 @@ import Base from '../../layouts/Base.astro';
 import ChatThread from '../ChatThread.astro';
 import WaButton from '../WaButton.astro';
 import Device from '../Device.astro';
+import { tr as trAlt, langOf as langAlt } from '../../i18n/t';
+const tt = trAlt(langAlt(Astro.url));
 import Bars from '../Bars.astro';
 import Icon from '../Icon.astro';
 import Tour from '../Tour.astro';
@@ -63,7 +65,7 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
         <div class="relative isolate aspect-[4/3.1] overflow-hidden rounded-[1.75rem] bg-mint md:aspect-[5/4.3] md:rounded-[2.25rem]">
           <!-- a café counter in Rabat (AI image), behind the real product -->
           <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 768px) 50vw, 100vw"
-            alt="" width="1200" height="900" decoding="async" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
+            alt={tt('Le comptoir d’un café à Rabat')} width="1200" height="900" decoding="async" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
           <div class="absolute inset-0 -z-10 bg-linear-to-b from-navy/10 via-transparent to-navy/30" aria-hidden="true"></div>
 
           <!-- phones: the iPhone in front, a narrow crop of the ticket behind; no labels on the picture -->

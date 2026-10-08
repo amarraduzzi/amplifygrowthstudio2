@@ -4,6 +4,8 @@
 import QRCode from 'qrcode';
 import WaButton from './WaButton.astro';
 import Device from './Device.astro';
+import { tr as trAlt, langOf as langAlt } from '../i18n/t';
+const tt = trAlt(langAlt(Astro.url));
 import Bars from './Bars.astro';
 import { SITE, CONTACT, REVIEW, isPlaceholder, signupUrl } from '../config';
 import { copy } from '../i18n';
@@ -32,8 +34,8 @@ const showReview = !isPlaceholder(REVIEW.text);
       <div class="mx-auto mt-10 w-48 rotate-[3deg] md:hidden" aria-hidden="true"><div class="try-phone relative">
         <Device kind="phone" w={600} h={1298}>
           <div slot="screen" class="relative aspect-[600/1298] overflow-hidden">
-            <img src="/img/menu-liste.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s1 absolute inset-0 size-full object-cover" />
-            <img src="/img/menu-fiche.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s2 absolute inset-0 size-full object-cover" />
+            <img src="/img/menu-liste.webp" alt={tt('Le menu QR : la liste des plats')} width="600" height="1298" loading="lazy" class="try-s try-s1 absolute inset-0 size-full object-cover" />
+            <img src="/img/menu-fiche.webp" alt={tt('Le menu QR : la fiche d’un plat')} width="600" height="1298" loading="lazy" class="try-s try-s2 absolute inset-0 size-full object-cover" />
             <div class="try-s try-s3 absolute inset-0 grid place-items-center bg-[#FAF8F3] p-4 text-center">
               <div>
                 <span class="mx-auto grid size-14 place-items-center rounded-full bg-green text-navy"><svg viewBox="0 0 24 24" class="size-8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>
@@ -71,8 +73,8 @@ const showReview = !isPlaceholder(REVIEW.text);
       <div class="w-52 rotate-[4deg]" aria-hidden="true"><div class="try-phone relative">
         <Device kind="phone" w={600} h={1298}>
           <div slot="screen" class="relative aspect-[600/1298] overflow-hidden">
-            <img src="/img/menu-liste.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s1 absolute inset-0 size-full object-cover" />
-            <img src="/img/menu-fiche.webp" alt="" width="600" height="1298" loading="lazy" class="try-s try-s2 absolute inset-0 size-full object-cover" />
+            <img src="/img/menu-liste.webp" alt={tt('Le menu QR : la liste des plats')} width="600" height="1298" loading="lazy" class="try-s try-s1 absolute inset-0 size-full object-cover" />
+            <img src="/img/menu-fiche.webp" alt={tt('Le menu QR : la fiche d’un plat')} width="600" height="1298" loading="lazy" class="try-s try-s2 absolute inset-0 size-full object-cover" />
             <div class="try-s try-s3 absolute inset-0 grid place-items-center bg-[#FAF8F3] p-4 text-center">
               <div>
                 <span class="mx-auto grid size-14 place-items-center rounded-full bg-green text-navy"><svg viewBox="0 0 24 24" class="size-8" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg></span>

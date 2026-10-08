@@ -681,4 +681,7 @@ export const dictAr: Record<string, string> = {
   "La salle sert. La caisse compte.": "القاعة تخدم. والصندوق يحسب.",
   "Découvrir Amplify Site": "اكتشفوا Amplify Site",
   "Votre site dès": "موقعكم ابتداء من",
+  "Le comptoir d’un café à Rabat": "كونتوار مقهى في الرباط",
+  "Le menu QR : la liste des plats": "قائمة QR: لائحة الأطباق",
+  "Le menu QR : la fiche d’un plat": "قائمة QR: بطاقة طبق",
 };

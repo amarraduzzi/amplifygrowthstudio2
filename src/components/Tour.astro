@@ -3,6 +3,8 @@
 // with a short explanation, then moves to the next screen. The visitor can take over at any moment:
 // tap a tab, tap a point (zoom in), tap the screen again (zoom out). Desktop: the device tilts with the mouse.
 import Device from './Device.astro';
+import { tr as trAlt, langOf as langAlt } from '../i18n/t';
+const tt = trAlt(langAlt(Astro.url));
 import { copy } from '../i18n';
 import type { Lang } from '../i18n/routes';
 interface Props { lang: Lang }
@@ -37,7 +39,7 @@ const t = copy(Astro.props.lang).home.tour;
             <div class={`tilt relative w-full ${tab.kind === 'phone' ? 'max-w-[17rem] sm:max-w-[19rem]' : 'max-w-5xl'} ${tab.img2 ? 'md:-translate-x-[38%]' : ''}`}>
               {tab.img2 && (
                 <div class="second-phone pointer-events-none absolute top-[6%] hidden w-[92%] rotate-[5deg] md:block" style="inset-inline-start:78%" aria-hidden="true">
-                  <Device kind="phone" src={tab.img2} alt="" w={tab.w} h={tab.h} />
+                  <Device kind="phone" src={tab.img2} alt={tt('Le menu QR : la fiche d’un plat')} w={tab.w} h={tab.h} />
                 </div>
               )}
               <Device kind={tab.kind} src={tab.img || undefined} alt={tab.text} w={tab.w} h={tab.h} class={tab.kind === 'tablet' ? 'p-2! sm:p-3! rounded-[1.4rem]! sm:rounded-[2rem]!' : ''}>

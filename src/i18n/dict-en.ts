@@ -681,4 +681,7 @@ export const dictEn: Record<string, string> = {
   "La salle sert. La caisse compte.": "The floor serves. The till counts.",
   "Découvrir Amplify Site": "Discover Amplify Site",
   "Votre site dès": "Your website from",
+  "Le comptoir d’un café à Rabat": "The counter of a café in Rabat",
+  "Le menu QR : la liste des plats": "The QR menu: the list of dishes",
+  "Le menu QR : la fiche d’un plat": "The QR menu: a dish card",
 };
