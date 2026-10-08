@@ -19,7 +19,7 @@ export const en: Copy = {
     chatReply: 'Hello, happy to help. Tell us where your business is: in Rabat we come and see you, elsewhere we meet on a video call.',
     chatNote: 'The button opens WhatsApp with this message. You can edit it before sending.',
     faqCta: 'Another question? Ask us on WhatsApp.',
-    footerTagline: 'Systems and marketing for businesses in Morocco. On site in Rabat, by video across Morocco.',
+    footerTagline: 'Systems and marketing in Morocco, from Rabat.',
     footer: {
       cols: { products: 'Products', services: 'Services', company: 'Amplify', contact: 'Get in touch' },
       pricing: 'Pricing',
@@ -167,7 +167,7 @@ export const en: Copy = {
     loop: {
       h2a: 'From the first click',
       h2b: 'to the customer who returns.',
-      p: 'Systems and marketing work as one. Each step feeds the next, and the loop starts again.',
+      p: 'Systems and marketing work as one: five steps, one system.',
       scroll: 'Scroll down',
       stations: [
         { h: 'Attract', p: 'A fast website, a polished Google Business Profile and content that makes people want to come. They find you.', tags: ['Marketing'], link: 'marketing', icon: 'megaphone' },
@@ -257,7 +257,7 @@ export const en: Copy = {
       from: 'From',
       per: 'DH excl. VAT / month',
       discover: 'Discover',
-      trial: '14 days free',
+      trial: 'Try it free for 14 days',
     },
     hero: {
       h1: 'POS and management software for restaurants in Morocco',
@@ -304,7 +304,7 @@ export const en: Copy = {
       ['Will my team find their way around?', 'The POS is in French and Arabic, with big buttons. Every employee has a personal code. We train your team, on site in Rabat or by video.'],
       ['What happens if the internet goes down?', 'The POS keeps taking orders and payments. Everything syncs as soon as the connection is back.'],
       ['Can I keep my current POS?', 'Yes. Amplify Profit (margins, stock, team, costs) also works on its own, without our POS.'],
-      ['How much does it cost?', 'The price depends on your venue and the modules you choose. Ask for a quote on WhatsApp, we reply quickly.'],
+      ['How much does it cost?', 'Amplify POS from 199 DH excl. VAT per month, Amplify Profit from 249 DH excl. VAT per month. 14-day free trial, no commitment.'],
     ],
     final: { h2: 'See the system with your own dishes.', p: 'Send us a message and we’ll show you the POS and the management side.' },
   },

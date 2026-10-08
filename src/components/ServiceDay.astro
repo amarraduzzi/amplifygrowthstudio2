@@ -7,11 +7,11 @@ import { ROUTES, type Lang } from '../i18n/routes';
 interface Props { lang: Lang; allCta: string; profitCta: string }
 const { lang, allCta, profitCta } = Astro.props;
 const moments = [
-  { t: '08:00', h: 'Chaque serveur entre avec son code', p: 'Pas de mot de passe partagé : chacun a son code personnel, et la caisse se verrouille toute seule après quelques minutes.', v: 'pin' },
-  { t: '12:30', h: 'Le rush, en quelques touches', p: 'Tables, commandes, remises et encaissement en quelques touches. La caisse suit, même quand la salle est pleine.', v: 'till' },
+  { t: '08:00', h: 'Chaque serveur se connecte avec son code', p: 'Pas de mot de passe partagé : chacun a son code personnel, et la caisse se verrouille toute seule après quelques minutes.', v: 'pin' },
+  { t: '12:30', h: 'Le rush, en quelques touches', p: 'Tables, commandes, remises et encaissement, sans attendre. La caisse tient le rythme, même quand la salle est pleine.', v: 'till' },
   { t: '12:31', h: 'Une commande arrive du QR', p: 'Le client scanne, choisit et commande depuis son téléphone. La caisse sonne, vous acceptez.', v: 'qr' },
-  { t: '12:32', h: 'Les bons partent tout seuls', p: 'Chaque article part vers la bonne imprimante, cuisine ou bar, avec les précisions du client.', v: 'print' },
-  { t: '16:10', h: 'Chaque dirham contrôlé', p: 'Une remise, une annulation, un remboursement : il faut le code du manager. Et tout reste tracé.', v: 'lock' },
+  { t: '12:32', h: 'Les bons partent tout seuls', p: 'Chaque article va vers la bonne imprimante, cuisine ou bar, avec les précisions du client.', v: 'print' },
+  { t: '16:10', h: 'Chaque dirham contrôlé', p: 'Une remise, une annulation, un remboursement : il faut un code manager. Et tout reste tracé.', v: 'lock' },
   { t: '23:30', h: 'La clôture en un clic', p: 'Rapport Z, espèces attendues, ventes par employé. Tickets numérotés, avec l’ICE du client, et une archive infalsifiable.', v: 'z' },
 ];
 ---

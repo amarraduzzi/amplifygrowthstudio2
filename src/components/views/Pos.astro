@@ -56,7 +56,7 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
           <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block whitespace-nowrap" style="--d:80ms">La caisse qui</span></span>
           <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block whitespace-nowrap text-green-deep" style="--d:200ms">ne s’arrête jamais.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
         </h1>
-        <p class="fade-up mt-4 max-w-xl text-[1.05rem] leading-snug text-muted md:mt-5 md:text-xl" style="--d:300ms">Caisse tactile, menu QR, bons cuisine et chiffres du jour pour cafés et restaurants au Maroc. En français et en arabe. Même quand internet tombe.</p>
+        <p class="fade-up mt-4 max-w-xl text-[1.05rem] leading-snug text-muted md:mt-5 md:text-xl" style="--d:300ms">Caisse tactile, menu QR, bons cuisine et chiffres du jour pour cafés et restaurants au Maroc. En français et en arabe, même quand internet tombe.</p>
         <div class="fade-up mt-6 flex items-center gap-4 md:mt-7" style="--d:400ms">
           <a href={signup} class="inline-flex min-h-12 items-center whitespace-nowrap rounded-full bg-green px-5 text-[0.95rem] font-semibold text-navy hover:bg-[#04A859] md:px-7 md:text-lg">{p.hero.cta}</a>
           <a href="#demo" class="whitespace-nowrap text-sm font-medium underline underline-offset-4 md:inline-flex md:min-h-12 md:items-center md:rounded-full md:border md:border-navy/25 md:px-6 md:text-lg md:font-normal md:no-underline md:hover:border-navy">Voir la démo</a>
@@ -87,10 +87,10 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
             <p class="pr-line whitespace-nowrap" style="--d:2400ms">2 × Café noir</p>
           </div>
         </div>
-        <!-- internet drops, the service goes on -->
+        <!-- the kitchen ticket is sent -->
         <p class="chat-in absolute bottom-[3%] end-[4%] flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:3000ms" aria-hidden="true">
-          <span class="grid size-6 place-items-center rounded-full bg-[#F5B301] sm:size-7"><svg viewBox="0 0 24 24" class="size-3.5 sm:size-4" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M2 8.8a15 15 0 0 1 20 0M5.5 12.3a10 10 0 0 1 13 0M9 15.8a5 5 0 0 1 6 0M12 19.5h.01M3 3l18 18"/></svg></span>
-          Internet coupé, le service continue
+          <span class="grid size-6 place-items-center rounded-full bg-green sm:size-7"><svg viewBox="0 0 24 24" class="size-3.5 sm:size-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg></span>
+          Bon envoyé en cuisine
         </p>
       </div>
     </div>
@@ -98,7 +98,7 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
     <!-- three facts -->
     <div class="border-y border-line bg-paper">
       <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
-        {[['199', 'DH HT / mois, tout compris'], ['14', 'jours gratuits, sans carte bancaire'], ['0', 'coupure de service si internet tombe']].map(([n, l]) => (
+        {[['199', 'DH HT / mois, tout compris'], ['14', 'jours gratuits, sans carte bancaire'], ['0 %', 'de commission sur vos commandes en ligne']].map(([n, l]) => (
           <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
         ))}
       </ul>
@@ -141,5 +141,5 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 
   <!-- final -->
   <ProductFinal title={p.final.title} text={p.final.text} cta={p.final.cta} href={signup} wa={wa} waLabel={t.ui.whatsapp} where="pos-final"
-    steps={['Compte créé', 'Menu importé depuis une photo', 'Tables et équipe ajoutées', 'Caisse prête à encaisser']} done="Prêt pour le service" />
+    steps={['Compte créé', 'Menu importé depuis une photo', 'Tables et équipe ajoutées', 'Caisse prête']} done="Tout est prêt" />
 </Base>

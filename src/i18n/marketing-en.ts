@@ -90,7 +90,7 @@ export const mkEn = {
   },
   compare: {
     h2a: 'Seen',
-    h2b: 'or sold?',
+    h2b: 'or profitable?',
     cols: ['Typical marketing in Morocco', 'Amplify marketing'],
     rows: [
       ['Goal', 'Views and likes', 'Customers who walk in and come back'],

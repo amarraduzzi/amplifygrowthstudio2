@@ -20,9 +20,9 @@ const story = [
   ['qr', 'Table 9 commande un tajine par le QR.'],
   ['pos', 'La caisse sonne, le bon part en cuisine.'],
   ['stock', 'Le stock de poulet baisse tout seul.'],
-  ['margins', 'La marge du tajine est comptée.'],
+  ['margins', 'La marge du tajine est calculée.'],
   ['team', 'Les ventes du serveur montent.'],
-  ['money', 'Le résultat du mois avance.'],
+  ['money', 'Le résultat du mois se met à jour.'],
 ];
 ---
 <div data-hub data-story={JSON.stringify(story.map(([k, x]) => [k, tt(x)]))}>
@@ -34,7 +34,7 @@ const story = [
   <!-- center -->
   <div class="absolute start-1/2 top-1/2 grid size-[26%] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-navy text-center text-white shadow-[0_30px_60px_-20px_rgba(0,30,62,0.6)] rtl:translate-x-1/2">
     <span class="hub-pulse absolute inset-0 rounded-full ring-2 ring-green" aria-hidden="true"></span>
-    <span><span dir="ltr" class="hub-word display block text-[clamp(1.4rem,4.5vw,2.4rem)] leading-none">Amplify</span><span class="mt-0.5 block text-[clamp(0.55rem,1.6vw,0.75rem)] text-white/70">tout parle ensemble</span></span>
+    <span><span dir="ltr" class="hub-word display block text-[clamp(1.4rem,4.5vw,2.4rem)] leading-none">Amplify</span><span class="mt-0.5 block text-[clamp(0.55rem,1.6vw,0.75rem)] text-white/70">tout est relié</span></span>
   </div>
   <!-- modules -->
   {pos.map(m => (

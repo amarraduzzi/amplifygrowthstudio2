@@ -10,7 +10,7 @@ export const rsEn = {
     kicker: 'Restaurants, cafés, snack bars',
     h1a: 'Your restaurant,',
     h1b: 'finally under control.',
-    lead: 'Orders that reach the kitchen, a till that adds up, margins you can see, and customers who come back. One partner in Rabat, and we start with what costs you the most.',
+    lead: 'Orders that reach the kitchen, a till that adds up, margins you can see, and customers who come back. One team in Rabat, and we start with your priority.',
     cta: 'Run my assessment',
     cta2: 'Message us on WhatsApp',
     modes: ['Today', 'With Amplify'],

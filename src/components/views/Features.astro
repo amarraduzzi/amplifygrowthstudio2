@@ -70,7 +70,7 @@ const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélit�
     <p class="fx-try mb-10 flex flex-wrap items-center gap-2 text-sm text-muted">Essayez :
       {examples.map(x => <button type="button" class="fx-ex rounded-full bg-paper px-3 py-1 font-semibold text-navy ring-1 ring-line hover:ring-green" data-q={x}>{x}</button>)}
     </p>
-    <p class="fx-none mb-10 hidden rounded-2xl bg-paper p-6 text-center ring-1 ring-line">Rien trouvé. <a href="#" class="fx-wa font-semibold text-green-deep underline underline-offset-4">Demandez-nous sur WhatsApp</a>, la réponse est peut-être oui.</p>
+    <p class="fx-none mb-10 hidden rounded-2xl bg-paper p-6 text-center ring-1 ring-line">Aucun résultat. <a href="#" class="fx-wa font-semibold text-green-deep underline underline-offset-4">Demandez-nous sur WhatsApp</a>, la réponse est peut-être oui.</p>
 
     <div class="space-y-24">
       {f.modules.map((m, mi) => (
@@ -103,7 +103,7 @@ const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélit�
   </div>
 
   <ProductFinal title={f.final.title} text={f.final.text} cta={f.final.cta} href={signupUrl(lang)} wa={wa} waLabel={t.ui.whatsapp} where="features-final"
-    steps={['Compte créé', 'Menu importé depuis une photo', 'Tables et équipe ajoutées', 'Caisse prête à encaisser']} done="Prêt pour le service" />
+    steps={['Compte créé', 'Menu importé depuis une photo', 'Tables et équipe ajoutées', 'Caisse prête']} done="Tout est prêt" />
 </Base>
 
 <script>

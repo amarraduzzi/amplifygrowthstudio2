@@ -138,7 +138,7 @@ export const profitEn = {
     text: 'Amplify Profit calculates what each dish costs, what it really earns you, and what price to charge. With your current POS, whatever it is.',
     cta: 'Try it free for 14 days',
     cta2: 'How it works',
-    note: 'No credit card. No need to change your POS.',
+    note: 'No credit card. No commitment.',
   },
   card: {
     label: 'Recipe card',
