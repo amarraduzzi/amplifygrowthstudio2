@@ -139,25 +139,28 @@ const schema = [
   <section class="st-root relative bg-navy text-white" data-styles>
     <div class="st-pin relative overflow-hidden">
       <div class="pointer-events-none absolute -start-40 top-20 size-[34rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
-      <div class="st-inner relative mx-auto flex max-w-6xl flex-col px-4 py-20 sm:px-6">
-        <div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-          <h2 class="max-w-3xl text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trois styles.</span><span class="block text-green">Aucun ne ressemble à un modèle.</span></h2>
-          <div class="flex flex-wrap gap-2" role="tablist" aria-label="Style">
+      <div class="st-inner relative mx-auto grid max-w-6xl content-center 2xl:max-w-7xl gap-6 px-4 py-20 sm:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
+        <div>
+          <h2 class="max-w-3xl text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[3.4rem]"><span class="block">Trois styles.</span><span class="block text-green">Aucun ne ressemble à un modèle.</span></h2>
+          <div class="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Style">
             {styles.map((s, i) => <button type="button" role="tab" data-style={s.k} aria-selected={i === 0 ? 'true' : 'false'} class="st-tab relative min-h-11 overflow-hidden rounded-full px-5 font-semibold ring-1 ring-white/20 transition-colors"><span class="st-fill absolute inset-0 origin-left bg-green/25" aria-hidden="true"></span><span class="relative">{s.name}</span></button>)}
           </div>
-        </div>
-        <div class="relative mt-4 min-h-[5.5rem] text-white/75 sm:min-h-[3.5rem] sm:text-lg">
-          {styles.map((s, i) => <p data-desc={s.k} class={`st-desc absolute inset-x-0 top-0 max-w-2xl ${i === 0 ? 'on' : ''}`}>{s.text}</p>)}
-        </div>
-        <div class="st-frame mx-auto mt-4 w-full overflow-hidden rounded-[1.4rem] bg-[#0B1422] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
-          <div class="flex items-center gap-2 px-4 py-3"><span class="size-3 rounded-full bg-[#FF5F57]"></span><span class="size-3 rounded-full bg-[#FEBC2E]"></span><span class="size-3 rounded-full bg-[#28C840]"></span>
-            <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
-          <div class="relative aspect-[16/10] overflow-hidden">
-            {styles.map((s, i) => <img src={s.img} alt={tt('Le site de Dar Nour, style') + ' ' + s.name} width="1600" height="1000" loading={i ? 'lazy' : 'eager'} decoding="async" data-shot={s.k} class={`st-shot absolute inset-0 h-full w-full object-cover object-top ${i === 0 ? 'on' : ''}`} />)}
-            <span class="st-edge pointer-events-none absolute inset-y-0 w-[3px] bg-green shadow-[0_0_30px_6px_rgba(5,185,98,.6)]" aria-hidden="true"></span>
+          <div class="relative mt-5 min-h-[5.5rem] text-white/75 sm:min-h-[3.5rem] sm:text-lg lg:min-h-[6rem]">
+            {styles.map((s, i) => <p data-desc={s.k} class={`st-desc absolute inset-x-0 top-0 max-w-2xl ${i === 0 ? 'on' : ''}`}>{s.text}</p>)}
           </div>
+          <p class="mt-2 hidden text-sm text-white/50 lg:block">Captures réelles du café de démonstration Dar Nour.</p>
         </div>
-        <p class="mt-4 text-sm text-white/50">Captures réelles du café de démonstration Dar Nour.</p>
+        <div>
+          <div class="st-frame mx-auto w-full overflow-hidden rounded-[1.4rem] bg-[#0B1422] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
+            <div class="flex items-center gap-2 px-4 py-3"><span class="size-3 rounded-full bg-[#FF5F57]"></span><span class="size-3 rounded-full bg-[#FEBC2E]"></span><span class="size-3 rounded-full bg-[#28C840]"></span>
+              <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
+            <div class="relative aspect-[16/10] overflow-hidden">
+              {styles.map((s, i) => <img src={s.img} alt={tt('Le site de Dar Nour, style') + ' ' + s.name} width="1600" height="1000" loading={i ? 'lazy' : 'eager'} decoding="async" data-shot={s.k} class={`st-shot absolute inset-0 h-full w-full object-cover object-top ${i === 0 ? 'on' : ''}`} />)}
+              <span class="st-edge pointer-events-none absolute inset-y-0 w-[3px] bg-green shadow-[0_0_30px_6px_rgba(5,185,98,.6)]" aria-hidden="true"></span>
+            </div>
+          </div>
+          <p class="mt-4 text-sm text-white/50 lg:hidden">Captures réelles du café de démonstration Dar Nour.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -298,8 +301,9 @@ const schema = [
   /* the styles: pinned with JS, a wipe from one to the next */
   .st-root.live { height: 320vh; }
   .st-root.live .st-pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
-  .st-root.live .st-inner { height: 100%; justify-content: center; padding-top: 5rem; padding-bottom: 2rem; }
+  .st-root.live .st-inner { height: 100%; padding-top: 5rem; padding-bottom: 1.5rem; }
   .st-root.live .st-frame { width: min(100%, calc((100svh - 19rem) * 1.6)); }
+  @media (min-width: 1024px) { .st-root.live .st-frame { width: min(100%, calc((100svh - 10rem) * 1.6)); } }
   .st-shot { clip-path: inset(0 0 0 0); }
   .st-root:not(.live) .st-shot { opacity: 0; transition: opacity .6s ease; }
   .st-root:not(.live) .st-shot.on { opacity: 1; }
