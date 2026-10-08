@@ -659,4 +659,6 @@ export const dictEn: Record<string, string> = {
   "Commande en ligne n° 42": "Online order no. 42",
   "N° 42 · 12:41": "No. 42 · 12:41",
   "PAYÉ": "PAID",
+  "Des supporters marocains et étrangers sur une terrasse de café un soir de match": "Moroccan and foreign fans on a café terrace on a match night",
+  "Un touriste cherche un restaurant sur son téléphone devant une porte de riad": "A tourist looks for a restaurant on a phone in front of a riad door",
 };

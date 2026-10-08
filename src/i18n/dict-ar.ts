@@ -659,4 +659,6 @@ export const dictAr: Record<string, string> = {
   "N° 42 · 12:41": "رقم 42 · 12:41",
   "PAYÉ": "مدفوع",
   "Amplify Site + Amplify POS": "Amplify Site + Amplify POS",
+  "Des supporters marocains et étrangers sur une terrasse de café un soir de match": "مشجعون مغاربة وأجانب على شرفة مقهى في ليلة مباراة",
+  "Un touriste cherche un restaurant sur son téléphone devant une porte de riad": "سائح يبحث عن مطعم على هاتفه أمام باب رياض",
 };
