@@ -69,7 +69,7 @@ const pos = (i: number) => { const a = (-90 + (i * 360) / N) * Math.PI / 180; re
 </section>
 
 <!-- the three ways in, right after the loop -->
-<section class="bg-blue pb-20 text-white md:pb-24">
+<section class="relative z-10 bg-blue pb-20 text-white md:pb-24">
   <div class="mx-auto grid max-w-6xl gap-3 px-4 sm:px-6 md:grid-cols-3">
     {c.three.map(([name, sub, key]) => (
       <a href={ROUTES[key][lang]} class="group flex items-center justify-between gap-4 rounded-2xl bg-white/5 px-5 py-4 ring-1 ring-white/15 hover:bg-white/10">

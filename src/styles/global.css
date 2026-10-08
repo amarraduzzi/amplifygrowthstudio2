@@ -160,6 +160,13 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
 .loop-arc { stroke-dashoffset: calc(var(--c) * (1 - var(--p)) * 1px); }
 .loop-comet { transform: rotate(calc(var(--p) * 360deg)); }
 .loop-live .loop-comet { transition: transform .15s linear; }
+/* desktop with a low screen (laptops): the pinned loop must fit in one screen */
+@media (min-width: 768px) and (max-height: 900px) {
+  .loop-live .loop-head p { display: none; }
+  .loop-live .loop-head h2 { font-size: clamp(2.6rem, 7svh, 4.5rem); }
+  .loop-live .loop-body { margin-top: 1rem; }
+  .loop-live .loop-body > div:first-child { max-width: min(28rem, 50svh); }
+}
 .loop-node.lit { background: var(--color-green); color: var(--color-navy); box-shadow: none; }
 .loop-node.now { scale: 1.22; box-shadow: 0 0 0 6px rgb(5 185 98 / .25); }
 .loop-panel { opacity: 0; transform: translateY(14px); transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
