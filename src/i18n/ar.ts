@@ -3,7 +3,7 @@
 import type { Copy } from './fr';
 
 export const ar: Copy = {
-  nav: { systems: 'الأنظمة', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'المميزات', marketing: 'التسويق', restaurants: 'المطاعم', contact: 'اتصل بنا', login: 'تسجيل الدخول', trial: 'تجربة مجانية' },
+  nav: { systems: 'الأنظمة', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'المميزات', marketing: 'Amplify Clients', restaurants: 'المطاعم', contact: 'اتصل بنا', login: 'تسجيل الدخول', trial: 'تجربة مجانية' },
   ui: {
     whatsapp: 'راسلنا على واتساب',
     whatsappShort: 'WhatsApp',
@@ -96,7 +96,7 @@ export const ar: Copy = {
         order: ['طلب جديد', '2 × بيتزا مارغريتا', '1 × أتاي بالنعناع', 'للأخذ، الساعة 19:30'],
         reply: 'شكرًا، تم تسجيل الطلب! سيكون جاهزًا على 19:30.',
       },
-      marketing: ['التسويق', 'Google، حملات تذوق، مفهوم حقيقي وموقع يحوّل الزوار إلى زبناء. زبناء على الطاولة، وليس مشاهدات.'],
+      marketing: ['Amplify Clients', 'Google، حملات تذوق، مفهوم حقيقي وموقع يحوّل الزوار إلى زبناء. زبناء على الطاولة، وليس مشاهدات.'],
     },
     places: {
       h2a: 'مهن مختلفة.',
@@ -177,7 +177,7 @@ export const ar: Copy = {
         { h: 'إرجاع الزبون', p: 'نقاط الولاء، آراء Google على التذكرة، عروض واتساب للزبناء الموافقين. والدورة تبدأ من جديد.', tags: ['الولاء', 'آراء Google'], link: 'marketing', icon: 'check' },
       ] as { h: string; p: string; tags: string[]; link: 'marketing' | 'pos' | 'profit'; icon: 'megaphone' | 'qr' | 'till' | 'chart' | 'check' }[],
       more: 'اعرف المزيد',
-      three: [['Amplify POS', 'الكاشير، ابتداءً من 199 درهم دون احتساب الضريبة / شهريًا، كل شيء مشمول', 'pos'], ['Amplify Profit', 'هوامش الربح، ابتداءً من 249 درهم دون احتساب الضريبة / شهريًا', 'profit'], ['التسويق', 'الموقع، واتساب، Google، حسب عرض سعر', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
+      three: [['Amplify POS', 'الكاشير، ابتداءً من 199 درهم دون احتساب الضريبة / شهريًا، كل شيء مشمول', 'pos'], ['Amplify Profit', 'هوامش الربح، ابتداءً من 249 درهم دون احتساب الضريبة / شهريًا', 'profit'], ['Amplify Clients', 'Google، إنستغرام، حملات تذوق، حسب عرض سعر', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
     },
     paths: {
       h2: 'نفكر أبعد من الكاشير.',
@@ -189,7 +189,7 @@ export const ar: Copy = {
         link: 'اكتشف الأنظمة',
       },
       marketing: {
-        h3: 'التسويق',
+        h3: 'Amplify Clients',
         p: 'تسويق يُقاس بالزبناء على الطاولة، وليس بالمشاهدات: Google، حملات تذوق، أنشطة في الحي، مفهوم قوي وموقع يحوّل الزوار إلى زبناء.',
         list: ['Google والآراء', 'حملات تذوق وأنشطة ميدانية', 'موقع يحوّل الزوار إلى زبناء'],
         link: 'اكتشف التسويق',

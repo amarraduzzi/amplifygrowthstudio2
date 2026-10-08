@@ -49,7 +49,7 @@ export const rsAr = {
     items: [
       { k: 'pos', name: 'Amplify POS', h: 'الكاشير', p: 'الكاشير، الطاولات، قائمة QR، تذاكر المطبخ. حتى بدون إنترنت.', cta: 'شاهد Amplify POS' },
       { k: 'profit', name: 'Amplify Profit', h: 'هوامش الربح', p: 'كم يكلف كل طبق، كم يربحك، والسعر المناسب.', cta: 'شاهد Amplify Profit' },
-      { k: 'marketing', name: 'التسويق', h: 'الزبناء', p: 'Google، حملات تذوق، واتساب وموقع يجلب الزبناء.', cta: 'شاهد التسويق' },
+      { k: 'marketing', name: 'Amplify Clients', h: 'الزبناء', p: 'Google، حملات تذوق، واتساب وموقع يجلب الزبناء.', cta: 'شاهد التسويق' },
     ],
     flows: ['المبيعات', 'هوامش الربح', 'القياس'],
   },

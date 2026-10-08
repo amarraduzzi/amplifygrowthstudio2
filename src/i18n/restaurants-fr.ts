@@ -49,7 +49,7 @@ export const rsFr = {
     items: [
       { k: 'pos', name: 'Amplify POS', h: 'La caisse', p: 'Caisse, tables, menu QR, bons cuisine. Même sans internet.', cta: 'Voir Amplify POS' },
       { k: 'profit', name: 'Amplify Profit', h: 'Les marges', p: 'Ce que coûte chaque plat, ce qu’il rapporte, et le bon prix.', cta: 'Voir Amplify Profit' },
-      { k: 'marketing', name: 'Marketing', h: 'Les clients', p: 'Google, dégustations, WhatsApp et un site qui fait réserver et commander.', cta: 'Voir le marketing' },
+      { k: 'marketing', name: 'Amplify Clients', h: 'Les clients', p: 'Google, dégustations, WhatsApp et un site qui fait réserver et commander.', cta: 'Voir le marketing' },
     ],
     flows: ['ventes', 'marges', 'mesure'],
   },

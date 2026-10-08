@@ -2,12 +2,12 @@
 // No invented results: cases only when real ([PLACEHOLDER] until then).
 export const mkEn = {
   meta: {
-    title: 'Restaurant and café marketing in Morocco that brings customers | Amplify',
+    title: 'Restaurant and café marketing in Morocco that brings customers | Amplify Clients',
     description: 'Google visibility, tastings, neighbourhood actions and a real concept. Marketing for restaurants, cafés and snack bars, measured in customers at the table, not views. Rabat.',
   },
   wa: 'Hello, I’d like more customers in my venue. Could we talk about an assessment?',
   hero: {
-    kicker: 'Marketing for food and hospitality',
+    kicker: 'Amplify Clients: marketing for restaurants',
     h1a: 'Customers at the table.',
     h1b: 'Not views.',
     lead: 'Restaurant, café, coffee shop, snack bar or tea room: we do marketing that brings people through the door. Google first, ideas that go out and find customers, and a concept that looks like nobody else.',

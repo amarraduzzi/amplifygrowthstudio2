@@ -12,7 +12,7 @@ import { waLink } from '../config';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = c.diag;
-const P = { pos: ['Amplify POS', 'bg-blue text-white', ROUTES.pos[lang]], profit: ['Amplify Profit', 'bg-green text-navy', ROUTES.profit[lang]], marketing: ['Marketing', 'bg-[#F5B301] text-navy', ROUTES.marketing[lang]] } as const;
+const P = { pos: ['Amplify POS', 'bg-blue text-white', ROUTES.pos[lang]], profit: ['Amplify Profit', 'bg-green text-navy', ROUTES.profit[lang]], marketing: ['Amplify Clients', 'bg-[#F5B301] text-navy', ROUTES.marketing[lang]] } as const;
 const pre = ['marge', 'commandes'];
 ---
 <section id="diagnostic" class="scroll-mt-20 border-y border-line bg-paper" data-rsdiag data-wa={c.wa} data-cost={tt('Ce qui me coûte le plus :')}>

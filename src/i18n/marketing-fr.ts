@@ -2,12 +2,12 @@
 // No invented results: cases only when real ([PLACEHOLDER] until then).
 export const mkFr = {
   meta: {
-    title: 'Marketing qui ramène des clients, pour restaurants et cafés au Maroc | Amplify',
+    title: 'Marketing qui ramène des clients, pour restaurants et cafés au Maroc | Amplify Clients',
     description: 'Référencement Google, dégustations, actions de quartier et un vrai concept. Du marketing pour restaurants, cafés et snacks qui se mesure en clients à table, pas en vues. Rabat.',
   },
   wa: 'Bonjour, je voudrais plus de clients dans mon établissement. On peut parler d’un diagnostic ?',
   hero: {
-    kicker: 'Marketing pour la restauration',
+    kicker: 'Amplify Clients : le marketing des restaurants',
     h1a: 'Des clients à table.',
     h1b: 'Pas des vues.',
     lead: 'Restaurant, café, coffee shop, snack ou salon de thé : notre marketing fait entrer des gens. Google d’abord, des idées qui vont chercher le client, et un concept qui ne ressemble à personne.',

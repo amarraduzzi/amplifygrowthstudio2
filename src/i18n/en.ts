@@ -3,7 +3,7 @@
 import type { Copy } from './fr';
 
 export const en: Copy = {
-  nav: { systems: 'Systems', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Features', marketing: 'Marketing', restaurants: 'Restaurants', contact: 'Contact', login: 'Log in', trial: 'Free trial' },
+  nav: { systems: 'Systems', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Features', marketing: 'Amplify Clients', restaurants: 'Restaurants', contact: 'Contact', login: 'Log in', trial: 'Free trial' },
   ui: {
     whatsapp: 'Message us on WhatsApp',
     whatsappShort: 'WhatsApp',
@@ -96,7 +96,7 @@ export const en: Copy = {
         order: ['New order', '2 × Pizza Margarita', '1 × Mint tea', 'Takeaway, 7:30 pm'],
         reply: 'Thanks, got it! Ready at 7:30 pm.',
       },
-      marketing: ['Marketing', 'Google, tastings, a real concept and a website that converts. Customers at your tables, not views.'],
+      marketing: ['Amplify Clients', 'Google, tastings, a real concept and a website that converts. Customers at your tables, not views.'],
     },
     places: {
       h2a: 'Different trades.',
@@ -177,7 +177,7 @@ export const en: Copy = {
         { h: 'Bring them back', p: 'Loyalty points, Google reviews on the receipt, WhatsApp offers to customers who opted in. And the loop starts again.', tags: ['Loyalty', 'Google reviews'], link: 'marketing', icon: 'check' },
       ] as { h: string; p: string; tags: string[]; link: 'marketing' | 'pos' | 'profit'; icon: 'megaphone' | 'qr' | 'till' | 'chart' | 'check' }[],
       more: 'Learn more',
-      three: [['Amplify POS', 'The POS, from 199 DH excl. VAT / month, all included', 'pos'], ['Amplify Profit', 'Your margins, from 249 DH excl. VAT / month', 'profit'], ['Marketing', 'Website, WhatsApp, Google, on quote', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
+      three: [['Amplify POS', 'The POS, from 199 DH excl. VAT / month, all included', 'pos'], ['Amplify Profit', 'Your margins, from 249 DH excl. VAT / month', 'profit'], ['Amplify Clients', 'Google, Instagram, tastings, on quote', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
     },
     paths: {
       h2: 'We think beyond the POS.',
@@ -189,7 +189,7 @@ export const en: Copy = {
         link: 'Explore the systems',
       },
       marketing: {
-        h3: 'Marketing',
+        h3: 'Amplify Clients',
         p: 'Marketing measured in customers at your tables, not views: Google, tastings, neighbourhood actions, a strong concept and a website that converts.',
         list: ['Google and reviews', 'Tastings and local actions', 'A website that converts'],
         link: 'Explore marketing',

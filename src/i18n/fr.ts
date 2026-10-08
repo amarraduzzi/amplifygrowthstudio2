@@ -3,7 +3,7 @@
 // Placeholders: [IN CAPITALS], listed in OPEN-PUNTEN.md. Nothing here is invented.
 
 export const fr = {
-  nav: { systems: 'Systèmes', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Fonctionnalités', marketing: 'Marketing', restaurants: 'Restaurants', contact: 'Contact', login: 'Se connecter', trial: 'Essai gratuit' },
+  nav: { systems: 'Systèmes', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Fonctionnalités', marketing: 'Amplify Clients', restaurants: 'Restaurants', contact: 'Contact', login: 'Se connecter', trial: 'Essai gratuit' },
   ui: {
     whatsapp: 'Écrire sur WhatsApp',
     whatsappShort: 'WhatsApp',
@@ -96,7 +96,7 @@ export const fr = {
         order: ['Nouvelle commande', '2 × Pizza Margherita', '1 × Thé à la menthe', 'À emporter, 19 h 30'],
         reply: 'Merci, c’est noté ! Prête à 19 h 30.',
       },
-      marketing: ['Marketing', 'Google, dégustations, un vrai concept et un site qui fait réserver et commander. Des clients à table, pas des vues.'],
+      marketing: ['Amplify Clients', 'Google, dégustations, un vrai concept et un site qui fait réserver et commander. Des clients à table, pas des vues.'],
     },
     places: {
       h2a: 'Différents métiers.',
@@ -177,7 +177,7 @@ export const fr = {
         { h: 'Faire revenir', p: 'Points de fidélité, avis Google sur le ticket, offres WhatsApp aux clients qui ont donné leur accord. Et la boucle recommence.', tags: ['Fidélité', 'Avis Google'], link: 'marketing', icon: 'check' },
       ] as { h: string; p: string; tags: string[]; link: 'marketing' | 'pos' | 'profit'; icon: 'megaphone' | 'qr' | 'till' | 'chart' | 'check' }[],
       more: 'En savoir plus',
-      three: [['Amplify POS', 'La caisse, dès 199 DH HT / mois, tout compris', 'pos'], ['Amplify Profit', 'Les marges, dès 249 DH HT / mois', 'profit'], ['Marketing', 'Site, WhatsApp, Google, sur devis', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
+      three: [['Amplify POS', 'La caisse, dès 199 DH HT / mois, tout compris', 'pos'], ['Amplify Profit', 'Les marges, dès 249 DH HT / mois', 'profit'], ['Amplify Clients', 'Google, Instagram, dégustations, sur devis', 'marketing']] as [string, string, 'pos' | 'profit' | 'marketing'][],
     },
     paths: {
       h2: 'On pense au-delà de la caisse.',
@@ -189,7 +189,7 @@ export const fr = {
         link: 'Découvrir les systèmes',
       },
       marketing: {
-        h3: 'Marketing',
+        h3: 'Amplify Clients',
         p: 'Du marketing qui se mesure en clients à table, pas en vues : Google, dégustations, actions de quartier, un concept fort et un site qui fait réserver et commander.',
         list: ['Google et avis', 'Dégustations et actions terrain', 'Site qui fait commander'],
         link: 'Découvrir le marketing',

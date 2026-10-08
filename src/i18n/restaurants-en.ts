@@ -49,7 +49,7 @@ export const rsEn = {
     items: [
       { k: 'pos', name: 'Amplify POS', h: 'The POS', p: 'POS, tables, QR menu, kitchen tickets. Even without internet.', cta: 'See Amplify POS' },
       { k: 'profit', name: 'Amplify Profit', h: 'The margins', p: 'What each dish costs, what it earns, and the right price.', cta: 'See Amplify Profit' },
-      { k: 'marketing', name: 'Marketing', h: 'The customers', p: 'Google, tastings, WhatsApp and a website that converts.', cta: 'See marketing' },
+      { k: 'marketing', name: 'Amplify Clients', h: 'The customers', p: 'Google, tastings, WhatsApp and a website that converts.', cta: 'See marketing' },
     ],
     flows: ['sales', 'margins', 'measurement'],
   },
