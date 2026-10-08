@@ -661,4 +661,10 @@ export const dictEn: Record<string, string> = {
   "PAYÉ": "PAID",
   "Des supporters marocains et étrangers sur une terrasse de café un soir de match": "Moroccan and foreign fans on a café terrace on a match night",
   "Un touriste cherche un restaurant sur son téléphone devant une porte de riad": "A tourist looks for a restaurant on a phone in front of a riad door",
+  "Une équipe Amplify filme un cuisinier qui dresse un tajine dans sa cuisine": "An Amplify team films a cook plating a tajine in his kitchen",
+  "Tourné chez vous.": "Shot at your place.",
+  "Votre cuisine, votre équipe.": "Your kitchen, your team.",
+  "En tournage": "Filming",
+  "Un client laisse un avis Google en scannant le QR posé sur sa table": "A guest leaves a Google review by scanning the QR on the table",
+  "Un QR sur la table, plus d’avis Google": "A QR on the table, more Google reviews",
 };

@@ -661,4 +661,10 @@ export const dictAr: Record<string, string> = {
   "Amplify Site + Amplify POS": "Amplify Site + Amplify POS",
   "Des supporters marocains et étrangers sur une terrasse de café un soir de match": "مشجعون مغاربة وأجانب على شرفة مقهى في ليلة مباراة",
   "Un touriste cherche un restaurant sur son téléphone devant une porte de riad": "سائح يبحث عن مطعم على هاتفه أمام باب رياض",
+  "Une équipe Amplify filme un cuisinier qui dresse un tajine dans sa cuisine": "فريق Amplify يصور طباخا يقدم طاجينا في مطبخه",
+  "Tourné chez vous.": "نصوّر عندكم.",
+  "Votre cuisine, votre équipe.": "مطبخكم، فريقكم.",
+  "En tournage": "جارٍ التصوير",
+  "Un client laisse un avis Google en scannant le QR posé sur sa table": "زبون يترك تقييما على غوغل بمسح رمز QR على طاولته",
+  "Un QR sur la table, plus d’avis Google": "رمز QR على الطاولة، تقييمات أكثر على غوغل",
 };

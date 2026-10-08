@@ -77,6 +77,15 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
         </li>
       ))}
     </ol>
+    <!-- content made in your place -->
+    <figure class="mkx relative mt-16 overflow-hidden rounded-[2rem] bg-navy">
+      <img src="/img/mk-content.webp" alt={tt('Une équipe Amplify filme un cuisinier qui dresse un tajine dans sa cuisine')} width="1376" height="768" loading="lazy" decoding="async" class="mkx-img aspect-[16/9] h-auto w-full object-cover md:aspect-[21/9]" />
+      <div class="absolute inset-0 bg-gradient-to-t from-navy/90 via-navy/20 to-transparent"></div>
+      <figcaption class="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-4 p-6 text-white md:p-10">
+        <p class="display max-w-2xl text-3xl leading-[0.95] sm:text-5xl">{tt('Tourné chez vous.')}<span class="block text-green">{tt('Votre cuisine, votre équipe.')}</span></p>
+        <p class="mkx-rec inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold backdrop-blur"><span class="size-2.5 rounded-full bg-[#F04438]"></span>{tt('En tournage')}</p>
+      </figcaption>
+    </figure>
   </section>
 
   <!-- for all of horeca -->
@@ -96,6 +105,11 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
     <div>
       <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.report.h2a}</span><span class="block text-green-deep">{c.report.h2b}</span></h2>
       <p class="mt-5 max-w-md text-lg text-muted">{c.report.p}</p>
+      <!-- more Google reviews: the QR on the table -->
+      <figure class="mkx relative mt-8 max-w-md overflow-hidden rounded-[2rem]">
+        <img src="/img/mk-review.webp" alt={tt('Un client laisse un avis Google en scannant le QR posé sur sa table')} width="896" height="1200" loading="lazy" decoding="async" class="mkx-img aspect-[4/3] h-auto w-full object-cover object-[50%_45%]" />
+        <figcaption class="mkx-chip absolute bottom-4 start-4 inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-navy shadow-xl"><span class="text-[#F5B301]">★</span>{tt('Un QR sur la table, plus d’avis Google')}</figcaption>
+      </figure>
     </div>
     <div aria-hidden="true">
       <div class="mx-auto max-w-sm rounded-[1.75rem] bg-[#E9E2D7] p-4 shadow-[0_40px_80px_-40px_rgba(0,30,62,0.5)]">
@@ -143,4 +157,19 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { root.classList.add('in'); io.disconnect(); } }, { threshold: 0.4 });
     io.observe(root);
   });
+</script>
+
+<style is:global>
+  .mkx-img { transform: scale(1.1); transition: transform 2.6s cubic-bezier(.2,.8,.2,1); }
+  .mkx.seen .mkx-img { transform: scale(1); }
+  .mkx-rec span { animation: mkx-blink 1.2s steps(1) infinite; }
+  @keyframes mkx-blink { 50% { opacity: .2; } }
+  .js .mkx-chip { opacity: 0; transform: translateY(12px); }
+  .mkx.seen .mkx-chip { animation: mkx-in .6s cubic-bezier(.2,.8,.2,1) .8s both; }
+  @keyframes mkx-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .mkx-img { transform: none; transition: none; } .mkx-rec span, .mkx.seen .mkx-chip { animation: none; } .js .mkx-chip { opacity: 1; transform: none; } }
+</style>
+<script>
+  const mkx = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); mkx.unobserve(e.target); } }), { threshold: 0.25 });
+  document.querySelectorAll('.mkx').forEach(n => mkx.observe(n));
 </script>
