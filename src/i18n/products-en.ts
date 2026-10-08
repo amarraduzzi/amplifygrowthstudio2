@@ -284,6 +284,7 @@ export const featuresEn = {
         ['Waitlist', 'A QR at the door: guests join, see their place, and get a message when their table is ready.'],
         ['Ordering kiosk', 'A tablet at the entrance: guests order by themselves, get a number and pay at the till.'],
         ['Menus by time of day and Ramadan', 'Breakfast in the morning, a Ftour menu at sunset: a category only shows at the hours and dates you choose.'],
+        ['Your own couriers', 'The till picks the courier. He gets his deliveries on his phone, with directions, and confirms each one with the guest’s 4-digit code.'],
       ],
     },
     {

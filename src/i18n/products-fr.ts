@@ -287,6 +287,7 @@ export const featuresFr = {
         ['File d’attente', 'Un QR à l’entrée : le client s’inscrit, voit sa place, et reçoit le message quand sa table est prête.'],
         ['Borne de commande', 'Une tablette à l’entrée : le client commande seul, reçoit un numéro et paie à la caisse.'],
         ['Menus selon l’heure et Ramadan', 'Petit-déjeuner le matin, menu Ftour au coucher du soleil : une catégorie n’apparaît qu’aux heures et aux dates choisies.'],
+        ['Vos propres livreurs', 'La caisse choisit le livreur. Il reçoit ses courses sur son téléphone, avec l’itinéraire, et valide la livraison avec le code à 4 chiffres du client.'],
       ],
     },
     {
