@@ -248,6 +248,8 @@ export const featuresFr = {
         ['Écran client', 'Une tablette ou un 2e écran tourné vers le client affiche la commande en direct, le total, puis le montant reçu et la monnaie à rendre. En français et en arabe.'],
         ['Ardoise client', 'Les habitués paient plus tard : plafond par client, solde à jour, relevé à imprimer ou à envoyer.'],
         ['Happy hours et codes promo', '−30 % sur les boissons de 15 h à 18 h, un code BIENVENUE10 : appliqués tout seuls, à la caisse comme en ligne, et visibles sur le ticket.'],
+        ['Envoi par service', 'Entrée, plat, dessert : la suite attend à la caisse et part en cuisine avec « Envoyer la suite ». La cuisine voit ce qui arrive ensuite.'],
+        ['Postes de préparation et passe', 'Grill, pizza, dessert : chaque poste a ses bons et son écran. Le passe voit, table par table, ce qui est prêt à servir.'],
       ],
     },
     {
@@ -312,6 +314,8 @@ export const featuresFr = {
         ['Stock lié aux ventes, en direct', 'Chaque vente déduit les ingrédients de la recette, options comprises. Un plat passe « épuisé » tout seul quand il manque un ingrédient.'],
         ['Bons de commande fournisseurs', 'Un bon de commande depuis le conseil d’achat, envoyé par WhatsApp. À la réception, le stock et les prix se mettent à jour, avec une alerte si un prix monte.'],
         ['Pertes déclarées', 'Un produit jeté ou cassé se déclare depuis la caisse, avec le motif, et compte dans les écarts.'],
+        ['Comptes fournisseurs', 'Ce que vous devez à chaque fournisseur, ce qui est en retard et la prochaine échéance. Paiements, avoirs et relevé.'],
+        ['Comparer les fournisseurs', 'Pour un même produit : prix moyen et dernier prix chez chaque fournisseur, et ce que vous auriez payé en moins chez le moins cher.'],
       ],
     },
     {

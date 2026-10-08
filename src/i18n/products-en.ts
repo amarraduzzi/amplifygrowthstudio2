@@ -245,6 +245,8 @@ export const featuresEn = {
         ['Customer display', 'A tablet or second screen facing the guest shows the order live, the total, then the cash received and the change. In French and Arabic.'],
         ['House accounts', 'Regulars pay later: a limit per guest, an up-to-date balance, a statement to print or send.'],
         ['Happy hours and promo codes', '-30% on drinks from 3 to 6 pm, a WELCOME10 code: applied automatically, at the till and online, and shown on the receipt.'],
+        ['Courses', 'Starter, main, dessert: the next course waits at the till and goes to the kitchen with "Send next". The kitchen sees what comes next.'],
+        ['Kitchen stations and the pass', 'Grill, pizza, dessert: each station has its own tickets and screen. The pass sees, table by table, what is ready to serve.'],
       ],
     },
     {
@@ -309,6 +311,8 @@ export const featuresEn = {
         ['Stock linked to sales, live', 'Every sale deducts the recipe ingredients, options included. A dish turns "sold out" by itself when an ingredient runs out.'],
         ['Supplier purchase orders', 'A purchase order from the buying advice, sent on WhatsApp. On delivery, stock and prices update, with an alert when a price goes up.'],
         ['Recorded waste', 'A product thrown away or broken is recorded from the till, with the reason, and counts in the differences.'],
+        ['Supplier accounts', 'What you owe each supplier, what is overdue and the next due date. Payments, credit notes and statement.'],
+        ['Compare suppliers', 'For the same product: average and last price at each supplier, and what you would have saved at the cheapest.'],
       ],
     },
     {
