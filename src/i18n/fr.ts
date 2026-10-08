@@ -3,7 +3,7 @@
 // Placeholders: [IN CAPITALS], listed in OPEN-PUNTEN.md. Nothing here is invented.
 
 export const fr = {
-  nav: { systems: 'Systèmes', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Fonctionnalités', marketing: 'Amplify Clients', restaurants: 'Restaurants', contact: 'Contact', login: 'Se connecter', trial: 'Essai gratuit' },
+  nav: { systems: 'Systèmes', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Fonctionnalités', marketing: 'Amplify Clients', restaurants: 'Par où commencer', contact: 'Contact', login: 'Se connecter', trial: 'Essai gratuit' },
   ui: {
     whatsapp: 'Écrire sur WhatsApp',
     whatsappShort: 'WhatsApp',

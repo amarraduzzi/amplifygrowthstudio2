@@ -3,7 +3,7 @@
 import type { Copy } from './fr';
 
 export const en: Copy = {
-  nav: { systems: 'Systems', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Features', marketing: 'Amplify Clients', restaurants: 'Restaurants', contact: 'Contact', login: 'Log in', trial: 'Free trial' },
+  nav: { systems: 'Systems', pos: 'Amplify POS', profit: 'Amplify Profit', site: 'Amplify Site', features: 'Features', marketing: 'Amplify Clients', restaurants: 'Where to start', contact: 'Contact', login: 'Log in', trial: 'Free trial' },
   ui: {
     whatsapp: 'Message us on WhatsApp',
     whatsappShort: 'WhatsApp',

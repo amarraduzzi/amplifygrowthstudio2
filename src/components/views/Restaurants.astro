@@ -3,13 +3,13 @@
 // plan, the three tools that talk to each other, priorities per trade, FAQ, and a final card that
 // carries the visitor's diagnostic into WhatsApp.
 import Base from '../../layouts/Base.astro';
-import RsHero from '../RsHero.astro';
 import RsDiag from '../RsDiag.astro';
 import Proof from '../Proof.astro';
 import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import { copy } from '../../i18n';
+import { OFFER, signupUrl } from '../../config';
 import { rsOf } from '../../i18n/content';
 import { tr, langOf } from '../../i18n/t';
 const LG = langOf(Astro.url);
@@ -22,11 +22,36 @@ const { lang } = Astro.props;
 const t = copy(lang);
 const old = t.restaurants;
 const schema = [serviceSchema(`${c.hero.h1a} ${c.hero.h1b}`, c.meta.description, abs(ROUTES.restaurants[lang])), faqSchema(c.faq)].filter(Boolean) as Record<string, unknown>[];
-const TRIO = { pos: ['till', 'bg-blue text-white', ROUTES.pos[lang]], profit: ['chart', 'bg-green text-navy', ROUTES.profit[lang]], marketing: ['megaphone', 'bg-[#F5B301] text-navy', ROUTES.marketing[lang]] } as const;
+const TRIO = { pos: ['till', 'bg-blue text-white', ROUTES.pos[lang], tt('dès 199 DH HT / mois')], profit: ['chart', 'bg-green text-navy', ROUTES.profit[lang], tt('dès 249 DH HT / mois')], site: ['phone', 'bg-white text-navy', ROUTES.site[lang], `${tt('dès')} ${OFFER.siteSetup} DH`], marketing: ['megaphone', 'bg-[#F5B301] text-navy', ROUTES.marketing[lang], tt('sur devis')] } as const;
 const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'metier-snack', the: 'metier-salon-the' } as const;
 ---
 <Base lang={lang} page="restaurants" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
-  <RsHero />
+  <!-- hero: the question, a real room, and the four ways in -->
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12" data-rshero>
+    <div>
+      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{c.hero.kicker}</p>
+      <h1 class="mt-5 text-[clamp(3rem,6.2vw,5.4rem)]">
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Par où')}</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{tt('commencer ?')}</span></span>
+      </h1>
+      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Caisse, marges, site ou clients : chaque restaurant a un premier problème. Dites-nous le vôtre en 10 secondes, nous vous montrons par quel outil commencer et ce que ça coûte.')}</p>
+      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+        <a href="#diagnostic" class="inline-flex min-h-12 items-center gap-2 rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{c.hero.cta}<span aria-hidden="true">↓</span></a>
+        <WaButton text={c.wa} label={c.hero.cta2} where="restaurants-hero" tone="light" class="px-6 ring-1 ring-line" />
+      </div>
+    </div>
+    <div class="relative" aria-hidden="true">
+      <div class="rsh-photo overflow-hidden rounded-[2rem] shadow-[0_40px_80px_-40px_rgba(0,30,62,0.6)]">
+        <img src="/img/photos/metier-restaurant-1600.webp" srcset="/img/photos/metier-restaurant-800.webp 800w, /img/photos/metier-restaurant-1600.webp 1536w" sizes="(min-width: 1024px) 560px, 100vw" alt="" width="1536" height="1024" fetchpriority="high" class="aspect-[4/3.4] w-full object-cover" />
+      </div>
+      {[['pos', 'Amplify POS', tt('La caisse'), 'start-[-4%] top-[8%]'], ['profit', 'Amplify Profit', tt('Les marges'), 'end-[-3%] top-[24%]'], ['site', 'Amplify Site', tt('Le site'), 'start-[-2%] bottom-[22%]'], ['marketing', 'Amplify Clients', tt('Les clients'), 'end-[4%] bottom-[-4%]']].map(([k, n, h, pos], i) => (
+        <span class={`rsh-chip absolute ${pos} flex items-center gap-2.5 rounded-2xl bg-white py-2 pe-4 ps-2 text-navy shadow-xl ring-1 ring-line`} style={`--i:${i}`}>
+          <span class={`grid size-9 place-items-center rounded-xl ${TRIO[k as keyof typeof TRIO][1]} ${k === 'site' ? 'ring-1 ring-line' : ''}`}><Icon name={TRIO[k as keyof typeof TRIO][0] as any} class="size-5" /></span>
+          <span class="leading-tight"><span class="block text-[0.7rem] font-semibold text-muted">{n}</span><span class="block font-bold">{h}</span></span>
+        </span>
+      ))}
+    </div>
+  </section>
 
   <RsDiag lang={lang} />
 
@@ -36,27 +61,22 @@ const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'meti
     <div class="mx-auto max-w-6xl px-4 sm:px-6">
       <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.trio.h2a}</span><span class="block text-green">{c.trio.h2b}</span></h2>
       <p class="mt-4 max-w-2xl text-lg text-white/75">{c.trio.p}</p>
-      <div class="mt-14 grid items-stretch gap-4 md:grid-cols-[1fr_auto_1fr_auto_1fr] md:gap-0">
-        {c.trio.items.map((it, i) => (
-          <>
-            {i > 0 && (
-              <div class="rt-link relative mx-auto flex h-14 w-1 items-center justify-center md:h-auto md:w-24" aria-hidden="true">
-                <span class="rt-wire absolute inset-0 m-auto h-full w-1 rounded-full md:h-1 md:w-full"></span>
-                <span class="rt-dot absolute size-3 rounded-full bg-green shadow-[0_0_12px_3px_rgba(5,185,98,.7)]"></span>
-                <span class="relative z-10 rounded-full bg-navy px-2.5 py-1 text-xs font-bold text-green ring-1 ring-green/40">{c.trio.flows[i - 1]}</span>
-              </div>
-            )}
-            <a href={TRIO[it.k as keyof typeof TRIO][2]} class="rt-card group relative flex flex-col rounded-[1.75rem] bg-white/[0.05] p-6 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white/[0.09] hover:ring-green/50" style={`--d:${i * 150}ms`}>
-              <span class={`grid size-14 place-items-center rounded-2xl ${TRIO[it.k as keyof typeof TRIO][1]}`}><Icon name={TRIO[it.k as keyof typeof TRIO][0] as any} class="size-7" /></span>
+      <div class="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {c.trio.items.map((it, i) => {
+          const T = TRIO[it.k as keyof typeof TRIO];
+          return (
+            <a href={T[2]} class="rt-card group relative flex flex-col rounded-[1.75rem] bg-white/[0.05] p-6 ring-1 ring-white/10 transition-all duration-300 hover:-translate-y-1.5 hover:bg-white/[0.09] hover:ring-green/50" style={`--d:${i * 120}ms`}>
+              <span class={`grid size-14 place-items-center rounded-2xl ${T[1]}`}><Icon name={T[0] as any} class="size-7" /></span>
               <p class="mt-5 text-sm font-semibold text-green">{it.name}</p>
-              <h3 class="display mt-1 text-4xl">{it.h}</h3>
+              <h3 class="display mt-1 text-3xl xl:text-[2.1rem]">{it.h}</h3>
               <p class="mt-2 flex-1 text-white/70">{it.p}</p>
-              <span class="mt-5 inline-flex items-center gap-2 font-semibold text-green">{it.cta}<span class="transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" aria-hidden="true">→</span></span>
+              <p class="mt-4 rounded-xl bg-white/[0.07] px-3 py-2 text-sm font-semibold">{T[3]}</p>
+              <span class="mt-4 inline-flex items-center gap-2 font-semibold text-green">{it.cta}<span class="transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1" aria-hidden="true">→</span></span>
             </a>
-          </>
-        ))}
+          );
+        })}
       </div>
-      <p class="rt-loop mx-auto mt-8 flex w-fit items-center gap-2 rounded-full bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/80 ring-1 ring-white/10"><span class="text-green">↺</span>Ventes, marges et marketing : tout est relié.</p>
+      <p class="rt-loop mx-auto mt-8 flex w-fit items-center gap-2 rounded-full bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/80 ring-1 ring-white/10"><span class="text-green">↺</span>{tt('Ventes, marges, site et clients : tout est relié.')}</p>
     </div>
   </section>
 
@@ -95,7 +115,7 @@ const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'meti
       <div>
         <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.final.h2a}</span><span class="block text-green">{c.final.h2b}</span></h2>
         <p class="mt-5 max-w-xl text-lg text-white/75">{c.final.p}</p>
-        <div class="mt-8"><WaButton text={c.wa} label={c.final.cta} where="restaurants-final" class="rf-wa px-8 text-lg" /></div>
+        <div class="mt-8 flex flex-wrap items-center gap-3"><WaButton text={c.wa} label={c.final.cta} where="restaurants-final" class="rf-wa px-8 text-lg" /><a href={signupUrl(lang)} class="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 text-lg font-semibold hover:border-white">{tt('Essai gratuit 14 jours')}</a></div>
         <p class="rf-note mt-3 hidden text-sm text-green">✓ {c.final.chosen}</p>
       </div>
       <div class="rounded-[1.5rem] bg-white/5 p-5 ring-1 ring-white/15">
@@ -107,6 +127,15 @@ const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'meti
   </section>
 </Base>
 
+<style is:global>
+  .js .rsh-chip { opacity: 0; transform: translateY(14px) scale(.9); }
+  .rsh-chip { animation: rsh-in .6s cubic-bezier(.2,1.4,.4,1) both, rsh-float 6s ease-in-out infinite; animation-delay: calc(.6s + var(--i) * .18s), calc(1.4s + var(--i) * .7s); }
+  @keyframes rsh-in { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: none; } }
+  @keyframes rsh-float { 50% { transform: translateY(-6px); } }
+  .rsh-photo img { animation: rsh-zoom 2.4s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes rsh-zoom { from { transform: scale(1.08); } }
+  @media (prefers-reduced-motion: reduce) { .rsh-chip, .rsh-photo img { animation: none; opacity: 1; transform: none; } }
+</style>
 <script>
   // types: tabs that rotate by themselves until the visitor picks one
   document.querySelectorAll<HTMLElement>('[data-rstypes]').forEach((root) => {

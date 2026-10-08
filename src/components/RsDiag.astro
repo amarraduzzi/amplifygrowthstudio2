@@ -8,11 +8,18 @@ const LG = langOf(Astro.url);
 const tt = tr(LG);
 const c = rsOf(LG);
 import { ROUTES, type Lang } from '../i18n/routes';
-import { waLink } from '../config';
+import { waLink, signupUrl, OFFER } from '../config';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = c.diag;
-const P = { pos: ['Amplify POS', 'bg-blue text-white', ROUTES.pos[lang]], profit: ['Amplify Profit', 'bg-green text-navy', ROUTES.profit[lang]], marketing: ['Amplify Clients', 'bg-[#F5B301] text-navy', ROUTES.marketing[lang]] } as const;
+const P = { pos: ['Amplify POS', 'bg-blue text-white', ROUTES.pos[lang]], profit: ['Amplify Profit', 'bg-green text-navy', ROUTES.profit[lang]], site: ['Amplify Site', 'bg-white text-navy', ROUTES.site[lang]], marketing: ['Amplify Clients', 'bg-[#F5B301] text-navy', ROUTES.marketing[lang]] } as const;
+// where the plan starts: the first product of the plan, its price and the way in
+const START = {
+  pos: { name: 'Amplify POS', price: tt('dès 199 DH HT / mois'), href: signupUrl(lang, 'pos'), cta: tt('Essayer 14 jours gratuits') },
+  profit: { name: 'Amplify Profit', price: tt('dès 249 DH HT / mois'), href: signupUrl(lang, 'profit'), cta: tt('Essayer 14 jours gratuits') },
+  site: { name: 'Amplify Site', price: `${OFFER.siteSetup} DH ${tt('une fois, puis')} ${OFFER.siteMonthly} DH / ${tt('mois')}`, href: ROUTES.site[lang], cta: tt('Voir l’offre à 250 DH') },
+  marketing: { name: 'Amplify Clients', price: tt('sur devis'), href: ROUTES.marketing[lang], cta: tt('Voir Amplify Clients') },
+};
 const pre = ['marge', 'commandes'];
 ---
 <section id="diagnostic" class="scroll-mt-20 border-y border-line bg-paper" data-rsdiag data-wa={c.wa} data-cost={tt('Ce qui me coûte le plus :')}>
@@ -44,7 +51,7 @@ const pre = ['marge', 'commandes'];
           </div>
           <ol class="rd-plan relative mt-6 space-y-3">
             {d.pains.slice().sort((a, b) => a.o - b.o).map(x => (
-              <li class="rd-step hidden" data-k={x.k}>
+              <li class="rd-step hidden" data-k={x.k} data-p={x.p}>
                 <div class="flex gap-4 rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
                   <span class="rd-num display grid size-10 shrink-0 place-items-center rounded-full bg-white text-xl text-navy">1</span>
                   <div class="min-w-0">
@@ -56,7 +63,16 @@ const pre = ['marge', 'commandes'];
             ))}
           </ol>
           <p class="rd-empty hidden rounded-2xl border-2 border-dashed border-white/20 p-6 text-center text-white/60">{d.empty}</p>
-          <a href={waLink(c.wa)} target="_blank" rel="noopener" data-wa="restaurants-diag" class="rd-send mt-6 flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-green px-6 font-semibold text-navy transition-transform hover:scale-[1.02] hover:bg-[#04A859]">
+          <!-- the first step, ready to start -->
+          {Object.entries(START).map(([k, v]) => (
+            <div class="rd-start mt-6 hidden rounded-2xl bg-green p-5 text-navy" data-p={k}>
+              <p class="text-sm font-semibold">{tt('Commencez par')}</p>
+              <p class="display mt-1 text-3xl">{v.name}</p>
+              <p class="text-sm font-semibold text-navy/75">{v.price}</p>
+              <a href={v.href} class="mt-4 inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-5 font-semibold text-white transition-transform hover:scale-[1.03]">{v.cta}<span aria-hidden="true" class="rtl:rotate-180">→</span></a>
+            </div>
+          ))}
+          <a href={waLink(c.wa)} target="_blank" rel="noopener" data-wa="restaurants-diag" class="rd-send mt-4 flex min-h-12 items-center justify-center gap-2.5 rounded-full bg-white/10 px-6 font-semibold text-white ring-1 ring-white/20 transition-colors hover:bg-white/15">
             <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true"><path fill="currentColor" d="M3 20.5 21 12 3 3.5 3 10l12 2-12 2z"/></svg>{d.send}
           </a>
         </div>
@@ -81,6 +97,8 @@ const pre = ['marge', 'commandes'];
         s.classList.toggle('hidden', !show);
         if (show) { n++; s.querySelector('.rd-num')!.textContent = String(n); if (!was) { s.classList.remove('rd-in'); void s.offsetWidth; s.classList.add('rd-in'); } }
       });
+      const first = steps.find(st => !st.classList.contains('hidden'))?.dataset.p;
+      root.querySelectorAll<HTMLElement>('.rd-start').forEach(b => { const on2 = b.dataset.p === first; if (on2 && b.classList.contains('hidden')) { b.classList.remove('rd-in'); void b.offsetWidth; b.classList.add('rd-in'); } b.classList.toggle('hidden', !on2); });
       root.querySelector('.rd-n')!.textContent = String(n); root.querySelector('.rd-n2')!.textContent = String(n);
       root.querySelector('.rd-empty')!.classList.toggle('hidden', n > 0);
       send.classList.toggle('pointer-events-none', n === 0); send.classList.toggle('opacity-40', n === 0);
