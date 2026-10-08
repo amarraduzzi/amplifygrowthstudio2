@@ -1,0 +1,14 @@
+# Amplify Growth Studio
+
+> Systems and marketing for restaurants, cafés and snacks in Morocco. Team based in Rabat, working on site in Rabat and by video across Morocco. Website in French, English and Arabic.
+
+## Products
+- [Amplify POS](https://www.amplifygrowthstudio.com/amplify-pos/): till (POS) for restaurants and cafés: touch till, QR menu and table ordering, kitchen tickets and kitchen screen, online ordering without commission, bookings, delivery, works offline. From 199 DH excl. VAT per month. 14 days free.
+- [Amplify Profit](https://www.amplifygrowthstudio.com/amplify-profit/): cost and margin of every dish (recipe cards filled by AI), stock and supplier purchases, team, charges and break-even. Works with any till. From 249 DH excl. VAT per month.
+- [Amplify Site](https://www.amplifygrowthstudio.com/amplify-site/): restaurant website with the menu, photos, opening hours, directions and orders on WhatsApp, in French, Arabic and English. Made for you for 250 DH one time (launch offer) or free if you build it yourself, then 100 DH per month. Connecting your own domain: 150 DH one time.
+- [Amplify Clients](https://www.amplifygrowthstudio.com/marketing/): marketing for restaurants: Google Business Profile and reviews, tastings, neighbourhood partnerships, WhatsApp customer list, content. On quote.
+
+## Contact
+- WhatsApp and phone: +212 6 60 35 37 41
+- Email: Amar.amplifygrowth@gmail.com
+- [Contact page](https://www.amplifygrowthstudio.com/contact/)
