@@ -568,4 +568,11 @@ export const dictAr: Record<string, string> = {
   "Site en ligne": "الموقع على الإنترنت",
   "Votre site est en ligne": "موقعكم على الإنترنت",
   "Amplify Site": "Amplify Site",
+  "Une photo de votre carte.": "صورة لقائمتكم.",
+  "Le site se remplit tout seul.": "والموقع يمتلئ وحده.",
+  "Prenez votre carte en photo. L’IA lit les plats, les prix et les catégories, puis les met en page dans le style choisi. Vous relisez, vous corrigez si besoin, c’est en ligne.": "صوّروا قائمتكم. يقرأ الذكاء الاصطناعي الأطباق والأثمنة والأصناف، ثم يرتبها في النمط الذي اخترتم. تراجعون، تصححون إن لزم، والموقع على الإنترنت.",
+  "Les plats et les prix, sans rien taper": "الأطباق والأثمنة، بدون كتابة",
+  "Les catégories rangées dans l’ordre": "الأصناف مرتبة",
+  "Traduit en arabe et en anglais": "مترجم إلى العربية والإنجليزية",
+  "Commander sur WhatsApp": "اطلب عبر واتساب",
 };

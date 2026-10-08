@@ -68,45 +68,97 @@ const schema = [
       <p class="fade-up mt-3 text-sm text-muted" style="--d:480ms">14 jours gratuits, puis {OFFER.siteMonthly} DH par mois. Sans engagement.</p>
     </div>
 
-    <!-- the site on a laptop, the phone menu, and the order arriving on WhatsApp -->
-    <div class="relative pb-10 lg:pb-16" aria-hidden="true">
-      <div class="as-rv overflow-hidden rounded-[1.2rem] bg-[#0B1422] shadow-[0_40px_80px_-35px_rgba(0,30,62,0.6)] ring-1 ring-black/10" style="--d:120ms">
-        <div class="flex items-center gap-2 px-4 py-2.5"><span class="size-2.5 rounded-full bg-[#FF5F57]"></span><span class="size-2.5 rounded-full bg-[#FEBC2E]"></span><span class="size-2.5 rounded-full bg-[#28C840]"></span>
-          <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
-        <img src="/img/s-riad.webp" alt="" width="1600" height="1000" fetchpriority="high" decoding="async" class="block h-auto w-full" />
-      </div>
-      <div class="as-rv as-drop absolute -bottom-2 start-[-4%] w-[30%] max-w-[13rem]" style="--d:380ms"><Device kind="phone" src="/img/s-phone-menu.webp" alt="" w={600} h={1298} screenBg="#EFE3D1" class="-rotate-[4deg]" /></div>
-      <div dir="ltr" class="as-rv as-pop absolute -bottom-4 end-[2%] w-[56%] max-w-[19rem] rounded-2xl bg-[#E7FFDB] p-3.5 text-[0.8rem] leading-snug text-[#111B21] shadow-[0_24px_50px_-20px_rgba(0,30,62,0.55)] ring-1 ring-black/5 sm:text-sm" style="--d:900ms">
-        <p class="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#128C7E]"><svg viewBox="0 0 24 24" class="size-3.5" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2z"/></svg>Nouvelle commande</p>
-        <x-notr><p>Bonjour Dar Nour, je souhaite commander :</p><p class="mt-1">2 × Café noir<br />1 × Chocolat chaud<br />1 × Double expresso</p><p class="mt-1 font-semibold">Total : 56 DH · À emporter</p></x-notr>
-        <p class="mt-1 text-end text-[0.65rem] text-[#667781]">12:41 ✓✓</p>
+    <!-- the site on a laptop, the phone menu, and orders arriving on WhatsApp, one after the other -->
+    <div class="relative pb-10 [perspective:1400px] lg:pb-16" aria-hidden="true" data-hero>
+      <div class="hero-tilt relative transition-transform duration-300 ease-out [transform-style:preserve-3d]">
+        <div class="as-rv overflow-hidden rounded-[1.2rem] bg-[#0B1422] shadow-[0_40px_80px_-35px_rgba(0,30,62,0.6)] ring-1 ring-black/10" style="--d:120ms">
+          <div class="flex items-center gap-2 px-4 py-2.5"><span class="size-2.5 rounded-full bg-[#FF5F57]"></span><span class="size-2.5 rounded-full bg-[#FEBC2E]"></span><span class="size-2.5 rounded-full bg-[#28C840]"></span>
+            <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
+          <img src="/img/s-riad.webp" alt="" width="1600" height="1000" fetchpriority="high" decoding="async" class="block h-auto w-full" />
+        </div>
+        <div class="hero-far as-rv as-drop absolute -bottom-2 start-[-4%] w-[30%] max-w-[13rem]" style="--d:380ms"><div class="hero-float"><Device kind="phone" src="/img/s-phone-menu.webp" alt="" w={600} h={1298} screenBg="#EFE3D1" class="-rotate-[4deg]" /></div></div>
+        <div class="hero-near absolute -bottom-4 end-[2%] w-[56%] max-w-[19rem]">
+          <div dir="ltr" class="wa-card rounded-2xl bg-[#E7FFDB] p-3.5 text-[0.8rem] leading-snug text-[#111B21] shadow-[0_24px_50px_-20px_rgba(0,30,62,0.55)] ring-1 ring-black/5 sm:text-sm" data-wa-card>
+            <p class="mb-1.5 flex items-center gap-1.5 text-xs font-bold text-[#128C7E]"><svg viewBox="0 0 24 24" class="size-3.5" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.4 5 5.1-1.3A10 10 0 1 0 12 2z"/></svg><span>Nouvelle commande</span><span class="wa-ping ms-auto size-2 rounded-full bg-[#25D366]"></span></p>
+            <p class="wa-typing inline-flex gap-1 py-1.5">{[0, 1, 2].map(i => <span class="size-1.5 rounded-full bg-[#128C7E]/60" style={`animation:dot 1.2s ${i * .15}s infinite`}></span>)}</p>
+            <x-notr><div class="wa-body" data-wa-body><p>Bonjour Dar Nour, je souhaite commander :</p><p class="mt-1">2 × Café noir<br />1 × Chocolat chaud<br />1 × Double expresso</p><p class="mt-1 font-semibold">Total : 56 DH · À emporter</p></div></x-notr>
+            <p class="mt-1 text-end text-[0.65rem] text-[#667781]"><span data-wa-time>12:41</span> <span class="wa-ticks">✓✓</span></p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- three styles: the visitor switches and sees the same café in each -->
-  <section class="relative overflow-hidden bg-navy text-white" data-styles>
-    <div class="pointer-events-none absolute -start-40 top-20 size-[34rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
-    <div class="relative mx-auto max-w-6xl px-4 py-24 sm:px-6">
-      <div class="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-        <h2 class="as-rv max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trois styles.</span><span class="block text-green">Aucun ne ressemble à un modèle.</span></h2>
-        <div class="as-rv flex flex-wrap gap-2" role="tablist" aria-label="Style" style="--d:120ms">
-          {styles.map((s, i) => <button type="button" role="tab" data-style={s.k} aria-selected={i === 0 ? 'true' : 'false'} class="st-tab min-h-11 rounded-full px-5 font-semibold ring-1 ring-white/20 transition-colors">{s.name}</button>)}
-        </div>
+  <!-- from a photo of the menu to the site: the scan line reads the card, the site fills itself -->
+  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6" data-scan>
+    <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <div>
+        <h2 class="as-rv text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Une photo de votre carte.</span><span class="block text-green-deep">Le site se remplit tout seul.</span></h2>
+        <p class="as-rv mt-5 max-w-lg text-lg text-muted" style="--d:100ms">Prenez votre carte en photo. L’IA lit les plats, les prix et les catégories, puis les met en page dans le style choisi. Vous relisez, vous corrigez si besoin, c’est en ligne.</p>
+        <ul class="as-rv mt-8 space-y-3" style="--d:180ms">
+          {['Les plats et les prix, sans rien taper', 'Les catégories rangées dans l’ordre', 'Traduit en arabe et en anglais'].map(x => <li class="flex items-center gap-3 text-lg"><span class="grid size-7 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-4" /></span>{x}</li>)}
+        </ul>
       </div>
-      <div class="as-rv relative mt-10" style="--d:180ms">
-        <div class="overflow-hidden rounded-[1.4rem] bg-[#0B1422] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
-          <div class="flex items-center gap-2 px-4 py-3"><span class="size-3 rounded-full bg-[#FF5F57]"></span><span class="size-3 rounded-full bg-[#FEBC2E]"></span><span class="size-3 rounded-full bg-[#28C840]"></span>
-            <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
-          <div class="relative aspect-[16/10]">
-            {styles.map((s, i) => <img src={s.img} alt={tt('Le site de Dar Nour, style') + ' ' + s.name} width="1600" height="1000" loading="lazy" decoding="async" data-shot={s.k} class={`st-shot absolute inset-0 h-full w-full object-cover object-top ${i === 0 ? 'on' : ''}`} />)}
+      <div class="as-rv relative grid grid-cols-[1fr_auto_1fr] items-center gap-3 sm:gap-5" style="--d:120ms" aria-hidden="true">
+        <!-- the paper menu, being read -->
+        <div class="scan-paper relative -rotate-[3deg] overflow-hidden rounded-md bg-[#FBF6EA] p-4 font-serif text-[#3A2A1E] shadow-[0_30px_60px_-30px_rgba(0,30,62,0.5)] ring-1 ring-black/5 sm:p-6">
+          <p class="text-center text-lg italic sm:text-2xl">Dar Nour</p>
+          <p class="mt-1 text-center text-[0.6rem] tracking-[0.3em] text-[#3A2A1E]/60 sm:text-xs"><x-notr>CAFÉ · RABAT</x-notr></p>
+          {[['Boissons', [['Café noir', '16'], ['Thé à la menthe', '16'], ['Jus d’orange', '22']]], ['Cuisine', [['Msemen au miel', '18'], ['Tajine poulet citron', '95'], ['Pizza Margherita', '36']]]].map(([cat, rows], ci) => (
+            <div class="mt-3 sm:mt-4">
+              <p class="scan-row text-[0.7rem] font-bold uppercase tracking-wider sm:text-sm" data-r={ci * 4}><x-notr>{cat}</x-notr></p>
+              {(rows as string[][]).map(([n, pr], ri) => <p class="scan-row flex items-baseline gap-1 text-[0.68rem] sm:text-[0.95rem]" data-r={ci * 4 + ri + 1}><x-notr>{n}</x-notr><span class="mx-1 flex-1 border-b border-dotted border-[#3A2A1E]/35"></span>{pr}</p>)}
+            </div>
+          ))}
+          <span class="scan-beam pointer-events-none absolute inset-x-0 top-0 h-16"></span>
+        </div>
+        <span class="scan-arrow grid size-10 place-items-center rounded-full bg-navy text-green sm:size-12"><svg viewBox="0 0 24 24" class="size-5 rtl:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        <!-- the site, filling in -->
+        <div class="rounded-[1.6rem] bg-[#0B1422] p-1.5 shadow-[0_40px_80px_-30px_rgba(0,30,62,0.6)]">
+          <div dir="ltr" class="overflow-hidden rounded-[1.2rem] bg-[#EFE3D1] px-3 pb-4 pt-3 text-[#2E1F17] sm:px-4">
+            <p class="text-center font-serif text-base sm:text-xl">Dar Nour</p>
+            <div class="mx-auto mt-1 h-2 w-16 opacity-70 [background:radial-gradient(circle,#B8862B_1.2px,transparent_1.6px)_0_0/8px_8px]"></div>
+            {[0, 4].map(c => (
+              <div class="mt-2.5">
+                <p class="site-row text-center font-serif text-[0.8rem] font-semibold sm:text-base" data-r={c}><x-notr>{c === 0 ? 'Boissons' : 'Cuisine'}</x-notr></p>
+                {[1, 2, 3].map(k => {
+                  const rows = [['Café noir', '16'], ['Thé à la menthe', '16'], ['Jus d’orange', '22'], ['Msemen au miel', '18'], ['Tajine poulet citron', '95'], ['Pizza Margherita', '36']];
+                  const [n, pr] = rows[(c ? 3 : 0) + k - 1];
+                  return <p class="site-row mt-1 flex items-baseline gap-1 text-[0.62rem] sm:text-[0.82rem]" data-r={c + k}><span class="font-serif font-semibold"><x-notr>{n}</x-notr></span><span class="flex-1 border-b border-dotted border-[#2E1F17]/30"></span><b>{pr} DH</b></p>;
+                })}
+              </div>
+            ))}
+            <p class="site-row mt-3 rounded-full bg-[#1FA855] py-1.5 text-center text-[0.65rem] font-bold text-white sm:text-xs" data-r="8">Commander sur WhatsApp</p>
           </div>
         </div>
       </div>
-      <div class="mt-6 grid gap-3 md:grid-cols-3">
-        {styles.map((s, i) => <p data-desc={s.k} class={`st-desc rounded-2xl p-4 text-white/70 ring-1 ring-white/10 transition ${i === 0 ? 'on' : ''}`}><b class="block text-white">{s.name}</b>{s.text}</p>)}
+    </div>
+  </section>
+
+  <!-- three styles: pinned while you scroll, each style wipes over the previous one -->
+  <section class="st-root relative bg-navy text-white" data-styles>
+    <div class="st-pin relative overflow-hidden">
+      <div class="pointer-events-none absolute -start-40 top-20 size-[34rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
+      <div class="st-inner relative mx-auto flex max-w-6xl flex-col px-4 py-20 sm:px-6">
+        <div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+          <h2 class="max-w-3xl text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trois styles.</span><span class="block text-green">Aucun ne ressemble à un modèle.</span></h2>
+          <div class="flex flex-wrap gap-2" role="tablist" aria-label="Style">
+            {styles.map((s, i) => <button type="button" role="tab" data-style={s.k} aria-selected={i === 0 ? 'true' : 'false'} class="st-tab relative min-h-11 overflow-hidden rounded-full px-5 font-semibold ring-1 ring-white/20 transition-colors"><span class="st-fill absolute inset-0 origin-left bg-green/25" aria-hidden="true"></span><span class="relative">{s.name}</span></button>)}
+          </div>
+        </div>
+        <div class="relative mt-4 min-h-[5.5rem] text-white/75 sm:min-h-[3.5rem] sm:text-lg">
+          {styles.map((s, i) => <p data-desc={s.k} class={`st-desc absolute inset-x-0 top-0 max-w-2xl ${i === 0 ? 'on' : ''}`}>{s.text}</p>)}
+        </div>
+        <div class="st-frame mx-auto mt-4 w-full overflow-hidden rounded-[1.4rem] bg-[#0B1422] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
+          <div class="flex items-center gap-2 px-4 py-3"><span class="size-3 rounded-full bg-[#FF5F57]"></span><span class="size-3 rounded-full bg-[#FEBC2E]"></span><span class="size-3 rounded-full bg-[#28C840]"></span>
+            <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
+          <div class="relative aspect-[16/10] overflow-hidden">
+            {styles.map((s, i) => <img src={s.img} alt={tt('Le site de Dar Nour, style') + ' ' + s.name} width="1600" height="1000" loading={i ? 'lazy' : 'eager'} decoding="async" data-shot={s.k} class={`st-shot absolute inset-0 h-full w-full object-cover object-top ${i === 0 ? 'on' : ''}`} />)}
+            <span class="st-edge pointer-events-none absolute inset-y-0 w-[3px] bg-green shadow-[0_0_30px_6px_rgba(5,185,98,.6)]" aria-hidden="true"></span>
+          </div>
+        </div>
+        <p class="mt-4 text-sm text-white/50">Captures réelles du café de démonstration Dar Nour.</p>
       </div>
-      <p class="mt-6 text-sm text-white/50">Captures réelles du café de démonstration Dar Nour.</p>
     </div>
   </section>
 
@@ -122,15 +174,16 @@ const schema = [
         ['Il envoie en un clic', 'Prénom, à emporter, livraison ou sur place : WhatsApp s’ouvre avec le message prêt.', '/img/s-phone-wa.webp'],
         ['Vous recevez la commande', 'Les plats, les quantités et le total. Vous répondez comme d’habitude.', ''],
       ].map(([h, x, img], i) => (
-        <li class="as-rv" style={`--d:${i * 120}ms`}>
+        <li class="as-rv" style={`--d:${i * 120}ms`} data-chat={img ? undefined : ''}>
           <div class="mx-auto w-[72%] max-w-[15rem]">
             {img ? <Device kind="phone" src={img} alt="" w={600} h={1298} screenBg="#EFE3D1" /> : (
               <div class="rounded-[2.2rem] bg-[#0B1422] p-2 shadow-[0_40px_80px_-30px_rgba(0,0,0,0.5)]" aria-hidden="true">
                 <div dir="ltr" class="flex aspect-[600/1298] flex-col overflow-hidden rounded-[1.8rem] bg-[#EFEAE2]">
                   <div class="flex items-center gap-2 bg-[#008069] px-3 pb-2.5 pt-6 text-white"><span class="grid size-7 place-items-center rounded-full bg-white/25 text-xs font-bold">Y</span><span class="text-sm font-semibold">Yassine</span></div>
                   <div class="flex flex-1 flex-col justify-end gap-2 p-2.5 text-[0.72rem] leading-snug text-[#111B21]">
-                    <div class="ms-auto max-w-[88%] rounded-lg rounded-se-none bg-[#D9FDD3] p-2 shadow-sm"><x-notr>Bonjour Dar Nour, je souhaite commander :<br /><br />2 × Café noir (22,40 DH)<br />1 × Chocolat chaud (16,80 DH)<br />1 × Double expresso (16,80 DH)<br /><br />Total : 56 DH<br />À emporter<br />Nom : Yassine</x-notr><span class="mt-1 block text-end text-[0.6rem] text-[#667781]">12:41 ✓✓</span></div>
-                    <div class="max-w-[70%] rounded-lg rounded-ss-none bg-white p-2 shadow-sm"><x-notr>C’est noté, prêt dans 10 minutes.</x-notr><span class="mt-1 block text-end text-[0.6rem] text-[#667781]">12:42</span></div>
+                    <div class="chat-in max-w-[88%] rounded-lg rounded-ss-none bg-white p-2 shadow-sm" style="--d:200ms"><x-notr>Bonjour Dar Nour, je souhaite commander :<br /><br />2 × Café noir (22,40 DH)<br />1 × Chocolat chaud (16,80 DH)<br />1 × Double expresso (16,80 DH)<br /><br />Total : 56 DH<br />À emporter<br />Nom : Yassine</x-notr><span class="mt-1 block text-end text-[0.6rem] text-[#667781]">12:41</span></div>
+                    <p class="chat-in chat-typing ms-auto inline-flex w-fit gap-1 rounded-lg bg-[#D9FDD3] px-2.5 py-2" style="--d:1100ms">{[0, 1, 2].map(i => <span class="size-1.5 rounded-full bg-[#128C7E]/60" style={`animation:dot 1.2s ${i * .15}s infinite`}></span>)}</p>
+                    <div class="chat-in chat-reply ms-auto max-w-[70%] rounded-lg rounded-se-none bg-[#D9FDD3] p-2 shadow-sm" style="--d:2300ms"><x-notr>C’est noté, prêt dans 10 minutes.</x-notr><span class="mt-1 block text-end text-[0.6rem] text-[#53BDEB]">12:42 ✓✓</span></div>
                   </div>
                 </div>
               </div>
@@ -204,38 +257,183 @@ const schema = [
   .js .as-rv:not(.seen) { opacity: 0; transform: translateY(18px); }
   .as-rv.seen { animation: as-in .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
   .as-drop.seen { animation-name: as-drop; }
-  .as-pop.seen { animation-name: as-pop; }
   @keyframes as-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
   @keyframes as-drop { from { opacity: 0; transform: translateY(50px) rotate(-3deg); } to { opacity: 1; transform: none; } }
-  @keyframes as-pop { 0% { opacity: 0; transform: translateY(16px) scale(.9); } 70% { transform: scale(1.03); } 100% { opacity: 1; transform: none; } }
-  .st-tab[aria-selected="true"] { background: #05B962; color: #001E3E; box-shadow: none; }
-  .st-tab[aria-selected="false"]:hover { background: rgba(255,255,255,.08); }
-  .st-shot { opacity: 0; transition: opacity .6s ease, transform 1.2s cubic-bezier(.2,.8,.2,1); transform: scale(1.02); }
-  .st-shot.on { opacity: 1; transform: none; }
-  .st-desc.on { background: rgba(255,255,255,.08); color: rgba(255,255,255,.9); box-shadow: inset 0 0 0 1px rgba(5,185,98,.6); }
-  @media (prefers-reduced-motion: reduce) { .js .as-rv:not(.seen), .as-rv.seen { opacity: 1; transform: none; animation: none; } .st-shot { transition: none; } }
+  @keyframes dot { 0%, 60%, 100% { opacity: .3; transform: none; } 30% { opacity: 1; transform: translateY(-3px); } }
+
+  /* hero: the phone floats, the card follows the pointer a little more than the laptop */
+  .hero-float { animation: float 6s ease-in-out infinite; }
+  @keyframes float { 50% { transform: translateY(-10px); } }
+  .hero-near, .hero-far { transition: transform .3s ease-out; }
+  /* the WhatsApp card: typing, then the order, then read */
+  .wa-card { transform-origin: 100% 100%; transition: opacity .45s, transform .45s cubic-bezier(.2,.8,.2,1); }
+  .wa-card.out { opacity: 0; transform: translateY(14px) scale(.94); }
+  .wa-body p { opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s; }
+  .wa-card.show .wa-body p { opacity: 1; transform: none; }
+  .wa-card.show .wa-body p:nth-child(2) { transition-delay: .25s; }
+  .wa-card.show .wa-body p:nth-child(3) { transition-delay: .5s; }
+  .wa-typing { display: none; }
+  .wa-card.typing .wa-typing { display: inline-flex; }
+  .wa-card.typing .wa-body { display: none; }
+  .wa-ticks { transition: color .4s; }
+  .wa-card.read .wa-ticks { color: #53BDEB; }
+  .wa-ping { box-shadow: 0 0 0 0 rgba(37,211,102,.7); }
+  .wa-card.typing .wa-ping { animation: ping 1s ease-out infinite; }
+  @keyframes ping { to { box-shadow: 0 0 0 10px rgba(37,211,102,0); } }
+
+  /* the scan */
+  .scan-beam { opacity: 0; background: linear-gradient(180deg, transparent, rgba(5,185,98,.28) 70%, #05B962 96%, transparent); }
+  [data-scan].run .scan-beam { animation: beam 3.2s cubic-bezier(.45,0,.55,1) forwards; }
+  @keyframes beam { 0% { opacity: 0; transform: translateY(-4rem); } 8% { opacity: 1; } 92% { opacity: 1; } 100% { opacity: 0; transform: translateY(calc(var(--h, 300px))); } }
+  .scan-row { transition: color .3s, background-color .3s; border-radius: 3px; }
+  .scan-row.read { background: rgba(5,185,98,.14); }
+  .site-row { opacity: 0; transform: translateX(14px); transition: opacity .4s, transform .5s cubic-bezier(.2,.8,.2,1); }
+  .site-row.in { opacity: 1; transform: none; }
+  .scan-arrow { transition: transform .4s; }
+  [data-scan].run .scan-arrow { animation: nudge 1s ease-in-out infinite; }
+  @keyframes nudge { 50% { transform: translateX(5px); } }
+  [dir="rtl"] [data-scan].run .scan-arrow { animation-name: nudge-rtl; }
+  @keyframes nudge-rtl { 50% { transform: translateX(-5px); } }
+
+  /* the styles: pinned with JS, a wipe from one to the next */
+  .st-root.live { height: 320vh; }
+  .st-root.live .st-pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
+  .st-root.live .st-inner { height: 100%; justify-content: center; padding-top: 5rem; padding-bottom: 2rem; }
+  .st-root.live .st-frame { width: min(100%, calc((100svh - 19rem) * 1.6)); }
+  .st-shot { clip-path: inset(0 0 0 0); }
+  .st-root:not(.live) .st-shot { opacity: 0; transition: opacity .6s ease; }
+  .st-root:not(.live) .st-shot.on { opacity: 1; }
+  .st-edge { display: none; }
+  .st-root.live .st-edge { display: block; }
+  .st-tab[aria-selected="true"] { background: #05B962; color: #001E3E; }
+  .st-tab[aria-selected="true"] .st-fill { opacity: 0; }
+  .st-fill { transform: scaleX(var(--f, 0)); }
+  [dir="rtl"] .st-fill { transform-origin: right; }
+  .st-desc { opacity: 0; transform: translateY(8px); transition: opacity .4s, transform .4s; }
+  .st-desc.on { opacity: 1; transform: none; }
+
+  /* the chat in step 3 */
+  .chat-in { opacity: 0; transform: translateY(10px) scale(.96); }
+  [data-chat].seen .chat-in { animation: as-in .45s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d); }
+  [data-chat].seen .chat-typing { animation: typing-in-out 1.2s ease both; animation-delay: var(--d); }
+  @keyframes typing-in-out { 0% { opacity: 0; } 15%, 85% { opacity: 1; } 100% { opacity: 0; height: 0; padding: 0; margin: 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js .as-rv:not(.seen), .as-rv.seen, .chat-in, .site-row, .wa-body p { opacity: 1; transform: none; animation: none; }
+    .hero-float, .wa-ping, .scan-arrow { animation: none; }
+    .chat-typing, .scan-beam { display: none; }
+  }
 </style>
 <script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('seen'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -10% 0px' });
-  document.querySelectorAll('.as-rv').forEach(n => io.observe(n));
-  // the style switcher: tabs, then it moves on by itself until the visitor picks one
+  document.querySelectorAll('.as-rv, [data-chat]').forEach(n => io.observe(n));
+  const wait = (ms: number) => new Promise(r => setTimeout(r, ms));
+  const visible = (el: Element, cb: (on: boolean) => void) => new IntersectionObserver(([e]) => cb(e.isIntersecting), { threshold: 0.25 }).observe(el);
+
+  // hero: orders keep arriving on WhatsApp; the scene leans towards the pointer
+  document.querySelectorAll<HTMLElement>('[data-hero]').forEach(root => {
+    const card = root.querySelector<HTMLElement>('[data-wa-card]')!, body = root.querySelector<HTMLElement>('[data-wa-body]')!, time = root.querySelector<HTMLElement>('[data-wa-time]')!;
+    const orders = [
+      ['2 × Café noir<br>1 × Chocolat chaud<br>1 × Double expresso', 'Total : 56 DH · À emporter'],
+      ['1 × Tajine poulet citron<br>2 × Thé à la menthe', 'Total : 127 DH · Livraison'],
+      ['2 × Pizza Margherita<br>2 × Jus d’orange', 'Total : 116 DH · Sur place'],
+    ];
+    if (still) { card.classList.add('show', 'read'); return; }
+    let on = false, n = 0, running = false, min = 41;
+    visible(root, v => { on = v; if (v && !running) loop(); });
+    async function loop() {
+      running = true;
+      while (on) {
+        const [lines, total] = orders[n++ % orders.length];
+        body.children[1].innerHTML = lines; body.children[2].textContent = total; time.textContent = `12:${String(min++ % 60).padStart(2, '0')}`;
+        card.classList.remove('out', 'show', 'read'); card.classList.add('typing');
+        await wait(1500); card.classList.remove('typing'); card.classList.add('show');
+        await wait(1600); card.classList.add('read');
+        await wait(3200); card.classList.add('out');
+        await wait(600);
+      }
+      card.classList.remove('out', 'typing'); card.classList.add('show', 'read');
+      running = false;
+    }
+    if (!matchMedia('(pointer: fine)').matches) return;
+    const tilt = root.querySelector<HTMLElement>('.hero-tilt')!, near = root.querySelector<HTMLElement>('.hero-near')!, far = root.querySelector<HTMLElement>('.hero-far')!;
+    root.addEventListener('pointermove', e => {
+      const r = root.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      tilt.style.transform = `rotateY(${x * 7}deg) rotateX(${-y * 5}deg)`;
+      near.style.transform = `translate3d(${x * 22}px, ${y * 16}px, 40px)`;
+      far.style.transform = `translate3d(${x * -14}px, ${y * -10}px, 20px)`;
+    });
+    root.addEventListener('pointerleave', () => { tilt.style.transform = ''; near.style.transform = ''; far.style.transform = ''; });
+  });
+
+  // the scan: the line reads the paper menu, each line read appears on the site; again while in view
+  document.querySelectorAll<HTMLElement>('[data-scan]').forEach(root => {
+    const paper = root.querySelector<HTMLElement>('.scan-paper')!;
+    const reads = [...root.querySelectorAll<HTMLElement>('.scan-row')], rows = [...root.querySelectorAll<HTMLElement>('.site-row')];
+    const show = (all: boolean) => { reads.forEach(r => r.classList.toggle('read', false)); rows.forEach(r => r.classList.toggle('in', all)); };
+    if (still) { show(true); return; }
+    let on = false, running = false;
+    visible(root, v => { on = v; if (v && !running) loop(); });
+    async function loop() {
+      running = true;
+      while (on) {
+        show(false); root.classList.remove('run'); void root.offsetWidth;
+        paper.style.setProperty('--h', `${paper.offsetHeight + 64}px`);
+        root.classList.add('run');
+        const top = paper.getBoundingClientRect().top, h = paper.offsetHeight;
+        // each line lights up when the beam passes it, then shows on the site
+        await Promise.all(reads.map(r => {
+          const at = ((r.getBoundingClientRect().top - top) / h) * 3000;
+          return wait(at + 250).then(() => { r.classList.add('read'); root.querySelectorAll<HTMLElement>(`.site-row[data-r="${r.dataset.r}"]`).forEach(x => x.classList.add('in')); });
+        }));
+        await wait(500); rows.forEach(x => x.classList.add('in'));
+        await wait(3500);
+      }
+      running = false;
+    }
+  });
+
+  // the styles: pinned while scrolling, the next style wipes over the previous one
   document.querySelectorAll<HTMLElement>('[data-styles]').forEach(root => {
     const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-style]')];
-    const pick = (k: string) => {
-      tabs.forEach(b => b.setAttribute('aria-selected', String(b.dataset.style === k)));
-      root.querySelectorAll<HTMLElement>('[data-shot]').forEach(i => i.classList.toggle('on', i.dataset.shot === k));
-      root.querySelectorAll<HTMLElement>('[data-desc]').forEach(i => i.classList.toggle('on', i.dataset.desc === k));
+    const shots = [...root.querySelectorAll<HTMLElement>('[data-shot]')];
+    const descs = [...root.querySelectorAll<HTMLElement>('[data-desc]')];
+    const edge = root.querySelector<HTMLElement>('.st-edge')!;
+    const rtl = document.documentElement.dir === 'rtl';
+    const N = tabs.length;
+    let cur = 0;
+    const select = (i: number) => {
+      if (i === cur) return; cur = i;
+      tabs.forEach((b, k) => b.setAttribute('aria-selected', String(k === i)));
+      descs.forEach((d, k) => d.classList.toggle('on', k === i));
+      shots.forEach((d, k) => d.classList.toggle('on', k === i));
     };
-    let auto: number | undefined;
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    tabs.forEach(b => b.addEventListener('click', () => { window.clearInterval(auto); pick(b.dataset.style!); }));
-    if (!still) {
-      const seen = new IntersectionObserver(([e]) => {
-        window.clearInterval(auto);
-        if (e.isIntersecting) auto = window.setInterval(() => { const i = tabs.findIndex(b => b.getAttribute('aria-selected') === 'true'); pick(tabs[(i + 1) % tabs.length].dataset.style!); }, 3800);
-      }, { threshold: 0.4 });
-      seen.observe(root);
-      tabs.forEach(b => b.addEventListener('click', () => seen.disconnect(), { once: true }));
-    }
+    if (still) { tabs.forEach((b, k) => b.addEventListener('click', () => { cur = -1; select(k); })); return; }
+    root.classList.add('live');
+    const update = () => {
+      const r = root.getBoundingClientRect(), run = r.height - innerHeight;
+      const t = Math.min(1, Math.max(0, -r.top / (run > 0 ? run : 1))) * (N - 0.4) + 0.2;
+      let edgeAt = -1;
+      shots.forEach((img, k) => {
+        if (!k) return;
+        const v = Math.min(1, Math.max(0, (t - (k - 0.3)) / 0.6));
+        const hide = `${((1 - v) * 100).toFixed(2)}%`;
+        img.style.clipPath = rtl ? `inset(0 0 0 ${hide})` : `inset(0 ${hide} 0 0)`;
+        if (v > 0 && v < 1) edgeAt = v;
+      });
+      edge.style.opacity = edgeAt < 0 ? '0' : '1';
+      if (edgeAt >= 0) edge.style[rtl ? 'right' : 'left'] = `calc(${(edgeAt * 100).toFixed(2)}% - 1px)`;
+      tabs.forEach((b, k) => b.style.setProperty('--f', String(Math.min(1, Math.max(0, t - k + 1)))));
+      select(Math.min(N - 1, Math.max(0, Math.round(t - 0.5))));
+    };
+    tabs.forEach((b, k) => b.addEventListener('click', () => {
+      const run = root.offsetHeight - innerHeight;
+      scrollTo({ top: root.getBoundingClientRect().top + scrollY + run * Math.min(1, Math.max(0, (k + 0.3) / (N - 0.4))), behavior: 'smooth' });
+    }));
+    let ticking = false;
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { ticking = false; update(); }); } }, { passive: true });
+    addEventListener('resize', update);
+    update();
   });
 </script>

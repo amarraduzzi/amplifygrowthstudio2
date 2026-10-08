@@ -568,4 +568,11 @@ export const dictEn: Record<string, string> = {
   "Site en ligne": "Website online",
   "Votre site est en ligne": "Your website is online",
   "Amplify Site": "Amplify Site",
+  "Une photo de votre carte.": "A photo of your menu.",
+  "Le site se remplit tout seul.": "The website fills itself in.",
+  "Prenez votre carte en photo. L’IA lit les plats, les prix et les catégories, puis les met en page dans le style choisi. Vous relisez, vous corrigez si besoin, c’est en ligne.": "Take a photo of your menu. The AI reads the dishes, prices and categories, then lays them out in the style you picked. You check, fix anything if needed, and it is online.",
+  "Les plats et les prix, sans rien taper": "Dishes and prices, without typing",
+  "Les catégories rangées dans l’ordre": "Categories in the right order",
+  "Traduit en arabe et en anglais": "Translated into Arabic and English",
+  "Commander sur WhatsApp": "Order on WhatsApp",
 };
