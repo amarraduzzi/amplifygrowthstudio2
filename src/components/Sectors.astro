@@ -1,9 +1,9 @@
 ---
-// "Par quoi commencer ?": the restaurant owner picks his biggest problem (margin, orders, customers)
-// and the block shows the product that solves it, its starting price, a small live visual, a link to
-// the product page and a WhatsApp message written for that problem.
-// Desktop: the Amplify logo as a hub with the routes around it; the chosen one turns to face the panel.
-import Mark from './Mark.astro';
+// "Trois problèmes. Trois points de départ.": the three routes side by side, so the owner compares
+// them at a glance (margin with Profit, orders with POS, customers with Site and Clients). Each card:
+// a large live visual that plays when the card comes into view, the owner's own words, what he gets,
+// the starting price, WhatsApp and the product page. Cards rise one after the other; on a computer
+// they tilt toward the mouse. No "most popular" badge: nothing invented.
 import Icon from './Icon.astro';
 import WaButton from './WaButton.astro';
 import { copy } from '../i18n';
@@ -13,149 +13,126 @@ const lang = Astro.props.lang;
 const all = copy(lang);
 const c = all.home.places;
 const v = c.v;
-const N = c.sectors.length;
+// per route: the visual's background, the accent of the card
+const LOOK: Record<string, { bg: string; accent: string; glow: string }> = {
+  profit: { bg: 'bg-navy', accent: 'bg-green text-navy', glow: 'rgb(5 185 98 / .35)' },
+  pos: { bg: 'bg-blue-2', accent: 'bg-white text-navy', glow: 'rgb(10 63 122 / .4)' },
+  clients: { bg: 'bg-mint', accent: 'bg-navy text-white', glow: 'rgb(5 185 98 / .25)' },
+};
 ---
-<section class="mx-auto max-w-6xl px-4 py-24 sm:px-6" data-sectors>
-  <h2 class="text-center text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.h2a}</span><span class="block">{c.h2b}</span></h2>
+<section class="mx-auto max-w-6xl px-4 py-24 sm:px-6" data-routes>
+  <h2 class="text-center text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.h2a}</span><span class="block text-green-deep">{c.h2b}</span></h2>
   <p class="mx-auto mt-6 max-w-xl text-center text-muted">{c.p}</p>
 
-  <!-- the choice -->
-  <div class="snap-row -mx-4 mt-10 flex gap-2 overflow-x-auto px-4 md:mx-0 md:flex-wrap md:justify-center md:overflow-visible md:px-0" role="tablist" aria-label={c.choose}>
-    {c.sectors.map((s, i) => (
-      <button type="button" role="tab" id={`sec-tab-${s.key}`} aria-controls={`sec-${s.key}`} aria-selected={i === 0 ? 'true' : 'false'} data-sec={i}
-        class="sec-tab group relative flex shrink-0 items-center gap-2.5 overflow-hidden rounded-full bg-paper py-2 pe-5 ps-2 font-semibold ring-1 ring-line transition-colors hover:ring-navy aria-selected:bg-navy aria-selected:text-white aria-selected:ring-navy">
-        <span class="grid size-9 place-items-center rounded-full bg-chalk text-navy group-aria-selected:bg-green group-aria-selected:text-navy"><Icon name={s.icon} class="size-5" /></span>
-        <span class="whitespace-nowrap">{s.label}</span>
-        <span class="sec-progress absolute inset-x-0 bottom-0 h-[3px] origin-left bg-green rtl:origin-right" style="transform:scaleX(0)" aria-hidden="true"></span>
-      </button>
-    ))}
-  </div>
-
-  <div class="mt-10 grid items-center gap-10 lg:grid-cols-[20rem_1fr] lg:gap-14">
-    <!-- hub (desktop) -->
-    <div class="relative mx-auto hidden size-80 lg:block" aria-hidden="true">
-      <div class="absolute inset-6 rounded-full border-2 border-dashed border-line"></div>
-      <span class="hub-line absolute start-1/2 top-1/2 h-[3px] w-1/2 origin-left -translate-y-1/2 rounded-full bg-green"></span>
-      <div class="hub-orbit absolute inset-0" style="--rot:0deg">
-        {c.sectors.map((s, i) => (
-          <span class="hub-sat absolute left-1/2 top-1/2 size-0" style={`--a:${(i * 360) / N}deg`} data-sat={i}>
-            <span class="hub-sat-inner grid size-14 place-items-center rounded-2xl bg-paper text-navy shadow-lg ring-1 ring-line transition-all duration-500"><Icon name={s.icon} class="size-6" /></span>
-          </span>
-        ))}
-      </div>
-      <div class="absolute inset-[30%] grid place-items-center rounded-full bg-paper shadow-[0_20px_50px_-20px_rgba(0,30,62,0.35)] ring-1 ring-line">
-        <Mark class="w-[62%]" id="hub" />
-      </div>
-    </div>
-
-    <!-- the panels -->
-    <div class="grid">
-      {c.sectors.map((s, i) => (
-        <div role="tabpanel" id={`sec-${s.key}`} aria-labelledby={`sec-tab-${s.key}`} data-secpanel={i} inert={i !== 0} aria-hidden={i !== 0 ? 'true' : undefined}
-          class={`sec-panel col-start-1 row-start-1 grid items-center gap-6 rounded-[2rem] bg-paper p-5 ring-1 ring-line transition-opacity duration-300 md:grid-cols-[1.15fr_0.85fr] md:gap-8 md:p-10 ${i === 0 ? 'is-on' : 'invisible opacity-0'}`}>
-          <div>
-            <p class="sec-in text-xl font-semibold leading-snug tracking-tight sm:text-2xl md:text-[1.75rem]" style="--d:0ms">{s.quote}</p>
-            <ul class="mt-6 space-y-3">
-              {s.does.map((d, k) => (
-                <li class="sec-in flex gap-3" style={`--d:${150 + k * 120}ms`}>
-                  <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
-                  <span>{d}</span>
-                </li>
-              ))}
-            </ul>
-            <p class="sec-in mt-6 font-semibold text-green-deep" style="--d:500ms">{s.price}</p>
-            <div class="sec-in mt-4 flex flex-wrap items-center gap-x-5 gap-y-3" style="--d:600ms">
-              <WaButton text={s.wa} label={all.ui.whatsapp} where={`home-sector-${s.key}`} class="px-6" />
-              <a href={ROUTES[s.link][lang]} class="font-semibold underline underline-offset-4 hover:text-green-deep">{c.more} {s.price.split(/[,،]/)[0]}</a>
-            </div>
-          </div>
-
+  <div class="mt-12 grid gap-5 lg:grid-cols-3" style="perspective:1400px">
+    {c.sectors.map((s, i) => {
+      const L = LOOK[s.key] ?? LOOK.profit;
+      return (
+        <article class="rt sec-panel group relative flex flex-col overflow-hidden rounded-[2rem] bg-paper ring-1 ring-line" style={`--i:${i};--glow:${L.glow}`} data-rt>
           <!-- the live visual -->
-          <div class="relative order-first grid min-h-56 place-items-center overflow-hidden rounded-[1.5rem] bg-chalk p-5 md:order-none md:min-h-64 md:p-6" aria-hidden="true">
-            {s.visual === 'ticket' && (
-              <div class="vis-ticket w-56 rounded-t-lg bg-white px-5 pb-6 pt-4 font-mono text-[0.8rem] text-navy shadow-xl">
-                <p class="pr-line text-center font-bold" style="--d:200ms">{v.ticket.title}</p>
-                <p class="pr-line my-2 border-t border-dashed border-navy/30" style="--d:300ms"></p>
-                {v.ticket.lines.map(([a, b], k) => <p class="pr-line flex justify-between" style={`--d:${450 + k * 250}ms`}><span>{a}</span><span>{b}</span></p>)}
-                <p class="pr-line my-2 border-t border-dashed border-navy/30" style="--d:950ms"></p>
-                <p class="pr-line flex justify-between font-bold" style="--d:1100ms"><span>{v.ticket.total}</span><span>{v.ticket.amount}</span></p>
-                <p class="pr-line mt-3 flex items-center gap-1.5 text-green-deep" style="--d:1400ms"><Icon name="chef" class="size-4" />{v.ticket.sent}</p>
-                <p class="pr-line flex items-center gap-1.5 text-green-deep" style="--d:1650ms"><Icon name="chart" class="size-4" />{v.ticket.margin}</p>
-              </div>
-            )}
+          <div class={`rt-vis relative grid min-h-64 place-items-center lg:h-[19rem] overflow-hidden ${L.bg} px-5 pb-6 pt-16`} aria-hidden="true">
+            <span class={`absolute start-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-bold ${L.accent}`}><Icon name={s.icon} class="size-4" />{s.label}</span>
             {s.visual === 'margin' && (
-              <div class="w-full max-w-64 rounded-2xl bg-white p-4 text-navy shadow-xl">
+              <div class="w-full max-w-64 rounded-2xl bg-white p-4 text-navy shadow-2xl">
                 <p class="flex items-center justify-between font-bold"><span>{v.margin.title}</span><span class="rounded-full bg-chalk px-2 py-0.5 text-[0.65rem] font-semibold text-muted">{v.margin.note}</span></p>
                 <ul class="mt-3 space-y-2.5">
                   {v.margin.rows.map(([name, pct], k) => (
                     <li class="text-[0.8rem]">
                       <span class="flex justify-between"><span>{name}</span><span class={`font-bold tabular-nums ${pct < 40 ? 'text-[#B42318]' : 'text-green-deep'}`} dir="ltr">{pct} %</span></span>
-                      <span class="mt-1 block h-1.5 overflow-hidden rounded-full bg-chalk"><span class={`m-bar block h-full rounded-full ${pct < 40 ? 'bg-[#F04438]' : 'bg-green'}`} style={`--w:${pct}%;--d:${300 + k * 250}ms`}></span></span>
+                      <span class="mt-1 block h-1.5 overflow-hidden rounded-full bg-chalk"><span class={`m-bar block h-full rounded-full ${pct < 40 ? 'bg-[#F04438]' : 'bg-green'}`} style={`--w:${pct}%;--d:${400 + k * 250}ms`}></span></span>
                     </li>
                   ))}
                 </ul>
               </div>
             )}
+            {s.visual === 'ticket' && (
+              <div class="vis-ticket w-56 rounded-lg bg-white px-5 pb-5 pt-4 font-mono text-[0.78rem] text-navy shadow-2xl">
+                <p class="pr-line text-center font-bold" style="--d:300ms">{v.ticket.title}</p>
+                <p class="pr-line my-2 border-t border-dashed border-navy/30" style="--d:400ms"></p>
+                {v.ticket.lines.map(([a, b], k) => <p class="pr-line flex justify-between" style={`--d:${550 + k * 250}ms`}><span>{a}</span><span>{b}</span></p>)}
+                <p class="pr-line my-2 border-t border-dashed border-navy/30" style="--d:1050ms"></p>
+                <p class="pr-line flex justify-between font-bold" style="--d:1200ms"><span>{v.ticket.total}</span><span>{v.ticket.amount}</span></p>
+                <p class="pr-line mt-2 flex items-center gap-1.5 text-green-deep" style="--d:1500ms"><Icon name="chef" class="size-4" />{v.ticket.sent}</p>
+                <p class="pr-line flex items-center gap-1.5 text-green-deep" style="--d:1750ms"><Icon name="chart" class="size-4" />{v.ticket.margin}</p>
+              </div>
+            )}
             {s.visual === 'google' && (
-              <div class="w-full max-w-64 rounded-2xl bg-white p-4 text-navy shadow-xl">
+              <div class="w-full max-w-64 rounded-2xl bg-white p-4 text-navy shadow-2xl">
                 <div class="flex items-center gap-3">
                   <span class="grid size-11 place-items-center rounded-xl bg-blue text-white"><Icon name="store" class="size-5" /></span>
                   <span><span class="block font-bold">{v.google.name}</span><span class="text-xs text-muted">{v.google.kind}</span></span>
                 </div>
                 <div class="mt-3 flex items-center gap-1.5 text-sm">
                   <span class="font-bold">5,0</span>
-                  <span class="flex">{[0, 1, 2, 3, 4].map(k => <svg viewBox="0 0 20 20" class="g-star size-4" style={`--d:${300 + k * 180}ms`}><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
+                  <span class="flex">{[0, 1, 2, 3, 4].map(k => <svg viewBox="0 0 20 20" class="g-star size-4" style={`--d:${400 + k * 180}ms`}><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
                 </div>
                 <p class="mt-1 text-xs font-semibold text-green-deep">{v.google.open}</p>
                 <div class="mt-3 grid grid-cols-3 gap-1.5">
-                  {v.google.actions.map((a, k) => <span class={`sec-in rounded-full py-1.5 text-center text-[0.7rem] font-semibold ${k === 2 ? 'bg-green text-navy' : 'bg-chalk'}`} style={`--d:${1300 + k * 120}ms`}>{a}</span>)}
+                  {v.google.actions.map((a, k) => <span class={`sec-in rounded-full py-1.5 text-center text-[0.7rem] font-semibold ${k === 2 ? 'bg-green text-navy' : 'bg-chalk'}`} style={`--d:${1400 + k * 120}ms`}>{a}</span>)}
                 </div>
               </div>
             )}
           </div>
-        </div>
-      ))}
-    </div>
+
+          <!-- the words, the price, the way in -->
+          <div class="flex flex-1 flex-col p-6 sm:p-7">
+            <p class="text-xl font-semibold leading-snug tracking-tight">{s.quote}</p>
+            <ul class="mt-5 space-y-2.5 text-[0.95rem]">
+              {s.does.map(d => (
+                <li class="flex gap-2.5">
+                  <span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span>
+                  <span>{d}</span>
+                </li>
+              ))}
+            </ul>
+            <div class="mt-auto pt-6">
+              <p class="text-sm font-semibold text-muted">{s.price.split(/[,،]/)[0]}</p>
+              <p class="display mt-1 text-[1.9rem] leading-none text-navy">{s.price.split(/[,،]/).slice(1).join(',').trim()}</p>
+              <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
+                <WaButton text={s.wa} label={all.ui.whatsapp} where={`home-route-${s.key}`} class="px-5" />
+                <a href={ROUTES[s.link][lang]} class="font-semibold underline underline-offset-4 hover:text-green-deep">{c.more} {s.price.split(/[,،]/)[0]}</a>
+              </div>
+            </div>
+          </div>
+        </article>
+      );
+    })}
   </div>
 </section>
 
-<script>
-  document.querySelectorAll<HTMLElement>('[data-sectors]').forEach((root) => {
-    const tabs = [...root.querySelectorAll<HTMLButtonElement>('[data-sec]')];
-    const panels = [...root.querySelectorAll<HTMLElement>('[data-secpanel]')];
-    const sats = [...root.querySelectorAll<HTMLElement>('[data-sat]')];
-    const orbit = root.querySelector<HTMLElement>('.hub-orbit');
-    const line = root.querySelector<HTMLElement>('.hub-line');
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const N = tabs.length, STEP = 5500;
-    let current = 0, auto = !still, timer = 0, rot = 0;
+<style>
+  /* the cards rise one after the other; on hover the card lifts and glows in its colour */
+  :global(.js) .rt { opacity: 0; transform: translateY(40px) rotateX(8deg); transition: opacity .6s ease, transform .8s cubic-bezier(.2,.8,.2,1), box-shadow .4s; transition-delay: calc(var(--i) * 140ms); transform-origin: 50% 100%; }
+  :global(.js) .rt.is-on { opacity: 1; transform: none; }
+  .rt:hover { box-shadow: 0 40px 80px -36px var(--glow), 0 0 0 2px var(--glow); }
+  .rt.is-on.tilt { transition: transform .15s ease-out, box-shadow .4s; transition-delay: 0s; }
+  .rt-vis > div { transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+  .rt:hover .rt-vis > div { transform: translateY(-6px) scale(1.04); }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .rt { opacity: 1; transform: none; transition: none; }
+    .rt:hover .rt-vis > div { transform: none; }
+  }
+</style>
 
-    const show = (i: number, fromUser = false) => {
-      clearTimeout(timer);
-      current = i;
-      tabs.forEach((t, k) => { t.setAttribute('aria-selected', k === i ? 'true' : 'false'); t.tabIndex = k === i ? 0 : -1; t.classList.remove('running'); });
-      panels.forEach((p, k) => { const on = k === i; p.inert = !on; if (on) p.removeAttribute('aria-hidden'); else p.setAttribute('aria-hidden', 'true'); p.classList.toggle('is-on', on); p.classList.toggle('invisible', !on); p.classList.toggle('opacity-0', !on); });
-      sats.forEach((s, k) => s.classList.toggle('on', k === i));
-      // turn the orbit, always in the same direction, so the chosen sector faces the panel (0 degrees)
-      const target = -(i * 360) / N;
-      let d = (target - rot) % 360; if (d > 0) d -= 360; rot += d;
-      orbit?.style.setProperty('--rot', `${rot}deg`);
-      if (line) { line.classList.remove('draw-line'); void line.offsetWidth; line.classList.add('draw-line'); }
-      if (fromUser) tabs[i].scrollIntoView({ block: 'nearest', inline: 'center', behavior: still ? 'auto' : 'smooth' });
-      if (auto) { void tabs[i].offsetWidth; tabs[i].classList.add('running'); timer = window.setTimeout(() => show((i + 1) % N), STEP); }
-    };
-    const stop = () => { auto = false; clearTimeout(timer); tabs.forEach(t => t.classList.remove('running')); };
-    tabs.forEach((t, i) => {
-      t.addEventListener('click', () => { stop(); show(i, true); });
-      t.addEventListener('keydown', (e) => {
-        const d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
-        if (!d) return; e.preventDefault(); stop(); const n = (current + d + N) % N; show(n, true); tabs[n].focus();
-      });
-    });
-    sats.forEach((s, i) => s.addEventListener('click', () => { stop(); show(i); }));
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); show(0); } }, { threshold: 0.35 });
-      io.observe(root);
+<script>
+  document.querySelectorAll<HTMLElement>('[data-routes]').forEach((root) => {
+    const cards = [...root.querySelectorAll<HTMLElement>('[data-rt]')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // the visuals play when the cards come into view (all three, one after the other)
+    if (!('IntersectionObserver' in window) || still) cards.forEach(c => c.classList.add('is-on'));
+    else {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); cards.forEach(c => c.classList.add('is-on')); } }, { threshold: 0.2 });
+      io.observe(cards[0]);
     }
+    // on a computer, the card tilts a little toward the mouse
+    if (still || !matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+    cards.forEach(card => {
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+        card.classList.add('tilt');
+        card.style.transform = `rotateY(${x * 7}deg) rotateX(${-y * 6}deg) translateY(-6px)`;
+      });
+      card.addEventListener('pointerleave', () => { card.style.transform = ''; setTimeout(() => card.classList.remove('tilt'), 160); });
+    });
   });
 </script>

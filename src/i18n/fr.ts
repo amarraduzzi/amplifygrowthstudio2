@@ -100,8 +100,8 @@ export const fr = {
       marketing: ['Amplify Clients', 'Google, dégustations, un vrai concept et un site qui fait réserver et commander. Des clients à table, pas des vues.'],
     },
     places: {
-      h2a: 'Par quoi',
-      h2b: 'commencer ?',
+      h2a: 'Trois problèmes.',
+      h2b: 'Trois points de départ.',
       p: 'Choisissez ce qui vous coûte le plus aujourd’hui. Vous ajoutez le reste quand vous voulez.',
       choose: 'Votre priorité',
       more: 'Découvrir',

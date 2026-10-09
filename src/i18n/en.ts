@@ -100,8 +100,8 @@ export const en: Copy = {
       marketing: ['Amplify Clients', 'Google, tastings, a real concept and a website that converts. Customers at your tables, not views.'],
     },
     places: {
-      h2a: 'Where',
-      h2b: 'to start?',
+      h2a: 'Three problems.',
+      h2b: 'Three places to start.',
       p: 'Pick what costs you the most today. Add the rest whenever you like.',
       choose: 'Your priority',
       more: 'Discover',
