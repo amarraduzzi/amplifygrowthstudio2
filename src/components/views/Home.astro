@@ -32,7 +32,6 @@ const schema = [
 ].filter(Boolean) as Record<string, unknown>[];
 const ICONS = ['qr', 'till', 'chef', 'chart', 'megaphone'] as const;
 const TILE = ['bg-blue text-white', 'bg-navy text-green', 'bg-green text-navy', 'bg-navy text-white', 'bg-green-deep text-white'];
-const PLACE_ICONS = ['cup', 'bag', 'store', 'briefcase'] as const;
 const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [1600, 937], cuisine: [1600, 937], marges: [1400, 714], 'menu-qr': [780, 1688] };
 ---
 <Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
@@ -47,7 +46,7 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
         ))}</h1>
         <p class="fade-up mt-4 max-w-xl text-[1.05rem] leading-snug text-muted md:mt-5 md:text-xl" style="--d:300ms"><span class="md:hidden">{c.hero.leadShort}</span><span class="hidden md:inline">{c.hero.lead}</span></p>
         <div id="hero-cta" class="fade-up mt-5 flex flex-wrap items-center gap-x-3.5 gap-y-2 md:mt-7 md:gap-3" style="--d:400ms">
-          <WaButton text={c.wa} label={t.ui.whatsapp} where="home-hero" class="whitespace-nowrap px-4 text-[0.95rem] md:px-7 md:text-lg" />
+          <WaButton text={c.wa} label={c.hero.diag} where="home-hero" class="whitespace-nowrap px-4 text-[0.95rem] md:px-7 md:text-lg" />
           <a href={signupUrl(lang)} class="inline-flex items-center whitespace-nowrap text-sm font-medium underline underline-offset-4 md:min-h-12 md:rounded-full md:border md:border-navy/25 md:px-7 md:text-lg md:font-normal md:no-underline md:hover:border-navy">{c.hero.trial}</a>
         </div>
         <ul class="fade-up mt-4 flex items-center gap-x-4 text-[0.8rem] md:mt-6 md:gap-x-6 md:text-[0.95rem]" style="--d:500ms">

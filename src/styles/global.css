@@ -130,6 +130,11 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
 @keyframes print { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
 .sec-panel.is-on .q-card { animation: q-in .5s cubic-bezier(.2,.9,.25,1.2) both; animation-delay: var(--d, 0ms); }
 @keyframes q-in { from { opacity: 0; transform: translateX(40px); } }
+/* margin bars of the "Je ne connais pas ma marge" route grow when the panel shows */
+.m-bar { width: var(--w); }
+.sec-panel.is-on .m-bar { animation: m-grow .7s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+@keyframes m-grow { from { width: 0; } to { width: var(--w); } }
+@media (prefers-reduced-motion: reduce) { .sec-panel.is-on .m-bar { animation: none; } }
 .g-star { color: var(--color-line); }
 .sec-panel.is-on .g-star { animation: star .3s ease both; animation-delay: var(--d, 0ms); }
 @keyframes star { from { color: var(--color-line); transform: scale(.6); } to { color: #F5B301; transform: scale(1); } }

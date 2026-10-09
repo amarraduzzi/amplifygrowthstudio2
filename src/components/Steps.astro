@@ -4,7 +4,7 @@
 // while the steps light up one by one as you scroll.
 import WaButton from './WaButton.astro';
 import Icon from './Icon.astro';
-import { signupUrl } from '../config';
+import { OFFER, signupUrl } from '../config';
 import { copy } from '../i18n';
 import type { Lang } from '../i18n/routes';
 interface Props { lang: Lang; wa: string }
@@ -30,7 +30,10 @@ const routes = [{ key: 'us', items: c.items }, { key: 'self', items: c.self }] a
       <span class="h-1 w-40 overflow-hidden rounded-full bg-line"><span class="steps-bar block h-full w-full origin-left bg-green transition-transform duration-500 rtl:origin-right" style="transform:scaleX(0.25)"></span></span>
       <span class="display text-2xl text-muted">04</span>
     </div>
-    <div class="mt-8" data-cta="us"><WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-steps" class="px-7" /></div>
+    <div class="mt-8" data-cta="us">
+      <WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-steps" class="px-7" />
+      <p class="mt-3 max-w-sm text-sm text-muted">{c.usNote.replace('{price}', String(OFFER.installRabat))}</p>
+    </div>
     <div class="mt-8 hidden" data-cta="self">
       <a href={signupUrl(Astro.props.lang)} class="inline-flex min-h-12 items-center rounded-full bg-navy px-7 font-semibold text-white hover:bg-blue">{c.selfCta}</a>
       <p class="mt-2 text-sm text-muted">{c.selfNote}</p>

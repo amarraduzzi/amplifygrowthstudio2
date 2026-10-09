@@ -1,14 +1,16 @@
 ---
-// "Choose your trade": the visitor picks a sector and the block speaks about their business,
-// with a small live visual and a WhatsApp message written for that sector.
-// Desktop: the Amplify logo as a hub with the four sectors around it; the chosen one turns to face the panel.
+// "Par quoi commencer ?": the restaurant owner picks his biggest problem (margin, orders, customers)
+// and the block shows the product that solves it, its starting price, a small live visual, a link to
+// the product page and a WhatsApp message written for that problem.
+// Desktop: the Amplify logo as a hub with the routes around it; the chosen one turns to face the panel.
 import Mark from './Mark.astro';
 import Icon from './Icon.astro';
 import WaButton from './WaButton.astro';
 import { copy } from '../i18n';
-import type { Lang } from '../i18n/routes';
+import { ROUTES, type Lang } from '../i18n/routes';
 interface Props { lang: Lang }
-const all = copy(Astro.props.lang);
+const lang = Astro.props.lang;
+const all = copy(lang);
 const c = all.home.places;
 const v = c.v;
 const N = c.sectors.length;
@@ -61,7 +63,11 @@ const N = c.sectors.length;
                 </li>
               ))}
             </ul>
-            <div class="sec-in mt-7" style="--d:550ms"><WaButton text={s.wa} label={all.ui.whatsapp} where={`home-sector-${s.key}`} class="px-6" /></div>
+            <p class="sec-in mt-6 font-semibold text-green-deep" style="--d:500ms">{s.price}</p>
+            <div class="sec-in mt-4 flex flex-wrap items-center gap-x-5 gap-y-3" style="--d:600ms">
+              <WaButton text={s.wa} label={all.ui.whatsapp} where={`home-sector-${s.key}`} class="px-6" />
+              <a href={ROUTES[s.link][lang]} class="font-semibold underline underline-offset-4 hover:text-green-deep">{c.more} {s.price.split(/[,،]/)[0]}</a>
+            </div>
           </div>
 
           <!-- the live visual -->
@@ -77,14 +83,17 @@ const N = c.sectors.length;
                 <p class="pr-line flex items-center gap-1.5 text-green-deep" style="--d:1650ms"><Icon name="chart" class="size-4" />{v.ticket.margin}</p>
               </div>
             )}
-            {s.visual === 'queue' && (
-              <div class="w-full max-w-60 space-y-2.5">
-                {v.queue.map(([where, t, item], k) => (
-                  <div class="q-card flex items-center justify-between rounded-xl bg-navy px-4 py-3 text-white shadow-lg" style={`--d:${200 + k * 300}ms`}>
-                    <span><span class="block text-xs text-white/60">{where}</span><span class="font-semibold">{item}</span></span>
-                    <span class={`rounded-lg px-2 py-1 text-xs font-bold ${k === 2 ? 'bg-[#F5B301] text-navy' : 'bg-white/10'}`}>{t}</span>
-                  </div>
-                ))}
+            {s.visual === 'margin' && (
+              <div class="w-full max-w-64 rounded-2xl bg-white p-4 text-navy shadow-xl">
+                <p class="flex items-center justify-between font-bold"><span>{v.margin.title}</span><span class="rounded-full bg-chalk px-2 py-0.5 text-[0.65rem] font-semibold text-muted">{v.margin.note}</span></p>
+                <ul class="mt-3 space-y-2.5">
+                  {v.margin.rows.map(([name, pct], k) => (
+                    <li class="text-[0.8rem]">
+                      <span class="flex justify-between"><span>{name}</span><span class={`font-bold tabular-nums ${pct < 40 ? 'text-[#B42318]' : 'text-green-deep'}`} dir="ltr">{pct} %</span></span>
+                      <span class="mt-1 block h-1.5 overflow-hidden rounded-full bg-chalk"><span class={`m-bar block h-full rounded-full ${pct < 40 ? 'bg-[#F04438]' : 'bg-green'}`} style={`--w:${pct}%;--d:${300 + k * 250}ms`}></span></span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             )}
             {s.visual === 'google' && (
@@ -100,16 +109,6 @@ const N = c.sectors.length;
                 <p class="mt-1 text-xs font-semibold text-green-deep">{v.google.open}</p>
                 <div class="mt-3 grid grid-cols-3 gap-1.5">
                   {v.google.actions.map((a, k) => <span class={`sec-in rounded-full py-1.5 text-center text-[0.7rem] font-semibold ${k === 2 ? 'bg-green text-navy' : 'bg-chalk'}`} style={`--d:${1300 + k * 120}ms`}>{a}</span>)}
-                </div>
-              </div>
-            )}
-            {s.visual === 'rdv' && (
-              <div class="w-full max-w-64 overflow-hidden rounded-2xl bg-[#EFEAE2] text-[0.8rem] text-[#111] shadow-xl">
-                <div class="flex items-center gap-2 bg-[#075E54] px-3 py-2.5 text-white"><span class="size-6 rounded-full bg-white/30"></span><span class="font-semibold">{v.rdv.title}</span></div>
-                <div class="space-y-2 p-3">
-                  <p class="sec-in ms-auto w-fit max-w-[85%] rounded-lg rounded-se-none bg-[#D9FDD3] px-3 py-2 leading-snug" style="--d:300ms">{v.rdv.ask}</p>
-                  <p class="sec-in w-fit max-w-[85%] rounded-lg rounded-ss-none bg-white px-3 py-2 leading-snug" style="--d:1100ms">{v.rdv.reply}</p>
-                  <p class="sec-in ms-auto w-fit max-w-[85%] rounded-lg rounded-se-none bg-[#D9FDD3] px-3 py-2 leading-snug" style="--d:1800ms">{v.rdv.ok}</p>
                 </div>
               </div>
             )}
