@@ -58,16 +58,16 @@ const I18N = {
 
     <!-- scenarios: what happens, what you do -->
     <div class="mt-10 grid gap-3 lg:grid-cols-2">
-      <div class="rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
+      <div class="min-w-0 rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
         <p class="px-1 text-xs font-semibold text-white/60">{tt('Ce qui arrive')}</p>
-        <div class="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+        <div class="mt-2 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <button type="button" data-sc="heavy" class="ms-chip ms-chip-bad">{tt('La main lourde en cuisine')}</button>
           <button type="button" data-sc="rise" class="ms-chip ms-chip-bad">{tt('Les prix d’achat montent')}</button>
         </div>
       </div>
-      <div class="rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
+      <div class="min-w-0 rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
         <p class="px-1 text-xs font-semibold text-white/60">{tt('Ce que vous faites')}</p>
-        <div class="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
+        <div class="mt-2 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap">
           <button type="button" data-sc="weigh" class="ms-chip ms-chip-fix">⚖ {tt('Peser chaque portion')}</button>
           <button type="button" data-sc="nego" class="ms-chip ms-chip-fix">{tt('Négocier −8 % chez vos fournisseurs')}</button>
           <button type="button" data-sc="fix" class="ms-chip ms-chip-fix">✓ {tt('Prix conseillés')}</button>
@@ -166,7 +166,8 @@ const I18N = {
 </section>
 
 <style>
-  .ms-chip { flex-shrink: 0; white-space: nowrap; border-radius: 999px; padding: .55rem 1rem; font-weight: 600; font-size: .92rem; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); transition: background-color .2s, transform .15s; }
+  .ms-chip { min-width: 0; border-radius: 1rem; padding: .6rem .7rem; font-weight: 600; font-size: .85rem; line-height: 1.2; text-align: center; overflow-wrap: anywhere; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); transition: background-color .2s, transform .15s; }
+  @media (min-width: 640px) { .ms-chip { flex-shrink: 0; white-space: nowrap; border-radius: 999px; padding: .55rem 1rem; font-size: .92rem; } }
   .ms-chip:hover { background: rgb(255 255 255 / .16); }
   .ms-chip:active { transform: scale(.97); }
   .ms-chip-bad { box-shadow: inset 0 0 0 1px rgb(229 72 77 / .6); }
@@ -174,7 +175,7 @@ const I18N = {
   .ms-chip-fix { background: var(--color-green); color: var(--color-navy); box-shadow: none; }
   .ms-chip-fix:hover { background: #2fd07f; }
   .ms-chip-fix.ms-call { animation: ms-call 1.4s ease-out infinite; }
-  /* phones: the chips sit in a swipe row that clips a spreading ring, so the call is a soft blink instead */
+  /* phones: a spreading ring would overlap the neighbouring chip, so the call is a soft blink instead */
   @media (max-width: 639px) { .ms-chip-fix.ms-call { animation: ms-blink 1.2s ease-in-out infinite; } }
   @keyframes ms-blink { 50% { background: #8ff0bd; } }
   .ms-chip-ghost { background: transparent; }
