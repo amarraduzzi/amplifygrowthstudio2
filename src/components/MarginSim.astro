@@ -52,7 +52,7 @@ const I18N = {
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="mx-auto max-w-3xl text-center">
       <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-green"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{tt('Simulateur de marge')}</p>
-      <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('10 grammes de trop.')}</span><span class="block text-green">{tt('Des milliers de dirhams par an.')}</span></h2>
+      <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Portions, achats, prix.')}</span><span class="block text-green">{tt('Voyez votre marge bouger.')}</span></h2>
       <p class="mx-auto mt-6 max-w-2xl text-white/75">{tt('Un restaurant fictif qui vend 50 pizzas et 50 tacos par jour. Une main un peu lourde en cuisine, un fournisseur qui augmente, un prix jamais négocié : voyez ce que chacun coûte en un an.')}</p>
     </div>
 
@@ -83,7 +83,7 @@ const I18N = {
         <p class="mt-0.5 text-xs text-white/55">{tt('Ce que la main ajoute, sans balance.')}</p>
         <div class="mt-4 space-y-4">
           {ING.map(g => (
-            <div>
+            <div class={['viande', 'cafe'].includes(g.key) ? 'hidden lg:block' : ''}>
               <label class="flex items-center justify-between gap-2 text-sm" for={`ms-x-${g.key}`}>
                 <span class="font-semibold">{g.name}</span>
                 <span class="tabular-nums text-white/80" data-xv={g.key} dir="ltr">+0 g</span>
@@ -92,7 +92,8 @@ const I18N = {
             </div>
           ))}
         </div>
-        <p class="mt-7 border-t border-white/10 pt-5 font-semibold">{tt('Prix d’achat')}</p>
+        <details class="ms-prices group mt-7 border-t border-white/10 pt-5" open>
+        <summary class="flex cursor-pointer list-none items-center justify-between font-semibold lg:pointer-events-none">{tt('Prix d’achat')}<span class="text-white/60 transition-transform group-open:rotate-180 lg:hidden" aria-hidden="true">▾</span></summary>
         <p class="mt-0.5 text-xs text-white/55">{tt('À gauche : vous avez négocié. À droite : le fournisseur augmente.')}</p>
         <div class="mt-4 space-y-4">
           {ING.map(g => (
@@ -105,6 +106,7 @@ const I18N = {
             </div>
           ))}
         </div>
+        </details>
       </div>
 
       <!-- the result -->
@@ -174,6 +176,8 @@ const I18N = {
   :global(.ms-leak) { animation: ms-in .35s ease both; }
   @keyframes ms-in { from { opacity: 0; transform: translateY(6px); } }
   @keyframes ms-shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
+  /* phones: the five dishes that bring in the most */
+  @media (max-width: 1023px) { :global(.ms-list > li:nth-child(n + 6)) { display: none; } }
   :global(.ms-bar) { transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
   @media (prefers-reduced-motion: reduce) {
     .ms-chip-fix.ms-call, :global(.ms-row.flash), :global(.ms-leak) { animation: none; }
@@ -369,6 +373,9 @@ const I18N = {
       if (sc === 'fix') { calc().forEach(x => { if (x.bad) sell[x.d.id] = x.sug; }); render(); }
       if (sc === 'reset') { DISHES.forEach(d => { sell[d.id] = d.price; }); go({ price: BASEP, extra: ZERO }); }
     }));
+
+    // phones: the purchase prices start folded
+    if (matchMedia('(max-width: 1023px)').matches) root.querySelector('.ms-prices')?.removeAttribute('open');
 
     sync(); render();
 

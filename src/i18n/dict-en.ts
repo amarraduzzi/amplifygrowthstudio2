@@ -815,4 +815,6 @@ export const dictEn: Record<string, string> = {
   "Votre restaurant prêt": "Your restaurant ready",
   "Vous préférez qu’on le fasse avec vous ?": "Prefer to do it with us?",
   "avant votre prochain café.": "before your next coffee.",
+  "Portions, achats, prix.": "Portions, purchases, prices.",
+  "Voyez votre marge bouger.": "Watch your margin move.",
 };

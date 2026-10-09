@@ -815,4 +815,6 @@ export const dictAr: Record<string, string> = {
   "Votre restaurant prêt": "مطعمك جاهز",
   "Vous préférez qu’on le fasse avec vous ?": "تفضل أن نقوم بذلك معك؟",
   "avant votre prochain café.": "قبل قهوتك القادمة.",
+  "Portions, achats, prix.": "الحصص، المشتريات، الأثمان.",
+  "Voyez votre marge bouger.": "شاهد هامشك يتغير.",
 };
