@@ -13,9 +13,8 @@ import MarginSim from '../MarginSim.astro';
 import LeakTicker from '../LeakTicker.astro';
 import ScaleBand from '../ScaleBand.astro';
 import SupplierBand from '../SupplierBand.astro';
-import Steps from '../Steps.astro';
+import QuickStart from '../QuickStart.astro';
 import ChatFaq from '../ChatFaq.astro';
-import Doors from '../Doors.astro';
 import Ph from '../Ph.astro';
 import Mark from '../Mark.astro';
 import { SITE, CONTACT, signupUrl } from '../../config';
@@ -137,14 +136,11 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- TOUR: the real product, interactive screenshots -->
   <Tour lang={lang} />
 
-  <!-- STEPS: how starting works, with us or on your own -->
-  <Steps lang={lang} wa={c.wa} />
-
   <!-- FAQ: a WhatsApp conversation -->
   <ChatFaq lang={lang} wa={c.wa} />
 
-  <!-- FINAL: two ways to start -->
-  <Doors lang={lang} />
+  <!-- START: on your own, today; help as a safety net -->
+  <QuickStart lang={lang} wa={c.wa} />
 <script>
   // the facts under the hero count up when they come into view
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;

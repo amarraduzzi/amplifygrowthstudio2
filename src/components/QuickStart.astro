@@ -1,0 +1,198 @@
+---
+// The last section of the homepage: start on your own, today. A stopwatch runs while the four steps
+// happen on a tablet: the account, the menu read from a photo, the QR codes, the first order at the
+// till. Then the big button. Help from the team stays one line below, as a safety net, not a gate.
+// Times are indicative ("environ"): the printer and the team training are not in the five minutes.
+import WaButton from './WaButton.astro';
+import Icon from './Icon.astro';
+import { OFFER, signupUrl } from '../config';
+import { tr, langOf } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang; wa: string }
+const { lang, wa } = Astro.props;
+const tt = tr(langOf(Astro.url));
+const STEPS = [
+  { at: 30, label: tt('Compte créé'), sub: tt('Un e-mail, le nom du restaurant') },
+  { at: 90, label: tt('Carte lue depuis une photo'), sub: tt('L’IA remplit vos plats et vos prix') },
+  { at: 180, label: tt('QR codes prêts'), sub: tt('Un par table, à imprimer') },
+  { at: 270, label: tt('Première commande en caisse'), sub: tt('Sur un PC, une tablette ou un téléphone') },
+];
+// a QR-looking pattern (decoration, not a real code): 21 x 21 modules, three finder squares, the rest pseudo-random
+const qr = (seed: number) => {
+  const N = 21, cells: [number, number][] = [];
+  let x = seed * 9301 + 49297;
+  const finder = (r: number, c: number) => [[0, 0], [0, N - 7], [N - 7, 0]].some(([fr, fc]) => r >= fr && r < fr + 7 && c >= fc && c < fc + 7);
+  const inFinder = (r: number, c: number) => {
+    for (const [fr, fc] of [[0, 0], [0, N - 7], [N - 7, 0]]) {
+      const a = r - fr, b = c - fc;
+      if (a >= 0 && a < 7 && b >= 0 && b < 7) return a === 0 || a === 6 || b === 0 || b === 6 || (a >= 2 && a <= 4 && b >= 2 && b <= 4);
+    }
+    return false;
+  };
+  for (let r = 0; r < N; r++) for (let c = 0; c < N; c++) {
+    x = (x * 1103515245 + 12345) % 2147483648;
+    if (finder(r, c) ? inFinder(r, c) : (r > 7 || c > 7) && !(r < 8 && c > N - 9) && !(r > N - 9 && c < 8) && x % 100 < 48) cells.push([c, r]);
+  }
+  return cells;
+};
+const DISHES: [string, string][] = [[tt('Pizza margherita'), '50'], [tt('Tacos poulet'), '45'], [tt('Café noir'), '16'], [tt('Thé à la menthe'), '16']];
+---
+<section class="qs relative isolate overflow-hidden bg-navy py-24 text-white" data-quick>
+  <div class="pointer-events-none absolute -start-32 -top-40 -z-10 size-[30rem] rounded-full bg-green/20 blur-3xl" aria-hidden="true"></div>
+  <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.05fr]">
+    <div>
+      <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-green"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{tt('Sans rendez-vous, sans devis')}</p>
+      <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Votre restaurant prêt')}</span><span class="block text-green">{tt('avant votre prochain café.')}</span></h2>
+      <p class="mt-6 max-w-md text-lg text-white/75">{tt('Créez votre compte, photographiez votre carte, encaissez. Vous testez pendant un vrai service, et vous continuez seulement si ça vous plaît.')}</p>
+      <a href={signupUrl(lang)} class="qs-cta mt-8 inline-flex min-h-14 items-center gap-3 rounded-full bg-green px-8 text-lg font-bold text-navy transition-transform hover:scale-[1.03] active:scale-[.98]">
+        {tt('Créer mon restaurant')}
+        <svg viewBox="0 0 24 24" class="size-5 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
+      <p class="mt-3 text-sm text-white/60">{tt('14 jours gratuits. Sans carte bancaire. Sans engagement.')}</p>
+    </div>
+
+    <!-- the stopwatch and the tablet -->
+    <div class="qs-dev rounded-[2rem] bg-white/[0.06] p-4 ring-1 ring-white/10 sm:p-6" aria-hidden="true">
+      <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+          <span class="relative grid size-12 place-items-center">
+            <svg viewBox="0 0 48 48" class="absolute inset-0 -rotate-90"><circle cx="24" cy="24" r="21" fill="none" stroke="rgb(255 255 255 / .12)" stroke-width="4" /><circle class="qs-ring" cx="24" cy="24" r="21" fill="none" stroke="#05B962" stroke-width="4" stroke-linecap="round" stroke-dasharray="132" stroke-dashoffset="132" /></svg>
+            <Icon name="check" class="qs-done size-5 scale-0 text-green transition-transform duration-500" />
+          </span>
+          <span class="qs-time display text-5xl tabular-nums" dir="ltr">0:00</span>
+        </div>
+        <button type="button" class="qs-again hidden rounded-full bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/20" tabindex="-1">↺ {tt('Revoir')}</button>
+      </div>
+
+      <div class="mt-5 grid gap-4 sm:grid-cols-[1.15fr_0.85fr]">
+        <!-- the steps -->
+        <ol class="space-y-2">
+          {STEPS.map((s, i) => (
+            <li class="qs-step flex items-start gap-3 rounded-2xl p-2.5 transition-colors duration-300" data-at={s.at}>
+              <span class="qs-dot mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-white/10 text-xs font-bold text-white/60 transition-all duration-300">{i + 1}</span>
+              <span class="min-w-0">
+                <span class="block font-semibold leading-tight">{s.label}</span>
+                <span class="block text-xs text-white/55">{s.sub}</span>
+              </span>
+              <span class="qs-at ms-auto shrink-0 text-xs tabular-nums text-white/40" dir="ltr">{Math.floor(s.at / 60)}:{String(s.at % 60).padStart(2, '0')}</span>
+            </li>
+          ))}
+        </ol>
+
+        <!-- the tablet: what each step looks like -->
+        <div class="relative min-h-64 overflow-hidden rounded-2xl bg-white p-4 text-navy">
+          <div class="qs-pane absolute inset-4" data-pane="0">
+            <p class="text-xs font-semibold text-muted">{tt('Créer mon restaurant')}</p>
+            <div class="mt-3 space-y-2">
+              <p class="rounded-lg bg-chalk px-3 py-2 text-sm"><span class="qs-type" data-text="patron@moncafe.ma"></span><span class="qs-caret">|</span></p>
+              <p class="rounded-lg bg-chalk px-3 py-2 text-sm"><span class="qs-type" data-text={tt('Café de la Gare')}></span></p>
+              <p class="rounded-lg bg-navy px-3 py-2 text-center text-sm font-semibold text-white">{tt('Créer mon restaurant')}</p>
+            </div>
+          </div>
+          <div class="qs-pane absolute inset-4" data-pane="1">
+            <p class="text-xs font-semibold text-muted">{tt('Votre carte')}</p>
+            <ul class="mt-2 divide-y divide-line">
+              {DISHES.map(([n, p], k) => <li class="qs-dish flex justify-between py-1.5 text-sm" style={`--k:${k}`}><span>{n}</span><span class="font-semibold tabular-nums" dir="ltr">{p} {tt('DH')}</span></li>)}
+            </ul>
+            <p class="qs-dish mt-2 inline-flex rounded-full bg-mint px-2.5 py-1 text-xs font-semibold text-green-deep" style="--k:4">✓ {tt('Lu par l’IA, à vérifier')}</p>
+          </div>
+          <div class="qs-pane absolute inset-4" data-pane="2">
+            <p class="text-xs font-semibold text-muted">{tt('QR codes des tables')}</p>
+            <div class="mt-3 grid grid-cols-2 gap-3">
+              {[1, 2, 3, 4].map((t, k) => (
+                <div class="qs-qr rounded-xl bg-chalk p-2 text-center" style={`--k:${k}`}>
+                  <svg viewBox="-1 -1 23 23" class="mx-auto size-16 rounded bg-white" shape-rendering="crispEdges">{qr(t).map(([cx, cy]) => <rect x={cx} y={cy} width="1" height="1" fill="#001E3E" />)}</svg>
+                  <p class="mt-1 text-xs font-semibold">{tt('Table')} {t}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div class="qs-pane absolute inset-4" data-pane="3">
+            <p class="text-xs font-semibold text-muted">{tt('Caisse')}</p>
+            <div class="qs-order mt-3 rounded-xl bg-navy p-3 text-white shadow-xl">
+              <p class="flex items-center justify-between text-sm font-bold"><span>{tt('Nouvelle commande')}</span><span class="rounded-full bg-green px-2 py-0.5 text-xs text-navy">{tt('Table')} 2</span></p>
+              <p class="mt-2 flex justify-between text-sm"><span>2 × {tt('Café noir')}</span><span class="tabular-nums" dir="ltr">32 {tt('DH')}</span></p>
+              <p class="flex justify-between text-sm"><span>1 × {tt('Pizza margherita')}</span><span class="tabular-nums" dir="ltr">50 {tt('DH')}</span></p>
+              <p class="mt-2 flex justify-between border-t border-white/15 pt-2 font-bold"><span>{tt('Total')}</span><span class="tabular-nums" dir="ltr">82 {tt('DH')}</span></p>
+            </div>
+            <p class="qs-ready display mt-3 text-center text-xl text-green-deep">✓ {tt('Prêt pour le service.')}</p>
+          </div>
+        </div>
+      </div>
+      <p class="mt-3 text-center text-xs text-white/45">{tt('Durées indicatives. L’imprimante et la formation de l’équipe viennent après, avec nous si vous voulez.')}</p>
+    </div>
+  </div>
+
+  <!-- help, as a safety net -->
+  <div class="mx-auto mt-12 max-w-6xl px-4 sm:px-6">
+    <div class="flex flex-col gap-4 rounded-[1.5rem] bg-white/[0.06] p-5 ring-1 ring-white/10 sm:flex-row sm:items-center sm:p-6">
+      <span class="grid size-11 shrink-0 place-items-center rounded-full bg-green/15 text-green"><Icon name="users" class="size-5" /></span>
+      <p class="min-w-0 flex-1 text-white/80"><b class="text-white">{tt('Vous préférez qu’on le fasse avec vous ?')}</b> {tt('Installation guidée en vidéo : incluse. Sur place à Rabat : {p} DH HT, offerte avec l’abonnement annuel.').replace('{p}', String(OFFER.installRabat))}</p>
+      <WaButton text={wa} label={tt('Parler à l’équipe')} where="home-quick-help" tone="light" class="shrink-0" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .qs-pane { opacity: 0; transform: translateY(12px); transition: opacity .35s, transform .45s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+  .qs-pane.on { opacity: 1; transform: none; }
+  .qs-step.on { background: rgb(255 255 255 / .06); }
+  .qs-step.done .qs-dot { background: #05B962; color: #001E3E; }
+  .qs-step.done .qs-at { color: #05B962; }
+  .qs-pane.on .qs-dish, .qs-pane.on .qs-qr { animation: qs-in .4s cubic-bezier(.2,.8,.2,1.2) both; animation-delay: calc(var(--k) * 160ms + 150ms); }
+  .qs-pane.on .qs-order { animation: qs-ding .6s cubic-bezier(.3,1.6,.5,1) both .2s; }
+  .qs-pane.on .qs-ready { animation: qs-in .4s ease both 1s; }
+  .qs-caret { animation: qs-blink 1s steps(1) infinite; }
+  .qs.end .qs-done { transform: scale(1); }
+  .qs.end .qs-cta { animation: qs-call 1.6s ease-out 3; }
+  @keyframes qs-in { from { opacity: 0; transform: translateY(8px) scale(.96); } }
+  @keyframes qs-ding { from { opacity: 0; transform: translateY(-24px) scale(.9); } }
+  @keyframes qs-blink { 50% { opacity: 0; } }
+  @keyframes qs-call { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 20px rgb(5 185 98 / 0); } }
+  @media (prefers-reduced-motion: reduce) {
+    .qs-pane, .qs-pane.on .qs-dish, .qs-pane.on .qs-qr, .qs-pane.on .qs-order, .qs-pane.on .qs-ready, .qs-caret, .qs.end .qs-cta { animation: none; transition: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-quick]').forEach((root) => {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const steps = [...root.querySelectorAll<HTMLElement>('.qs-step')];
+    const panes = [...root.querySelectorAll<HTMLElement>('.qs-pane')];
+    const time = root.querySelector<HTMLElement>('.qs-time')!;
+    const ring = root.querySelector<SVGCircleElement>('.qs-ring')!;
+    const again = root.querySelector<HTMLElement>('.qs-again')!;
+    const types = [...root.querySelectorAll<HTMLElement>('.qs-type')];
+    const AT = steps.map(s => Number(s.dataset.at)), END = AT[AT.length - 1];
+    const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+    let raf = 0;
+    // one real second = 30 seconds on the stopwatch: 4:30 plays in 9 seconds
+    const show = (sim: number) => {
+      time.textContent = fmt(sim);
+      ring.style.strokeDashoffset = String(132 * (1 - Math.min(1, sim / END)));
+      const cur = Math.min(steps.length - 1, AT.findIndex(a => sim < a) === -1 ? steps.length - 1 : AT.findIndex(a => sim < a));
+      steps.forEach((s, i) => { s.classList.toggle('on', i === cur && sim < END); s.classList.toggle('done', sim >= AT[i]); });
+      panes.forEach((p, i) => p.classList.toggle('on', i === cur));
+      // the sign-up form types itself during the first step
+      const k = Math.min(1, sim / AT[0]);
+      types.forEach((t, i) => { const txt = t.dataset.text ?? ''; const part = Math.max(0, Math.min(1, k * 2 - i)); t.textContent = txt.slice(0, Math.round(txt.length * part)); });
+      root.classList.toggle('end', sim >= END);
+    };
+    const play = () => {
+      cancelAnimationFrame(raf); again.classList.add('hidden'); root.classList.remove('end');
+      if (still) { show(END); again.classList.add('hidden'); return; }
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const sim = Math.min(END, ((t - t0) / 1000) * 30);
+        show(sim);
+        if (sim < END) raf = requestAnimationFrame(tick); else again.classList.remove('hidden');
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    show(0);
+    again.addEventListener('click', play);
+    if (!('IntersectionObserver' in window)) { play(); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); setTimeout(play, 400); } }, { threshold: 0.4 });
+    io.observe(root.querySelector('.qs-dev')!);
+  });
+</script>
