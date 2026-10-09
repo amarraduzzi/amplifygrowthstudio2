@@ -774,4 +774,11 @@ export const dictAr: Record<string, string> = {
   "Fournisseurs comparés et renégociés": "موردون تمت مقارنتهم والتفاوض معهم",
   "Marge par plat, à chaque vente": "الهامش لكل طبق، مع كل عملية بيع",
   "Où un restaurant perd de l’argent, et comment l’arrêter": "أين يخسر المطعم المال، وكيف توقف ذلك",
+  "Un cuisinier verse du fromage râpé sur une pizza posée sur une balance de cuisine": "طباخ يرش الجبن المبشور على بيتزا موضوعة فوق ميزان المطبخ",
+  "10 g de fromage en trop.": "10 غ جبن زائدة.",
+  "Sur chaque pizza.": "في كل بيتزا.",
+  "Balance": "الميزان",
+  "fiche : 130 g": "البطاقة: 130 غ",
+  "× 50 pizzas par jour, 360 jours par an, fromage à 75 DH le kilo": "× 50 بيتزا يوميًا، 360 يومًا في السنة، الجبن بـ 75 درهم للكيلو",
+  "perdus par an, rien que sur la pizza": "ضائعة في السنة، فقط في البيتزا",
 };

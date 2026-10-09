@@ -11,6 +11,7 @@ import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
 import MarginSim from '../MarginSim.astro';
 import LeakTicker from '../LeakTicker.astro';
+import ScaleBand from '../ScaleBand.astro';
 import Steps from '../Steps.astro';
 import ChatFaq from '../ChatFaq.astro';
 import Doors from '../Doors.astro';
@@ -119,6 +120,9 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
 
   <!-- LEAKS: where a restaurant loses money, and what stops it, running both ways -->
   <LeakTicker />
+
+  <!-- SCALE: the cheese on the scale, 130 g becomes 140 g, and what that costs in a year -->
+  <ScaleBand />
 
   <!-- MARGIN SIMULATOR: the aha, right after the promise -->
   <MarginSim />

@@ -1,0 +1,86 @@
+---
+// Above the margin simulator: a cook sprinkles cheese on a pizza that sits on a scale (AI photo,
+// illustration only). When it comes into view the scale reads 130 g, climbs to 140 g and turns red,
+// then the cost of those 10 grams over a year appears: 10 g x 50 pizzas a day x 360 days at 75 DH/kg.
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const loc = LG === 'en' ? 'en-US' : LG === 'ar' ? 'ar-MA' : 'fr-FR';
+const yearly = (10 / 1000) * 50 * 360 * 75;
+---
+<section class="bg-navy px-4 pt-20 sm:px-6" data-scale>
+  <figure class="sb relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-blue md:rounded-[2.5rem]">
+    <div class="relative overflow-hidden">
+    <picture>
+      <source media="(max-width: 767px)" srcset="/img/photos/balance-m.webp" width="800" height="640" />
+      <img src="/img/photos/balance-1376.webp" srcset="/img/photos/balance-800.webp 800w, /img/photos/balance-1376.webp 1376w" sizes="(min-width: 1152px) 1152px, 100vw"
+        alt={tt('Un cuisinier verse du fromage râpé sur une pizza posée sur une balance de cuisine')} width="1376" height="768" loading="lazy" decoding="async"
+        class="sb-img block aspect-[5/4] w-full object-cover md:aspect-[1376/768]" />
+    </picture>
+    <span class="pointer-events-none absolute inset-0 bg-linear-to-t from-blue/70 to-transparent to-40% md:bg-linear-to-r md:from-navy/90 md:via-navy/35 md:to-transparent md:to-100%" aria-hidden="true"></span>
+
+    <!-- the scale's display: a pulse where the grams are read -->
+    <span class="sb-ping pointer-events-none absolute size-10 -translate-x-1/2 -translate-y-1/2 rounded-full ring-4 ring-green/80 start-[66%] top-[75%] md:start-[76.4%] md:top-[75%] rtl:translate-x-1/2" aria-hidden="true"></span>
+    </div>
+
+    <!-- the reading, then what 10 grams cost in a year -->
+    <figcaption class="relative p-5 text-white sm:p-8 md:absolute md:inset-y-0 md:start-0 md:flex md:w-[48%] md:flex-col md:justify-center md:p-12">
+      <p class="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold backdrop-blur"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</p>
+      <p class="display mt-3 text-[2.2rem] leading-[0.95] sm:text-5xl lg:text-6xl">{tt('10 g de fromage en trop.')} <span class="text-green">{tt('Sur chaque pizza.')}</span></p>
+
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <div class="sb-card flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-navy shadow-2xl">
+          <span class="text-xs font-semibold leading-tight text-muted">{tt('Balance')}<br /><span class="font-normal">{tt('fiche : 130 g')}</span></span>
+          <span class="sb-g display whitespace-nowrap text-4xl tabular-nums transition-colors duration-300" style="text-transform:none" dir="ltr">130&nbsp;g</span>
+          <span class="sb-plus whitespace-nowrap rounded-full bg-[#E5484D] px-2 py-0.5 text-sm font-bold text-white" dir="ltr">+10 g</span>
+        </div>
+      </div>
+      <p class="sb-calc mt-4 text-white/75">{tt('× 50 pizzas par jour, 360 jours par an, fromage à 75 DH le kilo')}</p>
+      <p class="sb-res mt-2 w-fit max-w-full rounded-2xl bg-[#E5484D] px-4 py-2 text-lg font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= {yearly.toLocaleString(loc)} {tt('DH')}</span> {tt('perdus par an, rien que sur la pizza')}</p>
+    </figcaption>
+  </figure>
+</section>
+
+<style>
+  /* the photo settles in; the reading climbs; the cost lands */
+  :global(.js) .sb .sb-img { transform: scale(1.08); transition: transform 2.4s cubic-bezier(.2,.7,.2,1); }
+  :global(.js) .sb.in .sb-img { transform: scale(1); }
+  :global(.js) .sb .sb-card, :global(.js) .sb .sb-calc, :global(.js) .sb .sb-res { opacity: 0; transform: translateY(12px); transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1.2); }
+  :global(.js) .sb.in .sb-card { opacity: 1; transform: none; transition-delay: .4s; }
+  :global(.js) .sb.in .sb-calc { opacity: 1; transform: none; transition-delay: 2.2s; }
+  :global(.js) .sb.in .sb-res { opacity: 1; transform: none; transition-delay: 2.7s; }
+  :global(.js) .sb .sb-plus { opacity: 0; transform: scale(.4); transition: opacity .3s 1.9s, transform .5s 1.9s cubic-bezier(.3,1.8,.5,1); }
+  :global(.js) .sb.in .sb-plus { opacity: 1; transform: none; }
+  .sb-ping { animation: sb-ping 1.8s ease-out infinite; }
+  @keyframes sb-ping { 0% { opacity: .9; transform: translate(-50%, -50%) scale(.6); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(1.8); } }
+  :global([dir="rtl"]) .sb-ping { animation-name: sb-ping-rtl; }
+  @keyframes sb-ping-rtl { 0% { opacity: .9; transform: translate(50%, -50%) scale(.6); } 100% { opacity: 0; transform: translate(50%, -50%) scale(1.8); } }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .sb .sb-img, :global(.js) .sb .sb-card, :global(.js) .sb .sb-calc, :global(.js) .sb .sb-res, :global(.js) .sb .sb-plus { opacity: 1; transform: none; transition: none; }
+    .sb-ping { animation: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-scale] .sb').forEach((el) => {
+    const g = el.querySelector<HTMLElement>('.sb-g')!;
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const play = () => {
+      el.classList.add('in');
+      if (still) { g.textContent = '140\u00a0g'; g.style.color = '#E5484D'; return; }
+      // the cheese keeps falling: 130 g, then the reading climbs to 140 g and turns red
+      setTimeout(() => {
+        const t0 = performance.now();
+        const step = (t: number) => {
+          const k = Math.min(1, (t - t0) / 1100);
+          g.textContent = `${Math.round(130 + 10 * k)}\u00a0g`;
+          if (k < 1) requestAnimationFrame(step); else g.style.color = '#E5484D';
+        };
+        requestAnimationFrame(step);
+      }, 900);
+    };
+    if (!('IntersectionObserver' in window)) { play(); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.45 });
+    io.observe(el);
+  });
+</script>

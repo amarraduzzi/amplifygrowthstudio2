@@ -774,4 +774,11 @@ export const dictEn: Record<string, string> = {
   "Fournisseurs comparés et renégociés": "Suppliers compared and renegotiated",
   "Marge par plat, à chaque vente": "Margin per dish, on every sale",
   "Où un restaurant perd de l’argent, et comment l’arrêter": "Where a restaurant loses money, and how to stop it",
+  "Un cuisinier verse du fromage râpé sur une pizza posée sur une balance de cuisine": "A cook sprinkles grated cheese on a pizza sitting on a kitchen scale",
+  "10 g de fromage en trop.": "10 g too much cheese.",
+  "Sur chaque pizza.": "On every pizza.",
+  "Balance": "Scale",
+  "fiche : 130 g": "recipe: 130 g",
+  "× 50 pizzas par jour, 360 jours par an, fromage à 75 DH le kilo": "× 50 pizzas a day, 360 days a year, cheese at 75 DH a kilo",
+  "perdus par an, rien que sur la pizza": "lost a year, on the pizza alone",
 };
