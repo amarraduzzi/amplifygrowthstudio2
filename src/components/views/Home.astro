@@ -9,6 +9,7 @@ import Bars from '../Bars.astro';
 import Icon from '../Icon.astro';
 import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
+import MarginSim from '../MarginSim.astro';
 import Steps from '../Steps.astro';
 import TryIt from '../TryIt.astro';
 import Loop from '../Loop.astro';
@@ -148,6 +149,9 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
 
   <!-- PLACES: choose your trade -->
   <Sectors lang={lang} />
+
+  <!-- MARGIN SIMULATOR: a fictional café, the visitor moves prices and portions -->
+  <MarginSim />
 
   <!-- STEPS: how starting works -->
   <Steps lang={lang} wa={c.wa} />
