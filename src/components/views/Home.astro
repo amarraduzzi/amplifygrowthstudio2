@@ -110,9 +110,10 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
       </div>
     </div>
     <div class="border-y border-line bg-paper">
-      <dl class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:gap-6 md:py-7">
+      <!-- phones: three short rows, the figure then its line; from tablet up: three columns -->
+      <dl class="mx-auto grid max-w-6xl gap-3 px-4 py-5 sm:grid-cols-3 sm:px-6 md:gap-6 md:py-7">
         {c.hero.facts.map(([n, u, l]) => (
-          <div class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><dt class="display whitespace-nowrap text-5xl text-navy md:text-6xl"><span data-count={n} dir="ltr">{n}</span><span class="ms-1 normal-case text-green-deep">{u}</span></dt><dd class="text-[0.78rem] leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</dd></div>
+          <div class="flex items-center gap-4"><dt class="display w-[5.5rem] shrink-0 whitespace-nowrap text-[2rem] text-navy sm:w-auto sm:text-5xl md:text-6xl"><span data-count={n} dir="ltr">{n}</span><span class="ms-1 normal-case text-green-deep">{u}</span></dt><dd class="text-sm leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</dd></div>
         ))}
       </dl>
     </div>

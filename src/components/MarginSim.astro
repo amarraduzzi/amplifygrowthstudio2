@@ -60,14 +60,14 @@ const I18N = {
     <div class="mt-10 grid gap-3 lg:grid-cols-2">
       <div class="rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
         <p class="px-1 text-xs font-semibold text-white/60">{tt('Ce qui arrive')}</p>
-        <div class="mt-2 flex flex-wrap gap-2">
+        <div class="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
           <button type="button" data-sc="heavy" class="ms-chip ms-chip-bad">{tt('La main lourde en cuisine')}</button>
           <button type="button" data-sc="rise" class="ms-chip ms-chip-bad">{tt('Les prix d’achat montent')}</button>
         </div>
       </div>
       <div class="rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
         <p class="px-1 text-xs font-semibold text-white/60">{tt('Ce que vous faites')}</p>
-        <div class="mt-2 flex flex-wrap gap-2">
+        <div class="-mx-1 mt-2 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
           <button type="button" data-sc="weigh" class="ms-chip ms-chip-fix">⚖ {tt('Peser chaque portion')}</button>
           <button type="button" data-sc="nego" class="ms-chip ms-chip-fix">{tt('Négocier −8 % chez vos fournisseurs')}</button>
           <button type="button" data-sc="fix" class="ms-chip ms-chip-fix">✓ {tt('Prix conseillés')}</button>
@@ -78,7 +78,7 @@ const I18N = {
 
     <div class="mt-5 grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
       <!-- the levers -->
-      <div class="self-start rounded-[2rem] bg-white/[0.06] p-5 ring-1 ring-white/10 sm:p-7">
+      <div class="ms-levers self-start rounded-[2rem] bg-white/[0.06] p-5 ring-1 ring-white/10 sm:p-7">
         <p class="font-semibold">{tt('En trop par plat')}</p>
         <p class="mt-0.5 text-xs text-white/55">{tt('Ce que la main ajoute, sans balance.')}</p>
         <div class="mt-4 space-y-4">
@@ -151,12 +151,22 @@ const I18N = {
         <ol class="ms-list relative mt-2 space-y-1.5"></ol>
       </div>
     </div>
+    <!-- phones: while the sliders are on screen, the result follows at the top -->
+    <div class="ms-float pointer-events-none fixed inset-x-3 z-30 lg:hidden" aria-hidden="true">
+      <div class="rounded-2xl bg-paper px-4 py-2.5 text-navy shadow-[0_18px_40px_-14px_rgba(0,0,0,.65)] ring-1 ring-line">
+        <div class="flex items-center justify-between gap-3">
+          <div class="min-w-0"><p class="text-[0.7rem] font-semibold text-muted">{tt('Marge brute sur un an')}</p><p class="ms-ftotal display text-[1.6rem] tabular-nums leading-none" dir="ltr"></p></div>
+          <p class="ms-fdelta shrink-0 rounded-full px-2.5 py-1 text-sm font-bold" dir="ltr"></p>
+        </div>
+        <p class="ms-fleak mt-1 truncate text-xs font-semibold text-[#B42318]"></p>
+      </div>
+    </div>
     <p class="mt-5 text-center text-xs text-white/50">{tt('Restaurant de démonstration, prix et ventes d’exemple. Marge brute hors TVA (10 %), sur 360 jours d’ouverture, avec les mêmes quantités vendues.')}</p>
   </div>
 </section>
 
 <style>
-  .ms-chip { border-radius: 999px; padding: .55rem 1rem; font-weight: 600; font-size: .92rem; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); transition: background-color .2s, transform .15s; }
+  .ms-chip { flex-shrink: 0; white-space: nowrap; border-radius: 999px; padding: .55rem 1rem; font-weight: 600; font-size: .92rem; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); transition: background-color .2s, transform .15s; }
   .ms-chip:hover { background: rgb(255 255 255 / .16); }
   .ms-chip:active { transform: scale(.97); }
   .ms-chip-bad { box-shadow: inset 0 0 0 1px rgb(229 72 77 / .6); }
@@ -164,6 +174,9 @@ const I18N = {
   .ms-chip-fix { background: var(--color-green); color: var(--color-navy); box-shadow: none; }
   .ms-chip-fix:hover { background: #2fd07f; }
   .ms-chip-fix.ms-call { animation: ms-call 1.4s ease-out infinite; }
+  /* phones: the chips sit in a swipe row that clips a spreading ring, so the call is a soft blink instead */
+  @media (max-width: 639px) { .ms-chip-fix.ms-call { animation: ms-blink 1.2s ease-in-out infinite; } }
+  @keyframes ms-blink { 50% { background: #8ff0bd; } }
   .ms-chip-ghost { background: transparent; }
   .ms-red { background: linear-gradient(to right, #E5484D 0 var(--fill, 0%), rgb(255 255 255 / .15) var(--fill, 0%)); }
   :global([dir="rtl"]) .ms-red { background: linear-gradient(to left, #E5484D 0 var(--fill, 0%), rgb(255 255 255 / .15) var(--fill, 0%)); }
@@ -178,6 +191,8 @@ const I18N = {
   @keyframes ms-shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
   /* phones: the five dishes that bring in the most */
   @media (max-width: 1023px) { :global(.ms-list > li:nth-child(n + 6)) { display: none; } }
+  .ms-float { top: 76px; opacity: 0; transform: translateY(-14px); transition: opacity .25s, transform .3s cubic-bezier(.2,.8,.2,1); }
+  .ms-float.show { opacity: 1; transform: none; }
   :global(.ms-bar) { transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
   @media (prefers-reduced-motion: reduce) {
     .ms-chip-fix.ms-call, :global(.ms-row.flash), :global(.ms-leak) { animation: none; }
@@ -256,6 +271,7 @@ const I18N = {
         const k = dur ? Math.min(1, (t - t0) / dur) : 1, e = 1 - Math.pow(1 - k, 3);
         shown = from + (to - from) * e;
         $('.ms-total').textContent = dh(shown);
+        $('.ms-ftotal').textContent = dh(shown);
         if (k < 1) raf = requestAnimationFrame(tick);
       };
       raf = requestAnimationFrame(tick);
@@ -273,6 +289,8 @@ const I18N = {
       de.textContent = delta ? `${delta > 0 ? '+' : '−'}${nf(Math.abs(delta))} ${I.perYear}` : I.same;
       de.style.background = delta < 0 ? '#FDE2E2' : delta > 0 ? '#DDF7E9' : '#EEF1EC';
       de.style.color = delta < 0 ? '#B42318' : delta > 0 ? '#00804A' : '#4A5D74';
+      const fd = $<HTMLElement>('.ms-fdelta');
+      fd.textContent = de.textContent; fd.style.background = de.style.background; fd.style.color = de.style.color;
       const fcAll = r.reduce((s, x) => s + x.c * x.d.day, 0) / r.reduce((s, x) => s + x.ht * x.d.day, 0) * 100;
       $('.ms-fc').textContent = `${nf(fcAll, 1)} %`;
       $<SVGGElement>('.ms-needle').style.transform = `rotate(${Math.max(-90, Math.min(90, (fcAll / 50) * 180 - 90))}deg)`;
@@ -323,6 +341,10 @@ const I18N = {
         : badOnes.length === 1 ? I.insightPrice.replace('{d}', badOnes[0].d.name).replace('{m}', dh(badOnes[0].lost, 2)).replace('{p}', dh(badOnes[0].sug))
         : I.insightMany.replace('{n}', String(badOnes.length)).replace('{d}', badOnes[0].d.name).replace('{m}', dh(badOnes[0].lost, 2));
       $('.ms-insight-txt').textContent = txt;
+      const top = L[0];
+      const fl = $<HTMLElement>('.ms-fleak');
+      fl.textContent = top ? `${top.label} → ${top.v > 0 ? '+' : '−'}${nf(Math.abs(top.v))} ${I.dh}` : '';
+      fl.style.color = top && top.v > 0 ? '#00804A' : '#B42318';
       $('[data-sc="weigh"]').classList.toggle('ms-call', !!heavy && !still);
       $('[data-sc="fix"]').classList.toggle('ms-call', !heavy && badOnes.length > 0 && !still);
 
@@ -373,6 +395,18 @@ const I18N = {
       if (sc === 'fix') { calc().forEach(x => { if (x.bad) sell[x.d.id] = x.sug; }); render(); }
       if (sc === 'reset') { DISHES.forEach(d => { sell[d.id] = d.price; }); go({ price: BASEP, extra: ZERO }); }
     }));
+
+    // phones: the result follows at the top while the sliders are on screen and the result card is not
+    const float = $<HTMLElement>('.ms-float');
+    if ('IntersectionObserver' in window && matchMedia('(max-width: 1023px)').matches) {
+      const head = document.querySelector('header');
+      const place = () => { float.style.top = `${Math.round((head?.getBoundingClientRect().height ?? 64) + 8)}px`; };
+      place(); addEventListener('resize', place);
+      let levers = false, result = true;
+      const upd = () => float.classList.toggle('show', levers && !result);
+      new IntersectionObserver(([e]) => { levers = e.isIntersecting; upd(); }, { threshold: 0.05 }).observe($('.ms-levers'));
+      new IntersectionObserver(([e]) => { result = e.isIntersecting; upd(); }, { threshold: 0 }).observe($('.ms-total'));
+    }
 
     // phones: the purchase prices start folded
     if (matchMedia('(max-width: 1023px)').matches) root.querySelector('.ms-prices')?.removeAttribute('open');
