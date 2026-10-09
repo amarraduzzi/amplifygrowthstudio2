@@ -1,0 +1,33 @@
+---
+// Between the hero and the margin simulator: two bands running in opposite directions. The top one
+// lists where a restaurant loses money, the bottom one what stops it. Example figures, said as such.
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const LOSS = [
+  tt('10 g de fromage en trop × 100 plats par jour = 27 000 DH par an'),
+  tt('Poulet +30 % chez le fournisseur'),
+  tt('Une portion de frites trop généreuse'),
+  tt('Un prix fixé il y a deux ans'),
+  tt('Des pertes jamais comptées'),
+];
+const FIX = [
+  tt('Chaque portion pesée'),
+  tt('Fiche technique au gramme'),
+  tt('Prix conseillé pour chaque plat'),
+  tt('Fournisseurs comparés et renégociés'),
+  tt('Marge par plat, à chaque vente'),
+];
+---
+<section class="overflow-hidden bg-chalk py-8" aria-label={tt('Où un restaurant perd de l’argent, et comment l’arrêter')}>
+  {[LOSS, FIX].map((row, r) => (
+    <div class={`flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)] ${r ? 'mt-3' : ''}`}>
+      <ul class={`mk-marquee flex shrink-0 gap-3 pe-3 ${r ? 'mk-rev' : ''}`} aria-hidden={r ? 'true' : undefined}>
+        {[...row, ...row].map((x) => (
+          <li class={`flex items-center gap-2.5 whitespace-nowrap rounded-full px-5 py-2.5 text-lg font-semibold sm:text-xl ${r ? 'bg-green text-navy' : 'bg-paper text-navy ring-1 ring-line'}`}>
+            <span class={`grid size-6 place-items-center rounded-full text-sm font-bold ${r ? 'bg-navy text-green' : 'bg-[#E5484D] text-white'}`} aria-hidden="true">{r ? '✓' : '−'}</span>{x}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
+</section>

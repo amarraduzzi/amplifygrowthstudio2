@@ -10,9 +10,8 @@ import Icon from '../Icon.astro';
 import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
 import MarginSim from '../MarginSim.astro';
+import LeakTicker from '../LeakTicker.astro';
 import Steps from '../Steps.astro';
-import TryIt from '../TryIt.astro';
-import Loop from '../Loop.astro';
 import ChatFaq from '../ChatFaq.astro';
 import Doors from '../Doors.astro';
 import Ph from '../Ph.astro';
@@ -31,8 +30,6 @@ const schema = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: abs(ROUTES.home[lang]), inLanguage: lang },
   faqSchema(c.faq),
 ].filter(Boolean) as Record<string, unknown>[];
-const ICONS = ['qr', 'till', 'chef', 'chart', 'megaphone'] as const;
-const TILE = ['bg-blue text-white', 'bg-navy text-green', 'bg-green text-navy', 'bg-navy text-white', 'bg-green-deep text-white'];
 const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [1600, 937], cuisine: [1600, 937], marges: [1400, 714], 'menu-qr': [780, 1688] };
 ---
 <Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
@@ -113,58 +110,44 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
     </div>
     <div class="border-y border-line bg-paper">
       <dl class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:gap-6 md:py-7">
-        {c.hero.facts.map(([n, l]) => (
-          <div class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><dt class="display text-5xl text-navy md:text-6xl">{n}</dt><dd class="text-[0.78rem] leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</dd></div>
+        {c.hero.facts.map(([n, u, l]) => (
+          <div class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><dt class="display whitespace-nowrap text-5xl text-navy md:text-6xl"><span data-count={n} dir="ltr">{n}</span><span class="ms-1 normal-case text-green-deep">{u}</span></dt><dd class="text-[0.78rem] leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</dd></div>
         ))}
       </dl>
     </div>
   </section>
 
-  <!-- STATEMENT: the second line fills in as you scroll; the five steps get connected by a line that grows with the scroll -->
-  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
-    <h2 class="text-center text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[5.5rem]" data-scrub="words">
-      <span class="block">{c.statement.a}</span>
-      <span class="block">{c.statement.b.split(' ').map((w, i) => <><span class="word">{w}</span>{' '}</>)}</span>
-    </h2>
-    <p class="mx-auto mt-8 max-w-2xl text-center text-lg text-muted">{c.statement.p}</p>
+  <!-- LEAKS: where a restaurant loses money, and what stops it, running both ways -->
+  <LeakTicker />
 
-    <ol class="relative mx-auto mt-14 grid max-w-md gap-7 lg:max-w-none lg:grid-cols-5 lg:gap-3" data-scrub="steps">
-      <!-- the connecting line: vertical on phones, horizontal on desktop -->
-      <span class="absolute start-[1.375rem] top-[1.375rem] bottom-[1.375rem] w-[3px] -translate-x-1/2 rounded-full bg-line lg:hidden rtl:translate-x-1/2" aria-hidden="true"><span class="flow-y block size-full rounded-full bg-green"></span></span>
-      <span class="absolute top-[1.375rem] hidden h-[3px] -translate-y-1/2 rounded-full bg-line lg:block" style="inset-inline-start:1.375rem;inset-inline-end:calc((100% - 3rem) / 5 - 1.375rem)" aria-hidden="true"><span class="flow-x block size-full rounded-full bg-green"></span></span>
-      {c.statement.items.map(([h, p], i) => (
-        <li class="step relative grid grid-cols-[2.75rem_1fr] items-start gap-4 lg:block" style={`--i:${i}`}>
-          <span class={`node relative z-10 grid size-11 place-items-center rounded-full ring-4 ring-chalk transition-all duration-500 ${TILE[i]}`}><Icon name={ICONS[i]} /></span>
-          <div class="lg:mt-5 lg:pe-4">
-            <h3 class="text-xl">{h}</h3>
-            <p class="mt-1 text-[0.95rem] leading-snug text-muted">{p}</p>
-          </div>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <!-- TOUR: interactive, real screenshots -->
-  <Tour lang={lang} />
-
-  <!-- PLACES: choose your trade -->
-  <Sectors lang={lang} />
-
-  <!-- MARGIN SIMULATOR: a fictional café, the visitor moves prices and portions -->
+  <!-- MARGIN SIMULATOR: the aha, right after the promise -->
   <MarginSim />
 
-  <!-- STEPS: how starting works -->
+  <!-- PLACES: where to start, by problem -->
+  <Sectors lang={lang} />
+
+  <!-- TOUR: the real product, interactive screenshots -->
+  <Tour lang={lang} />
+
+  <!-- STEPS: how starting works, with us or on your own -->
   <Steps lang={lang} wa={c.wa} />
-
-  <!-- TRY IT: scan and order in the live demo -->
-  <TryIt lang={lang} />
-
-  <!-- LOOP: systems and marketing as one loop, pinned while scrolling -->
-  <Loop lang={lang} />
 
   <!-- FAQ: a WhatsApp conversation -->
   <ChatFaq lang={lang} wa={c.wa} />
 
   <!-- FINAL: two ways to start -->
   <Doors lang={lang} />
+<script>
+  // the facts under the hero count up when they come into view
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; cio.unobserve(e.target);
+    const el = e.target as HTMLElement, to = Number(el.dataset.count);
+    if (still) return;
+    const t0 = performance.now(), dur = 1200;
+    const step = (now: number) => { const k = Math.min(1, (now - t0) / dur); el.textContent = String(Math.max(k > 0 ? 1 : 0, Math.round(to * (1 - Math.pow(1 - k, 3))))); if (k < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  }), { threshold: 0.6 });
+  document.querySelectorAll('[data-count]').forEach(n => cio.observe(n));
+</script>
 </Base>
