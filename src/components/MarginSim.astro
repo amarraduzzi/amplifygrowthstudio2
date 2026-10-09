@@ -1,39 +1,47 @@
 ---
-// The margin simulator: a fictional café with eight dishes and example figures. The visitor moves
-// purchase prices and portions; the cost, food cost and margin of every dish recalculate, the dishes
-// re-rank by what they bring in a month, the gauge swings, and the dishes that stop paying light up
-// with Amplify's suggested price (the price that gives back the margin per plate of the start, rounded up
-// to the dirham). One orchestrated moment: on first view, purchase prices rise by
-// themselves and the margin falls, then "Prix conseillés" brings it back.
+// The margin simulator: a fictional restaurant with eight dishes, daily sales and example figures.
+// Three things move the margin, as in real life: purchase prices (they rise, or you negotiate them
+// down), the hand in the kitchen (10 g of cheese too many on every pizza) and the selling price.
+// Everything is counted per plate, per day and per year; "Où part l'argent" shows what each lever
+// costs or saves in a year, the dishes re-rank, the gauge swings, and the dishes that lose margin light
+// up with the price that gives it back. One orchestrated moment: on first view the portions grow by
+// themselves and the yearly loss counts up, then "Peser chaque portion" calls.
 // Example data only, labelled as such: no client result, no promise.
 import { tr, langOf } from '../i18n/t';
 const LG = langOf(Astro.url);
 const tt = tr(LG);
 
-// ingredient prices per kg or per L (slider driven), and fixed pieces in DH
+// ingredients: purchase price per kg or L, the slider range for the price and the grams (or ml)
+// too many per plate the cook can add
 const ING = [
-  { key: 'poulet', name: tt('Poulet'), unit: tt('DH / kg'), base: 60, min: 40, max: 95 },
-  { key: 'viande', name: tt('Viande hachée'), unit: tt('DH / kg'), base: 90, min: 65, max: 135 },
-  { key: 'fromage', name: tt('Fromage'), unit: tt('DH / kg'), base: 75, min: 50, max: 115 },
-  { key: 'cafe', name: tt('Café en grains'), unit: tt('DH / kg'), base: 160, min: 110, max: 240 },
+  { key: 'fromage', name: tt('Fromage'), base: 75, min: 55, max: 110, extra: 30, step: 5 },
+  { key: 'poulet', name: tt('Poulet'), base: 60, min: 45, max: 90, extra: 40, step: 5 },
+  { key: 'viande', name: tt('Viande hachée'), base: 90, min: 70, max: 130, extra: 40, step: 5 },
+  { key: 'frites', name: tt('Frites'), base: 18, min: 12, max: 28, extra: 60, step: 10 },
+  { key: 'cafe', name: tt('Café en grains'), base: 160, min: 120, max: 230, extra: 4, step: 1 },
 ];
-// a recipe line: [ingredient key or null for a fixed item, grams (or ml), price per kg/L for fixed-rate items, fixed DH]
+// a recipe line: [ingredient key or null, grams (or ml), price per kg/L when no key, fixed DH]
 type Line = [string | null, number, number, number];
-const DISHES: { id: string; name: string; price: number; qty: number; lines: Line[] }[] = [
-  { id: 'noir', name: tt('Café noir'), price: 16, qty: 1800, lines: [['cafe', 8, 0, 0], [null, 10, 8, 0]] },
-  { id: 'lait', name: tt('Café au lait'), price: 18, qty: 700, lines: [['cafe', 8, 0, 0], [null, 150, 9, 0]] },
-  { id: 'the', name: tt('Thé à la menthe'), price: 16, qty: 600, lines: [[null, 6, 120, 0], [null, 0, 0, 1], [null, 25, 8, 0]] },
-  { id: 'jus', name: tt('Jus d’orange'), price: 20, qty: 300, lines: [[null, 500, 6, 0]] },
-  { id: 'tacos', name: tt('Tacos poulet'), price: 45, qty: 320, lines: [['poulet', 120, 0, 0], [null, 120, 18, 0], ['fromage', 30, 0, 0], [null, 0, 0, 2]] },
-  { id: 'kefta', name: tt('Sandwich kefta'), price: 40, qty: 260, lines: [['viande', 90, 0, 0], [null, 100, 18, 0], [null, 0, 0, 2.8]] },
-  { id: 'pizza', name: tt('Pizza margherita'), price: 50, qty: 220, lines: [['fromage', 130, 0, 0], [null, 0, 0, 5]] },
-  { id: 'crepe', name: tt('Crêpe Nutella'), price: 25, qty: 250, lines: [[null, 40, 80, 0], [null, 0, 0, 2]] },
+const DISHES: { id: string; name: string; price: number; day: number; lines: Line[] }[] = [
+  { id: 'pizza', name: tt('Pizza margherita'), price: 50, day: 50, lines: [['fromage', 130, 0, 0], [null, 0, 0, 5]] },
+  { id: 'tacos', name: tt('Tacos poulet'), price: 45, day: 50, lines: [['poulet', 120, 0, 0], ['frites', 120, 0, 0], ['fromage', 30, 0, 0], [null, 0, 0, 2]] },
+  { id: 'kefta', name: tt('Sandwich kefta'), price: 40, day: 30, lines: [['viande', 90, 0, 0], ['frites', 100, 0, 0], [null, 0, 0, 2.8]] },
+  { id: 'noir', name: tt('Café noir'), price: 16, day: 120, lines: [['cafe', 8, 0, 0], [null, 10, 8, 0]] },
+  { id: 'lait', name: tt('Café au lait'), price: 18, day: 40, lines: [['cafe', 8, 0, 0], [null, 150, 9, 0]] },
+  { id: 'the', name: tt('Thé à la menthe'), price: 16, day: 30, lines: [[null, 6, 120, 0], [null, 0, 0, 1], [null, 25, 8, 0]] },
+  { id: 'jus', name: tt('Jus d’orange'), price: 20, day: 20, lines: [[null, 500, 6, 0]] },
+  { id: 'crepe', name: tt('Crêpe Nutella'), price: 25, day: 20, lines: [[null, 40, 80, 0], [null, 0, 0, 2]] },
 ];
+const DAYS = 360;
 const I18N = {
-  loc: LG === 'en' ? 'en-US' : LG === 'ar' ? 'ar-MA' : 'fr-FR',
-  dh: tt('DH'), perMonth: tt('DH / mois'), perPlate: tt('par plat'), check: tt('À revoir'), sug: tt('Prix conseillé'),
-  same: tt('comme au départ'), insightOk: tt('Tous les plats paient. Le plus rentable du mois : {d}.'),
-  insightBad: tt('{d} rapporte {m} de moins par plat. Prix conseillé : {p}.'),
+  loc: LG === 'en' ? 'en-US' : LG === 'ar' ? 'ar-MA' : 'fr-FR', days: DAYS, sep: LG === 'fr' ? ' : ' : ': ',
+  dh: tt('DH'), perYear: tt('DH / an'), perPlate: tt('par plat'), perDay: tt('/ jour'), check: tt('À revoir'),
+  same: tt('comme au départ'), sub: tt('soit {m} par mois, {d} par jour'),
+  gram: tt('g en trop par plat'), price: tt('prix d’achat'), priced: tt('Prix conseillés appliqués'),
+  none: tt('Rien ne bouge encore. Faites glisser un curseur, ou choisissez un scénario.'),
+  insightOk: tt('Tous les plats gardent leur marge. Le plus rentable de l’année : {d}.'),
+  insightPortion: tt('Le plus cher, c’est la main lourde : {i} en trop coûte {m} par an. Peser chaque portion règle ça.'),
+  insightPrice: tt('{d} rapporte {m} de moins par plat. Prix conseillé : {p}.'),
   insightMany: tt('{n} plats rapportent moins qu’avant. Le plus touché : {d}, {m} de moins par plat.'),
 };
 ---
@@ -44,53 +52,73 @@ const I18N = {
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <div class="mx-auto max-w-3xl text-center">
       <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-green"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{tt('Simulateur de marge')}</p>
-      <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Un prix monte.')}</span><span class="block text-green">{tt('Votre marge bouge.')}</span></h2>
-      <p class="mx-auto mt-6 max-w-xl text-white/75">{tt('Un café fictif, huit plats, des chiffres d’exemple. Changez un prix d’achat ou une portion : chaque marge se recalcule, comme dans Amplify Profit.')}</p>
+      <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('10 grammes de trop.')}</span><span class="block text-green">{tt('Des milliers de dirhams par an.')}</span></h2>
+      <p class="mx-auto mt-6 max-w-2xl text-white/75">{tt('Un restaurant fictif qui vend 50 pizzas et 50 tacos par jour. Une main un peu lourde en cuisine, un fournisseur qui augmente, un prix jamais négocié : voyez ce que chacun coûte en un an.')}</p>
     </div>
 
-    <!-- scenarios -->
-    <div class="mt-10 flex flex-wrap justify-center gap-2" role="group" aria-label={tt('Scénarios')}>
-      <button type="button" data-sc="rise" class="ms-chip">{tt('Les prix d’achat montent')}</button>
-      <button type="button" data-sc="portion" class="ms-chip">{tt('Portions trop généreuses')}</button>
-      <button type="button" data-sc="fix" class="ms-chip ms-chip-fix">✓ {tt('Appliquer les prix conseillés')}</button>
-      <button type="button" data-sc="reset" class="ms-chip ms-chip-ghost">↺ {tt('Revenir au départ')}</button>
+    <!-- scenarios: what happens, what you do -->
+    <div class="mt-10 grid gap-3 lg:grid-cols-2">
+      <div class="rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
+        <p class="px-1 text-xs font-semibold text-white/60">{tt('Ce qui arrive')}</p>
+        <div class="mt-2 flex flex-wrap gap-2">
+          <button type="button" data-sc="heavy" class="ms-chip ms-chip-bad">{tt('La main lourde en cuisine')}</button>
+          <button type="button" data-sc="rise" class="ms-chip ms-chip-bad">{tt('Les prix d’achat montent')}</button>
+        </div>
+      </div>
+      <div class="rounded-2xl bg-white/[0.05] p-3 ring-1 ring-white/10">
+        <p class="px-1 text-xs font-semibold text-white/60">{tt('Ce que vous faites')}</p>
+        <div class="mt-2 flex flex-wrap gap-2">
+          <button type="button" data-sc="weigh" class="ms-chip ms-chip-fix">⚖ {tt('Peser chaque portion')}</button>
+          <button type="button" data-sc="nego" class="ms-chip ms-chip-fix">{tt('Négocier −8 % chez vos fournisseurs')}</button>
+          <button type="button" data-sc="fix" class="ms-chip ms-chip-fix">✓ {tt('Prix conseillés')}</button>
+          <button type="button" data-sc="reset" class="ms-chip ms-chip-ghost">↺ {tt('Revenir au départ')}</button>
+        </div>
+      </div>
     </div>
 
-    <div class="mt-8 grid gap-5 lg:grid-cols-[0.8fr_1.2fr]">
+    <div class="mt-5 grid gap-5 lg:grid-cols-[0.82fr_1.18fr]">
       <!-- the levers -->
       <div class="self-start rounded-[2rem] bg-white/[0.06] p-5 ring-1 ring-white/10 sm:p-7">
-        <p class="font-semibold">{tt('Prix d’achat cette semaine')}</p>
-        <div class="mt-4 space-y-5">
+        <p class="font-semibold">{tt('En trop par plat')}</p>
+        <p class="mt-0.5 text-xs text-white/55">{tt('Ce que la main ajoute, sans balance.')}</p>
+        <div class="mt-4 space-y-4">
           {ING.map(g => (
             <div>
-              <label class="flex items-center justify-between gap-2 text-sm" for={`ms-${g.key}`}>
+              <label class="flex items-center justify-between gap-2 text-sm" for={`ms-x-${g.key}`}>
                 <span class="font-semibold">{g.name}</span>
-                <span class="flex items-center gap-2"><span class="ms-val tabular-nums text-white/80" data-val={g.key} dir="ltr">{g.base} {g.unit}</span><span class="ms-d hidden rounded-full px-1.5 py-0.5 text-[0.7rem] font-bold" data-d={g.key}></span></span>
+                <span class="tabular-nums text-white/80" data-xv={g.key} dir="ltr">+0 g</span>
               </label>
-              <input id={`ms-${g.key}`} type="range" min={g.min} max={g.max} step="1" value={g.base} data-ing={g.key} class="pc-range pl-range mt-2.5 w-full" />
+              <input id={`ms-x-${g.key}`} type="range" min="0" max={g.extra} step={g.step} value="0" data-extra={g.key} class="pc-range pl-range ms-red mt-2 w-full" />
             </div>
           ))}
-          <div class="border-t border-white/10 pt-5">
-            <label class="flex items-center justify-between gap-2 text-sm" for="ms-portion">
-              <span class="font-semibold">{tt('Taille des portions')}</span>
-              <span class="ms-val tabular-nums text-white/80" data-val="portion" dir="ltr">100 %</span>
-            </label>
-            <input id="ms-portion" type="range" min="90" max="130" step="1" value="100" data-portion class="pc-range pl-range mt-2.5 w-full" />
-            <p class="mt-1.5 text-xs text-white/55">{tt('Une main un peu lourde en cuisine, sur chaque plat.')}</p>
-          </div>
+        </div>
+        <p class="mt-7 border-t border-white/10 pt-5 font-semibold">{tt('Prix d’achat')}</p>
+        <p class="mt-0.5 text-xs text-white/55">{tt('À gauche : vous avez négocié. À droite : le fournisseur augmente.')}</p>
+        <div class="mt-4 space-y-4">
+          {ING.map(g => (
+            <div>
+              <label class="flex items-center justify-between gap-2 text-sm" for={`ms-p-${g.key}`}>
+                <span class="font-semibold">{g.name}</span>
+                <span class="flex items-center gap-2"><span class="tabular-nums text-white/80" data-pv={g.key} dir="ltr">{g.base}</span><span class="hidden rounded-full px-1.5 py-0.5 text-[0.7rem] font-bold" data-pd={g.key} dir="ltr"></span></span>
+              </label>
+              <input id={`ms-p-${g.key}`} type="range" min={g.min} max={g.max} step="1" value={g.base} data-price={g.key} class="pc-range pl-range mt-2 w-full" />
+            </div>
+          ))}
         </div>
       </div>
 
       <!-- the result -->
-      <div class="rounded-[2rem] bg-paper p-5 text-navy shadow-[0_40px_90px_-40px_rgba(0,0,0,0.7)] sm:p-7">
+      <!-- on phones the result comes first: the visitor sees the yearly loss before the sliders -->
+      <div class="order-first rounded-[2rem] bg-paper p-5 text-navy shadow-[0_40px_90px_-40px_rgba(0,0,0,0.7)] sm:p-7 lg:order-none">
         <div class="grid gap-5 sm:grid-cols-[1fr_auto] sm:items-center">
           <div>
-            <p class="text-sm font-semibold text-muted">{tt('Marge brute du mois')} <span class="ms-1 rounded-full bg-chalk px-2 py-0.5 text-[0.7rem]">{tt('Exemple')}</span></p>
-            <p class="ms-total display mt-1 text-[2.8rem] tabular-nums leading-none sm:text-6xl" dir="ltr">0</p>
-            <p class="ms-delta mt-2 inline-flex min-h-7 items-center rounded-full px-2.5 py-1 text-sm font-bold" dir="ltr"></p>
+            <p class="text-sm font-semibold text-muted">{tt('Marge brute sur un an')} <span class="ms-1 rounded-full bg-chalk px-2 py-0.5 text-[0.7rem]">{tt('Exemple')}</span></p>
+            <p class="ms-total display mt-1 text-[2.6rem] tabular-nums leading-none sm:text-6xl" dir="ltr">0</p>
+            <p class="ms-sub mt-1.5 text-sm text-muted"></p>
+            <p class="ms-delta mt-2 inline-flex min-h-8 items-center rounded-full px-3 py-1 text-base font-bold" dir="ltr"></p>
           </div>
           <!-- food cost gauge -->
-          <div class="mx-auto w-44 text-center sm:mx-0">
+          <div class="mx-auto w-40 text-center sm:mx-0">
             <svg viewBox="0 0 200 116" class="w-full" aria-hidden="true">
               <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="#D3DBD6" stroke-width="16" stroke-linecap="round" />
               <path d="M20 100 A80 80 0 0 1 124.7 23.9" fill="none" stroke="#05B962" stroke-width="16" stroke-linecap="round" />
@@ -103,69 +131,104 @@ const I18N = {
           </div>
         </div>
 
-        <!-- the dishes, ranked by what they bring in a month -->
-        <div class="mt-6 flex items-center justify-between text-xs font-semibold text-muted">
-          <span>{tt('Plat')}</span><span>{tt('Marge du mois')}</span>
+        <!-- where the money goes, per lever, in a year -->
+        <div class="mt-6 rounded-2xl bg-chalk p-4">
+          <p class="flex items-center justify-between text-sm font-bold"><span>{tt('Où part l’argent')}</span><span class="text-xs font-semibold text-muted">{tt('sur un an')}</span></p>
+          <ul class="ms-leaks mt-3 space-y-2"></ul>
         </div>
-        <ol class="ms-list relative mt-2 space-y-1.5"></ol>
 
-        <p class="ms-insight mt-5 flex items-start gap-3 rounded-2xl bg-chalk p-3.5 text-sm font-medium">
-          <span class="grid size-7 shrink-0 place-items-center rounded-full bg-navy text-[0.8rem] font-bold text-green" aria-hidden="true">A</span>
+        <p class="mt-4 flex items-start gap-3 rounded-2xl bg-navy p-3.5 text-sm font-medium text-white">
+          <span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-[0.8rem] font-bold text-navy" aria-hidden="true">A</span>
           <span class="ms-insight-txt" aria-live="polite"></span>
         </p>
+
+        <!-- the dishes, ranked by what they bring in a year -->
+        <div class="mt-6 flex items-center justify-between text-xs font-semibold text-muted">
+          <span>{tt('Plat')}</span><span>{tt('Marge sur un an')}</span>
+        </div>
+        <ol class="ms-list relative mt-2 space-y-1.5"></ol>
       </div>
     </div>
-    <p class="mt-5 text-center text-xs text-white/50">{tt('Café de démonstration, prix et quantités d’exemple. Marge calculée hors TVA (10 %), sur 30 jours, avec les mêmes quantités vendues.')}</p>
+    <p class="mt-5 text-center text-xs text-white/50">{tt('Restaurant de démonstration, prix et ventes d’exemple. Marge brute hors TVA (10 %), sur 360 jours d’ouverture, avec les mêmes quantités vendues.')}</p>
   </div>
 </section>
 
 <style>
-  .ms-chip { border-radius: 999px; padding: .6rem 1.1rem; font-weight: 600; font-size: .95rem; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); transition: background-color .2s, transform .15s; }
+  .ms-chip { border-radius: 999px; padding: .55rem 1rem; font-weight: 600; font-size: .92rem; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); transition: background-color .2s, transform .15s; }
   .ms-chip:hover { background: rgb(255 255 255 / .16); }
   .ms-chip:active { transform: scale(.97); }
-  .ms-chip[aria-pressed="true"] { background: #fff; color: var(--color-navy); }
+  .ms-chip-bad { box-shadow: inset 0 0 0 1px rgb(229 72 77 / .6); }
+  .ms-chip-bad:hover { background: rgb(229 72 77 / .2); }
   .ms-chip-fix { background: var(--color-green); color: var(--color-navy); box-shadow: none; }
   .ms-chip-fix:hover { background: #2fd07f; }
   .ms-chip-fix.ms-call { animation: ms-call 1.4s ease-out infinite; }
   .ms-chip-ghost { background: transparent; }
+  .ms-red { background: linear-gradient(to right, #E5484D 0 var(--fill, 0%), rgb(255 255 255 / .15) var(--fill, 0%)); }
+  :global([dir="rtl"]) .ms-red { background: linear-gradient(to left, #E5484D 0 var(--fill, 0%), rgb(255 255 255 / .15) var(--fill, 0%)); }
+  .ms-red::-webkit-slider-thumb { background: #E5484D !important; }
+  .ms-red::-moz-range-thumb { background: #E5484D !important; }
   @keyframes ms-call { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 16px rgb(5 185 98 / 0); } }
   :global(.ms-row) { transition: transform .5s cubic-bezier(.2,.8,.2,1), background-color .4s; }
   :global(.ms-row.bad) { background: #FFF1F1; }
   :global(.ms-row.flash) { animation: ms-shake .45s ease; }
+  :global(.ms-leak) { animation: ms-in .35s ease both; }
+  @keyframes ms-in { from { opacity: 0; transform: translateY(6px); } }
   @keyframes ms-shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
   :global(.ms-bar) { transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
   @media (prefers-reduced-motion: reduce) {
-    .ms-chip-fix.ms-call, :global(.ms-row.flash) { animation: none; }
+    .ms-chip-fix.ms-call, :global(.ms-row.flash), :global(.ms-leak) { animation: none; }
     :global(.ms-row), :global(.ms-bar), .ms-needle { transition: none !important; }
   }
 </style>
 
 <script>
-  type Ing = { key: string; name: string; unit: string; base: number; min: number; max: number };
-  type Dish = { id: string; name: string; price: number; qty: number; lines: [string | null, number, number, number][] };
+  type Ing = { key: string; name: string; base: number; min: number; max: number; extra: number; step: number };
+  type Dish = { id: string; name: string; price: number; day: number; lines: [string | null, number, number, number][] };
   document.querySelectorAll<HTMLElement>('[data-msim]').forEach((root) => {
     const I = JSON.parse(root.dataset.i18n!);
     const ING: Ing[] = JSON.parse(root.dataset.ing!);
     const DISHES: Dish[] = JSON.parse(root.dataset.dishes!);
+    const N = Number(I.days);
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
     const nf = (n: number, d = 0) => n.toLocaleString(I.loc, { minimumFractionDigits: d, maximumFractionDigits: d });
     const dh = (n: number, d = 0) => `${nf(n, d)} ${I.dh}`;
 
-    const price: Record<string, number> = Object.fromEntries(ING.map(g => [g.key, g.base]));
-    let portion = 1;
+    const BASEP: Record<string, number> = Object.fromEntries(ING.map(g => [g.key, g.base]));
+    const ZERO: Record<string, number> = Object.fromEntries(ING.map(g => [g.key, 0]));
+    const price = { ...BASEP }, extra = { ...ZERO };
     const sell: Record<string, number> = Object.fromEntries(DISHES.map(d => [d.id, d.price]));
 
-    // cost of one plate: weighed lines scale with the portion, fixed pieces do not
-    const cost = (d: Dish) => d.lines.reduce((s, [k, g, rate, fixed]) => s + (fixed || ((g * portion / 1000) * (k ? price[k] : rate))), 0);
+    // cost of one plate: weighed lines get the grams too many, fixed pieces do not
+    const cost = (d: Dish, p = price, x = extra) => d.lines.reduce((s, [k, g, rate, fixed]) => s + (fixed || (((g + (k ? x[k] : 0)) / 1000) * (k ? p[k] : rate))), 0);
     // margin per plate at the start: what a suggested price gives back
-    const M0: Record<string, number> = Object.fromEntries(DISHES.map(d => [d.id, d.price / 1.1 - cost(d)]));
+    const M0: Record<string, number> = Object.fromEntries(DISHES.map(d => [d.id, d.price / 1.1 - cost(d, BASEP, ZERO)]));
     const calc = () => DISHES.map(d => {
       const ht = sell[d.id] / 1.1, c = cost(d), m = ht - c, lost = M0[d.id] - m;
       // to review: at least 1 DH and 5 % less per plate than at the start
-      return { d, ht, c, m, lost, bad: lost >= 1 && lost >= M0[d.id] * 0.05, fc: c / ht * 100, month: m * d.qty, sug: Math.ceil((M0[d.id] + c) * 1.1) };
+      return { d, ht, c, m, lost, bad: lost >= 1 && lost >= M0[d.id] * 0.05, fc: c / ht * 100, year: m * d.day * N, sug: Math.ceil((M0[d.id] + c) * 1.1) };
     });
-    const START = calc().reduce((s, x) => s + x.month, 0);
+    const START = calc().reduce((s, x) => s + x.year, 0);
+
+    // what each lever costs (or saves) in a year: the grams too many, the price move, the new prices
+    const leaks = () => {
+      const out: { label: string; name: string; v: number; kind: 'g' | 'p' }[] = [];
+      for (const g of ING) {
+        let grams = 0, move = 0;
+        for (const d of DISHES) for (const [k, w] of d.lines) if (k === g.key) {
+          grams += d.day * N * (extra[k] / 1000) * price[k];
+          move += d.day * N * (w / 1000) * (price[k] - g.base);
+        }
+        if (grams >= 1) out.push({ label: `${g.name}${I.sep}+${nf(extra[g.key])} ${I.gram}`, name: g.name, v: -grams, kind: 'g' });
+        if (Math.abs(move) >= 1) {
+          const pct = Math.round((price[g.key] / g.base - 1) * 100);
+          out.push({ label: `${g.name}${I.sep}${I.price} ${pct > 0 ? '+' : ''}${pct} %`, name: g.name, v: -move, kind: 'p' });
+        }
+      }
+      const priced = DISHES.reduce((s, d) => s + (sell[d.id] - d.price) / 1.1 * d.day * N, 0);
+      if (priced >= 1) out.push({ label: I.priced, name: '', v: priced, kind: 'p' });
+      return out.sort((a, b) => Math.abs(b.v) - Math.abs(a.v));
+    };
 
     // the rows, built once, moved with FLIP
     const list = $<HTMLOListElement>('.ms-list');
@@ -174,8 +237,8 @@ const I18N = {
       const li = document.createElement('li');
       li.className = 'ms-row rounded-xl px-3 py-2';
       li.innerHTML = `<div class="flex items-center justify-between gap-3 text-[0.9rem]">
-          <span class="min-w-0"><span class="block truncate font-semibold">${d.name}</span>
-            <span class="block text-xs text-muted"><span class="ms-p" dir="ltr"></span> · <span class="ms-pp" dir="ltr"></span> ${I.perPlate}<span class="ms-flag ms-1 hidden whitespace-nowrap rounded-full bg-[#E5484D] px-1.5 py-px text-[0.65rem] font-bold text-white"></span></span></span>
+          <span class="min-w-0"><span class="block truncate font-semibold">${d.name} <span class="font-normal text-muted"><span dir="ltr">${d.day}</span> ${I.perDay}</span></span>
+            <span class="block text-xs text-muted"><span class="ms-p" dir="ltr"></span> · <span class="ms-pp" dir="ltr"></span> ${I.perPlate} <span class="ms-flag hidden whitespace-nowrap rounded-full bg-[#E5484D] px-1.5 py-px text-[0.65rem] font-bold text-white"></span></span></span>
           <span class="ms-m shrink-0 font-bold tabular-nums" dir="ltr"></span></div>
         <span class="mt-1.5 block h-1.5 overflow-hidden rounded-full bg-chalk"><span class="ms-bar block h-full rounded-full bg-green"></span></span>`;
       rows.set(d.id, li); list.appendChild(li);
@@ -194,41 +257,52 @@ const I18N = {
       raf = requestAnimationFrame(tick);
     };
     const wasBad = new Set<string>();
+    let leakSig = '';
 
     const render = () => {
       const r = calc();
-      const total = r.reduce((s, x) => s + x.month, 0);
+      const total = r.reduce((s, x) => s + x.year, 0);
       roll(total);
-      const delta = total - START, pct = Math.abs(delta) < 1 ? 0 : delta;
+      $('.ms-sub').textContent = I.sub.replace('{m}', dh(total / 12)).replace('{d}', dh(total / N));
+      const delta = Math.abs(total - START) < 1 ? 0 : total - START;
       const de = $<HTMLElement>('.ms-delta');
-      de.textContent = pct ? `${pct > 0 ? '+' : '−'}${nf(Math.abs(pct))} ${I.perMonth}` : I.same;
-      de.style.background = pct < 0 ? '#FDE2E2' : pct > 0 ? '#DDF7E9' : '#EEF1EC';
-      de.style.color = pct < 0 ? '#B42318' : pct > 0 ? '#00804A' : '#4A5D74';
-      // food cost of the month, weighted by sales
-      const fcAll = r.reduce((s, x) => s + x.c * x.d.qty, 0) / r.reduce((s, x) => s + x.ht * x.d.qty, 0) * 100;
+      de.textContent = delta ? `${delta > 0 ? '+' : '−'}${nf(Math.abs(delta))} ${I.perYear}` : I.same;
+      de.style.background = delta < 0 ? '#FDE2E2' : delta > 0 ? '#DDF7E9' : '#EEF1EC';
+      de.style.color = delta < 0 ? '#B42318' : delta > 0 ? '#00804A' : '#4A5D74';
+      const fcAll = r.reduce((s, x) => s + x.c * x.d.day, 0) / r.reduce((s, x) => s + x.ht * x.d.day, 0) * 100;
       $('.ms-fc').textContent = `${nf(fcAll, 1)} %`;
       $<SVGGElement>('.ms-needle').style.transform = `rotate(${Math.max(-90, Math.min(90, (fcAll / 50) * 180 - 90))}deg)`;
 
+      // where the money goes
+      const L = leaks();
+      const ul = $<HTMLUListElement>('.ms-leaks');
+      const sig = L.map(x => x.label).join('|');
+      if (sig !== leakSig) {
+        ul.innerHTML = L.length ? L.map(x => `<li class="ms-leak flex items-center justify-between gap-3 text-sm"><span class="min-w-0"><span class="me-1.5 inline-block size-2 rounded-full ${x.v < 0 ? 'bg-[#E5484D]' : 'bg-green'}"></span>${x.label}</span><b class="shrink-0 tabular-nums" dir="ltr"></b></li>`).join('')
+          : `<li class="text-sm text-muted">${I.none}</li>`;
+        leakSig = sig;
+      }
+      ul.querySelectorAll('b').forEach((b, k) => { const v = L[k].v; b.textContent = `${v > 0 ? '+' : '−'}${nf(Math.abs(v))} ${I.dh}`; b.style.color = v < 0 ? '#B42318' : '#00804A'; });
+
       // FLIP: remember where the rows are, re-rank, then slide them
       const before = new Map([...rows].map(([id, el]) => [id, el.getBoundingClientRect().top]));
-      const ranked = [...r].sort((a, b) => b.month - a.month);
-      const max = Math.max(1, ranked[0].month);
+      const ranked = [...r].sort((a, b) => b.year - a.year);
+      const max = Math.max(1, ranked[0].year);
       ranked.forEach(x => {
         const li = rows.get(x.d.id)!;
         list.appendChild(li);
-        const bad = x.bad;
         li.querySelector('.ms-p')!.textContent = dh(sell[x.d.id]);
         li.querySelector('.ms-pp')!.textContent = dh(x.m, 2);
-        li.querySelector('.ms-m')!.textContent = dh(x.month);
+        li.querySelector('.ms-m')!.textContent = dh(x.year);
         const bar = li.querySelector<HTMLElement>('.ms-bar')!;
-        bar.style.width = `${Math.max(2, (x.month / max) * 100)}%`;
-        bar.style.backgroundColor = bad ? '#E5484D' : x.fc > 30 ? '#F5B301' : '#05B962';
+        bar.style.width = `${Math.max(2, (x.year / max) * 100)}%`;
+        bar.style.backgroundColor = x.bad ? '#E5484D' : x.fc > 30 ? '#F5B301' : '#05B962';
         const flag = li.querySelector<HTMLElement>('.ms-flag')!;
-        flag.classList.toggle('hidden', !bad);
-        flag.textContent = bad ? `${I.check} → ${dh(x.sug)}` : '';
-        li.classList.toggle('bad', bad);
-        if (bad && !wasBad.has(x.d.id) && !still) { li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash'); }
-        if (bad) wasBad.add(x.d.id); else wasBad.delete(x.d.id);
+        flag.classList.toggle('hidden', !x.bad);
+        flag.textContent = x.bad ? `${I.check} → ${dh(x.sug)}` : '';
+        li.classList.toggle('bad', x.bad);
+        if (x.bad && !wasBad.has(x.d.id) && !still) { li.classList.remove('flash'); void li.offsetWidth; li.classList.add('flash'); }
+        if (x.bad) wasBad.add(x.d.id); else wasBad.delete(x.d.id);
       });
       if (!still) rows.forEach((li, id) => {
         const dy = before.get(id)! - li.getBoundingClientRect().top;
@@ -237,63 +311,71 @@ const I18N = {
         requestAnimationFrame(() => { li.style.transition = ''; li.style.transform = ''; });
       });
 
-      // what Amplify would tell you
+      // what Amplify would tell you: the heavy hand first, then the prices
+      const heavy = L.find(x => x.kind === 'g' && x.v < 0);
       const badOnes = ranked.filter(x => x.bad).sort((a, b) => b.lost - a.lost);
-      const txt = !badOnes.length ? I.insightOk.replace('{d}', ranked[0].d.name)
-        : badOnes.length === 1 ? I.insightBad.replace('{d}', badOnes[0].d.name).replace('{m}', dh(badOnes[0].lost, 2)).replace('{p}', dh(badOnes[0].sug))
+      const txt = heavy ? I.insightPortion.replace('{i}', heavy.name.toLowerCase()).replace('{m}', dh(-heavy.v))
+        : !badOnes.length ? I.insightOk.replace('{d}', ranked[0].d.name)
+        : badOnes.length === 1 ? I.insightPrice.replace('{d}', badOnes[0].d.name).replace('{m}', dh(badOnes[0].lost, 2)).replace('{p}', dh(badOnes[0].sug))
         : I.insightMany.replace('{n}', String(badOnes.length)).replace('{d}', badOnes[0].d.name).replace('{m}', dh(badOnes[0].lost, 2));
       $('.ms-insight-txt').textContent = txt;
-      $('.ms-chip-fix').classList.toggle('ms-call', badOnes.length > 0 && !still);
+      $('[data-sc="weigh"]').classList.toggle('ms-call', !!heavy && !still);
+      $('[data-sc="fix"]').classList.toggle('ms-call', !heavy && badOnes.length > 0 && !still);
 
       // the levers' labels
       ING.forEach(g => {
-        root.querySelector(`[data-val="${g.key}"]`)!.textContent = `${price[g.key]} ${g.unit}`;
-        const d = root.querySelector<HTMLElement>(`[data-d="${g.key}"]`)!, p = Math.round((price[g.key] / g.base - 1) * 100);
+        root.querySelector(`[data-xv="${g.key}"]`)!.textContent = `+${nf(extra[g.key])} g`;
+        root.querySelector(`[data-pv="${g.key}"]`)!.textContent = `${price[g.key]} ${I.dh}/kg`;
+        const d = root.querySelector<HTMLElement>(`[data-pd="${g.key}"]`)!, p = Math.round((price[g.key] / g.base - 1) * 100);
         d.classList.toggle('hidden', p === 0);
         d.textContent = `${p > 0 ? '+' : ''}${p} %`;
         d.style.background = p > 0 ? '#E5484D' : '#05B962'; d.style.color = p > 0 ? '#fff' : '#001E3E';
       });
-      root.querySelector('[data-val="portion"]')!.textContent = `${Math.round(portion * 100)} %`;
     };
 
     const fill = (el: HTMLInputElement) => el.style.setProperty('--fill', `${((+el.value - +el.min) / (+el.max - +el.min)) * 100}%`);
     const inputs = [...root.querySelectorAll<HTMLInputElement>('input[type=range]')];
-    const sync = () => inputs.forEach(el => { if (el.dataset.ing) el.value = String(price[el.dataset.ing]); else el.value = String(Math.round(portion * 100)); fill(el); });
+    const sync = () => inputs.forEach(el => { el.value = String(el.dataset.extra ? extra[el.dataset.extra] : price[el.dataset.price!]); fill(el); });
     inputs.forEach(el => el.addEventListener('input', () => {
-      if (el.dataset.ing) price[el.dataset.ing] = +el.value; else portion = +el.value / 100;
+      if (el.dataset.extra) extra[el.dataset.extra] = +el.value; else price[el.dataset.price!] = +el.value;
       fill(el); stop(); render();
     }));
 
     // scenarios, animated from where we are to where we go
     let anim = 0;
     const stop = () => cancelAnimationFrame(anim);
-    const go = (to: { price?: Record<string, number>; portion?: number }, dur = 900) => {
+    const go = (to: { price?: Record<string, number>; extra?: Record<string, number> }, dur = 900) => {
       stop();
-      const p0 = { ...price }, q0 = portion, t0 = performance.now();
+      const p0 = { ...price }, x0 = { ...extra }, t0 = performance.now();
       const step = (t: number) => {
         const k = still ? 1 : Math.min(1, (t - t0) / dur), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
-        if (to.price) for (const g of ING) price[g.key] = Math.round(p0[g.key] + ((to.price[g.key] ?? p0[g.key]) - p0[g.key]) * e);
-        if (to.portion != null) portion = q0 + (to.portion - q0) * e;
+        for (const g of ING) {
+          if (to.price && to.price[g.key] != null) price[g.key] = Math.round(p0[g.key] + (to.price[g.key] - p0[g.key]) * e);
+          if (to.extra && to.extra[g.key] != null) extra[g.key] = Math.round((x0[g.key] + (to.extra[g.key] - x0[g.key]) * e) / g.step) * g.step;
+        }
         sync(); render();
         if (k < 1) anim = requestAnimationFrame(step);
       };
       anim = requestAnimationFrame(step);
     };
-    const RISE = { poulet: 78, viande: 115, fromage: 95, cafe: 195 };
+    const HEAVY = { fromage: 10, poulet: 20, viande: 15, frites: 30, cafe: 1 };
+    const RISE = { fromage: 95, poulet: 78, viande: 115, frites: 22, cafe: 195 };
     root.querySelectorAll<HTMLButtonElement>('[data-sc]').forEach(b => b.addEventListener('click', () => {
       const sc = b.dataset.sc;
+      if (sc === 'heavy') go({ extra: HEAVY });
       if (sc === 'rise') go({ price: RISE });
-      if (sc === 'portion') go({ portion: 1.2 });
+      if (sc === 'weigh') go({ extra: ZERO });
+      if (sc === 'nego') go({ price: Object.fromEntries(ING.map(g => [g.key, Math.max(g.min, Math.round(price[g.key] * 0.92))])) });
       if (sc === 'fix') { calc().forEach(x => { if (x.bad) sell[x.d.id] = x.sug; }); render(); }
-      if (sc === 'reset') { DISHES.forEach(d => { sell[d.id] = d.price; }); go({ price: Object.fromEntries(ING.map(g => [g.key, g.base])), portion: 1 }); }
+      if (sc === 'reset') { DISHES.forEach(d => { sell[d.id] = d.price; }); go({ price: BASEP, extra: ZERO }); }
     }));
 
     sync(); render();
 
-    // the first view: prices rise by themselves, the margin falls, the fix button calls
+    // the first view: the portions grow by themselves, the yearly loss counts up, "Peser" calls
     if (!still && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); setTimeout(() => go({ price: RISE }, 2200), 700); } }, { threshold: 0.35 });
-      io.observe($('.ms-list'));
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); setTimeout(() => go({ extra: HEAVY }, 2400), 700); } }, { threshold: 0.3 });
+      io.observe($('.ms-total'));
     }
   });
 </script>
