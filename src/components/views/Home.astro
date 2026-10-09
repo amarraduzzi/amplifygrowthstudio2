@@ -136,11 +136,11 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- TOUR: the real product, interactive screenshots -->
   <Tour lang={lang} />
 
-  <!-- FAQ: a WhatsApp conversation -->
-  <ChatFaq lang={lang} wa={c.wa} />
-
   <!-- START: on your own, today; help as a safety net -->
   <QuickStart lang={lang} wa={c.wa} />
+
+  <!-- FAQ: a WhatsApp conversation -->
+  <ChatFaq lang={lang} wa={c.wa} />
 <script>
   // the facts under the hero count up when they come into view
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
