@@ -1,0 +1,84 @@
+---
+// Between "Par quoi commencer ?" and the tour: the morning delivery (AI photo, illustration only).
+// In view, an invoice card plays: cheese goes from 75 to 82 DH/kg, the cost on the pizza appears
+// (130 g x 7 DH = 0,91 DH a plate, x 50 a day x 360 days = 16 380 DH a year), then the price
+// negotiated at 78 DH keeps 9 360 DH of it. Example figures, said as such.
+import { tr, langOf } from '../i18n/t';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const loc = LG === 'en' ? 'en-US' : LG === 'ar' ? 'ar-MA' : 'fr-FR';
+const n = (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+const sep = LG === 'fr' ? ' : ' : ': ', comma = LG === 'ar' ? '، ' : ', ';
+const perPlate = 0.13 * (82 - 75), lost = perPlate * 50 * 360, kept = lost - 0.13 * (78 - 75) * 50 * 360;
+---
+<section class="px-4 py-10 sm:px-6" data-supplier>
+  <figure class="sp relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-paper ring-1 ring-line md:rounded-[2.5rem]">
+    <div class="relative overflow-hidden">
+      <picture>
+        <source media="(max-width: 767px)" srcset="/img/photos/fournisseur-m.webp" width="800" height="640" />
+        <img src="/img/photos/fournisseur-1376.webp" srcset="/img/photos/fournisseur-800.webp 800w, /img/photos/fournisseur-1376.webp 1376w" sizes="(min-width: 1152px) 1152px, 100vw"
+          alt={tt('Le matin, un fournisseur livre du fromage et des pommes de terre ; le patron du café vérifie la facture sur son téléphone')} width="1376" height="768" loading="lazy" decoding="async"
+          class="sp-img block aspect-[5/4] w-full object-cover md:aspect-[1376/768]" />
+      </picture>
+      <span class="pointer-events-none absolute inset-0 hidden bg-linear-to-r from-white/85 via-white/40 to-transparent to-60% md:block rtl:bg-linear-to-l" aria-hidden="true"></span>
+    </div>
+
+    <figcaption class="relative p-5 sm:p-8 md:absolute md:inset-y-0 md:start-0 md:flex md:w-[50%] md:flex-col md:justify-center md:p-12">
+      <p class="inline-flex w-fit items-center gap-2 rounded-full bg-navy/10 px-3 py-1 text-sm font-semibold"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</p>
+      <p class="display mt-3 text-[2.2rem] leading-[0.95] sm:text-5xl lg:text-6xl">{tt('Le fournisseur augmente.')} <span class="text-green-deep">{tt('Vous le voyez le jour même.')}</span></p>
+      <p class="mt-3 max-w-md text-muted">{tt('Saisissez la facture : Amplify montre la hausse et ce qu’elle coûte sur chaque plat. Vous négociez avec des chiffres.')}</p>
+
+      <!-- the invoice -->
+      <div class="sp-card mt-5 max-w-md rounded-2xl bg-white p-4 text-navy shadow-[0_24px_60px_-24px_rgba(0,30,62,0.45)] ring-1 ring-line">
+        <p class="flex items-center justify-between text-xs font-semibold text-muted"><span>{tt('Facture du jour')}</span><span>{tt('Prix au kilo')}</span></p>
+        <p class="mt-2 flex items-center justify-between gap-3 border-b border-line pb-2">
+          <span class="font-semibold">{tt('Fromage')}</span>
+          <span class="flex items-center gap-2 tabular-nums" dir="ltr"><s class="text-muted">75</s> → <b class="sp-price">75</b> {tt('DH')} <span class="sp-up rounded-full bg-[#E5484D] px-1.5 py-0.5 text-[0.7rem] font-bold text-white">+9 %</span></span>
+        </p>
+        <p class="mt-2 flex items-center justify-between gap-3">
+          <span class="font-semibold">{tt('Pommes de terre')}</span>
+          <span class="tabular-nums text-muted" dir="ltr">6 {tt('DH')} <span class="ms-1 text-[0.7rem] font-bold">=</span></span>
+        </p>
+        <p class="sp-loss mt-3 rounded-xl bg-[#FDE2E2] px-3 py-2 text-sm font-semibold text-[#B42318]">{tt('Pizza margherita')}{sep}<span dir="ltr">−{n(perPlate, 2)} {tt('DH')}</span> {tt('par plat')}{comma}<span class="whitespace-nowrap" dir="ltr">−{n(lost)} {tt('DH')}</span> {tt('par an')}</p>
+        <p class="sp-win mt-2 rounded-xl bg-mint px-3 py-2 text-sm font-semibold text-green-deep">✓ {tt('Négocié à 78 DH :')} <span class="whitespace-nowrap" dir="ltr">+{n(kept)} {tt('DH')}</span> {tt('gardés par an')}</p>
+      </div>
+    </figcaption>
+  </figure>
+</section>
+
+<style>
+  :global(.js) .sp .sp-img { transform: scale(1.06); transition: transform 2.4s cubic-bezier(.2,.7,.2,1); }
+  :global(.js) .sp.in .sp-img { transform: scale(1); }
+  :global(.js) .sp .sp-card, :global(.js) .sp .sp-loss, :global(.js) .sp .sp-win, :global(.js) .sp .sp-up { opacity: 0; transform: translateY(10px); transition: opacity .45s, transform .55s cubic-bezier(.2,.8,.2,1.2); }
+  :global(.js) .sp.in .sp-card { opacity: 1; transform: none; transition-delay: .3s; }
+  :global(.js) .sp.in .sp-up { opacity: 1; transform: none; transition-delay: 1.9s; }
+  :global(.js) .sp.in .sp-loss { opacity: 1; transform: none; transition-delay: 2.4s; }
+  :global(.js) .sp.in .sp-win { opacity: 1; transform: none; transition-delay: 3.6s; }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.js) .sp .sp-img, :global(.js) .sp .sp-card, :global(.js) .sp .sp-loss, :global(.js) .sp .sp-win, :global(.js) .sp .sp-up { opacity: 1; transform: none; transition: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-supplier] .sp').forEach((el) => {
+    const price = el.querySelector<HTMLElement>('.sp-price')!;
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const play = () => {
+      el.classList.add('in');
+      if (still) { price.textContent = '82'; price.style.color = '#B42318'; return; }
+      // the new price climbs on the invoice, from 75 to 82
+      setTimeout(() => {
+        const t0 = performance.now();
+        const step = (t: number) => {
+          const k = Math.min(1, (t - t0) / 900);
+          price.textContent = String(Math.round(75 + 7 * k));
+          if (k < 1) requestAnimationFrame(step); else price.style.color = '#B42318';
+        };
+        requestAnimationFrame(step);
+      }, 900);
+    };
+    if (!('IntersectionObserver' in window)) { play(); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.45 });
+    io.observe(el);
+  });
+</script>
