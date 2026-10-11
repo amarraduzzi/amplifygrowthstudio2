@@ -1,0 +1,164 @@
+---
+// Article 5: what a restaurant is worth on paper. Provable figures for the bank, the buyer and the future franchisee. French only.
+// Figures are worked examples, said so on the page. Facts about banks, sales and franchising come from Moroccan law-firm and
+// consulting guides, not from an official text: the page says so and sends the reader to the bank and the accountant.
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import BlogEnd from '../../../components/BlogEnd.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import PhotoBand from '../../../components/PhotoBand.astro';
+import CountUp from '../../../components/CountUp.astro';
+import { ROUTES, abs } from '../../../i18n/routes';
+
+const lang = 'fr' as const;
+const title = 'Que vaut votre restaurant, sur le papier ? | Amplify Growth Studio';
+const description = 'Une banque, un acheteur ou un futur franchisé ne regardent pas ce que vous gagnez, mais ce que vous pouvez prouver. Un exemple chiffré, et quatre étapes pour construire votre historique dès maintenant.';
+const wa = 'Bonjour, j’ai lu votre article sur la valeur d’un restaurant. Je voudrais regarder mes chiffres avec vous.';
+const url = abs(ROUTES.blogValeur.fr);
+
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: 'Que vaut votre restaurant, sur le papier ?',
+  description, inLanguage: 'fr', image: abs('/img/photos/pf-soir-1600.webp'), datePublished: '2026-10-11', mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+  publisher: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+}];
+
+const alt = {
+  patron: 'Un patron de café sourit en regardant son téléphone, derrière son comptoir en bois',
+  soir: 'Un patron de restaurant fait ses comptes seul au comptoir, tard le soir, salle vide et chaises relevées',
+};
+
+const watchers: [string, string, string][] = [
+  ['La banque', 'Veut savoir si vous pouvez rembourser.',
+   'Pour un crédit PME, les guides de financement publiés au Maroc citent en général les bilans et comptes de résultat des trois derniers exercices, les déclarations d’impôt et de TVA, et la liste de vos crédits en cours. Une entreprise de moins de trois ans présente un prévisionnel à la place. Pour obtenir la garantie de l’État (Tamwilcom), la situation fiscale et sociale doit aussi être en règle. La liste exacte change d’une banque à l’autre : demandez-la à la vôtre.'],
+  ['L’acheteur', 'Veut savoir ce qu’il achète.',
+   'Au Maroc, la valeur d’un fonds de commerce s’estime par plusieurs méthodes : un coefficient appliqué au chiffre d’affaires moyen des trois derniers exercices, ou le bénéfice. La clientèle ne se mesure presque jamais seule : elle se lit dans le chiffre d’affaires et la rentabilité que le fonds dégage, année après année. L’administration fiscale utilise aussi des barèmes sectoriels pour estimer cette valeur quand elle contrôle les droits d’enregistrement. L’avis d’un expert-comptable est fortement conseillé.'],
+  ['Le futur franchisé', 'Veut savoir si le modèle marche vraiment.',
+   'Au Maroc, il n’existe pas de loi spécifique à la franchise, ni de document d’information précontractuelle obligatoire comme en France. La Fédération Marocaine de la Franchise a adopté un code de déontologie inspiré du code européen, mais il n’est pas contraignant. Ce code européen dit pourtant qu’un franchiseur doit avoir exploité son concept avec succès, pendant une période raisonnable, dans au moins une unité pilote. Rien ne vous oblige à le prouver. Un candidat sérieux le demandera quand même.'],
+];
+
+const versions: { name: string; proven: number; label: string; tone: string; width: number }[] = [
+  { name: 'Version A : tout est enregistré', proven: 18000, label: '216 000 DH par an', tone: 'bg-green', width: 100 },
+  { name: 'Version B : la moitié seulement', proven: 9000, label: '108 000 DH par an', tone: 'bg-[#8FA3B8]', width: 50 },
+];
+
+const steps: [string, string, string, string][] = [
+  ['Enregistrez chaque vente au même endroit.', 'Chaque encaissement, chaque employé, chaque jour, avec ', ROUTES.pos.fr, 'Amplify POS'],
+  ['Calculez le coût de chaque plat.', 'Fiche technique, food cost, marge : c’est le premier chiffre qu’un acheteur ou un franchisé veut voir. Voir ', ROUTES.profit.fr, 'Amplify Profit'],
+  ['Suivez quatre chiffres chaque mois.', 'Ingrédients, personnel, loyer, et ce qu’il vous reste, en pourcentage du chiffre d’affaires. Le point mort aussi, dans ', ROUTES.profit.fr, 'Amplify Profit'],
+  ['Gardez tout, et parlez-en à votre comptable.', 'Bilans, déclarations, relevés. Demandez aussi à votre banque la liste exacte de ce qu’elle voudrait voir, ', '', 'aujourd’hui, pas le jour où vous en avez besoin'],
+];
+const stepTail = [
+  ' : l’historique se construit vendre après vendre.',
+  ', et vous savez ce que chaque assiette rapporte.',
+  ', et vous voyez le chiffre que vous aurez à montrer.',
+  '.',
+];
+
+const note = 'Les montants sont des exemples qui illustrent le raisonnement, pas des prévisions : vos chiffres seront différents. Les informations sur le crédit, la cession d’un fonds et la franchise viennent de guides publiés au Maroc par des cabinets juridiques et de conseil, pas d’un texte officiel, et elles peuvent changer. Cet article n’est pas un conseil juridique ni fiscal : pour vos déclarations et vos contrats, adressez-vous à votre comptable et à votre banque. Les photos sont des illustrations, elles ne montrent ni de vrais clients ni l’équipe Amplify.';
+const reads = [
+  { href: ROUTES.blogCout.fr, title: 'Combien coûte vraiment votre plat ?', text: 'Le calcul de la marge, plat par plat.' },
+  { href: ROUTES.blogCouts.fr, title: 'Les coûts bas cachent des défauts', text: 'Ce qui reste de vos ventes quand les coûts bougent.' },
+];
+const question = 'Si une banque ou un acheteur vous demandait demain vos trois dernières années, quel bénéfice pourriez-vous prouver, et pas seulement estimer ? Et depuis quand pouvez-vous le prouver ?';
+---
+<Base lang={lang} page="blogValeur" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
+  <PageHero lang={lang} page="blogValeur" wa={wa}
+    h1="Que vaut votre restaurant, sur le papier ?"
+    lead="Une banque, un acheteur ou un futur franchisé ne demandent pas ce que vous gagnez. Ils demandent ce que vous pouvez prouver." />
+
+  <article>
+  <div class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
+    <figure class="mb-10 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src="/img/photos/mk-patron-1600.webp" srcset="/img/photos/mk-patron-800.webp 800w, /img/photos/mk-patron-1600.webp 1536w" sizes="(min-width: 768px) 768px, 100vw" alt={alt.patron} width="1536" height="1024" loading="eager" decoding="async" class="aspect-video w-full object-cover" style="object-position:50% 40%" />
+    </figure>
+    <p class="text-xl text-muted">Vous savez que votre restaurant marche. Vous voyez la salle, la caisse, les clients qui reviennent. Mais le jour où quelqu’un d’autre doit décider (une banque qui prête, un acheteur qui paie, un futur franchisé qui s’engage), il ne regarde pas votre salle. Il regarde des documents.</p>
+    <p class="mt-5">Ce n’est pas une question de confiance. C’est une question de preuve : ce qui n’est écrit nulle part ne compte pas dans leur calcul, même si c’est vrai.</p>
+
+    <!-- who looks -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Ce que ces trois personnes regardent</h2>
+    <p class="mt-5">Trois situations, trois façons de poser la même question. Voici ce que disent les guides publiés au Maroc, avec leurs limites.</p>
+    <ul class="mt-8 space-y-5">
+      {watchers.map(([who, ask, text]) => (
+        <li class="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
+          <p class="display text-3xl text-navy">{who}</p>
+          <p class="mt-1 font-semibold text-green-deep">{ask}</p>
+          <p class="mt-3">{text}</p>
+        </li>
+      ))}
+    </ul>
+    <p class="mt-6">Dans les trois cas, la réponse tient dans la même chose : des chiffres écrits, régulièrement, sur plusieurs années. Ce que vous estimez de tête n’entre dans aucun de ces dossiers.</p>
+
+    <!-- worked example -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Même restaurant, deux dossiers</h2>
+    <p class="mt-5">Imaginons un restaurant qui dégage, en réalité, <strong>18 000 DH de bénéfice par mois</strong>. Voici ce que voit celui qui doit décider, selon ce qui est enregistré.</p>
+    <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8" data-scrub="steps">
+      <ul class="space-y-7">
+        {versions.map((v) => (
+          <li class="step fn-row">
+            <p class="font-semibold">{v.name}</p>
+            <div class="mt-2 flex items-baseline justify-between gap-4">
+              <span class="display text-3xl text-navy"><span data-count={v.proven}>{v.proven.toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ')}</span> DH par mois</span>
+              <span class="whitespace-nowrap text-muted">{v.label}</span>
+            </div>
+            <div class="mt-2 h-4 overflow-hidden rounded-full bg-chalk" aria-hidden="true"><div class={`fn-bar h-full rounded-full ${v.tone}`} style={`width:${v.width}%`}></div></div>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-6 border-t-2 border-navy pt-4 text-sm text-muted">Exemple pour illustrer le raisonnement : ce n’est pas le chiffre de votre restaurant.</p>
+    </div>
+
+    <p class="mt-8">Le restaurant est le même. La salle est aussi pleine, la cuisine aussi bonne. Seule la preuve change. Et avec elle :</p>
+    <ul class="mt-6 space-y-4">
+      <li class="border-s-4 border-green ps-4"><strong>La valeur à la vente.</strong> Quel que soit le coefficient qu’un acheteur applique, il l’applique à ce qu’il peut vérifier. Avec le même coefficient, la valeur est divisée par deux.</li>
+      <li class="border-s-4 border-green ps-4"><strong>Le crédit.</strong> Une mensualité de 6 000 DH représente un tiers du bénéfice prouvé dans la version A, mais deux tiers dans la version B. La banque ne voit pas la même marge de manœuvre.</li>
+      <li class="border-s-4 border-green ps-4"><strong>L’ouverture d’un deuxième restaurant.</strong> Un futur franchisé calcule sur ce qu’il voit : 9 000 DH par mois ne l’aident pas à croire à 18 000.</li>
+    </ul>
+  </div>
+
+  <PhotoBand name="pf-soir" alt={alt.soir} kicker="La preuve" title="Votre salle est pleine. Votre dossier l’est-il aussi ?" w={1376} h={768} class="my-14 md:my-20" pos="70% 50%" />
+
+  <div class="mx-auto max-w-3xl px-4 sm:px-6">
+    <!-- one that works first -->
+    <h2 class="text-2xl sm:text-4xl">Un seul restaurant qui marche, avant d’en ouvrir un deuxième</h2>
+    <p class="mt-5">Beaucoup de patrons rêvent d’une deuxième adresse, ou d’une franchise. La condition est toujours la même : un premier restaurant dont on peut montrer, chiffres à l’appui, que le modèle fonctionne. Les professionnels de la franchise appellent cela l’unité pilote.</p>
+    <p class="mt-4">Rien ne l’impose au Maroc, mais la pratique est claire ailleurs. En France, les experts recommandent de disposer de deux bilans sur l’activité avant de franchiser un concept. Un contrat de franchise y a même été annulé par une cour d’appel, notamment parce que le document remis au candidat ne mentionnait pas le magasin pilote, dont les pertes contredisaient la rentabilité annoncée.</p>
+    <p class="mt-4">Ce qu’un candidat sérieux voudra voir est très concret :</p>
+    <ul class="mt-6 space-y-4">
+      <li class="border-s-4 border-green ps-4"><strong>Ce que coûte chaque plat</strong>, et ce qu’il rapporte.</li>
+      <li class="border-s-4 border-green ps-4"><strong>Le personnel en pourcentage du chiffre d’affaires</strong>, mois après mois.</li>
+      <li class="border-s-4 border-green ps-4"><strong>Le point mort :</strong> le chiffre à faire chaque jour pour ne pas perdre d’argent.</li>
+      <li class="border-s-4 border-green ps-4"><strong>Une journée normale :</strong> combien de clients, quel ticket moyen, quel jour fort, quel jour faible.</li>
+    </ul>
+    <p class="mt-6">Ce sont des chiffres de caisse et de cuisine, pas des discours. Et ils ne s’inventent pas la veille du rendez-vous.</p>
+
+    <!-- every month -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Chaque mois qui passe</h2>
+    <div class="mt-6 rounded-3xl bg-navy p-7 text-white sm:p-9">
+      <p class="display text-3xl sm:text-4xl">Chaque mois que vous attendez est un mois d’histoire que vous ne pourrez plus prouver.</p>
+    </div>
+    <p class="mt-6">On peut toujours commencer à noter ses chiffres demain. On ne peut pas reconstituer ceux d’hier. Quelqu’un qui commence aujourd’hui aura 12 mois d’historique dans un an, et 36 dans trois ans, la durée que les guides citent le plus souvent. Quelqu’un qui attend un an de plus aura un an de moins.</p>
+
+    <!-- four steps -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Quatre étapes pour commencer aujourd’hui</h2>
+    <ol class="mt-6 space-y-4" data-scrub="steps">
+      {steps.map(([a, b, href, label], i) => (
+        <li class="step af-step flex gap-4 rounded-2xl bg-paper p-5 ring-1 ring-line">
+          <span class="node grid size-9 shrink-0 place-items-center rounded-full bg-green font-bold text-navy transition-all duration-500" aria-hidden="true">{i + 1}</span>
+          <p><strong>{a}</strong> {b}{href ? <a href={href} class="font-semibold text-green-deep underline underline-offset-4">{label}</a> : <strong>{label}</strong>}{stepTail[i]}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-6">Aucune de ces étapes ne vous demande de changer votre façon de travailler. Elles demandent seulement que ce que vous savez déjà soit écrit quelque part.</p>
+    <p class="mt-4">Si vous voulez voir ce que votre restaurant montrerait aujourd’hui, <a href={ROUTES.contact.fr} class="font-semibold text-green-deep underline underline-offset-4">parlons-en</a>. Nous regardons vos chiffres avec vous, sans engagement.</p>
+
+    <BlogEnd question={question} note={note} reads={reads} />
+  </div>
+  </article>
+
+  <FinalCta lang={lang} page="blogValeur" wa={wa}
+    h2="Parlons de vos chiffres."
+    p="Nous les regardons avec vous, gratuitement, à partir de vos propres données de caisse." />
+</Base>
+
+<CountUp />

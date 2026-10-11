@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'contact' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'contact' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -16,6 +16,7 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   contact: { fr: '/contact/', ar: '/ar/contact/', en: '/en/contact/' },
   // French-only article: the page passes langsOnly=['fr'] to Base, so ar/en are never linked or listed in hreflang
   blog: { fr: '/blog/', ar: '/blog/', en: '/blog/' },
+  blogValeur: { fr: '/blog/valeur-de-votre-restaurant/', ar: '/blog/valeur-de-votre-restaurant/', en: '/blog/valeur-de-votre-restaurant/' },
   blogPlateforme: { fr: '/blog/commande-plateforme/', ar: '/blog/commande-plateforme/', en: '/blog/commande-plateforme/' },
   blogCouts: { fr: '/blog/couts-bas-defauts-caches/', ar: '/blog/couts-bas-defauts-caches/', en: '/blog/couts-bas-defauts-caches/' },
   blogCout: { fr: '/blog/cout-dun-plat/', ar: '/blog/cout-dun-plat/', en: '/blog/cout-dun-plat/' },
