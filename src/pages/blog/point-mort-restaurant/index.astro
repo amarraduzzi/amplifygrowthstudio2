@@ -1,0 +1,182 @@
+---
+// Article 6: the break-even point of a restaurant (revenue needed per month, per day, in customers). French only.
+// Same worked example as article 4 (100 000 DH of sales, 38 % ingredients, 12 000 DH staff, 12 000 DH rent, 6 000 DH energy, 14 000 DH other).
+// Figures are examples, said so on the page. Simplification stated: staff, energy and other costs are treated as fixed.
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import BlogEnd from '../../../components/BlogEnd.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import PhotoBand from '../../../components/PhotoBand.astro';
+import CountUp from '../../../components/CountUp.astro';
+import { ROUTES, abs } from '../../../i18n/routes';
+
+const lang = 'fr' as const;
+const title = 'Combien vendre par jour pour gagner de l’argent ? Le point mort | Amplify Growth Studio';
+const description = 'Le point mort est le chiffre d’affaires en dessous duquel votre restaurant perd de l’argent. Le calcul en trois lignes, avec un exemple chiffré : par mois, par jour et en nombre de clients.';
+const wa = 'Bonjour, j’ai lu votre article sur le point mort. Je voudrais calculer le mien avec vous.';
+const url = abs(ROUTES.blogPointMort.fr);
+
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: 'Combien devez-vous vendre par jour pour gagner de l’argent ?',
+  description, inLanguage: 'fr', image: abs('/img/photos/metier-cafe-1600.webp'), datePublished: '2026-10-11', mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+  publisher: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+}];
+
+const alt = {
+  hero: 'Au comptoir d’un café, un barista prépare un café pendant que des clients attendent devant la vitrine de viennoiseries',
+  rush: 'Le passe d’un restaurant au moment du rush, un serveur emporte les assiettes',
+};
+
+// The worked example. All figures below are computed from these inputs so the page never contradicts itself.
+const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+const SALES = 100000, TICKET = 60, DAYS = 30;
+const be = (fixed: number, varRate: number) => fixed / (1 - varRate);
+const fixedParts: [string, number][] = [['Loyer', 12000], ['Personnel', 12000], ['Gaz, électricité, eau', 6000], ['Autres frais', 14000]];
+const F0 = fixedParts.reduce((s, [, v]) => s + v, 0), V0 = 0.38;
+const be0 = be(F0, V0), day0 = be0 / DAYS, cl0 = day0 / TICKET, now = SALES / DAYS / TICKET;
+const F1 = 47600, V1 = 0.418; // article 4, "demain": ingredients +10 %, staff +30 %
+const be1 = be(F1, V1), day1 = be1 / DAYS, cl1 = day1 / TICKET;
+const safe0 = Math.round((1 - be0 / SALES) * 100), safe1 = Math.round((1 - be1 / SALES) * 100);
+const badMonth = 60000, badResult = badMonth * (1 - V0) - F0;
+const leverIng = be0 - be(F0, 0.35), leverFix = be0 - be(F0 - 5000, V0);
+
+const scen = [
+  { name: 'Aujourd’hui', fixed: F0, v: '38 %', be: be0, day: day0, cl: cl0, safe: safe0, tone: 'bg-green' },
+  { name: 'Demain (achats +10 %, personnel +30 %)', fixed: F1, v: '41,8 %', be: be1, day: day1, cl: cl1, safe: safe1, tone: 'bg-[#F5B301]' },
+];
+const steps: [string, string][] = [
+  ['Additionnez vos coûts fixes du mois.', 'Loyer, personnel avec les charges, gaz, électricité, eau, abonnements, autres frais. Tout ce qui tombe même si la salle reste vide.'],
+  ['Calculez vos ingrédients en pourcentage des ventes.', 'Achats du mois divisés par ventes du mois. Si vous ne l’avez jamais fait, c’est déjà une découverte.'],
+  ['Divisez : coûts fixes ÷ (1 − ce pourcentage).', 'Avec 38 %, on divise par 0,62. C’est votre point mort du mois.'],
+  ['Passez au jour et au client.', 'Divisez par vos jours d’ouverture, puis par votre ticket moyen : le nombre de clients à servir chaque jour.'],
+  ['Comparez avec la réalité.', 'Votre chiffre d’affaires de la semaine dernière, jour par jour. Combien de jours étiez-vous au-dessus ?'],
+];
+
+const note = 'Les montants sont des exemples qui illustrent le raisonnement, pas des prévisions : vos chiffres seront différents. Le calcul est volontairement simplifié : nous traitons le personnel, l’énergie et les autres frais comme fixes, alors qu’une partie varie avec l’activité. Cet article n’est pas un conseil comptable, juridique ni fiscal : pour les charges de votre personnel et vos déclarations, adressez-vous à votre comptable. Les photos sont des illustrations, elles ne montrent ni de vrais clients ni l’équipe Amplify.';
+const reads = [
+  { href: ROUTES.blogValeur.fr, title: 'Que vaut votre restaurant, sur le papier ?', text: 'Ce qu’une banque ou un acheteur peut vérifier.' },
+  { href: ROUTES.blogCouts.fr, title: 'Les coûts bas cachent des défauts', text: 'Ce qui reste de vos ventes quand les coûts bougent.' },
+];
+const question = 'Quel est votre point mort par jour, en dirhams et en clients ? Et combien de jours, la semaine dernière, l’avez-vous dépassé ?';
+---
+<Base lang={lang} page="blogPointMort" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
+  <PageHero lang={lang} page="blogPointMort" wa={wa}
+    h1="Combien devez-vous vendre par jour pour gagner de l’argent ?"
+    lead="Il existe un chiffre en dessous duquel vous perdez de l’argent chaque jour d’ouverture. Beaucoup de restaurateurs ne l’ont jamais calculé." />
+
+  <article>
+  <div class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
+    <figure class="mb-10 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src="/img/photos/metier-cafe-1600.webp" srcset="/img/photos/metier-cafe-800.webp 800w, /img/photos/metier-cafe-1600.webp 1536w" sizes="(min-width: 768px) 768px, 100vw" alt={alt.hero} width="1536" height="1024" loading="eager" decoding="async" class="aspect-video w-full object-cover" style="object-position:50% 55%" />
+    </figure>
+    <p class="text-xl text-muted">Une salle pleine fait plaisir. Mais elle ne dit pas si vous gagnez de l’argent. Ce qui le dit, c’est un seul chiffre : le <strong>point mort</strong>, le chiffre d’affaires minimum pour couvrir tous vos coûts. En dessous, vous perdez. Au-dessus, vous gagnez.</p>
+    <p class="mt-5">Le calcul tient en trois lignes. Il demande seulement de savoir ce que vous payez chaque mois.</p>
+
+    <!-- two kinds of cost -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Deux sortes de coûts</h2>
+    <p class="mt-5">Pour trouver le point mort, il faut séparer ce qui bouge avec les ventes et ce qui ne bouge pas.</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-7">
+        <p class="font-semibold">Coûts variables</p>
+        <p class="mt-1 text-muted">Plus vous vendez, plus ils montent.</p>
+        <p class="display mt-3 text-3xl text-navy">Ingrédients : 38 %</p>
+        <p class="mt-1 text-muted">de chaque dirham encaissé</p>
+      </div>
+      <div class="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-7">
+        <p class="font-semibold">Coûts fixes</p>
+        <p class="mt-1 text-muted">Ils tombent même si la salle est vide.</p>
+        <p class="display mt-3 text-3xl text-navy"><span data-count={F0}>{fmt(F0)}</span> DH par mois</p>
+        <p class="mt-1 text-muted">{fixedParts.map(([k, v]) => `${k} ${fmt(v)}`).join(' · ')}</p>
+      </div>
+    </div>
+    <p class="mt-5">C’est le même restaurant que dans l’article sur les coûts : 100 000 DH de ventes par mois. Ce sont des hypothèses, remplacez-les par les vôtres. Nous traitons ici le personnel comme un coût fixe, ce qui est une simplification.</p>
+
+    <!-- the calculation -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Le calcul en trois lignes</h2>
+    <div class="mt-6 rounded-3xl bg-mint p-6 sm:p-8">
+      <p class="display text-3xl text-green-deep sm:text-4xl">Point mort = coûts fixes ÷ (1 − part des ingrédients)</p>
+      <p class="mt-4 text-lg">Sur 100 DH vendus, 38 DH partent en ingrédients. Il en reste <strong>62</strong> pour payer les coûts fixes. Le point mort est le moment où ces 62 DH, additionnés, couvrent tout.</p>
+    </div>
+    <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
+      <dl>
+        <div class="flex items-baseline justify-between gap-6 border-b border-line py-3"><dt>Coûts fixes</dt><dd class="whitespace-nowrap font-semibold">{fmt(F0)} DH</dd></div>
+        <div class="flex items-baseline justify-between gap-6 border-b border-line py-3"><dt>Ce qui reste de 100 DH après les ingrédients</dt><dd class="whitespace-nowrap font-semibold">62 DH</dd></div>
+        <div class="flex items-baseline justify-between gap-6 border-b border-line py-3"><dt>Point mort par mois ({fmt(F0)} ÷ 0,62)</dt><dd class="whitespace-nowrap font-semibold">{fmt(be0)} DH</dd></div>
+        <div class="flex items-baseline justify-between gap-6 border-b border-line py-3"><dt>Par jour (sur {DAYS} jours d’ouverture)</dt><dd class="whitespace-nowrap font-semibold">{fmt(day0)} DH</dd></div>
+        <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1 pt-4"><dt class="font-semibold">En clients (ticket moyen de {TICKET} DH)</dt><dd class="display text-3xl text-navy">environ {fmt(cl0)} par jour</dd></div>
+      </dl>
+    </div>
+    <p class="mt-5">Avec 100 000 DH de ventes, vous servez environ {fmt(now)} clients par jour. Le point mort est à {fmt(cl0)} : la différence, soit {safe0} % de vos ventes, est votre marge de sécurité. C’est elle qui devient les <strong>18 000 DH</strong> qu’il vous reste.</p>
+  </div>
+
+  <PhotoBand name="pos-service" dir="/img/photos" big="1600" w={1600} h={686} alt={alt.rush} kicker="Le service" title="Les premiers clients paient les coûts. Les suivants, vous." class="my-14 md:my-20" pos="60% 50%" />
+
+  <div class="mx-auto max-w-3xl px-4 sm:px-6">
+    <!-- costs move -->
+    <h2 class="text-2xl sm:text-4xl">Quand les coûts bougent, le point mort bouge</h2>
+    <p class="mt-5">Reprenons le « demain » de l’article précédent : les achats montent de 10 % et le personnel de 30 %. Les ventes ne changent pas. Le point mort, si.</p>
+    <div class="mt-6 space-y-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8" data-scrub="steps">
+      {scen.map((s) => (
+        <div class="step fn-row">
+          <p class="font-semibold">{s.name}</p>
+          <div class="mt-2 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <span class="display text-3xl text-navy"><span data-count={Math.round(s.day)}>{fmt(s.day)}</span> DH par jour</span>
+            <span class="text-muted">environ {fmt(s.cl)} clients</span>
+          </div>
+          <div class="mt-2 h-4 overflow-hidden rounded-full bg-chalk" aria-hidden="true"><div class={`fn-bar h-full rounded-full ${s.tone}`} style={`width:${Math.round((s.be / SALES) * 100)}%`}></div></div>
+          <p class="mt-2 text-sm text-muted">Point mort : {fmt(s.be)} DH par mois, soit {Math.round((s.be / SALES) * 100)} % de 100 000 DH. Marge de sécurité : {s.safe} %.</p>
+        </div>
+      ))}
+    </div>
+    <div class="mt-8 rounded-3xl bg-navy p-7 text-white sm:p-9">
+      <p class="display text-4xl sm:text-5xl">Mêmes ventes.<br /><span class="text-green">Marge de sécurité : {safe0} % → {safe1} %.</span></p>
+      <p class="mt-4 text-lg text-white/80">Il faut servir environ {fmt(cl1 - cl0)} clients de plus par jour juste pour rester à zéro. Et un mois plus faible fait mal plus vite : à {fmt(badMonth)} DH de ventes, avec les coûts d’aujourd’hui, le résultat est de −{fmt(Math.abs(badResult))} DH.</p>
+    </div>
+
+    <!-- where to act -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Sur quoi agir pour le faire baisser</h2>
+    <p class="mt-5">Baisser le point mort revient à moins avoir à vendre pour s’en sortir. Deux leviers, avec le restaurant d’aujourd’hui :</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-3xl bg-mint p-6 sm:p-7">
+        <p class="font-semibold">Ingrédients de 38 % à 35 %</p>
+        <p class="mt-1 text-muted">Moins de gaspillage, des portions calibrées</p>
+        <p class="display mt-3 text-3xl text-green-deep">−{fmt(leverIng)} DH</p>
+        <p class="mt-1 text-muted">de point mort par mois</p>
+      </div>
+      <div class="rounded-3xl bg-mint p-6 sm:p-7">
+        <p class="font-semibold">5 000 DH de coûts fixes en moins</p>
+        <p class="mt-1 text-muted">Par exemple des heures mieux placées</p>
+        <p class="display mt-3 text-3xl text-green-deep">−{fmt(leverFix)} DH</p>
+        <p class="mt-1 text-muted">de point mort par mois</p>
+      </div>
+    </div>
+    <p class="mt-5">Un dirham de coût fixe en moins vaut <strong>{(1 / (1 - V0)).toFixed(2).replace('.', ',')} DH de ventes en moins à faire</strong>. C’est pourquoi regarder ses coûts peut rapporter plus que chercher à vendre davantage.</p>
+
+    <!-- why others want it -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Pourquoi les autres voudront ce chiffre</h2>
+    <p class="mt-5">Dans <a href={ROUTES.blogValeur.fr} class="font-semibold text-green-deep underline underline-offset-4">l’article précédent</a>, nous parlions de ce que vous pouvez prouver à une banque, un acheteur ou un futur franchisé. Le point mort en fait partie : il montre à partir de quel niveau d’activité le restaurant gagne de l’argent, et si ce niveau est confortable ou fragile. Un point mort que vous savez calculer, et suivre mois après mois, est un point mort que vous pouvez montrer.</p>
+
+    <!-- compute yours -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Calculez le vôtre en cinq minutes</h2>
+    <ol class="mt-6 space-y-4" data-scrub="steps">
+      {steps.map(([a, b], i) => (
+        <li class="step af-step flex gap-4 rounded-2xl bg-paper p-5 ring-1 ring-line">
+          <span class="node grid size-9 shrink-0 place-items-center rounded-full bg-green font-bold text-navy transition-all duration-500" aria-hidden="true">{i + 1}</span>
+          <p><strong>{a}</strong> {b}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-6">Faire ce calcul à la main marche, mais il faut le refaire chaque mois, avec des achats qui changent. <a href={ROUTES.profit.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify Profit</a> calcule votre point mort à partir de vos charges, et <a href={ROUTES.pos.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify POS</a> enregistre chaque vente, pour que vous puissiez comparer ce que vous encaissez à ce chiffre.</p>
+    <p class="mt-4">Si vous voulez le calculer avec nous, <a href={ROUTES.contact.fr} class="font-semibold text-green-deep underline underline-offset-4">parlons-en</a>. Nous le faisons avec vous, à partir de vos propres chiffres.</p>
+
+    <BlogEnd question={question} note={note} reads={reads} />
+  </div>
+  </article>
+
+  <FinalCta lang={lang} page="blogPointMort" wa={wa}
+    h2="Parlons de vos chiffres."
+    p="Nous calculons avec vous le chiffre à faire chaque jour, gratuitement, à partir de vos propres données." />
+</Base>
+
+<CountUp />
