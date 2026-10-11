@@ -11,8 +11,8 @@ import CountUp from '../../../components/CountUp.astro';
 import { ROUTES, abs } from '../../../i18n/routes';
 
 const lang = 'fr' as const;
-const title = 'Combien vendre par jour pour gagner de l’argent ? Le point mort | Amplify Growth Studio';
-const description = 'Le point mort est le chiffre d’affaires en dessous duquel votre restaurant perd de l’argent. Le calcul en trois lignes, avec un exemple chiffré : par mois, par jour et en nombre de clients.';
+const title = 'Point mort d’un restaurant au Maroc : combien vendre par jour ? | Amplify Growth Studio';
+const description = 'Le point mort est le chiffre d’affaires en dessous duquel votre restaurant perd de l’argent. Le calcul en trois lignes, avec un exemple chiffré en dirhams : par mois, par jour et en clients.';
 const wa = 'Bonjour, j’ai lu votre article sur le point mort. Je voudrais calculer le mien avec vous.';
 const url = abs(ROUTES.blogPointMort.fr);
 
@@ -71,7 +71,7 @@ const question = 'Quel est votre point mort par jour, en dirhams et en clients ?
       <img src="/img/photos/metier-cafe-1600.webp" srcset="/img/photos/metier-cafe-800.webp 800w, /img/photos/metier-cafe-1600.webp 1536w" sizes="(min-width: 768px) 768px, 100vw" alt={alt.hero} width="1536" height="1024" loading="eager" decoding="async" class="aspect-video w-full object-cover" style="object-position:50% 55%" />
     </figure>
     <p class="text-xl text-muted">Une salle pleine fait plaisir. Mais elle ne dit pas si vous gagnez de l’argent. Ce qui le dit, c’est un seul chiffre : le <strong>point mort</strong>, le chiffre d’affaires minimum pour couvrir tous vos coûts. En dessous, vous perdez. Au-dessus, vous gagnez.</p>
-    <p class="mt-5">Le calcul tient en trois lignes. Il demande seulement de savoir ce que vous payez chaque mois.</p>
+    <p class="mt-5">Le calcul tient en trois lignes. Il demande seulement de savoir ce que vous payez chaque mois. C’est l’un des <a href={ROUTES.blogChiffres.fr} class="font-semibold text-green-deep underline underline-offset-4">six chiffres du restaurateur</a>.</p>
 
     <!-- two kinds of cost -->
     <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Deux sortes de coûts</h2>

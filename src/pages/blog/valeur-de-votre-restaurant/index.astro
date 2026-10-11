@@ -11,8 +11,8 @@ import CountUp from '../../../components/CountUp.astro';
 import { ROUTES, abs } from '../../../i18n/routes';
 
 const lang = 'fr' as const;
-const title = 'Que vaut votre restaurant, sur le papier ? | Amplify Growth Studio';
-const description = 'Une banque, un acheteur ou un futur franchisé ne regardent pas ce que vous gagnez, mais ce que vous pouvez prouver. Un exemple chiffré, et quatre étapes pour construire votre historique dès maintenant.';
+const title = 'Valeur d’un restaurant au Maroc : ce que la banque vérifie | Amplify Growth Studio';
+const description = 'Au Maroc, une banque, un acheteur ou un futur franchisé ne regardent pas ce que vous gagnez, mais ce que vous pouvez prouver. Un exemple chiffré, et quatre étapes pour construire votre historique.';
 const wa = 'Bonjour, j’ai lu votre article sur la valeur d’un restaurant. Je voudrais regarder mes chiffres avec vous.';
 const url = abs(ROUTES.blogValeur.fr);
 
@@ -127,7 +127,7 @@ const question = 'Si une banque ou un acheteur vous demandait demain vos trois d
     <ul class="mt-6 space-y-4">
       <li class="border-s-4 border-green ps-4"><strong>Ce que coûte chaque plat</strong>, et ce qu’il rapporte.</li>
       <li class="border-s-4 border-green ps-4"><strong>Le personnel en pourcentage du chiffre d’affaires</strong>, mois après mois.</li>
-      <li class="border-s-4 border-green ps-4"><strong>Le point mort :</strong> le chiffre à faire chaque jour pour ne pas perdre d’argent.</li>
+      <li class="border-s-4 border-green ps-4"><strong>Le <a href={ROUTES.blogPointMort.fr} class="font-semibold text-green-deep underline underline-offset-4">point mort</a> :</strong> le chiffre à faire chaque jour pour ne pas perdre d’argent.</li>
       <li class="border-s-4 border-green ps-4"><strong>Une journée normale :</strong> combien de clients, quel ticket moyen, quel jour fort, quel jour faible.</li>
     </ul>
     <p class="mt-6">Ce sont des chiffres de caisse et de cuisine, pas des discours. Et ils ne s’inventent pas la veille du rendez-vous.</p>
@@ -149,7 +149,7 @@ const question = 'Si une banque ou un acheteur vous demandait demain vos trois d
         </li>
       ))}
     </ol>
-    <p class="mt-6">Aucune de ces étapes ne vous demande de changer votre façon de travailler. Elles demandent seulement que ce que vous savez déjà soit écrit quelque part.</p>
+    <p class="mt-6">Aucune de ces étapes ne vous demande de changer votre façon de travailler. Elles demandent seulement que ce que vous savez déjà soit écrit quelque part. Les bases se trouvent dans les <a href={ROUTES.blogChiffres.fr} class="font-semibold text-green-deep underline underline-offset-4">six chiffres du restaurateur</a>.</p>
     <p class="mt-4">Si vous voulez voir ce que votre restaurant montrerait aujourd’hui, <a href={ROUTES.contact.fr} class="font-semibold text-green-deep underline underline-offset-4">parlons-en</a>. Nous regardons vos chiffres avec vous, sans engagement.</p>
 
     <BlogEnd question={question} note={note} reads={reads} />
