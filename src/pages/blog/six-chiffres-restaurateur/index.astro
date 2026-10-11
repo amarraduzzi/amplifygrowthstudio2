@@ -1,0 +1,184 @@
+---
+// Article 7: the six figures every restaurateur should know (basics). French only.
+// Same worked example as articles 4 and 6 (100 000 DH of sales, 38 % ingredients, 12 000 DH staff, 12 000 DH rent, 6 000 DH energy,
+// 14 000 DH other, 18 000 DH left; pizza at 50 DH costing 19 DH like article 3). No industry benchmarks are stated: none were verified.
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import BlogEnd from '../../../components/BlogEnd.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import CountUp from '../../../components/CountUp.astro';
+import { ROUTES, abs } from '../../../i18n/routes';
+
+const lang = 'fr' as const;
+const title = 'Les six chiffres que tout restaurateur doit connaître | Amplify Growth Studio';
+const description = 'Ticket moyen, coût d’un plat, ingrédients, personnel et loyer, point mort, bénéfice : les six chiffres de base d’un restaurant, comment les calculer et à quel rythme les regarder.';
+const wa = 'Bonjour, j’ai lu votre article sur les six chiffres. Je voudrais calculer les miens avec vous.';
+const url = abs(ROUTES.blogChiffres.fr);
+
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: 'Les six chiffres que tout restaurateur doit connaître',
+  description, inLanguage: 'fr', image: abs('/img/photos/metier-snack-1600.webp'), datePublished: '2026-10-11', mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+  publisher: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+}];
+
+const alt = {
+  hero: 'Le comptoir très animé d’un snack : des cuisiniers préparent des plats pendant que des clients attendent',
+  supplier: 'Un patron de restaurant vérifie la facture d’un livreur à la porte de sa cuisine, devant des caisses de produits',
+};
+
+const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+const SALES = 100000, TICKET = 60, DAYS = 30;
+const clientsMonth = SALES / TICKET, clientsDay = clientsMonth / DAYS;
+const FIXED = 12000 + 12000 + 6000 + 14000, V = 0.38;
+const be = FIXED / (1 - V), beDay = be / DAYS, beClients = beDay / TICKET;
+
+type Part = [string, number, string];
+const C = { ing: 'bg-[#8FA3B8]', per: 'bg-[#F5B301]', loy: 'bg-[#C9D3DC]', ene: 'bg-[#5B7390]', aut: 'bg-[#E3E8EE]', rest: 'bg-green' };
+const parts: Part[] = [['Ingrédients', 38, C.ing], ['Personnel', 12, C.per], ['Loyer', 12, C.loy], ['Gaz, électricité, eau', 6, C.ene], ['Autres frais', 14, C.aut], ['Il vous reste', 18, C.rest]];
+
+const six: { n: number; name: string; how: string; ex: string; tells: string }[] = [
+  { n: 1, name: 'Le ticket moyen et le nombre de clients',
+    how: 'Ventes ÷ nombre de clients.',
+    ex: `${fmt(SALES)} DH ÷ ${fmt(clientsMonth)} clients = ${TICKET} DH par client, soit environ ${fmt(clientsDay)} clients par jour.`,
+    tells: 'Quand les ventes baissent, est-ce moins de clients, ou des clients qui dépensent moins ? Ce sont deux problèmes différents, avec deux remèdes différents.' },
+  { n: 2, name: 'Le coût de chaque plat',
+    how: 'Chaque ingrédient, pesé, multiplié par son prix d’achat. C’est la fiche technique.',
+    ex: 'Une pizza vendue 50 DH qui contient 19 DH d’ingrédients : il reste 31 DH pour payer tout le reste.',
+    tells: 'Quel plat gagne de l’argent, lequel en perd, et à quel prix vous pouvez le vendre.' },
+  { n: 3, name: 'Les ingrédients en pourcentage des ventes',
+    how: 'Achats du mois ÷ ventes du mois. Si votre stock a beaucoup changé entre le début et la fin du mois, tenez-en compte.',
+    ex: '38 000 DH d’achats ÷ 100 000 DH de ventes = 38 %.',
+    tells: 'Si ce pourcentage monte alors que votre carte n’a pas changé, quelque chose se perd : du gaspillage, des portions trop grandes ou des prix d’achat qui montent.' },
+  { n: 4, name: 'Le personnel et le loyer en pourcentage des ventes',
+    how: 'Coût du personnel avec les charges ÷ ventes, et loyer ÷ ventes.',
+    ex: '12 000 DH de personnel = 12 %. 12 000 DH de loyer = 12 %.',
+    tells: 'Le loyer est fixe : son pourcentage baisse quand vous vendez plus. Si le pourcentage du personnel monte, soit il y a trop d’heures pour le travail à faire, soit les ventes ont baissé.' },
+  { n: 5, name: 'Le point mort',
+    how: 'Coûts fixes ÷ (1 − part des ingrédients), puis divisé par les jours d’ouverture.',
+    ex: `${fmt(FIXED)} DH ÷ 0,62 = ${fmt(be)} DH par mois, soit ${fmt(beDay)} DH par jour : environ ${fmt(beClients)} clients.`,
+    tells: 'Le chiffre d’affaires en dessous duquel vous perdez de l’argent. C’est le chiffre à regarder en premier quand les coûts bougent.' },
+  { n: 6, name: 'Ce qu’il vous reste',
+    how: 'Ventes − tous les coûts.',
+    ex: '100 000 DH − 82 000 DH = 18 000 DH : 18 DH sur chaque tranche de 100 DH vendue.',
+    tells: 'Le seul chiffre qui dit si le restaurant gagne vraiment de l’argent. C’est aussi celui qu’une banque ou un acheteur voudra voir, mois après mois.' },
+];
+
+const rhythm: [string, string][] = [
+  ['Chaque jour', 'les ventes et le nombre de clients. Deux chiffres, deux minutes.'],
+  ['Chaque semaine', 'les achats et ce qui a été jeté. C’est là que les écarts se voient le plus tôt.'],
+  ['Chaque mois', 'les six chiffres, comparés au mois précédent.'],
+  ['À chaque hausse d’un fournisseur', 'le coût des plats concernés, et le prix si nécessaire.'],
+];
+
+const habits: [string, string][] = [
+  ['Une fiche technique par plat.', 'Pesez, notez, mettez à jour quand le prix d’achat change. C’est le chiffre 2, et il alimente le 3 et le 6.'],
+  ['L’argent du restaurant d’un côté, le vôtre de l’autre.', 'Quand tout est mélangé, ce que gagne vraiment le restaurant ne se lit plus, et ne se prouve plus.'],
+  ['Tout écrit au même endroit, tous les mois.', 'Un chiffre noté une fois ne sert à rien. Six chiffres suivis pendant un an racontent l’histoire de votre restaurant.'],
+];
+
+const note = 'Les montants sont des exemples qui illustrent le raisonnement, pas des prévisions : vos chiffres seront différents. Nous ne donnons volontairement aucun pourcentage « idéal », car il dépend de votre type d’établissement et de votre ville. Cet article n’est pas un conseil comptable, juridique ni fiscal : pour vos charges de personnel et vos déclarations, adressez-vous à votre comptable. Les photos sont des illustrations, elles ne montrent ni de vrais clients ni l’équipe Amplify.';
+const reads = [
+  { href: ROUTES.blogPointMort.fr, title: 'Combien vendre par jour pour gagner de l’argent ?', text: 'Le point mort, en dirhams et en clients.' },
+  { href: ROUTES.blogCout.fr, title: 'Combien coûte vraiment votre plat ?', text: 'La fiche technique, plat par plat.' },
+];
+const question = 'Parmi ces six chiffres, combien pourriez-vous donner aujourd’hui, sans chercher ? Et lequel vous manque le plus ?';
+---
+<Base lang={lang} page="blogChiffres" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
+  <PageHero lang={lang} page="blogChiffres" wa={wa}
+    h1="Les six chiffres que tout restaurateur doit connaître"
+    lead="Pas besoin d’un diplôme de gestion. Six chiffres suffisent, et vous pouvez les calculer avec un stylo et les factures du mois." />
+
+  <article>
+  <div class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
+    <figure class="mb-10 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src="/img/photos/metier-snack-1600.webp" srcset="/img/photos/metier-snack-800.webp 800w, /img/photos/metier-snack-1600.webp 1536w" sizes="(min-width: 768px) 768px, 100vw" alt={alt.hero} width="1536" height="1024" loading="eager" decoding="async" class="aspect-video w-full object-cover" style="object-position:50% 50%" />
+    </figure>
+    <p class="text-xl text-muted">Un restaurant se cuisine avec des produits, mais il se pilote avec très peu de chiffres. Quand on les connaît, on voit venir les problèmes. Quand on ne les connaît pas, on les découvre à la fin du mois.</p>
+    <p class="mt-5">Voici les six chiffres de base, comment les calculer, et ce que chacun vous dit. Nous prenons toujours le même restaurant en exemple : <strong>100 000 DH de ventes par mois</strong>. Ce sont des hypothèses, remplacez-les par les vôtres.</p>
+
+    <!-- where the 100 DH go -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Où vont vos 100 DH</h2>
+    <p class="mt-5">Pour commencer, une image. Sur chaque tranche de 100 DH encaissée, voici ce qui part, et ce qui reste :</p>
+    <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8" data-scrub="steps">
+      <div class="step fn-row">
+        <div class="h-8 overflow-hidden rounded-full bg-chalk" aria-hidden="true">
+          <div class="fn-bar flex h-full w-full overflow-hidden rounded-full">{parts.map(([, v, cls]) => <div class={cls} style={`width:${v}%`}></div>)}</div>
+        </div>
+        <p class="mt-3 text-sm text-muted">{parts.map(([k, v]) => `${k} ${v} DH`).join(' · ')}</p>
+      </div>
+      <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t border-line pt-4 text-sm text-muted" aria-hidden="true">
+        {parts.map(([k, , cls]) => <li class="flex items-center gap-1.5"><span class={`size-3 rounded-full ${cls}`}></span>{k}</li>)}
+      </ul>
+    </div>
+    <p class="mt-5">Les six chiffres qui suivent servent à lire cette barre : ce qui part, ce qui reste, et à partir de quand ça reste.</p>
+
+    <!-- the six -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Les six chiffres</h2>
+    <ol class="mt-8 space-y-5" data-scrub="steps">
+      {six.slice(0, 3).map((s) => (
+        <li class="step af-step rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
+          <div class="flex items-start gap-4">
+            <span class="node grid size-9 shrink-0 place-items-center rounded-full bg-green font-bold text-navy transition-all duration-500" aria-hidden="true">{s.n}</span>
+            <div>
+              <p class="display text-3xl text-navy">{s.name}</p>
+              <p class="mt-3"><strong>Comment :</strong> {s.how}</p>
+              <p class="mt-2"><strong>Exemple :</strong> {s.ex}</p>
+              <p class="mt-2 text-muted"><strong class="text-navy">Ce que ça dit :</strong> {s.tells}</p>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <figure class="mt-10 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src="/img/photos/fournisseur-1376.webp" srcset="/img/photos/fournisseur-800.webp 800w, /img/photos/fournisseur-1376.webp 1376w" sizes="(min-width: 768px) 768px, 100vw" alt={alt.supplier} width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
+
+    <ol class="mt-10 space-y-5" start="4" data-scrub="steps">
+      {six.slice(3).map((s) => (
+        <li class="step af-step rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
+          <div class="flex items-start gap-4">
+            <span class="node grid size-9 shrink-0 place-items-center rounded-full bg-green font-bold text-navy transition-all duration-500" aria-hidden="true">{s.n}</span>
+            <div>
+              <p class="display text-3xl text-navy">{s.name}</p>
+              <p class="mt-3"><strong>Comment :</strong> {s.how}</p>
+              <p class="mt-2"><strong>Exemple :</strong> {s.ex}</p>
+              <p class="mt-2 text-muted"><strong class="text-navy">Ce que ça dit :</strong> {s.tells}</p>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-6">Pour aller plus loin sur deux d’entre eux : <a href={ROUTES.blogCout.fr} class="font-semibold text-green-deep underline underline-offset-4">le coût d’un plat</a> (chiffre 2) et <a href={ROUTES.blogPointMort.fr} class="font-semibold text-green-deep underline underline-offset-4">le point mort</a> (chiffre 5) ont chacun leur article.</p>
+
+    <!-- rhythm -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">À quel rythme les regarder</h2>
+    <p class="mt-5">Pas besoin de tout suivre tous les jours. Un rythme simple, à adapter :</p>
+    <ul class="mt-6 space-y-4">
+      {rhythm.map(([a, b]) => <li class="border-s-4 border-green ps-4"><strong>{a} :</strong> {b}</li>)}
+    </ul>
+
+    <!-- habits -->
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Trois habitudes qui rendent tout le reste facile</h2>
+    <ol class="mt-6 space-y-4" data-scrub="steps">
+      {habits.map(([a, b], i) => (
+        <li class="step af-step flex gap-4 rounded-2xl bg-paper p-5 ring-1 ring-line">
+          <span class="node grid size-9 shrink-0 place-items-center rounded-full bg-green font-bold text-navy transition-all duration-500" aria-hidden="true">{i + 1}</span>
+          <p><strong>{a}</strong> {b}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-6">À la main, cela fonctionne, mais il faut s’y tenir chaque semaine. <a href={ROUTES.pos.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify POS</a> enregistre chaque vente et qui l’a encaissée, et <a href={ROUTES.profit.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify Profit</a> calcule le coût de chaque plat, la marge et le point mort à partir de vos achats et de vos charges.</p>
+    <p class="mt-4">Si vous voulez calculer vos six chiffres avec nous, <a href={ROUTES.contact.fr} class="font-semibold text-green-deep underline underline-offset-4">parlons-en</a>. Nous le faisons avec vous, à partir de vos propres données.</p>
+
+    <BlogEnd question={question} note={note} reads={reads} />
+  </div>
+  </article>
+
+  <FinalCta lang={lang} page="blogChiffres" wa={wa}
+    h2="Parlons de vos chiffres."
+    p="Nous calculons avec vous vos six chiffres, gratuitement, à partir de vos propres données." />
+</Base>
+
+<CountUp />
