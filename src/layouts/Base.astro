@@ -10,11 +10,13 @@ import WaButton from '../components/WaButton.astro';
 interface Props {
   lang: Lang; page: PageKey; title: string; description: string; wa: string;
   schema?: Record<string, unknown>[];
+  /** pages that exist in some languages only (e.g. a French article): no hreflang or language menu for the others */
+  langsOnly?: Lang[];
 }
-const { lang, page, title, description, wa, schema = [] } = Astro.props;
+const { lang, page, title, description, wa, schema = [], langsOnly } = Astro.props;
 const t = copy(lang);
 const canonical = abs(ROUTES[page][lang]);
-const langs = liveLanguages();
+const langs = langsOnly ?? liveLanguages();
 
 // The business itself, on every page (NAP identical everywhere). Unknown fields are left out.
 const address = {
@@ -61,7 +63,7 @@ const ld = [business, ...crumbs, ...schema];
 </head>
 <body class="min-h-dvh overflow-x-clip">
   <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-paper focus:px-4 focus:py-2">{t.ui.skip}</a>
-  <Header lang={lang} page={page} wa={wa} />
+  <Header lang={lang} page={page} wa={wa} langs={langs} />
   <main id="main"><slot /></main>
   <Footer lang={lang} />
   <!-- on phones the WhatsApp button stays at the bottom of the screen -->

@@ -4,12 +4,12 @@ import WaButton from './WaButton.astro';
 import { copy } from '../i18n';
 import { loginUrl, signupUrl } from '../config';
 import { ROUTES, liveLanguages, type Lang, type PageKey } from '../i18n/routes';
-interface Props { lang: Lang; page: PageKey; wa: string }
-const { lang, page, wa } = Astro.props;
+interface Props { lang: Lang; page: PageKey; wa: string; langs?: Lang[] }
+const { lang, page, wa, langs: langsProp } = Astro.props;
 const t = copy(lang);
 const nav = (['pos', 'profit', 'site', 'marketing', 'restaurants', 'contact'] as const).map(k => ({ k, label: t.nav[k], href: ROUTES[k][lang] }));
 const active = (k: string) => k === page || (k === 'pos' && page === 'features');
-const langs = liveLanguages();
+const langs = langsProp ?? liveLanguages();
 const LABEL: Record<Lang, string> = { fr: 'FR', ar: 'عربي', en: 'EN' };
 const SHORT: Record<Lang, string> = { fr: 'FR', ar: 'ع', en: 'EN' };
 const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 'English' };

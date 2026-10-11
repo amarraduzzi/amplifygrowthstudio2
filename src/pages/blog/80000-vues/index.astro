@@ -1,0 +1,123 @@
+---
+// Article: what a "viral" restaurant video really costs and brings in. French only (the audience reads French).
+// Figures are worked examples, said so on the page. Replace them with a client's real numbers when available.
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import { ROUTES, abs } from '../../../i18n/routes';
+
+const lang = 'fr' as const;
+const title = '80 000 vues, combien de clients ? Le calcul complet | Amplify Growth Studio';
+const description = 'Une vidéo vue 80 000 fois rapporte combien de clients à un restaurant ? Le calcul complet : agence, publicité Meta, et ce qu’il reste vraiment en caisse.';
+const wa = 'Bonjour, j’ai lu votre article sur les 80 000 vues. Je voudrais regarder mes chiffres avec vous.';
+const url = abs(ROUTES.blogVues.fr);
+
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: '80 000 vues, combien de clients ?',
+  description, inLanguage: 'fr', datePublished: '2026-10-11', mainEntityOfPage: url,
+  author: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+  publisher: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+}];
+
+const costs: [string, string][] = [
+  ['Agence ou créateur de contenu', '3 000 DH / mois'],
+  ['Publicité Meta, ciblée sur Rabat', '2 000 DH / mois'],
+];
+const gains: [string, string][] = [
+  ['Vues de la vidéo', '80 000'],
+  ['Regardent plus de 3 secondes', '2 000'],
+  ['Habitent la zone (la moitié)', '1 000'],
+  ['Viennent vraiment (2 %)', '20 clients'],
+  ['Dépense moyenne par client', '60 DH'],
+];
+const after = [
+  ['Il vous cherche sur Google ou Maps.', 'Votre fiche est-elle à jour, avec les horaires et de belles photos ?'],
+  ['Il veut commander ou réserver.', 'Peut-il le faire directement par WhatsApp, ou doit-il chercher un numéro ?'],
+  ['Il vient, et il est content.', 'A-t-il une raison de revenir ?'],
+];
+---
+<Base lang={lang} page="blogVues" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
+  <PageHero lang={lang} page="blogVues" wa={wa}
+    h1="80 000 vues, combien de clients ?"
+    lead="Votre vidéo a été vue 80 000 fois. Ça fait plaisir. Mais ces vues ne sont presque jamais gratuites. Regardons la facture complète, du premier dirham au dernier client." />
+
+  <article class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
+    <p class="text-xl text-muted">Il y a eu le tournage, souvent une agence, et de l’argent versé à Meta pour que la vidéo soit montrée. Voici un exemple chiffré, avec des hypothèses. Remplacez-les par ce que vous payez vraiment.</p>
+
+    <!-- cost -->
+    <h2 class="mt-16 text-4xl sm:text-5xl">Ce que la vidéo coûte</h2>
+    <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
+      <dl>
+        {costs.map(([k, v]) => (
+          <div class="flex items-baseline justify-between gap-6 border-b border-line py-3"><dt>{k}</dt><dd class="font-semibold">{v}</dd></div>
+        ))}
+        <div class="flex items-baseline justify-between gap-6 pt-4"><dt class="font-semibold">Total</dt><dd class="display text-3xl text-navy">5 000 DH / mois</dd></div>
+      </dl>
+      <p class="mt-2 text-end text-muted">soit <strong class="text-navy">60 000 DH par an</strong></p>
+    </div>
+    <p class="mt-5">Votre temps n’est pas compté ici. Si vous faites les vidéos vous-même, vous ne payez pas d’agence, mais vous payez en heures qui ne vont ni à la cuisine ni aux clients.</p>
+
+    <!-- return -->
+    <h2 class="mt-16 text-4xl sm:text-5xl">Ce que la vidéo rapporte</h2>
+    <p class="mt-5">Supposons que ça marche : <strong>80 000 vues</strong>. Voilà ce qu’il en reste.</p>
+    <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
+      <dl>
+        {gains.map(([k, v]) => (
+          <div class="flex items-baseline justify-between gap-6 border-b border-line py-3 last:border-0"><dt>{k}</dt><dd class="font-semibold">{v}</dd></div>
+        ))}
+        <div class="flex items-baseline justify-between gap-6 border-t-2 border-navy pt-4"><dt class="font-semibold">Chiffre d’affaires</dt><dd class="display text-3xl text-navy">1 200 DH</dd></div>
+      </dl>
+    </div>
+
+    <div class="mt-8 rounded-3xl bg-navy p-7 text-white sm:p-9">
+      <p class="display text-4xl sm:text-5xl">5 000 DH dépensés.<br /><span class="text-green">1 200 DH encaissés.</span></p>
+      <p class="mt-4 text-lg text-white/80">Et cela, avant même de payer les ingrédients. Chaque nouveau client vous coûte environ <strong class="text-white">250 DH</strong> de marketing, alors qu’il dépense 60 DH. Même dans un mois exceptionnel, à 5 % au lieu de 2 %, on arrive à 50 clients et 3 000 DH de chiffre d’affaires : encore moins que la dépense.</p>
+    </div>
+
+    <h2 class="mt-16 text-4xl sm:text-5xl">Ce qui peut sauver le calcul</h2>
+    <p class="mt-5">Un client qui revient. Quelqu’un qui vient quatre fois vaut 240 DH, pas 60 DH. C’est là que se trouve la vraie valeur, mais seulement si vos clients ont une raison de revenir et si vous savez qui ils sont. Sans cela, la vidéo reste une dépense à refaire chaque mois.</p>
+
+    <!-- other side -->
+    <h2 class="mt-16 text-4xl sm:text-5xl">L’autre côté de la balance</h2>
+    <p class="mt-5">Imaginons un chiffre d’affaires de 200 000 DH par mois. Que se passe-t-il si vous perdez 3 % de moins en gaspillage, en portions mal calibrées, en achats ou en écarts de caisse ?</p>
+    <div class="mt-6 rounded-3xl bg-mint p-7 sm:p-9">
+      <p class="text-lg">3 % de 200 000 DH =</p>
+      <p class="display mt-1 text-5xl text-green-deep sm:text-6xl">6 000 DH par mois</p>
+      <p class="mt-3 text-lg">Soit <strong>72 000 DH par an</strong>, chaque année.</p>
+    </div>
+    <p class="mt-6">C’est plus que l’agence et la publicité réunies, sans dépense supplémentaire. Une vidéo virale est un pic qu’il faut racheter chaque mois. Une baisse du coût de revient travaille tous les jours.</p>
+    <p class="mt-4">Pourquoi tant d’établissements choisissent-ils quand même la vidéo ? Parce qu’elle se voit. Le chiffre monte et on peut le montrer. Les coûts, eux, restent invisibles tant qu’on ne connaît pas ses chiffres.</p>
+
+    <!-- what happens after: a real sequence -->
+    <h2 class="mt-16 text-4xl sm:text-5xl">Ce qui se passe après la vidéo</h2>
+    <p class="mt-5">Quelqu’un aime votre vidéo. Que fait-il ensuite ?</p>
+    <ol class="mt-6 space-y-4">
+      {after.map(([a, b], i) => (
+        <li class="flex gap-4 rounded-2xl bg-paper p-5 ring-1 ring-line">
+          <span class="grid size-9 shrink-0 place-items-center rounded-full bg-green font-bold text-navy" aria-hidden="true">{i + 1}</span>
+          <p><strong>{a}</strong> {b}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-6">Si une de ces étapes échoue, vous avez payé, en argent et en temps, pour des visiteurs que vous n’avez pas su garder.</p>
+
+    <!-- what works -->
+    <h2 class="mt-16 text-4xl sm:text-5xl">Ce qui fonctionne vraiment</h2>
+    <ul class="mt-6 space-y-4">
+      <li class="border-s-4 border-green ps-4"><strong>Le marketing reste utile, mais il doit mener quelque part :</strong> une bonne fiche Google, un site à vous, et la commande directe par WhatsApp. <a href={ROUTES.marketing.fr} class="font-semibold text-green-deep underline underline-offset-4">Voir notre approche</a>.</li>
+      <li class="border-s-4 border-green ps-4"><strong>Demandez à votre agence des résultats en clients, pas en vues.</strong> Combien de nouveaux clients, et combien chacun a coûté, budget publicitaire compris ?</li>
+      <li class="border-s-4 border-green ps-4"><strong>Connaissez vos chiffres.</strong> Que vous reste-t-il sur une commande moyenne, après coûts ? Quel plat coûte plus qu’il ne rapporte ? D’où vient l’écart entre la caisse et le chiffre du jour ? <a href={ROUTES.profit.fr} class="font-semibold text-green-deep underline underline-offset-4">Voir Amplify Profit</a>.</li>
+      <li class="border-s-4 border-green ps-4"><strong>Mesurez d’abord, investissez ensuite.</strong> Celui qui sait ce qu’il garde choisit mieux où placer son prochain dirham.</li>
+    </ul>
+
+    <!-- take-away question -->
+    <h2 class="mt-16 text-4xl sm:text-5xl">Une question à emporter</h2>
+    <p class="mt-5 text-xl">Le mois prochain, ne regardez pas combien de vues vous avez eues. Regardez combien il reste de chaque tranche de 100 DH de chiffre d’affaires, après tous les coûts, agence et publicité comprises. Quel chiffre attendez-vous ? Et correspond-il à ce qui arrive sur votre compte ?</p>
+
+    <p class="mt-10 text-sm text-muted">Les montants de cet article sont des exemples qui illustrent le raisonnement. Vos chiffres réels peuvent être très différents, et c’est précisément pour cela qu’il vaut la peine de les regarder.</p>
+  </article>
+
+  <FinalCta lang={lang} page="blogVues" wa={wa}
+    h2="Parlons de vos chiffres."
+    p="Nous les regardons avec vous, gratuitement, à partir de vos propres données de caisse." />
+</Base>
