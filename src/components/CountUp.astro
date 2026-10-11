@@ -1,0 +1,19 @@
+---
+// Numbers with data-count count up once when they scroll into view (the final value is already in the HTML).
+---
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = [...document.querySelectorAll<HTMLElement>('[data-count]')];
+  if (!still && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => entries.forEach((e) => {
+      if (!e.isIntersecting) return; io.unobserve(e.target);
+      const el = e.target as HTMLElement, end = Number(el.dataset.count), t0 = performance.now();
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / 1400), v = Math.round(end * (1 - Math.pow(1 - k, 3)));
+        el.textContent = v.toLocaleString('fr-FR'); if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }), { threshold: 0.6 });
+    els.forEach((el) => io.observe(el));
+  }
+</script>
