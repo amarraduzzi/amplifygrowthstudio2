@@ -7,7 +7,7 @@ import { ROUTES, liveLanguages, type Lang, type PageKey } from '../i18n/routes';
 interface Props { lang: Lang; page: PageKey; wa: string; langs?: Lang[] }
 const { lang, page, wa, langs: langsProp } = Astro.props;
 const t = copy(lang);
-const nav = (['pos', 'profit', 'site', 'marketing', 'restaurants', 'contact'] as const).map(k => ({ k, label: t.nav[k], href: ROUTES[k][lang] }));
+const nav = (['pos', 'profit', 'site', 'marketing', 'restaurants', ...(lang === 'fr' ? ['blog' as const] : []), 'contact'] as const).map(k => ({ k, label: k === 'blog' ? 'Blog' : t.nav[k], href: ROUTES[k][lang] }));
 const active = (k: string) => k === page || (k === 'pos' && page === 'features');
 const langs = langsProp ?? liveLanguages();
 const LABEL: Record<Lang, string> = { fr: 'FR', ar: 'عربي', en: 'EN' };

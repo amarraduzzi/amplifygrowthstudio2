@@ -19,11 +19,11 @@ const schema = [{
 }];
 
 const how = [
-  ['Vous regardez le voisin.', 'Il demande 45 DH, vous demandez 45 ou 50 DH.'],
+  ['Vous regardez le voisin.', 'Il demande 45 DH, vous demandez 45 ou 50 DH.'],
   ['Vous allez au feeling.', '« Un client peut payer ça. »'],
   ['Vous fixez le prix une fois', 'et vous n’y touchez plus, même quand les achats montent.'],
 ];
-const costs: [string, number][] = [['Pâte', 3], ['Sauce tomate', 2], ['Mozzarella, 100 g (75 DH le kilo)', 7.5], ['Garniture (olives, champignons, jambon)', 5], ['Huile, basilic, boîte', 1.5]];
+const costs: [string, number][] = [['Pâte', 3], ['Sauce tomate', 2], ['Mozzarella, 100 g (75 DH le kilo)', 7.5], ['Garniture (olives, champignons, jambon)', 5], ['Huile, basilic, boîte', 1.5]];
 const total = costs.reduce((a, [, c]) => a + c, 0);
 const fmt = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
 const why = [
@@ -43,66 +43,66 @@ const question = 'Quel est le plat que vous vendez le plus ? Savez-vous ce qu’
 
   <article>
   <div class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
-    <h2 class="text-4xl sm:text-5xl">Comment les prix naissent, le plus souvent</h2>
+    <h2 class="text-3xl sm:text-5xl">Comment les prix naissent, le plus souvent</h2>
     <p class="mt-5">Rarement avec un calcul. Le plus souvent :</p>
     <ul class="mt-6 space-y-4">
       {how.map(([a, b]) => <li class="border-s-4 border-green ps-4"><strong>{a}</strong> {b}</li>)}
     </ul>
     <p class="mt-6">Les trois ont le même défaut : le prix ne dit rien de ce que le plat vous coûte.</p>
 
-    <h2 class="mt-16 text-4xl sm:text-5xl">La fiche technique : chaque ingrédient, au gramme près</h2>
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">La fiche technique : chaque ingrédient, au gramme près</h2>
     <p class="mt-5">Une fiche technique est une petite carte par plat : les ingrédients, la quantité, le prix d’achat. C’est tout. Elle vous donne le vrai coût du plat, et elle garantit que chaque cuisinier prépare la même portion.</p>
   </div>
 
-  <PhotoBand name="balance" dir="/img/photos" big="1376" w={1376} h={769} alt="Un cuisinier ajoute du fromage râpé sur une pizza posée sur une balance, dans une cuisine de restaurant" kicker="Au gramme près" title="10 g de trop. 27 000 DH par an." class="my-14 md:my-20" pos="50% 55%" />
+  <PhotoBand name="balance" dir="/img/photos" big="1376" w={1376} h={769} alt="Un cuisinier ajoute du fromage râpé sur une pizza posée sur une balance, dans une cuisine de restaurant" kicker="Au gramme près" title="10 g de trop. 27 000 DH par an." class="my-14 md:my-20" pos="50% 55%" />
 
   <div class="mx-auto max-w-3xl px-4 sm:px-6">
-    <h2 class="text-4xl sm:text-5xl">Un exemple : une pizza</h2>
+    <h2 class="text-3xl sm:text-5xl">Un exemple : une pizza</h2>
     <p class="mt-5">Ce sont des hypothèses. Remplacez-les par ce que vous payez vraiment.</p>
     <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8" data-scrub="steps">
       <ul class="space-y-5">
         {costs.map(([k, c]) => (
           <li class="step fn-row">
-            <div class="flex items-baseline justify-between gap-4"><span>{k}</span><strong>{fmt(c)} DH</strong></div>
+            <div class="flex items-baseline justify-between gap-4"><span>{k}</span><strong class="whitespace-nowrap">{fmt(c)} DH</strong></div>
             <div class="mt-2 h-3 overflow-hidden rounded-full bg-chalk" aria-hidden="true"><div class="fn-bar h-full rounded-full bg-green" style={`width:${(c / total) * 100}%`}></div></div>
           </li>
         ))}
       </ul>
-      <p class="mt-6 flex items-baseline justify-between gap-4 border-t-2 border-navy pt-4"><span class="font-semibold">Total des ingrédients</span><strong class="display text-3xl"><span data-count={total}>{total}</span> DH</strong></p>
+      <p class="mt-6 flex items-baseline justify-between gap-4 border-t-2 border-navy pt-4"><span class="font-semibold">Total des ingrédients</span><strong class="display whitespace-nowrap text-3xl"><span data-count={total}>{total}</span> DH</strong></p>
     </div>
 
     <div class="mt-8 rounded-3xl bg-navy p-7 text-white sm:p-9" data-scrub="steps">
-      <p class="display text-4xl sm:text-5xl">Vendue 50 DH.<br /><span class="text-green">Il reste 31 DH.</span></p>
+      <p class="display text-4xl sm:text-5xl">Vendue 50 DH.<br /><span class="text-green">Il reste 31 DH.</span></p>
       <div class="step fn-row mt-6 h-5 overflow-hidden rounded-full bg-green" aria-hidden="true"><div class="fn-bar h-full w-[38%] bg-[#E5484D]"></div></div>
-      <p class="mt-3 text-white/80"><span class="text-[#FF8A8E]">Ingrédients : 19 DH, soit 38 %</span> (c’est la « foodcost »). Avec le reste, vous payez le loyer, le personnel, le gaz et l’électricité.</p>
+      <p class="mt-3 text-white/80"><span class="text-[#FF8A8E]">Ingrédients : 19 DH, soit 38 %</span> (c’est la « foodcost »). Avec le reste, vous payez le loyer, le personnel, le gaz et l’électricité.</p>
     </div>
 
-    <h2 class="mt-16 text-4xl sm:text-5xl">Les petits écarts deviennent de gros montants</h2>
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Les petits écarts deviennent de gros montants</h2>
     <div class="mt-6 grid gap-4 sm:grid-cols-2">
       <div class="rounded-3xl bg-mint p-6 sm:p-7">
-        <p class="font-semibold">10 g de fromage en trop</p>
-        <p class="mt-1 text-muted">= 0,75 DH par pizza. À 100 pizzas par jour :</p>
-        <p class="display mt-3 text-4xl text-green-deep"><span data-count="27000">27 000</span> DH par an</p>
+        <p class="font-semibold">10 g de fromage en trop</p>
+        <p class="mt-1 text-muted">= 0,75 DH par pizza. À 100 pizzas par jour :</p>
+        <p class="display mt-3 text-4xl text-green-deep"><span data-count="27000">27 000</span> DH par an</p>
       </div>
       <div class="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-7">
         <p class="font-semibold">Mozzarella +30 % chez le fournisseur</p>
-        <p class="mt-1 text-muted">Le plat coûte 21,25 DH au lieu de 19. Prix inchangé, 100 par jour :</p>
-        <p class="display mt-3 text-4xl text-[#C93C41]">−<span data-count="82000">82 000</span> DH par an</p>
+        <p class="mt-1 text-muted">Le plat coûte 21,25 DH au lieu de 19. Prix inchangé, 100 par jour :</p>
+        <p class="display mt-3 text-4xl text-[#C93C41]">−<span data-count="82000">82 000</span> DH par an</p>
       </div>
     </div>
     <figure class="mt-6 overflow-hidden rounded-3xl ring-1 ring-line">
       <img src="/img/photos/fournisseur-1376.webp" srcset="/img/photos/fournisseur-800.webp 800w, /img/photos/fournisseur-1376.webp 1376w" sizes="(min-width: 768px) 768px, 100vw" alt="Un restaurateur contrôle une facture pendant qu’un livreur décharge des fromages devant la porte" width="1376" height="769" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
     </figure>
 
-    <h2 class="mt-16 text-4xl sm:text-5xl">Comment calculer un prix</h2>
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Comment calculer un prix</h2>
     <p class="mt-5">Divisez votre coût par le pourcentage que vous visez.</p>
     <div class="mt-6 rounded-3xl bg-paper p-6 text-center ring-1 ring-line sm:p-8">
-      <p class="display text-3xl sm:text-4xl">21,25 DH ÷ 0,38 = <span class="text-green-deep">environ 56 DH</span></p>
+      <p class="display text-3xl sm:text-4xl">21,25 DH ÷ 0,38 = <span class="text-green-deep">environ 56 DH</span></p>
     </div>
     <p class="mt-5">Le pourcentage qui convient dépend de votre loyer, de votre personnel et du type de plat. Il se fixe avec vos propres chiffres, pas avec une norme trouvée dans un livre.</p>
 
-    <h2 class="mt-16 text-4xl sm:text-5xl">« Mais le voisin est moins cher »</h2>
-    <p class="mt-5">C’est la remarque qu’on entend le plus, et elle est légitime : les clients comparent. Mais le prix du voisin ne dit presque rien de ce que vous devez demander. Demandez-vous pourquoi il peut vendre à 40 DH :</p>
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">« Mais le voisin est moins cher »</h2>
+    <p class="mt-5">C’est la remarque qu’on entend le plus, et elle est légitime : les clients comparent. Mais le prix du voisin ne dit presque rien de ce que vous devez demander. Demandez-vous pourquoi il peut vendre à 40 DH :</p>
     <ul class="mt-6 space-y-3" data-scrub="steps">
       {why.map((w) => <li class="step af-step flex gap-3"><span class="mt-2 size-2.5 shrink-0 rounded-full bg-green" aria-hidden="true"></span><span>{w}</span></li>)}
     </ul>
@@ -113,10 +113,11 @@ const question = 'Quel est le plat que vous vendez le plus ? Savez-vous ce qu’
       <div class="rounded-3xl bg-paper p-6 ring-1 ring-line"><p class="font-semibold">Votre plancher est au-dessus</p><p class="mt-2 text-muted">Une guerre des prix ne paie pas. Cherchez l’écart dans la valeur (portion, qualité, service) ou dans vos coûts, pas dans votre prix.</p></div>
     </div>
 
-    <h2 class="mt-16 text-4xl sm:text-5xl">Une question à emporter</h2>
-    <p class="mt-5 text-3xl font-semibold leading-snug sm:text-4xl" data-scrub="words">{question.map((w) => <><span class="word">{w}</span>{' '}</>)}</p>
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Une question à emporter</h2>
+    <p class="mt-5 text-2xl font-semibold leading-snug sm:text-4xl" data-scrub="words">{question.map((w) => <><span class="word">{w}</span>{' '}</>)}</p>
 
-    <p class="mt-10 text-sm text-muted">Les montants sont des exemples qui illustrent le raisonnement ; les vôtres seront différents. Les photos de l’article sont des illustrations générées par IA, elles ne montrent ni de vrais clients ni l’équipe Amplify. À lire aussi : <a href={ROUTES.blogVues.fr} class="font-semibold text-green-deep underline underline-offset-4">80 000 vues, combien de clients ?</a> et <a href={ROUTES.profit.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify Profit</a>, qui calcule la marge de chaque plat.</p>
+    <p class="mt-10 text-sm text-muted">Les montants sont des exemples qui illustrent le raisonnement ; les vôtres seront différents. Les photos de l’article sont des illustrations générées par IA, elles ne montrent ni de vrais clients ni l’équipe Amplify. À lire aussi : <a href={ROUTES.blogVues.fr} class="font-semibold text-green-deep underline underline-offset-4">80 000 vues, combien de clients ?</a> et <a href={ROUTES.profit.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify Profit</a>, qui calcule la marge de chaque plat.</p>
+    <p class="mt-6"><a href={ROUTES.blog.fr} class="font-semibold text-green-deep underline underline-offset-4">← Tous les articles</a></p>
   </div>
   </article>
 
