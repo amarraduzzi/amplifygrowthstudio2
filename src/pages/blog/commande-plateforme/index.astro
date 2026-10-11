@@ -1,0 +1,121 @@
+---
+// Article 3: what is left of a 100 DH order on a delivery platform vs a direct order. French only.
+// Figures are worked examples. The 30 % cap comes from the July 2025 settlement between Glovo Morocco and the Conseil de la concurrence.
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import PhotoBand from '../../../components/PhotoBand.astro';
+import CountUp from '../../../components/CountUp.astro';
+import { ROUTES, abs } from '../../../i18n/routes';
+
+const lang = 'fr' as const;
+const title = 'Que reste-t-il d’une commande de 100 DH sur une plateforme de livraison ? | Amplify Growth Studio';
+const description = 'Commission, ingrédients, emballage : le calcul d’une commande de 100 DH via une plateforme, comparé à une commande directe par WhatsApp. Un exemple chiffré pour restaurateurs.';
+const wa = 'Bonjour, j’ai lu votre article sur les commandes en plateforme. Je voudrais calculer ce qu’il me reste par commande.';
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: 'Que reste-t-il d’une commande de 100 DH ?', description, inLanguage: 'fr',
+  datePublished: '2026-10-11', mainEntityOfPage: abs(ROUTES.blogPlateforme.fr), image: abs('/img/photos/metier-snack-1376.webp'),
+  author: { '@type': 'Organization', name: 'Amplify Growth Studio' }, publisher: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+}];
+
+type Part = [string, number, string];
+const C = { com: 'bg-[#E5484D]', ing: 'bg-[#8FA3B8]', emb: 'bg-[#C9D3DC]', liv: 'bg-[#F5B301]', rest: 'bg-green' };
+const scen: { name: string; rest: number; parts: Part[] }[] = [
+  { name: 'Via la plateforme', rest: 32, parts: [['Commission', 30, C.com], ['Ingrédients', 35, C.ing], ['Emballage', 3, C.emb], ['Il vous reste', 32, C.rest]] },
+  { name: 'En direct, à emporter', rest: 62, parts: [['Ingrédients', 35, C.ing], ['Emballage', 3, C.emb], ['Il vous reste', 62, C.rest]] },
+  { name: 'En direct, avec votre livreur', rest: 47, parts: [['Ingrédients', 35, C.ing], ['Emballage', 3, C.emb], ['Livreur', 15, C.liv], ['Il vous reste', 47, C.rest]] },
+];
+const legend: [string, string][] = [['Commission', C.com], ['Ingrédients', C.ing], ['Emballage', C.emb], ['Livreur', C.liv], ['Il vous reste', C.rest]];
+const how = [
+  ['Une petite carte dans chaque sac', 'avec votre numéro WhatsApp et un petit avantage, par exemple une boisson offerte à la prochaine commande. Cet avantage vous coûte moins que 30 %.'],
+  ['Un menu simple avec un bouton de commande', 'sur WhatsApp ou sur une page à vous, pour que commander soit aussi facile que dans l’application.'],
+  ['Une bonne fiche Google', 'pour que vos clients vous trouvent aussi sans la plateforme.'],
+];
+const question = 'Combien de vos commandes viennent d’une plateforme ? Et savez-vous, pour chaque commande, ce qu’il vous en reste ?'.split(' ');
+---
+<Base lang={lang} page="blogPlateforme" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
+  <PageHero lang={lang} page="blogPlateforme" wa={wa}
+    h1="Que reste-t-il d’une commande de 100 DH ?"
+    lead="Sur une plateforme de livraison, une commande de 100 DH ressemble à 100 DH de chiffre d’affaires. Voyons ce qui arrive vraiment dans votre caisse." />
+
+  <article>
+  <div class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
+    <p class="text-xl text-muted">Vous voyez le montant à l’écran, et la commande part en cuisine. Mais quand tout est payé, que reste-t-il pour vous ?</p>
+  </div>
+
+  <PhotoBand name="metier-snack" dir="/img/photos" big="1376" w={1376} h={769} alt="Le comptoir très animé d’un snack : des cuisiniers préparent des plats pendant que des clients attendent" kicker="Le piège" title="Beaucoup de commandes. Combien de bénéfice ?" class="my-14 md:my-20" pos="50% 40%" />
+
+  <div class="mx-auto max-w-3xl px-4 sm:px-6">
+    <h2 class="text-3xl sm:text-5xl">L’exemple : une commande de 100 DH</h2>
+    <p class="mt-5">Ce sont des hypothèses. Remplacez-les par ce que vous payez vraiment, commission de votre contrat comprise.</p>
+    <div class="mt-6 space-y-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8" data-scrub="steps">
+      {scen.map((sc) => (
+        <div class="step fn-row">
+          <div class="flex items-baseline justify-between gap-4"><span class="font-semibold">{sc.name}</span><span class="whitespace-nowrap"><strong class="display text-3xl"><span data-count={sc.rest}>{sc.rest}</span> DH</strong> <span class="hidden text-sm text-muted sm:inline">pour vous</span></span></div>
+          <div class="mt-3 h-6 overflow-hidden rounded-full bg-chalk" aria-hidden="true">
+            <div class="fn-bar flex h-full w-full overflow-hidden rounded-full">{sc.parts.map(([, v, cls]) => <div class={cls} style={`width:${v}%`}></div>)}</div>
+          </div>
+          <p class="mt-2 text-sm text-muted">{sc.parts.map(([k, v]) => `${k} ${v}\u00a0DH`).join(' · ')}</p>
+        </div>
+      ))}
+      <ul class="flex flex-wrap gap-x-4 gap-y-1 border-t border-line pt-4 text-sm text-muted" aria-hidden="true">
+        {legend.map(([k, cls]) => <li class="flex items-center gap-1.5"><span class={`size-3 rounded-full ${cls}`}></span>{k}</li>)}
+      </ul>
+    </div>
+    <p class="mt-4 text-sm text-muted">Avec 35 % d’ingrédients et 3 DH d’emballage. Et ce, avant le loyer, le personnel, le gaz et l’électricité.</p>
+
+    <div class="mt-8 rounded-3xl bg-navy p-7 text-white sm:p-9">
+      <p class="display text-4xl sm:text-5xl">Même plat. Même client.<br /><span class="text-green">+30 DH à emporter.</span></p>
+      <p class="mt-4 text-lg text-white/80">Et encore +15 DH si vous livrez vous-même, avec un livreur à 15 DH par course.</p>
+    </div>
+
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Pourquoi 30 % ?</h2>
+    <p class="mt-5">En juillet 2025, la plus grande plateforme du pays, Glovo, a conclu un accord avec le Conseil de la concurrence : fin des clauses d’exclusivité, plafonnement de la commission à 30 %, et révision des contrats qui dépassaient ce seuil (<a href="https://conseil-concurrence.ma/wp-content/uploads/2025/07/Communique-de-presse-Conseil-FR-Glovo.pdf" target="_blank" rel="noopener" class="font-semibold text-green-deep underline underline-offset-4">communiqué du Conseil</a>). Avant cela, la presse évoquait 31 % hors taxes, soit plus de 37 % TTC.</p>
+    <p class="mt-4">30 % est donc un plafond, pas un tarif : votre contrat peut être plus bas. Vérifiez aussi si votre pourcentage est hors taxes ou TTC, car cela change le calcul. Les autres plateformes ont leurs propres conditions.</p>
+
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Ce que cela change en un an</h2>
+    <p class="mt-5">Imaginons 20 commandes par jour sur la plateforme. Vous réussissez à en passer seulement 5 en direct.</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-7">
+        <p class="font-semibold">Avec votre livreur</p>
+        <p class="mt-1 text-muted">5 × 15 DH × 360 jours</p>
+        <p class="display mt-3 text-4xl text-green-deep"><span data-count="27000">27 000</span> DH par an</p>
+      </div>
+      <div class="rounded-3xl bg-mint p-6 sm:p-7">
+        <p class="font-semibold">Clients qui viennent chercher</p>
+        <p class="mt-1 text-muted">5 × 30 DH × 360 jours</p>
+        <p class="display mt-3 text-4xl text-green-deep"><span data-count="54000">54 000</span> DH par an</p>
+      </div>
+    </div>
+    <p class="mt-5">Et les 15 autres commandes restent sur la plateforme.</p>
+
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Là où une plateforme est précieuse</h2>
+    <p class="mt-5">Ce n’est pas un article contre les plateformes. Elles apportent des clients que vous ne connaissez pas encore, des livreurs, et une application où les gens sont déjà.</p>
+    <figure class="mt-6 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src="/img/blog/vues-5-apres-1376.webp" srcset="/img/blog/vues-5-apres-800.webp 800w, /img/blog/vues-5-apres-1376.webp 1376w" sizes="(min-width: 768px) 768px, 100vw" alt="Deux jeunes regardent un téléphone dans une rue de Rabat, devant l’entrée éclairée d’un restaurant" width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
+    <p class="mt-6">Comparez avec l’<a href={ROUTES.blogVues.fr} class="font-semibold text-green-deep underline underline-offset-4">article précédent</a> : un nouveau client venu d’une vidéo virale vous coûtait environ 250 DH de marketing. Via une plateforme, la première commande vous coûte 30 DH de commission. C’est peu.</p>
+    <p class="mt-4"><strong>Le problème commence à la deuxième, à la dixième, à la vingtième commande du même client.</strong> Chaque fois, vous payez 30 % de plus, alors qu’il vous connaît et pourrait vous appeler directement. Payez la plateforme pour trouver le client, pas pour le garder à vie.</p>
+
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Comment amener vos clients à commander en direct</h2>
+    <p class="mt-5">Sans les brusquer, et sans abîmer la relation avec la plateforme :</p>
+    <ul class="mt-6 space-y-4">
+      {how.map(([a, b]) => <li class="border-s-4 border-green ps-4"><strong>{a}</strong> {b}</li>)}
+    </ul>
+    <div class="mt-6 rounded-3xl bg-mint p-6 sm:p-7">
+      <p class="font-semibold">Même avec 10 % de remise, vous gagnez plus</p>
+      <p class="mt-2 text-lg">100 DH − 10 DH de remise = 90 DH, moins 35 DH d’ingrédients et 3 DH d’emballage : il vous reste <strong class="display whitespace-nowrap text-3xl text-green-deep">52 DH</strong>, contre 32 DH via la plateforme.</p>
+    </div>
+    <p class="mt-5"><strong>Attention :</strong> lisez votre contrat pour savoir ce que vous avez le droit de faire, notamment pour contacter les clients de la plateforme. Je ne connais pas le vôtre.</p>
+
+    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Une question à emporter</h2>
+    <p class="mt-5 text-2xl font-semibold leading-snug sm:text-4xl" data-scrub="words">{question.map((w) => <><span class="word">{w}</span>{' '}</>)}</p>
+
+    <p class="mt-10 text-sm text-muted">Les montants sont des exemples (35 % d’ingrédients, 3 DH d’emballage, 15 DH par livraison, 20 commandes par jour) ; les vôtres seront différents. Les photos sont des illustrations, elles ne montrent ni de vrais clients ni l’équipe Amplify. À lire aussi : <a href={ROUTES.blogCout.fr} class="font-semibold text-green-deep underline underline-offset-4">Combien coûte vraiment votre plat ?</a> et <a href={ROUTES.site.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify Site</a>, pour recevoir des commandes en direct.</p>
+    <p class="mt-6"><a href={ROUTES.blog.fr} class="font-semibold text-green-deep underline underline-offset-4">← Tous les articles</a></p>
+  </div>
+  </article>
+
+  <FinalCta lang={lang} page="blogPlateforme" wa={wa} h2="Parlons de vos commandes." p="Nous calculons avec vous ce qu’il vous reste par commande, gratuitement, à partir de votre contrat et de vos coûts." />
+</Base>
+<CountUp />

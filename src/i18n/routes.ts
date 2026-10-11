@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'contact' | 'blogVues' | 'blogCout' | 'blog';
+export type PageKey = 'home' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'contact' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -16,6 +16,7 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   contact: { fr: '/contact/', ar: '/ar/contact/', en: '/en/contact/' },
   // French-only article: the page passes langsOnly=['fr'] to Base, so ar/en are never linked or listed in hreflang
   blog: { fr: '/blog/', ar: '/blog/', en: '/blog/' },
+  blogPlateforme: { fr: '/blog/commande-plateforme/', ar: '/blog/commande-plateforme/', en: '/blog/commande-plateforme/' },
   blogCout: { fr: '/blog/cout-dun-plat/', ar: '/blog/cout-dun-plat/', en: '/blog/cout-dun-plat/' },
   blogVues: { fr: '/blog/80000-vues/', ar: '/blog/80000-vues/', en: '/blog/80000-vues/' },
 };
