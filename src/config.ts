@@ -33,9 +33,9 @@ export const loginUrl = (lang = 'fr') => `${APPS.admin}/?lang=${lang}`;
 
 export const CONTACT = {
   /** International format without + or spaces, for wa.me links */
-  whatsapp: '212660353741',
-  phoneDisplay: '+212 6 60 35 37 41',
-  email: 'Amar.amplifygrowth@gmail.com',
+  whatsapp: '212611053649',
+  phoneDisplay: '+212 6 11 05 36 49',
+  email: 'info@amplifygrowthstudio.com',
   street: '[ADRESSE À COMPLÉTER]',
   city: 'Rabat',
   postalCode: '[CODE POSTAL]',
