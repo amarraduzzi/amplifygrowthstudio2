@@ -1,0 +1,130 @@
+---
+// Article 4: low labour costs hide inefficiency; profit = revenue - costs. French only.
+// Figures are worked examples, not forecasts. No legal or tax advice: the article points to the accountant.
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import FinalCta from '../../../components/FinalCta.astro';
+import PhotoBand from '../../../components/PhotoBand.astro';
+import CountUp from '../../../components/CountUp.astro';
+import BlogEnd from '../../../components/BlogEnd.astro';
+import { ROUTES, abs } from '../../../i18n/routes';
+
+const lang = 'fr' as const;
+const title = 'Coûts bas au Maroc : ce qu’ils cachent à votre restaurant | Amplify Growth Studio';
+const description = 'Un personnel peu cher cache beaucoup d’inefficacités. Quand les coûts montent, c’est la marge qui paie. Un exemple chiffré et quatre réflexes pour rendre votre restaurant sain dès maintenant.';
+const wa = 'Bonjour, j’ai lu votre article sur les coûts. Je voudrais calculer ma marge réelle avec vous.';
+const schema = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: 'Les coûts bas cachent des défauts. Jusqu’au jour où ils montent.', description, inLanguage: 'fr',
+  datePublished: '2026-10-11', mainEntityOfPage: abs(ROUTES.blogCouts.fr), image: abs('/img/photos/metier-restaurant-1600.webp'),
+  author: { '@type': 'Organization', name: 'Amplify Growth Studio' }, publisher: { '@type': 'Organization', name: 'Amplify Growth Studio' },
+}];
+
+type Part = [string, number, string];
+const C = { ing: 'bg-[#8FA3B8]', per: 'bg-[#F5B301]', loy: 'bg-[#C9D3DC]', ene: 'bg-[#5B7390]', aut: 'bg-[#E3E8EE]', rest: 'bg-green' };
+const scen: { name: string; rest: number; parts: Part[] }[] = [
+  { name: 'Aujourd’hui', rest: 18000, parts: [['Ingrédients', 38, C.ing], ['Personnel', 12, C.per], ['Loyer', 12, C.loy], ['Gaz, électricité, eau', 6, C.ene], ['Autres frais', 14, C.aut], ['Il vous reste', 18, C.rest]] },
+  { name: 'Demain', rest: 10600, parts: [['Ingrédients', 41.8, C.ing], ['Personnel', 15.6, C.per], ['Loyer', 12, C.loy], ['Gaz, électricité, eau', 6, C.ene], ['Autres frais', 14, C.aut], ['Il vous reste', 10.6, C.rest]] },
+];
+const legend: [string, string][] = [['Ingrédients', C.ing], ['Personnel', C.per], ['Loyer', C.loy], ['Gaz, électricité, eau', C.ene], ['Autres frais', C.aut], ['Il vous reste', C.rest]];
+const fmt = (n: number) => n.toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+const hidden = [
+  ['Trop de monde en salle', 'parce que chaque personne coûte peu. Personne ne compte les heures, donc personne ne voit celles qui ne servent à rien.'],
+  ['Le gaspillage passe inaperçu', 'des portions un peu trop généreuses, des restes jetés, une marchandise qui disparaît. Chaque petit écart paraît sans importance.'],
+  ['Les prix suivent le voisin', 'on regarde ce que demande la rue d’à côté, rarement ce que le plat coûte vraiment à fabriquer.'],
+];
+const four: [string, string, string, string][] = [
+  ['Connaissez le coût réel de chaque plat.', 'Fiche technique, food cost, marge, prix conseillé : c’est exactement ce que fait ', ROUTES.profit.fr, 'Amplify Profit'],
+  ['Voyez ce qui entre et ce qui sort.', 'Chaque employé a son code sur ', ROUTES.pos.fr, 'Amplify POS'],
+  ['Mesurez le personnel en pourcentage du chiffre d’affaires.', 'Heures, coût de l’équipe, point mort : le chiffre à faire chaque jour pour être rentable, dans ', ROUTES.profit.fr, 'Amplify Profit'],
+  ['Remplissez la salle sans payer le prix fort.', 'Des commandes en direct et des clients qui reviennent, avec ', ROUTES.site.fr, 'Amplify Site'],
+];
+const fourTail = [
+  ', et vous voyez les marges bouger quand vos achats changent.',
+  ' : vous savez qui a encaissé quoi, et ce qui a vraiment été vendu.',
+  ', pour décider avant que les coûts n’augmentent, pas après.',
+  ' et Amplify Clients, plutôt que de laisser une commission de 30 % sur chaque commande.',
+];
+const note = 'Les montants sont des exemples qui illustrent le raisonnement, pas des prévisions : vos chiffres seront différents. Cet article n’est pas un conseil juridique ni fiscal ; pour vos contrats de travail et vos déclarations, adressez-vous à votre comptable. Les photos sont des illustrations, elles ne montrent ni de vrais clients ni l’équipe Amplify.';
+const reads = [{ href: ROUTES.blogCout.fr, title: 'Combien coûte vraiment votre plat ?', text: 'Le calcul de la marge, plat par plat.' }, { href: ROUTES.blogPlateforme.fr, title: 'Que reste-t-il d’une commande de 100 DH ?', text: 'Plateforme de livraison ou commande directe.' }];
+const question = 'Si vos achats augmentaient de 10 % et votre personnel de 30 % demain, que vous resterait-il à la fin du mois ? Le savez-vous aujourd’hui, au dirham près ?';
+---
+<Base lang={lang} page="blogCouts" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
+  <PageHero lang={lang} page="blogCouts" wa={wa}
+    h1="Les coûts bas cachent des défauts. Jusqu’au jour où ils montent."
+    lead="Au Maroc, un personnel peu cher fait oublier bien des inefficacités. Elles se voient le jour où les coûts augmentent." />
+
+  <article>
+  <div class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
+    <p class="text-xl text-muted">Beaucoup de restaurateurs regardent d’abord la caisse : combien avons-nous vendu aujourd’hui ? C’est normal, le chiffre d’affaires se voit tout de suite. Mais ce n’est pas ce que vous gardez.</p>
+  </div>
+
+  <PhotoBand name="metier-restaurant" dir="/img/photos" big="1600" w={1536} h={1024} alt="Une salle de restaurant bien remplie, avec des serveurs qui circulent entre les tables" kicker="Le piège" title="La salle est pleine. Et la marge ?" class="my-14 md:my-20" pos="50% 50%" />
+
+  <div class="mx-auto max-w-3xl px-4 sm:px-6">
+    <h2 class="text-2xl sm:text-4xl">On regarde la caisse, pas la facture</h2>
+    <div class="mt-6 rounded-3xl bg-mint p-6 sm:p-7">
+      <p class="display text-3xl text-green-deep sm:text-4xl">Bénéfice = chiffre d’affaires − coûts</p>
+      <p class="mt-3 text-lg">Il y a deux façons d’augmenter ce qu’il vous reste : vendre plus, ou dépenser moins. La plupart ne travaillent que la première.</p>
+    </div>
+    <p class="mt-6">Les ventes arrivent chaque jour, bien visibles. Les coûts arrivent en désordre : le fournisseur le lundi, le loyer en fin de mois, le gaz quand la facture tombe. Ils sont plus difficiles à suivre, alors on les laisse de côté. Et quand le personnel coûte peu, ce que l’on voit moins encore, ce sont les défauts qu’il couvre :</p>
+    <ul class="mt-6 space-y-4">
+      {hidden.map(([a, b]) => <li class="border-s-4 border-green ps-4"><strong>{a}</strong> {b}</li>)}
+    </ul>
+    <p class="mt-6">Tant que les coûts sont bas, tout cela tient. Ce n’est pas un défaut de caractère, c’est une situation confortable. Le risque est qu’elle change.</p>
+
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Un exemple : mêmes ventes, coûts qui montent</h2>
+    <p class="mt-5">Un restaurant qui encaisse 100 000 DH par mois. Ce sont des hypothèses, pas des prévisions : remplacez-les par vos vrais chiffres. Dans « demain », les achats augmentent de 10 % et le personnel de 30 %, par exemple si les contrats doivent être déclarés avec toutes leurs charges.</p>
+    <div class="mt-6 space-y-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8" data-scrub="steps">
+      {scen.map((sc) => (
+        <div class="step fn-row">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4"><span class="font-semibold">{sc.name}</span><strong class="display whitespace-nowrap text-3xl"><span data-count={sc.rest}>{fmt(sc.rest)}</span> DH</strong></div>
+          <div class="mt-3 h-6 overflow-hidden rounded-full bg-chalk" aria-hidden="true">
+            <div class="fn-bar flex h-full w-full overflow-hidden rounded-full">{sc.parts.map(([, v, cls]) => <div class={cls} style={`width:${v}%`}></div>)}</div>
+          </div>
+          <p class="mt-2 text-sm text-muted">{sc.parts.map(([k, v]) => `${k} ${fmt(v * 1000)}\u00a0DH`).join(' · ')}</p>
+        </div>
+      ))}
+      <ul class="flex flex-wrap gap-x-4 gap-y-1 border-t border-line pt-4 text-sm text-muted" aria-hidden="true">
+        {legend.map(([k, cls]) => <li class="flex items-center gap-1.5"><span class={`size-3 rounded-full ${cls}`}></span>{k}</li>)}
+      </ul>
+    </div>
+
+    <div class="mt-8 rounded-3xl bg-navy p-7 text-white sm:p-9">
+      <p class="display text-4xl sm:text-5xl">Mêmes ventes.<br /><span class="text-green">41 % de bénéfice en moins.</span></p>
+      <p class="mt-4 text-lg text-white/80">De 18 000 DH à 10 600 DH par mois, sans un client de moins. Personne n’a rien fait de mal : les coûts ont simplement bougé.</p>
+    </div>
+
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Vendre plus ne suffit pas</h2>
+    <p class="mt-5">Pour retrouver ces 7 400 DH uniquement avec des ventes, il faudrait encaisser environ 12 700 DH de plus chaque mois (en gardant le personnel inchangé, avec 58 % de marge après les ingrédients). C’est beaucoup de clients en plus. Comparez avec le gaspillage :</p>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-7">
+        <p class="font-semibold">Vendre plus</p>
+        <p class="mt-1 text-muted">Pour regagner 7 400 DH, il faut encaisser en plus</p>
+        <p class="display mt-3 text-4xl text-green-deep"><span data-count="12700">12 700</span> DH par mois</p>
+      </div>
+      <div class="rounded-3xl bg-mint p-6 sm:p-7">
+        <p class="font-semibold">Gaspiller moins</p>
+        <p class="mt-1 text-muted">Ramener les ingrédients de 38 % à 35 % des ventes</p>
+        <p class="display mt-3 text-4xl text-green-deep"><span data-count="3000">3 000</span> DH par mois</p>
+      </div>
+    </div>
+    <p class="mt-5">Un dirham de gaspillage évité reste un dirham entier. Un dirham encaissé en plus, lui, ne vous laisse que quelques centimes après les coûts : dans cet exemple, 18 sur 100.</p>
+
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Ce qui est probablement en train de changer</h2>
+    <p class="mt-5">Les prix d’achat montent déjà : les produits alimentaires, en particulier, bougent d’une semaine à l’autre. Et vos clients n’acceptent pas toujours facilement une hausse de prix, ce qui limite votre marge de manœuvre côté carte.</p>
+    <p class="mt-4">On peut aussi s’attendre, dans les prochaines années, à davantage de contrôle sur les déclarations fiscales et sur les contrats de travail. Je ne suis pas juriste et je ne connais pas votre situation : parlez-en à votre comptable. Mais une chose est sûre : plus vous connaissez vos coûts, moins le changement vous surprend.</p>
+
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Quatre réflexes pour rendre votre restaurant sain dès maintenant</h2>
+    <p class="mt-5">Pas besoin d’attendre. Commencez par ce qui vous donne des chiffres :</p>
+    <ul class="mt-6 space-y-4">
+      {four.map(([a, b, href, name], i) => <li class="border-s-4 border-green ps-4"><strong>{a}</strong> {b}<a href={href} class="font-semibold text-green-deep underline underline-offset-4">{name}</a>{fourTail[i]}</li>)}
+    </ul>
+    <p class="mt-6">Amplify ne remplace pas votre comptable : nous vous donnons les chiffres pour décider. <a href={ROUTES.restaurants.fr} class="font-semibold text-green-deep underline underline-offset-4">Voyez par où commencer</a> selon votre type d’établissement.</p>
+
+    <BlogEnd question={question} note={note} reads={reads} />
+  </div>
+  </article>
+
+  <FinalCta lang={lang} page="blogCouts" wa={wa} h2="Parlons de vos coûts." p="Nous calculons avec vous ce qu’il vous reste vraiment, gratuitement, à partir de vos achats et de votre caisse." />
+</Base>
+<CountUp />
