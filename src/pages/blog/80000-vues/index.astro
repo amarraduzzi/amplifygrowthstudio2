@@ -14,10 +14,20 @@ const url = abs(ROUTES.blogVues.fr);
 
 const schema = [{
   '@context': 'https://schema.org', '@type': 'Article', headline: '80 000 vues, combien de clients ?',
-  description, inLanguage: 'fr', datePublished: '2026-10-11', mainEntityOfPage: url,
+  description, inLanguage: 'fr', image: abs('/img/blog/vues-1-hero-1376.webp'), datePublished: '2026-10-11', mainEntityOfPage: url,
   author: { '@type': 'Organization', name: 'Amplify Growth Studio' },
   publisher: { '@type': 'Organization', name: 'Amplify Growth Studio' },
 }];
+
+// AI-generated illustrations (ambience only, not real clients), see the note at the end of the article.
+const IMG = {
+  hero: ['vues-1-hero', 'Un patron de café à Rabat, seul à une table dans sa salle presque vide, son téléphone à la main'],
+  cout: ['vues-2-cout', 'Un créateur de contenu filme un plateau de plats marocains avec un smartphone sur stabilisateur, le patron derrière lui les bras croisés'],
+  terrasse: ['vues-3-terrasse', 'Une terrasse de café presque vide à Rabat, un thé à la menthe et un téléphone posés sur une table en mosaïque'],
+  cuisine: ['vues-4-cuisine', 'Dans une cuisine de restaurant, un chef pèse une portion sur une balance pendant qu’une collègue contrôle une liste'],
+  apres: ['vues-5-apres', 'Deux jeunes regardent un téléphone dans une rue de Rabat au crépuscule, devant l’entrée éclairée d’un restaurant'],
+  chiffres: ['vues-6-chiffres', 'Le patron d’un restaurant, au comptoir après la fermeture, consulte ses chiffres sur une tablette'],
+} as const;
 
 const costs: [string, string][] = [
   ['Agence ou créateur de contenu', '3 000 DH / mois'],
@@ -42,10 +52,16 @@ const after = [
     lead="Votre vidéo a été vue 80 000 fois. Ça fait plaisir. Mais ces vues ne sont presque jamais gratuites. Regardons la facture complète, du premier dirham au dernier client." />
 
   <article class="mx-auto max-w-3xl px-4 pb-8 pt-16 sm:px-6 md:pt-24">
-    <p class="text-xl text-muted">Il y a eu le tournage, souvent une agence, et de l’argent versé à Meta pour que la vidéo soit montrée. Voici un exemple chiffré, avec des hypothèses. Remplacez-les par ce que vous payez vraiment.</p>
+    <figure class="mb-10 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src={`/img/blog/${IMG.hero[0]}-1376.webp`} srcset={`/img/blog/${IMG.hero[0]}-800.webp 800w, /img/blog/${IMG.hero[0]}-1376.webp 1376w`} sizes="(min-width: 768px) 768px, 100vw" alt={IMG.hero[1]} width="1376" height="768" loading="eager" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
+        <p class="text-xl text-muted">Il y a eu le tournage, souvent une agence, et de l’argent versé à Meta pour que la vidéo soit montrée. Voici un exemple chiffré, avec des hypothèses. Remplacez-les par ce que vous payez vraiment.</p>
 
     <!-- cost -->
     <h2 class="mt-16 text-4xl sm:text-5xl">Ce que la vidéo coûte</h2>
+    <figure class="mt-8 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src={`/img/blog/${IMG.cout[0]}-1376.webp`} srcset={`/img/blog/${IMG.cout[0]}-800.webp 800w, /img/blog/${IMG.cout[0]}-1376.webp 1376w`} sizes="(min-width: 768px) 768px, 100vw" alt={IMG.cout[1]} width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
     <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
       <dl>
         {costs.map(([k, v]) => (
@@ -60,6 +76,9 @@ const after = [
     <!-- return -->
     <h2 class="mt-16 text-4xl sm:text-5xl">Ce que la vidéo rapporte</h2>
     <p class="mt-5">Supposons que ça marche : <strong>80 000 vues</strong>. Voilà ce qu’il en reste.</p>
+    <figure class="mt-8 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src={`/img/blog/${IMG.terrasse[0]}-1376.webp`} srcset={`/img/blog/${IMG.terrasse[0]}-800.webp 800w, /img/blog/${IMG.terrasse[0]}-1376.webp 1376w`} sizes="(min-width: 768px) 768px, 100vw" alt={IMG.terrasse[1]} width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
     <div class="mt-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8">
       <dl>
         {gains.map(([k, v]) => (
@@ -80,6 +99,9 @@ const after = [
     <!-- other side -->
     <h2 class="mt-16 text-4xl sm:text-5xl">L’autre côté de la balance</h2>
     <p class="mt-5">Imaginons un chiffre d’affaires de 200 000 DH par mois. Que se passe-t-il si vous perdez 3 % de moins en gaspillage, en portions mal calibrées, en achats ou en écarts de caisse ?</p>
+    <figure class="mt-8 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src={`/img/blog/${IMG.cuisine[0]}-1376.webp`} srcset={`/img/blog/${IMG.cuisine[0]}-800.webp 800w, /img/blog/${IMG.cuisine[0]}-1376.webp 1376w`} sizes="(min-width: 768px) 768px, 100vw" alt={IMG.cuisine[1]} width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
     <div class="mt-6 rounded-3xl bg-mint p-7 sm:p-9">
       <p class="text-lg">3 % de 200 000 DH =</p>
       <p class="display mt-1 text-5xl text-green-deep sm:text-6xl">6 000 DH par mois</p>
@@ -91,6 +113,9 @@ const after = [
     <!-- what happens after: a real sequence -->
     <h2 class="mt-16 text-4xl sm:text-5xl">Ce qui se passe après la vidéo</h2>
     <p class="mt-5">Quelqu’un aime votre vidéo. Que fait-il ensuite ?</p>
+    <figure class="mt-8 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src={`/img/blog/${IMG.apres[0]}-1376.webp`} srcset={`/img/blog/${IMG.apres[0]}-800.webp 800w, /img/blog/${IMG.apres[0]}-1376.webp 1376w`} sizes="(min-width: 768px) 768px, 100vw" alt={IMG.apres[1]} width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
     <ol class="mt-6 space-y-4">
       {after.map(([a, b], i) => (
         <li class="flex gap-4 rounded-2xl bg-paper p-5 ring-1 ring-line">
@@ -113,8 +138,11 @@ const after = [
     <!-- take-away question -->
     <h2 class="mt-16 text-4xl sm:text-5xl">Une question à emporter</h2>
     <p class="mt-5 text-xl">Le mois prochain, ne regardez pas combien de vues vous avez eues. Regardez combien il reste de chaque tranche de 100 DH de chiffre d’affaires, après tous les coûts, agence et publicité comprises. Quel chiffre attendez-vous ? Et correspond-il à ce qui arrive sur votre compte ?</p>
+    <figure class="mt-8 overflow-hidden rounded-3xl ring-1 ring-line">
+      <img src={`/img/blog/${IMG.chiffres[0]}-1376.webp`} srcset={`/img/blog/${IMG.chiffres[0]}-800.webp 800w, /img/blog/${IMG.chiffres[0]}-1376.webp 1376w`} sizes="(min-width: 768px) 768px, 100vw" alt={IMG.chiffres[1]} width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
+    </figure>
 
-    <p class="mt-10 text-sm text-muted">Les montants de cet article sont des exemples qui illustrent le raisonnement. Vos chiffres réels peuvent être très différents, et c’est précisément pour cela qu’il vaut la peine de les regarder.</p>
+    <p class="mt-10 text-sm text-muted">Les montants de cet article sont des exemples qui illustrent le raisonnement. Vos chiffres réels peuvent être très différents, et c’est précisément pour cela qu’il vaut la peine de les regarder. Les photos sont des illustrations générées par IA, elles ne montrent ni de vrais clients ni l’équipe Amplify.</p>
   </article>
 
   <FinalCta lang={lang} page="blogVues" wa={wa}
