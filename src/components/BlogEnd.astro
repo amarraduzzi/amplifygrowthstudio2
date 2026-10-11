@@ -1,0 +1,30 @@
+---
+// Standard ending for every blog article: the take-away question, the reading notes and the next steps.
+// One component, so all articles end the same way. Do not write this block by hand in an article.
+import { ROUTES } from '../i18n/routes';
+interface Read { href: string; title: string; text: string }
+interface Props { question: string; note: string; reads?: Read[]; heading?: string }
+const { question, note, reads = [], heading = 'Une question à emporter' } = Astro.props;
+const long = question.length > 150;
+---
+<section class="mt-14 sm:mt-16" aria-labelledby="blog-end-title">
+  <div class="rounded-3xl bg-navy p-7 text-white sm:p-10">
+    <h2 id="blog-end-title" class="text-2xl text-green sm:text-3xl">{heading}</h2>
+    <p class:list={['mt-4 font-semibold leading-snug', long ? 'text-xl sm:text-2xl' : 'text-2xl sm:text-3xl']}>{question}</p>
+  </div>
+
+  {reads.length > 0 && (
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+      {reads.map((r) => (
+        <a href={r.href} class="block rounded-2xl bg-paper p-5 ring-1 ring-line transition-shadow hover:ring-2 hover:ring-green">
+          <span class="block text-sm text-muted">À lire aussi</span>
+          <span class="mt-1 block text-lg font-semibold text-green-deep">{r.title}</span>
+          <span class="mt-1 block text-muted">{r.text}</span>
+        </a>
+      ))}
+    </div>
+  )}
+
+  <p class="mt-6 border-s-4 border-line ps-4 text-base text-muted">{note}</p>
+  <p class="mt-6"><a href={ROUTES.blog.fr} class="font-semibold text-green-deep underline underline-offset-4">← Tous les articles</a></p>
+</section>

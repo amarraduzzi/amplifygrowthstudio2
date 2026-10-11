@@ -3,6 +3,7 @@
 // Figures are worked examples. The 30 % cap comes from the July 2025 settlement between Glovo Morocco and the Conseil de la concurrence.
 import Base from '../../../layouts/Base.astro';
 import PageHero from '../../../components/PageHero.astro';
+import BlogEnd from '../../../components/BlogEnd.astro';
 import FinalCta from '../../../components/FinalCta.astro';
 import PhotoBand from '../../../components/PhotoBand.astro';
 import CountUp from '../../../components/CountUp.astro';
@@ -31,7 +32,9 @@ const how = [
   ['Un menu simple avec un bouton de commande', 'sur WhatsApp ou sur une page à vous, pour que commander soit aussi facile que dans l’application.'],
   ['Une bonne fiche Google', 'pour que vos clients vous trouvent aussi sans la plateforme.'],
 ];
-const question = 'Combien de vos commandes viennent d’une plateforme ? Et savez-vous, pour chaque commande, ce qu’il vous en reste ?'.split(' ');
+const note = 'Les montants sont des exemples (35 % d’ingrédients, 3 DH d’emballage, 15 DH par livraison, 20 commandes par jour) ; les vôtres seront différents. Les photos sont des illustrations, elles ne montrent ni de vrais clients ni l’équipe Amplify.';
+const reads = [{ href: ROUTES.blogCout.fr, title: 'Combien coûte vraiment votre plat ?', text: 'Le calcul de la marge, plat par plat.' },{ href: ROUTES.site.fr, title: 'Amplify Site', text: 'Pour recevoir des commandes en direct.' }];
+const question = 'Combien de vos commandes viennent d’une plateforme ? Et savez-vous, pour chaque commande, ce qu’il vous en reste ?';
 ---
 <Base lang={lang} page="blogPlateforme" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
   <PageHero lang={lang} page="blogPlateforme" wa={wa}
@@ -46,7 +49,7 @@ const question = 'Combien de vos commandes viennent d’une plateforme ? Et save
   <PhotoBand name="metier-snack" dir="/img/photos" big="1600" w={1536} h={1024} alt="Le comptoir très animé d’un snack : des cuisiniers préparent des plats pendant que des clients attendent" kicker="Le piège" title="Beaucoup de commandes. Combien de bénéfice ?" class="my-14 md:my-20" pos="50% 40%" />
 
   <div class="mx-auto max-w-3xl px-4 sm:px-6">
-    <h2 class="text-3xl sm:text-5xl">L’exemple : une commande de 100 DH</h2>
+    <h2 class="text-2xl sm:text-4xl">L’exemple : une commande de 100 DH</h2>
     <p class="mt-5">Ce sont des hypothèses. Remplacez-les par ce que vous payez vraiment, commission de votre contrat comprise.</p>
     <div class="mt-6 space-y-6 rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-8" data-scrub="steps">
       {scen.map((sc) => (
@@ -69,11 +72,11 @@ const question = 'Combien de vos commandes viennent d’une plateforme ? Et save
       <p class="mt-4 text-lg text-white/80">Et encore +15 DH si vous livrez vous-même, avec un livreur à 15 DH par course.</p>
     </div>
 
-    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Pourquoi 30 % ?</h2>
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Pourquoi 30 % ?</h2>
     <p class="mt-5">En juillet 2025, la plus grande plateforme du pays, Glovo, a conclu un accord avec le Conseil de la concurrence : fin des clauses d’exclusivité, plafonnement de la commission à 30 %, et révision des contrats qui dépassaient ce seuil (<a href="https://conseil-concurrence.ma/wp-content/uploads/2025/07/Communique-de-presse-Conseil-FR-Glovo.pdf" target="_blank" rel="noopener" class="font-semibold text-green-deep underline underline-offset-4">communiqué du Conseil</a>). Avant cela, la presse évoquait 31 % hors taxes, soit plus de 37 % TTC.</p>
     <p class="mt-4">30 % est donc un plafond, pas un tarif : votre contrat peut être plus bas. Vérifiez aussi si votre pourcentage est hors taxes ou TTC, car cela change le calcul. Les autres plateformes ont leurs propres conditions.</p>
 
-    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Ce que cela change en un an</h2>
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Ce que cela change en un an</h2>
     <p class="mt-5">Imaginons 20 commandes par jour sur la plateforme. Vous réussissez à en passer seulement 5 en direct.</p>
     <div class="mt-6 grid gap-4 sm:grid-cols-2">
       <div class="rounded-3xl bg-paper p-6 ring-1 ring-line sm:p-7">
@@ -89,7 +92,7 @@ const question = 'Combien de vos commandes viennent d’une plateforme ? Et save
     </div>
     <p class="mt-5">Et les 15 autres commandes restent sur la plateforme.</p>
 
-    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Là où une plateforme est précieuse</h2>
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Là où une plateforme est précieuse</h2>
     <p class="mt-5">Ce n’est pas un article contre les plateformes. Elles apportent des clients que vous ne connaissez pas encore, des livreurs, et une application où les gens sont déjà.</p>
     <figure class="mt-6 overflow-hidden rounded-3xl ring-1 ring-line">
       <img src="/img/blog/vues-5-apres-1376.webp" srcset="/img/blog/vues-5-apres-800.webp 800w, /img/blog/vues-5-apres-1376.webp 1376w" sizes="(min-width: 768px) 768px, 100vw" alt="Deux jeunes regardent un téléphone dans une rue de Rabat, devant l’entrée éclairée d’un restaurant" width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover" />
@@ -97,7 +100,7 @@ const question = 'Combien de vos commandes viennent d’une plateforme ? Et save
     <p class="mt-6">Comparez avec l’<a href={ROUTES.blogVues.fr} class="font-semibold text-green-deep underline underline-offset-4">article précédent</a> : un nouveau client venu d’une vidéo virale vous coûtait environ 250 DH de marketing. Via une plateforme, la première commande vous coûte 30 DH de commission. C’est peu.</p>
     <p class="mt-4"><strong>Le problème commence à la deuxième, à la dixième, à la vingtième commande du même client.</strong> Chaque fois, vous payez 30 % de plus, alors qu’il vous connaît et pourrait vous appeler directement. Payez la plateforme pour trouver le client, pas pour le garder à vie.</p>
 
-    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Comment amener vos clients à commander en direct</h2>
+    <h2 class="mt-14 text-2xl sm:mt-16 sm:text-4xl">Comment amener vos clients à commander en direct</h2>
     <p class="mt-5">Sans les brusquer, et sans abîmer la relation avec la plateforme :</p>
     <ul class="mt-6 space-y-4">
       {how.map(([a, b]) => <li class="border-s-4 border-green ps-4"><strong>{a}</strong> {b}</li>)}
@@ -108,11 +111,7 @@ const question = 'Combien de vos commandes viennent d’une plateforme ? Et save
     </div>
     <p class="mt-5"><strong>Attention :</strong> lisez votre contrat pour savoir ce que vous avez le droit de faire, notamment pour contacter les clients de la plateforme. Je ne connais pas le vôtre.</p>
 
-    <h2 class="mt-14 text-3xl sm:mt-16 sm:text-5xl">Une question à emporter</h2>
-    <p class="mt-5 text-2xl font-semibold leading-snug sm:text-4xl" data-scrub="words">{question.map((w) => <><span class="word">{w}</span>{' '}</>)}</p>
-
-    <p class="mt-10 text-sm text-muted">Les montants sont des exemples (35 % d’ingrédients, 3 DH d’emballage, 15 DH par livraison, 20 commandes par jour) ; les vôtres seront différents. Les photos sont des illustrations, elles ne montrent ni de vrais clients ni l’équipe Amplify. À lire aussi : <a href={ROUTES.blogCout.fr} class="font-semibold text-green-deep underline underline-offset-4">Combien coûte vraiment votre plat ?</a> et <a href={ROUTES.site.fr} class="font-semibold text-green-deep underline underline-offset-4">Amplify Site</a>, pour recevoir des commandes en direct.</p>
-    <p class="mt-6"><a href={ROUTES.blog.fr} class="font-semibold text-green-deep underline underline-offset-4">← Tous les articles</a></p>
+    <BlogEnd question={question} note={note} reads={reads} />
   </div>
   </article>
 
