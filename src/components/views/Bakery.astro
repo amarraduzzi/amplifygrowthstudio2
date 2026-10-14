@@ -1,0 +1,155 @@
+---
+// Pâtisseries, boulangeries and traiteurs. The memorable element is the hero: the cost of a croissant
+// computed live from the price of butter, through the house dough (the same calculation Amplify does
+// with its preparations). Then the real screens of the demo pâtisserie: production plan, recipe card,
+// catering order, selling by weight. Only what exists today; the demo data is labelled as such.
+import Base from '../../layouts/Base.astro';
+import Faq from '../Faq.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import { signupUrl } from '../../config';
+import { tr, langOf } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(langOf(Astro.url));
+const title = tt('Logiciel de caisse et de production pour pâtisserie au Maroc | Amplify');
+const description = tt('Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, plan de production du jour, commandes traiteur avec acompte et facture, vente au poids. Pour pâtisseries, boulangeries et traiteurs au Maroc.');
+const wa = tt('Bonjour, j’ai une pâtisserie et je voudrais voir Amplify.');
+const faq = [
+  [tt('Mes recettes sont dans Excel. Faut-il tout retaper ?'), tt('Non. Les recettes s’importent en une fois depuis Excel ou CSV : une ligne par ingrédient, avec le produit, la quantité et l’unité. Les préparations comme la pâte feuilletée ou la crème pâtissière sont reconnues. Envoyez-nous votre fichier, nous le mettons en forme avec vous.')],
+  [tt('Je vends à la pièce et au kilo. Ça marche ?'), tt('Oui. Un produit vendu au poids a un prix au kilo : la caisse demande le poids lu sur la balance, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.')],
+  [tt('Les commandes traiteur passent-elles dans la comptabilité ?'), tt('Oui. Quand la commande est payée, la facture est émise par le système de la caisse : numérotée, avec l’ICE de votre client si c’est une société, et comptée dans le Z du jour.')],
+  [tt('J’ai un laboratoire et plusieurs boutiques.'), tt('Aujourd’hui, le laboratoire et la boutique partagent un même stock. Le transfert de marchandise entre un dépôt et plusieurs boutiques n’est pas encore disponible : parlons de votre organisation avant de commencer.')],
+  [tt('La caisse est-elle reliée à la balance ?'), tt('Pas automatiquement : la vendeuse tape le poids affiché sur la balance, en grammes ou en kilos. Le prix est calculé par la caisse.')],
+];
+const schema = [serviceSchema(tt('Amplify pour pâtisseries'), description, abs(ROUTES.bakery[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
+const shot = 'w-full rounded-[1.25rem] bg-white shadow-[0_40px_80px_-40px_rgba(0,30,62,0.55)] ring-1 ring-line';
+// the demo recipe behind the hero (DH): dough = flour 9 + milk 3,60 + sugar 0,77 + yeast 1,60 + salt 0,06 + butter 0,55 kg;
+// a batch of 30 croissants = one batch of dough + 2 eggs (2,60). Sold 8 DH incl. 10 % VAT.
+const blocks = [
+  { k: 'prod', img: 'pat-production', w: 1200, h: 491, alt: tt('Plan de production du lendemain dans Amplify'),
+    h2: tt('Combien en préparer demain ?'), p: tt('Chaque matin, la liste de ce qu’il faut produire : les ventes du même jour de la semaine, plus les commandes traiteur, moins ce qui est déjà en vitrine.'),
+    pts: [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les invendus du soir se voient en dirhams'), tt('Les pièces faites à l’avance et les préparations faites à la minute')] },
+  { k: 'cat', img: 'pat-traiteur', w: 1200, h: 885, alt: tt('Commande traiteur avec acompte dans Amplify'),
+    h2: tt('Le traiteur, du devis à la facture.'), p: tt('Mariage, séminaire, fiançailles : le devis part sur WhatsApp ou s’imprime. Le client accepte, la commande entre dans le plan de production de son jour.'),
+    pts: [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')] },
+  { k: 'kg', img: 'pat-poids', w: 896, h: 644, alt: tt('Vente au poids sur la caisse Amplify'),
+    h2: tt('Au kilo comme à la pièce.'), p: tt('Gâteaux secs, chocolats, msemen : la caisse demande le poids, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.'),
+    pts: [tt('Prix au kilo dans le menu'), tt('250 g, 500 g, 1 kg en un geste'), tt('Le ticket affiche « 0,450 kg »')] },
+];
+---
+<Base lang={lang} page="bakery" title={title} description={description} wa={wa} schema={schema}>
+  <!-- hero: the cost of a croissant, from the price of butter -->
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1fr] lg:gap-14">
+    <div>
+      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><Icon name="cake" class="size-4 text-green-deep" />{tt('Pâtisseries, boulangeries, traiteurs')}</p>
+      <h1 class="mt-5 text-[clamp(2.9rem,5.6vw,5rem)]">
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Combien vous coûte')}</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{tt('vraiment un croissant ?')}</span></span>
+      </h1>
+      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Le beurre augmente, la pâte aussi, et vos prix restent les mêmes. Amplify calcule le coût de chaque pièce à partir de vos recettes et de vos préparations maison, et vous dit combien produire demain.')}</p>
+      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+        <WaButton text={wa} label={tt('Voir une démo pâtisserie')} where="bakery-hero" class="px-7 text-lg" />
+        <a href={signupUrl(lang, 'profit')} class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg font-semibold hover:border-navy">{tt('Essai gratuit 14 jours')}</a>
+      </div>
+    </div>
+
+    <div class="fade-up relative isolate overflow-hidden rounded-[2rem] bg-navy p-6 text-white sm:p-8" style="--d:250ms" data-croissant>
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_100%_0%,rgba(5,185,98,.28),transparent_70%)]" aria-hidden="true"></span>
+      <label class="block">
+        <span class="flex items-baseline justify-between gap-3"><span class="font-semibold">{tt('Prix du beurre')}</span><span class="display text-3xl tabular-nums text-green" dir="ltr"><span data-v="butter">95</span> DH/kg</span></span>
+        <input type="range" min="60" max="140" step="1" value="95" class="mt-3 w-full accent-[#05B962]" data-butter aria-label={tt('Prix du beurre')} />
+      </label>
+      <ol class="mt-7 space-y-3">
+        <li class="cr-node flex items-center justify-between gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 ring-1 ring-white/10">
+          <span><span class="block text-sm text-white/60">{tt('Préparation maison')}</span><span class="font-semibold">{tt('Pâte levée feuilletée, 2,1 kg')}</span></span>
+          <span class="whitespace-nowrap font-bold tabular-nums" dir="ltr"><span data-v="dough">67,28</span> DH</span>
+        </li>
+        <li class="ms-6 border-s-2 border-dashed border-green/40 ps-4 text-sm text-white/60">{tt('+ dorure à l’œuf, pour une fournée de 30')}</li>
+        <li class="cr-node flex items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 text-navy">
+          <span><span class="block text-sm text-muted">{tt('Coût d’un croissant')}</span><span class="display text-4xl tabular-nums" dir="ltr"><span data-v="piece">2,33</span> DH</span></span>
+          <span class="text-end"><span class="block text-sm text-muted">{tt('Marge à 8 DH')}</span><span class="text-xl font-bold tabular-nums text-green-deep" dir="ltr" data-margin><span data-v="margin">4,94</span> DH</span></span>
+        </li>
+      </ol>
+      <p class="mt-5 text-xs text-white/50">{tt('Exemple calculé avec une recette de démonstration (TVA 10 %). Avec vos recettes, Amplify fait ce calcul pour chaque produit, à chaque nouveau prix d’achat.')}</p>
+    </div>
+  </section>
+
+  <!-- the recipe card and the margins -->
+  <section class="border-y border-line bg-paper py-24">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <div>
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une recette')}</span><span class="block text-green-deep">{tt('dans la recette.')}</span></h2>
+        <p class="mt-5 max-w-md text-lg text-muted">{tt('La pâte feuilletée, la crème pâtissière ou la pâte sucrée sont des préparations : vous les décrivez une fois, puis vous les utilisez dans vos croissants, mille-feuilles et tartes. Quand le prix d’un ingrédient change, tout suit.')}</p>
+        <ul class="mt-7 space-y-3">
+          {[tt('Coût par fournée et par pièce'), tt('Prix conseillé selon votre objectif de marge'), tt('Jusqu’à six niveaux : pâte, viennoiserie, plateau')].map(x => <li class="flex items-center gap-3 font-semibold"><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}
+        </ul>
+      </div>
+      <div class="relative">
+        <img src="/img/pat-marges-1200.webp" srcset="/img/pat-marges-700.webp 700w, /img/pat-marges-1200.webp 1200w" sizes="(min-width: 1024px) 620px, 100vw" alt={tt('Marges par produit dans Amplify')} width="1200" height="513" loading="lazy" class={shot} />
+        <img src="/img/pat-preparation-600.webp" srcset="/img/pat-preparation-600.webp 600w, /img/pat-preparation-1000.webp 1000w" sizes="(min-width: 1024px) 300px, 55vw" alt={tt('Fiche d’une préparation maison dans Amplify')} width="1000" height="1013" loading="lazy" class={`${shot} relative -mt-16 ms-auto w-[55%] sm:-mt-24 sm:w-[48%]`} />
+      </div>
+    </div>
+  </section>
+
+  <!-- production, catering, weight -->
+  {blocks.map((b, i) => (
+    <section id={b.k === 'cat' ? 'traiteur' : b.k === 'kg' ? 'poids' : 'production'} class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
+      <div class={i % 2 ? 'lg:order-2' : ''}>
+        <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{b.h2}</h2>
+        <p class="mt-5 max-w-md text-lg text-muted">{b.p}</p>
+        <ul class="mt-6 space-y-3">
+          {b.pts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}
+        </ul>
+      </div>
+      <img src={`/img/${b.img}-${b.w === 896 ? 900 : 1200}.webp`} srcset={`/img/${b.img}-${b.w === 896 ? 560 : 700}.webp ${b.w === 896 ? 560 : 700}w, /img/${b.img}-${b.w === 896 ? 900 : 1200}.webp ${b.w}w`} sizes="(min-width: 1024px) 560px, 100vw" alt={b.alt} width={b.w} height={b.h} loading="lazy" class={`${shot} ${b.k === 'kg' ? 'mx-auto max-w-md bg-[#0B1A2E]' : ''}`} />
+    </section>
+  ))}
+
+  <!-- recipes from Excel -->
+  <section class="px-4 sm:px-6">
+    <div class="mx-auto flex max-w-6xl flex-col items-start gap-6 rounded-[2rem] bg-mint px-6 py-10 md:flex-row md:items-center md:px-12">
+      <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-navy text-green"><Icon name="box" class="size-8" /></span>
+      <div class="flex-1">
+        <h2 class="text-3xl sm:text-4xl">{tt('Vos recettes sont dans Excel ?')}</h2>
+        <p class="mt-2 max-w-2xl text-lg text-navy/75">{tt('Envoyez-nous le fichier. Les recettes, les préparations et les ingrédients entrent en une fois, avec un aperçu avant d’enregistrer. Vous ajoutez ensuite vos prix d’achat.')}</p>
+      </div>
+      <WaButton text={tt('Bonjour, j’ai mes recettes dans Excel. Comment les mettre dans Amplify ?')} label={tt('Envoyer mon fichier')} where="bakery-excel" class="px-6" />
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} wa={wa} />
+
+  <section class="px-4 pb-24 sm:px-6">
+    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Voyez votre pâtisserie')}</span><span class="block text-green">{tt('dans Amplify.')}</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Nous vous montrons une pâtisserie de démonstration, puis nous mettons vos propres recettes en place. Caisse, marges, production et traiteur dans un seul système.')}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <WaButton text={wa} label={tt('Voir une démo pâtisserie')} where="bakery-final" class="px-8 text-lg" />
+        <a href={ROUTES.profit[lang]} class="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 text-lg font-semibold hover:border-white">{tt('Voir Amplify Profit')}</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // the demo recipe: dough = 15,03 DH + 0,55 kg of butter; 30 croissants = dough + 2,60 DH of egg; sold 8 DH incl. 10 % VAT
+  document.querySelectorAll<HTMLElement>('[data-croissant]').forEach((root) => {
+    const input = root.querySelector<HTMLInputElement>('[data-butter]')!;
+    const v = (k: string) => root.querySelector<HTMLElement>(`[data-v="${k}"]`)!;
+    const fmt = (n: number) => n.toFixed(2).replace('.', ',');
+    const run = () => {
+      const b = Number(input.value);
+      const dough = 15.03 + 0.55 * b, piece = (dough + 2.6) / 30, margin = 8 / 1.1 - piece;
+      v('butter').textContent = String(b);
+      v('dough').textContent = fmt(dough);
+      v('piece').textContent = fmt(piece);
+      v('margin').textContent = fmt(margin);
+    };
+    input.addEventListener('input', run);
+    run();
+  });
+</script>

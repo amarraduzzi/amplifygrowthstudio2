@@ -199,7 +199,7 @@ export const fr = {
     },
     faq: [
       ['Combien ça coûte ?', 'Les systèmes ont des prix publics : Amplify POS dès 199 DH HT par mois, Amplify Profit dès 249 DH HT, avec 14 jours gratuits et sans engagement. Pour un site ou le marketing, demandez un devis sur WhatsApp.'],
-      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Nous formons votre équipe, sur place à Rabat ou en vidéo.'],
+      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français, en arabe et en anglais, avec de grands boutons. Nous formons votre équipe, sur place à Rabat ou en vidéo.'],
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. La gestion des marges, du stock et de l’équipe fonctionne aussi sans notre caisse.'],
       ['Vous travaillez seulement à Rabat ?', 'Notre équipe est à Rabat. Pour le reste du Maroc, écrivez-nous et nous voyons ensemble comment faire.'],      ['Faut-il acheter du matériel ?', 'Non. Un PC, une tablette ou un téléphone avec Chrome suffit pour la caisse. Pour imprimer, il faut une imprimante ticket standard.'],
       ['Mes données m’appartiennent ?', 'Oui. Vous exportez vos ventes quand vous voulez, et l’abonnement est sans engagement.'],
@@ -302,7 +302,7 @@ export const fr = {
       ],
     },
     faq: [
-      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français et en arabe, avec de grands boutons. Chaque employé a son code personnel. Nous formons votre équipe, sur place à Rabat ou en vidéo.'],
+      ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français, en arabe et en anglais, avec de grands boutons. Chaque employé a son code personnel. Nous formons votre équipe, sur place à Rabat ou en vidéo.'],
       ['Que se passe-t-il si internet coupe ?', 'La caisse continue de prendre et d’encaisser les commandes. Tout se synchronise dès que la connexion revient.'],
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. Amplify Profit (marges, stock, équipe, charges) fonctionne aussi seul, sans notre caisse.'],
       ['Combien ça coûte ?', 'Amplify POS dès 199 DH HT par mois, Amplify Profit dès 249 DH HT par mois. Essai gratuit 14 jours, sans engagement.'],
@@ -382,7 +382,7 @@ export const fr = {
     faq: [
       ['Par où commencer ?', 'Par ce qui vous coûte le plus. Souvent, c’est la marge ou les erreurs de commande. Nous le regardons ensemble au premier rendez-vous.'],
       ['Ça marche pour un café ou un snack ?', 'Oui. La caisse gère le comptoir, les tables, l’emporter et la livraison.'],
-      ['Mes employés préfèrent l’arabe.', 'La caisse et l’écran cuisine existent en français et en arabe. Chaque poste choisit sa langue.'],
+      ['Mes employés préfèrent l’arabe.', 'La caisse et l’écran cuisine existent en français, en arabe et en anglais. Chaque poste choisit sa langue.'],
       ['Je dois tout changer d’un coup ?', 'Non. Vous pouvez commencer par un seul module, par exemple la gestion des marges, et garder le reste.'],
     ],
     final: { h2: 'Commençons par votre plus gros problème.', p: 'Expliquez-nous en un message, nous vous répondons avec une proposition simple.' },

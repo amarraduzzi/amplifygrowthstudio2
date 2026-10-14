@@ -199,7 +199,7 @@ export const en: Copy = {
     },
     faq: [
       ['How much does it cost?', 'Our systems have public prices: Amplify POS from 199 DH excl. VAT per month, Amplify Profit from 249 DH excl. VAT, with 14 days free and no commitment. For a website or marketing, ask for a quote on WhatsApp.'],
-      ['Will my team find their way around?', 'The POS is in French and Arabic, with big buttons. We train your team, on site in Rabat or by video.'],
+      ['Will my team find their way around?', 'The POS is in French, Arabic and English, with big buttons. We train your team, on site in Rabat or by video.'],
       ['Can I keep my current POS?', 'Yes. Margin, stock and team management also works without our POS.'],
       ['Do you only work in Rabat?', 'Our team is in Rabat. For the rest of Morocco, message us and we’ll work out how together.'],      ['Do I need to buy hardware?', 'No. A PC, tablet or phone with Chrome is enough for the POS. To print receipts, a standard receipt printer.'],
       ['Is my data mine?', 'Yes. You export your sales whenever you like, and the subscription has no commitment.'],
@@ -302,7 +302,7 @@ export const en: Copy = {
       ],
     },
     faq: [
-      ['Will my team find their way around?', 'The POS is in French and Arabic, with big buttons. Every employee has a personal code. We train your team, on site in Rabat or by video.'],
+      ['Will my team find their way around?', 'The POS is in French, Arabic and English, with big buttons. Every employee has a personal code. We train your team, on site in Rabat or by video.'],
       ['What happens if the internet goes down?', 'The POS keeps taking orders and payments. Everything syncs as soon as the connection is back.'],
       ['Can I keep my current POS?', 'Yes. Amplify Profit (margins, stock, team, costs) also works on its own, without our POS.'],
       ['How much does it cost?', 'Amplify POS from 199 DH excl. VAT per month, Amplify Profit from 249 DH excl. VAT per month. 14-day free trial, no commitment.'],
@@ -382,7 +382,7 @@ export const en: Copy = {
     faq: [
       ['Where do I start?', 'With what costs you the most. Often that’s the margin or order mistakes. We look at it together at the first meeting.'],
       ['Does it work for a café or a snack bar?', 'Yes. The POS handles the counter, tables, takeaway and delivery.'],
-      ['My staff prefer Arabic.', 'The POS and the kitchen display are available in French and Arabic. Each station chooses its language.'],
+      ['My staff prefer Arabic.', 'The POS and the kitchen display are available in French, Arabic and English. Each station chooses its language.'],
       ['Do I have to change everything at once?', 'No. You can start with a single module, for example margin management, and keep the rest.'],
     ],
     final: { h2: 'Let’s start with your biggest problem.', p: 'Explain it in one message and we’ll reply with a simple proposal.' },

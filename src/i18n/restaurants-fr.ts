@@ -67,7 +67,7 @@ export const rsFr = {
   faq: [
     ['Par où commencer ?', 'Par ce qui vous coûte le plus. Faites le diagnostic sur cette page, ou décrivez-nous votre situation sur WhatsApp. Souvent, c’est la marge ou les erreurs de commande.'],
     ['Ça marche pour un café ou un snack ?', 'Oui. La caisse gère le comptoir, les tables, l’emporter et la livraison. Le marketing s’adapte à votre quartier.'],
-    ['Mes employés préfèrent l’arabe.', 'La caisse et l’écran cuisine existent en français et en arabe. Chaque employé choisit sa langue.'],
+    ['Mes employés préfèrent l’arabe.', 'La caisse et l’écran cuisine existent en français, en arabe et en anglais. Chaque employé choisit sa langue.'],
     ['Je dois tout changer d’un coup ?', 'Non. Vous pouvez commencer par un seul outil, par exemple Amplify Profit avec votre caisse actuelle, et ajouter le reste plus tard.'],
     ['Vous venez sur place ?', 'À Rabat et autour, oui : nous installons la caisse, importons votre carte et formons votre équipe sur place. Ailleurs au Maroc, nous faisons tout cela avec vous en appel vidéo.'],
   ] as [string, string][],

@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -13,6 +13,7 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   features: { fr: '/amplify-pos/fonctionnalites/', ar: '/ar/amplify-pos/fonctionnalites/', en: '/en/amplify-pos/features/' },
   marketing: { fr: '/marketing/', ar: '/ar/marketing/', en: '/en/marketing/' },
   restaurants: { fr: '/restaurants/', ar: '/ar/restaurants/', en: '/en/restaurants/' },
+  bakery: { fr: '/patisseries/', ar: '/ar/patisseries/', en: '/en/bakeries/' },
   contact: { fr: '/contact/', ar: '/ar/contact/', en: '/en/contact/' },
   // French-only article: the page passes langsOnly=['fr'] to Base, so ar/en are never linked or listed in hreflang
   blog: { fr: '/blog/', ar: '/blog/', en: '/blog/' },

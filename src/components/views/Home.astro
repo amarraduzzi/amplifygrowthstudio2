@@ -9,6 +9,7 @@ import Bars from '../Bars.astro';
 import Icon from '../Icon.astro';
 import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
+import ForWho from '../ForWho.astro';
 import MarginSim from '../MarginSim.astro';
 import LeakTicker from '../LeakTicker.astro';
 import ScaleBand from '../ScaleBand.astro';
@@ -130,6 +131,8 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
 
   <!-- PLACES: where to start, by problem -->
   <Sectors lang={lang} />
+
+  <ForWho lang={lang} />
 
   <!-- SUPPLIER: the morning delivery, the price that went up, the price negotiated -->
   <SupplierBand />

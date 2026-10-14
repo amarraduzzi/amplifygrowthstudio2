@@ -67,7 +67,7 @@ export const rsEn = {
   faq: [
     ['Where do I start?', 'With what costs you the most. Take the assessment on this page, or describe your situation to us on WhatsApp. Often it’s the margin or order mistakes.'],
     ['Does it work for a café or a snack bar?', 'Yes. The POS handles the counter, tables, takeaway and delivery. The marketing adapts to your neighbourhood.'],
-    ['My staff prefer Arabic.', 'The POS and the kitchen display are available in French and Arabic. Each employee chooses their language.'],
+    ['My staff prefer Arabic.', 'The POS and the kitchen display are available in French, Arabic and English. Each employee chooses their language.'],
     ['Do I have to change everything at once?', 'No. You can start with a single tool, for example Amplify Profit with your current POS, and add the rest later.'],
     ['Do you come on site?', 'In Rabat and the surrounding area, yes: we install the POS, import your menu and train your team on site. Elsewhere in Morocco, we do all of this with you on a video call.'],
   ] as [string, string][],

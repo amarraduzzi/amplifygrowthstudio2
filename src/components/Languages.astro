@@ -1,5 +1,5 @@
 ---
-// "Chaque employé travaille dans sa langue": a live till (French / Arabic, mirrored right to left)
+// "Chaque employé travaille dans sa langue": a live till (French / Arabic mirrored right to left / English)
 // and the guest's QR menu (French / Arabic / English). Switch them yourself, or watch them switch.
 import { posOf } from '../i18n/content';
 import { tr, langOf } from '../i18n/t';
@@ -10,6 +10,7 @@ const l = posFr.lang;
 const T = {
   fr: { dir: 'ltr', table: 'Table 4', items: [['Thé à la menthe', '16'], ['Café noir', '32']], total: 'Total', send: 'Envoyer', pay: 'Encaisser', cur: 'MAD', hello: 'Bonjour Sara' },
   ar: { dir: 'rtl', table: 'طاولة 4', items: [['شاي بالنعناع', '16'], ['قهوة سوداء', '32']], total: 'المجموع', send: 'إرسال', pay: 'تحصيل', cur: 'درهم', hello: 'مرحبا سارة' },
+  en: { dir: 'ltr', table: 'Table 4', items: [['Mint tea', '16'], ['Black coffee', '32']], total: 'Total', send: 'Send', pay: 'Pay', cur: 'MAD', hello: 'Hello Sara' },
 };
 const M = {
   fr: { dir: 'ltr', cat: 'Boissons chaudes', items: [['Thé à la menthe', '16 MAD'], ['Café noir', '16 MAD'], ['Cappuccino', '24 MAD']], add: 'Ajouter' },
@@ -30,6 +31,7 @@ const seg = 'lang-btn rounded-full px-4 py-2 text-sm font-semibold transition-co
           <div class="inline-flex rounded-full bg-chalk p-1 ring-1 ring-line">
             <button type="button" class={seg} data-till="fr" aria-pressed="true">Français</button>
             <button type="button" class={seg} data-till="ar" aria-pressed="false" lang="ar">العربية</button>
+            <button type="button" class={seg} data-till="en" aria-pressed="false">English</button>
           </div>
         </div>
         <div class="flex flex-wrap items-center gap-3">
@@ -113,7 +115,7 @@ const seg = 'lang-btn rounded-full px-4 py-2 text-sm font-semibold transition-co
     const setTill = (v: string) => { tillBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.till === v))); show('.lang-till', 'lt', v); };
     const setMenu = (v: string) => { menuBtns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.menu === v))); show('.lang-menu', 'lm', v); };
     let auto = !still, timer = 0, step = 0;
-    const seq: [string, string][] = [['ar', 'fr'], ['ar', 'ar'], ['fr', 'en'], ['fr', 'fr']];
+    const seq: [string, string][] = [['ar', 'fr'], ['ar', 'ar'], ['en', 'en'], ['fr', 'fr']];
     const stop = () => { auto = false; clearInterval(timer); };
     tillBtns.forEach(b => b.addEventListener('click', () => { stop(); setTill(b.dataset.till!); }));
     menuBtns.forEach(b => b.addEventListener('click', () => { stop(); setMenu(b.dataset.menu!); }));
