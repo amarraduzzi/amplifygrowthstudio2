@@ -64,6 +64,8 @@ export const OFFER = {
   siteMonthly: 100,
   siteSetup: 250,
   siteDomain: 150,
+  /** Amplify Site Premium (the Maison and Signature styles), one-off */
+  sitePremium: 750,
 };
 
 export const isPlaceholder = (v: string) => /^\[.*\]$/.test(v.trim());

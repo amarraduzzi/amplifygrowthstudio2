@@ -1,6 +1,6 @@
 ---
 // Amplify Site: the restaurant website sold on its own (sign-up ?produit=site, or made by us).
-// Real screenshots of the demo café Dar Nour in the three styles. French inline; EN and AR come
+// Real screenshots of the demo café Dar Nour in the four styles and the two premium styles. French inline; EN and AR come
 // from the dictionaries (middleware). Prices: OFFER in config.ts.
 import Base from '../../layouts/Base.astro';
 import Icon from '../Icon.astro';
@@ -18,14 +18,36 @@ const { lang } = Astro.props;
 const t = copy(lang);
 const tt = tr(langOf(Astro.url));
 const title = tt('Site web pour restaurant au Maroc | Amplify Site');
-const description = tt('Un beau site pour votre restaurant ou votre café, avec votre carte, vos photos et les commandes sur WhatsApp. 14 jours gratuits, puis 100 DH par mois.');
+const description = tt('Un beau site pour votre restaurant ou votre café, avec votre carte, vos photos et les commandes sur WhatsApp. Dès 250 DH, puis 100 DH par mois.');
 const wa = tt('Bonjour, j’ai une question sur Amplify Site.');
 const doneForYou = tt('Bonjour, je veux que vous créiez le site de mon restaurant (offre à 250 DH).');
-const signup = signupUrl(lang, 'site');
+const premiumWa = tt('Bonjour, je veux un site premium pour mon restaurant (750 DH).');
+const customWa = tt('Bonjour, je veux un site sur mesure pour mon restaurant. Pouvons-nous en parler ?');
 const styles = [
   { k: 'riad', name: 'Riad', img: '/img/s-riad.webp', url: 'darnour.ma', text: 'Arches, zellige et une carte à l’ancienne. Pour une cuisine marocaine ou un lieu de caractère.' },
   { k: 'nuit', name: 'Nuit', img: '/img/s-nuit.webp', url: 'darnour.ma', text: 'Plein écran, comme au cinéma. Une grande photo ou une vidéo, vos plats en bande défilante.' },
   { k: 'moderne', name: 'Moderne', img: '/img/s-moderne.webp', url: 'darnour.ma', text: 'Clair et net, en grandes cartes photo. Pour un snack, un brunch ou une chaîne.' },
+  { k: 'atelier', name: 'Atelier', img: '/img/s-atelier.webp', url: 'darnour.ma', text: 'Une vitrine de pâtisserie : vos produits sur assiettes, les prix au kilo et un bloc pour les commandes d’événements.' },
+];
+const premium = [
+  { k: 'maison', name: 'Maison', img: '/img/s-maison.webp', phone: '/img/s-maison-phone.webp', bg: '#F1EFE9', details: [['/img/s-maison-story.webp', 'Votre histoire en chapitres'], ['/img/s-maison-form.webp', 'Le formulaire de demande']],
+    text: 'Un magazine. Votre nom en grand, votre histoire en chapitres, trois plats que la maison recommande et la carte comme un menu imprimé.' },
+  { k: 'signature', name: 'Signature', img: '/img/s-signature.webp', phone: '/img/s-signature-phone.webp', bg: '#0E1512', details: [['/img/s-signature-story.webp', 'Votre histoire en scènes'], ['/img/s-signature-chef.webp', 'Le mot du chef']],
+    text: 'Un film. Une vidéo ou une photo en plein écran qui s’ouvre comme au cinéma, votre histoire en scènes et vos plats en plein cadre.' },
+];
+const premiumParts = [
+  ['book', 'Votre histoire', 'En deux à quatre chapitres, chacun avec sa photo.'],
+  ['chef', 'Le mot du chef', 'Son visage et sa phrase, en grand.'],
+  ['cup', 'Trois plats mis en avant', 'Choisis dans votre carte, avec une phrase à vous.'],
+  ['bell', 'Les demandes d’événements', 'Groupe, privatisation, traiteur : la demande arrive dans votre espace, avec une alerte.'],
+] as const;
+const tiers = [
+  { k: 'classic', name: 'Classique', price: OFFER.siteSetup, wa: doneForYou, cta: 'Je veux le site Classique',
+    items: ['Un des quatre styles : Riad, Nuit, Moderne ou Atelier', 'Votre carte depuis une photo', 'Jusqu’à 10 photos', 'Français, arabe, anglais', 'Commandes sur WhatsApp', '1 série de corrections'] },
+  { k: 'premium', name: 'Premium', price: OFFER.sitePremium, wa: premiumWa, cta: 'Je veux le site Premium',
+    items: ['Tout le Classique, et en plus :', 'Un style premium : Maison ou Signature', 'Votre histoire en chapitres', 'Le mot du chef', 'Trois plats mis en avant', 'Un formulaire pour les groupes et les événements, avec alerte dans votre espace'] },
+  { k: 'custom', name: 'Sur mesure', price: 0, wa: customWa, cta: 'Parler de mon projet',
+    items: ['Un design créé pour votre marque, rien que pour vous', 'Nous en parlons ensemble, puis vous recevez un devis', 'Fait par l’équipe Amplify Growth Studio'] },
 ];
 const included = [
   ['search', 'Trouvé sur Google', 'Votre carte, vos horaires et votre adresse sont lisibles par Google, avec les informations que Google Maps attend.'],
@@ -39,13 +61,13 @@ const faq = ([
   ['Faut-il un nom de domaine ?', 'Non. Votre site est en ligne tout de suite sur une adresse Amplify. Si vous avez déjà un domaine, nous le relions à votre site pour 150 DH, une seule fois.'],
   ['Comment se passent les commandes sur WhatsApp ?', 'Le client choisit ses plats sur votre site, puis WhatsApp s’ouvre avec sa commande déjà écrite : les plats, le total, son prénom et le mode (à emporter, livraison ou sur place). Vous la recevez comme un message normal. Aucune commission.'],
   ['Je peux changer de style ou de photos plus tard ?', 'Oui, à tout moment, depuis votre espace. Le style, les photos, les textes et la carte se changent en quelques clics.'],
-  ['Comment payer ?', 'Par virement ou CashPlus. Nous activons votre site dès réception. Pas de carte bancaire demandée pour l’essai.'],
-  ['Que comprend l’offre à 250 DH ?', 'Nous créons votre site pour vous : la carte à partir d’une photo, jusqu’à 10 photos, les trois langues et une série de corrections. Ensuite, 100 DH par mois comme pour tout le monde.'],
+  ['Comment payer ?', 'Par virement ou CashPlus. Nous activons votre site dès réception.'],
+  ['Quelle différence entre Classique et Premium ?', 'Classique (250 DH) : un des quatre styles, votre carte à partir d’une photo, jusqu’à 10 photos, les trois langues et une série de corrections. Premium (750 DH) : tout cela, plus un style Maison ou Signature avec votre histoire en chapitres, le mot du chef, trois plats mis en avant et un formulaire pour les groupes et les événements. Dans les deux cas, 100 DH par mois ensuite.'],
   ['Et si j’arrête ?', 'Sans engagement. Si l’abonnement n’est pas renouvelé, votre site se met en pause. Vous pouvez le relancer quand vous voulez, tout est gardé.'],
 ]).map(([q, a]) => [tt(q), tt(a)]);
 const schema = [
   { '@context': 'https://schema.org', '@type': 'Service', name: 'Amplify Site', serviceType: tt('Site web pour restaurant'), areaServed: 'MA', url: abs(ROUTES.site[lang]), description,
-    offers: [{ '@type': 'Offer', name: tt('Abonnement mensuel'), price: String(OFFER.siteMonthly), priceCurrency: 'MAD' }, { '@type': 'Offer', name: tt('Création par Amplify'), price: String(OFFER.siteSetup), priceCurrency: 'MAD' }],
+    offers: [{ '@type': 'Offer', name: tt('Abonnement mensuel'), price: String(OFFER.siteMonthly), priceCurrency: 'MAD' }, { '@type': 'Offer', name: tt('Site Classique'), price: String(OFFER.siteSetup), priceCurrency: 'MAD' }, { '@type': 'Offer', name: tt('Site Premium'), price: String(OFFER.sitePremium), priceCurrency: 'MAD' }],
     provider: { '@id': `${SITE.url}/#business` } },
   faqSchema(faq),
 ].filter(Boolean) as Record<string, unknown>[];
@@ -58,14 +80,14 @@ const schema = [
       <h1 class="mt-5 text-[clamp(2.5rem,4.3vw,4.1rem)]">
         <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Un vrai site</span></span>
         <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:160ms">pour votre restaurant.</span></span>
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:260ms">En ligne ce soir.</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:260ms">Prêt en quelques jours.</span></span>
       </h1>
       <p class="fade-up mt-4 max-w-xl text-lg text-muted" style="--d:340ms">Votre carte, vos photos, vos horaires, l’itinéraire et les commandes sur WhatsApp. Sur Google, sur le téléphone, en trois langues.</p>
       <!-- the price, impossible to miss -->
       <div class="fade-up relative mt-6 inline-flex flex-wrap items-center gap-x-6 gap-y-3 rounded-[1.8rem] bg-navy py-4 pe-7 ps-6 sm:flex-nowrap text-white shadow-[0_30px_60px_-30px_rgba(0,30,62,0.7)]" style="--d:420ms" data-price>
         <span class="price-stamp absolute -end-4 -top-5 rotate-[8deg] rounded-full bg-green px-3.5 py-1.5 text-sm font-bold text-navy shadow-lg">Offre de lancement</span>
         <div>
-          <p class="text-sm font-semibold text-white/60">Nous créons votre site</p>
+          <p class="text-sm font-semibold text-white/60">Nous créons votre site, dès</p>
           <p class="display flex items-baseline gap-2 leading-none"><span class="text-[4.2rem] text-green tabular-nums sm:text-[4.8rem]" data-count={OFFER.siteSetup}>{OFFER.siteSetup}</span><span class="text-3xl">DH</span></p>
         </div>
         <div class="border-white/15 text-white/80 sm:border-s sm:ps-6">
@@ -75,8 +97,8 @@ const schema = [
         </div>
       </div>
       <div class="fade-up mt-5 flex flex-wrap items-center gap-3" style="--d:500ms">
-        <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-hero" class="cta-glow inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Je veux mon site à 250 DH</a>
-        <a href={signup} class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">Ou le créer moi-même, gratuitement</a>
+        <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-hero" class="cta-glow inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Je veux mon site</a>
+        <a href="#tarifs" class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">Voir les formules</a>
       </div>
     </div>
 
@@ -104,7 +126,7 @@ const schema = [
   <!-- a band that keeps moving: what 250 DH buys -->
   <div class="mq relative overflow-hidden border-y border-navy bg-navy py-4 text-white" aria-hidden="true">
     <div class="mq-track flex w-max gap-10 whitespace-nowrap">
-      {[0, 1].map(() => ['Votre site à 250 DH', 'Prêt en quelques jours', 'Sur Google', 'Français, arabe, anglais', 'Commandes sur WhatsApp', 'Itinéraire en un clic', 'Votre carte toujours à jour'].map((x, i) => <span class="display flex items-center gap-10 text-2xl sm:text-3xl"><span class={i === 0 ? 'text-green' : ''}>{x}</span><span class="text-green">✦</span></span>))}
+      {[0, 1].map(() => ['Votre site dès 250 DH', 'Premium : Maison et Signature', 'Prêt en quelques jours', 'Sur Google', 'Français, arabe, anglais', 'Commandes sur WhatsApp', 'Itinéraire en un clic', 'Votre carte toujours à jour'].map((x, i) => <span class="display flex items-center gap-10 text-2xl sm:text-3xl"><span class={i === 0 ? 'text-green' : ''}>{x}</span><span class="text-green">✦</span></span>))}
     </div>
   </div>
 
@@ -274,14 +296,14 @@ const schema = [
       <div class="pointer-events-none absolute -start-40 top-20 size-[34rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
       <div class="st-inner relative mx-auto grid max-w-6xl content-center 2xl:max-w-7xl gap-6 px-4 py-20 sm:px-6 lg:grid-cols-[0.72fr_1.28fr] lg:items-center lg:gap-10">
         <div>
-          <h2 class="max-w-3xl text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[3.4rem]"><span class="block">Trois styles.</span><span class="block text-green">Aucun ne ressemble à un modèle.</span></h2>
+          <h2 class="max-w-3xl text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[3.4rem]"><span class="block">Quatre styles.</span><span class="block text-green">Aucun ne ressemble à un modèle.</span></h2>
           <div class="mt-6 flex flex-wrap gap-2" role="tablist" aria-label="Style">
             {styles.map((s, i) => <button type="button" role="tab" data-style={s.k} aria-selected={i === 0 ? 'true' : 'false'} class="st-tab relative min-h-11 overflow-hidden rounded-full px-5 font-semibold ring-1 ring-white/20 transition-colors"><span class="st-fill absolute inset-0 origin-left bg-green/25" aria-hidden="true"></span><span class="relative">{s.name}</span></button>)}
           </div>
           <div class="relative mt-5 min-h-[5.5rem] text-white/75 sm:min-h-[3.5rem] sm:text-lg lg:min-h-[6rem]">
             {styles.map((s, i) => <p data-desc={s.k} class={`st-desc absolute inset-x-0 top-0 max-w-2xl ${i === 0 ? 'on' : ''}`}>{s.text}</p>)}
           </div>
-          <p class="mt-2 hidden text-sm text-white/50 lg:block">Captures réelles du café de démonstration Dar Nour.</p>
+          <p class="mt-2 hidden text-sm text-white/50 lg:block">Captures réelles du café de démonstration Dar Nour. <a href="#premium" class="font-semibold text-green underline-offset-4 hover:underline">Et deux styles premium.</a></p>
         </div>
         <div>
           <div class="st-frame mx-auto w-full overflow-hidden rounded-[1.4rem] bg-[#0B1422] shadow-[0_50px_100px_-40px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
@@ -294,6 +316,63 @@ const schema = [
           </div>
           <p class="mt-4 text-sm text-white/50 lg:hidden">Captures réelles du café de démonstration Dar Nour.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- premium: two styles that tell the story of the place; a thumbnail swaps the big screen -->
+  <section id="premium" class="scroll-mt-20 overflow-hidden" data-as>
+    <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+      <div class="flex flex-wrap items-end justify-between gap-8">
+        <div class="max-w-3xl">
+          <p class="as-rv inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1.5 text-sm font-semibold text-white"><span class="size-2 rounded-full bg-green"></span>Amplify Site Premium</p>
+          <h2 class="as-rv mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]" style="--d:60ms"><span class="block">Votre maison,</span><span class="block text-green-deep">racontée.</span></h2>
+          <p class="as-rv mt-5 max-w-2xl text-lg text-muted" style="--d:120ms">Pour les lieux qui ont une histoire, un chef et des groupes à recevoir. Deux styles qui vont plus loin qu’une carte en ligne.</p>
+        </div>
+        <div class="as-rv rounded-[1.6rem] bg-paper px-6 py-4 ring-1 ring-line" style="--d:180ms">
+          <p class="display flex items-baseline gap-2 leading-none"><span class="text-6xl tabular-nums text-navy">{OFFER.sitePremium}</span><span class="text-2xl">DH</span></p>
+          <p class="mt-1 text-sm text-muted">une seule fois, puis {OFFER.siteMonthly} DH par mois</p>
+        </div>
+      </div>
+
+      {premium.map((p, i) => (
+        <article class="pm as-rv mt-16 grid items-center gap-8 lg:grid-cols-[1.4fr_0.6fr] lg:gap-12" data-pm>
+          <div class={`relative pb-8 ${i % 2 ? 'lg:order-2' : ''}`}>
+            <div class="overflow-hidden rounded-[1.2rem] bg-[#0B1422] shadow-[0_40px_80px_-35px_rgba(0,30,62,0.6)] ring-1 ring-black/10">
+              <div class="flex items-center gap-2 px-4 py-2.5"><span class="size-2.5 rounded-full bg-[#FF5F57]"></span><span class="size-2.5 rounded-full bg-[#FEBC2E]"></span><span class="size-2.5 rounded-full bg-[#28C840]"></span>
+                <span class="ms-3 flex-1 truncate rounded-full bg-white/10 px-4 py-1 text-xs text-white/70" dir="ltr">darnour.ma</span></div>
+              <div class="relative aspect-[16/10]" style={`background:${p.bg}`}>
+                <img src={p.img} alt={tt('Le site de Dar Nour, style') + ' ' + p.name} width="1600" height="1000" loading="lazy" decoding="async" class="pm-main absolute inset-0 h-full w-full object-cover object-top" data-main />
+              </div>
+            </div>
+            <div class="absolute -bottom-2 end-[-2%] w-[24%] max-w-[10rem]" aria-hidden="true"><Device kind="phone" src={p.phone} alt="" w={600} h={1298} screenBg={p.bg} class="rotate-[3deg]" /></div>
+          </div>
+          <div>
+            <h3 class="text-4xl sm:text-5xl">{p.name}</h3>
+            <p class="mt-4 text-lg text-muted">{p.text}</p>
+            <div class="mt-6 grid grid-cols-3 gap-2.5" role="group" aria-label={p.name}>
+              {[[p.img, 'Accueil'], ...p.details].map(([src, label], k) => (
+                <button type="button" data-src={src} aria-pressed={k === 0 ? 'true' : 'false'} class="pm-th group text-start">
+                  <span class="block overflow-hidden rounded-lg ring-2 ring-transparent transition group-aria-pressed:ring-green"><img src={src} alt="" width="1600" height="1000" loading="lazy" decoding="async" class="aspect-[16/10] w-full object-cover object-top" /></span>
+                  <span class="mt-1.5 block text-xs font-semibold leading-tight text-muted group-aria-pressed:text-navy">{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+
+      <ul class="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {premiumParts.map(([ic, h, txt], i) => (
+          <li class="as-rv rounded-[1.4rem] bg-paper p-5 ring-1 ring-line" style={`--d:${i * 70}ms`}>
+            <span class="grid size-10 place-items-center rounded-xl bg-green/15 text-green-deep"><Icon name={ic} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-sm text-muted">{txt}</p>
+          </li>
+        ))}
+      </ul>
+      <div class="as-rv mt-10 flex flex-wrap items-center gap-3">
+        <a href={waLink(premiumWa)} target="_blank" rel="noopener" data-wa="site-premium" class="cta-glow inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Je veux le site Premium</a>
+        <a href="#tarifs" class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg hover:border-navy">Comparer les formules</a>
       </div>
     </div>
   </section>
@@ -403,45 +482,27 @@ const schema = [
     </div>
   </section>
 
-  <!-- pricing: the receipt prints itself -->
+  <!-- pricing: three levels, paid once, then the same monthly plan -->
   <section id="tarifs" class="relative scroll-mt-20 overflow-hidden bg-navy text-white" data-as>
     <div class="pointer-events-none absolute -start-40 bottom-0 size-[36rem] rounded-full bg-green/15 blur-3xl" aria-hidden="true"></div>
-    <div class="relative mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)] gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-center">
-      <div>
-        <h2 class="as-rv text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Moins cher qu’un flyer.</span><span class="block text-green">Visible toute l’année.</span></h2>
-        <p class="as-rv mt-5 max-w-lg text-lg text-white/75" style="--d:80ms">Un flyer finit à la poubelle. Votre site travaille pour vous chaque jour, sur Google, sur Instagram et sur WhatsApp.</p>
-        <div class="as-rv mt-8 flex flex-wrap gap-3" style="--d:140ms">
-          <a href={waLink(doneForYou)} target="_blank" rel="noopener" data-wa="site-pricing" class="cta-glow inline-flex min-h-12 items-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">Je veux mon site à 250 DH</a>
-        </div>
-        <!-- doing it yourself -->
-        <div class="as-rv mt-10 rounded-[1.8rem] bg-white/[0.06] p-6 ring-1 ring-white/15" style="--d:200ms">
-          <div class="flex flex-wrap items-end justify-between gap-4">
-            <div><p class="font-semibold">Je le fais moi-même</p><p class="text-sm text-white/65">Une photo de votre carte, un style. Dix minutes.</p></div>
-            <p class="display text-5xl leading-none">0 <span class="text-2xl">DH</span></p>
+    <div class="relative mx-auto max-w-6xl px-4 pb-12 pt-24 sm:px-6">
+      <h2 class="as-rv max-w-3xl text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Moins cher qu’un flyer.</span><span class="block text-green">Visible toute l’année.</span></h2>
+      <p class="as-rv mt-5 max-w-2xl text-lg text-white/75" style="--d:80ms">Vous payez la création une seule fois. Ensuite, {OFFER.siteMonthly} DH par mois : hébergement, mises à jour et votre carte toujours à jour. Sans engagement.</p>
+      <div class="mt-12 grid gap-5 lg:grid-cols-3">
+        {tiers.map((x, i) => (
+          <div class={`tier as-rv relative flex flex-col rounded-[1.8rem] p-6 sm:p-7 ${x.k === 'premium' ? 'bg-white text-navy shadow-[0_40px_80px_-30px_rgba(5,185,98,0.45)] ring-2 ring-green' : 'bg-white/[0.06] ring-1 ring-white/15'}`} style={`--d:${i * 90}ms`}>
+            {x.k === 'premium' && <span class="absolute -top-3 end-6 rounded-full bg-green px-3 py-1 text-xs font-bold text-navy">Maison ou Signature</span>}
+            <p class="font-semibold">{x.name}</p>
+            {x.price ? (
+              <p class="mt-3 display flex items-baseline gap-2 leading-none"><span class={`text-6xl tabular-nums ${x.k === 'premium' ? 'text-navy' : 'text-green'}`}>{x.price}</span><span class="text-2xl">DH</span></p>
+            ) : <p class="mt-3 display text-5xl leading-none text-green">Sur devis</p>}
+            <p class={`mt-2 text-sm ${x.k === 'premium' ? 'text-muted' : 'text-white/60'}`}>{x.price ? `une seule fois, puis ${OFFER.siteMonthly} DH par mois` : 'selon votre projet'}</p>
+            <ul class="mt-6 grid gap-2.5">
+              {x.items.map((it, k) => <li class={`flex gap-2.5 ${x.k === 'premium' && k === 0 ? 'font-semibold' : ''}`}><span class={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ${x.k === 'premium' ? 'bg-green text-navy' : 'bg-green/20 text-green'}`}><Icon name="check" class="size-3" /></span><span>{it}</span></li>)}
+            </ul>
+            <a href={waLink(x.wa)} target="_blank" rel="noopener" data-wa={`site-tier-${x.k}`} class={`mt-8 inline-flex min-h-12 items-center justify-center rounded-full px-6 text-lg font-semibold sm:mt-auto ${x.k === 'premium' ? 'cta-glow bg-green text-navy hover:bg-[#04A859]' : 'border border-white/30 hover:border-white'}`}>{x.cta}</a>
           </div>
-          <p class="mt-3 text-sm text-white/65">Création gratuite, 14 jours offerts, puis {OFFER.siteMonthly} DH par mois.</p>
-          <a href={signup} class="mt-4 inline-flex min-h-11 items-center rounded-full border border-white/30 px-5 font-semibold hover:border-white">Créer mon site gratuitement</a>
-        </div>
-      </div>
-      <!-- the receipt -->
-      <div class="as-rv relative mx-auto w-full max-w-sm" style="--d:120ms" data-receipt>
-        <div class="relative z-10 h-6 rounded-full bg-[#0B1422] shadow-[inset_0_-3px_0_rgba(255,255,255,.08)] ring-1 ring-white/10"></div>
-        <div class="-mt-3 overflow-hidden px-3">
-          <div class="rc-paper relative bg-[#FFFDF8] px-4 pb-8 pt-8 font-mono text-[0.78rem] sm:px-6 sm:text-[0.92rem] text-[#1B1B1B] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.7)]" dir="ltr">
-            <span class="rc-badge absolute -end-2 -top-1 z-20 rotate-[10deg] rounded-full bg-green px-3 py-1 font-sans text-xs font-bold text-navy">Offre de lancement</span>
-            <p class="rc-line text-center font-sans text-lg font-bold" style="--l:0">AMPLIFY SITE</p>
-            <p class="rc-line text-center text-xs text-[#6B6B6B]" style="--l:1">On le fait pour vous</p>
-            <p class="rc-line my-3 border-t border-dashed border-[#1B1B1B]/30" style="--l:2"></p>
-            {[['Site créé pour vous', '250,00'], ['Carte depuis une photo', 'inclus'], ['Jusqu’à 10 photos', 'inclus'], ['3 langues relues', 'inclus'], ['1 série de corrections', 'inclus'], ['Commandes WhatsApp', 'inclus']].map(([k, v], i) => (
-              <p class="rc-line flex gap-2 py-0.5" style={`--l:${i + 3}`}><span>{k}</span><span class="flex-1 overflow-hidden whitespace-nowrap text-[#1B1B1B]/30">........................................</span><span class={v === 'inclus' ? 'text-green-deep' : ''}>{v}</span></p>
-            ))}
-            <p class="rc-line my-3 border-t border-dashed border-[#1B1B1B]/30" style="--l:9"></p>
-            <p class="rc-line flex items-end justify-between" style="--l:10"><span class="font-sans text-lg font-bold">TOTAL</span><span class="font-sans"><span class="display text-6xl leading-none text-navy">250</span> <b>DH</b></span></p>
-            <p class="rc-line mt-1 text-end text-xs text-[#6B6B6B]" style="--l:11">une seule fois, puis 100 DH / mois</p>
-            <p class="rc-line mt-5 text-center text-xs text-[#6B6B6B]" style="--l:12">Merci et bon service</p>
-            <div class="rc-line mt-3 flex h-10 items-end justify-center gap-[2px]" style="--l:13">{Array.from({ length: 44 }, (_, i) => <span class="bg-[#1B1B1B]" style={`width:${[1, 2, 1, 3, 1, 1, 2][i % 7]}px;height:${i % 5 ? 100 : 80}%`}></span>)}</div>
-          </div>
-        </div>
+        ))}
       </div>
     </div>
     <div class="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6">
@@ -493,8 +554,8 @@ const schema = [
 
   <Faq lang={lang} items={faq} wa={wa} />
 
-  <ProductFinal title={tt('Votre site, en ligne ce soir.')} text={tt('Envoyez une photo de votre carte. Choisissez un style. Partagez le lien.')} cta={tt('Créer mon site gratuitement')} href={signup} wa={wa} waLabel={t.ui.whatsapp} where="site-final"
-    steps={['Compte créé', 'Carte importée en photo', 'Style choisi', 'Site en ligne'].map(tt)} done={tt('Votre site est en ligne')} secs={540} />
+  <ProductFinal title={tt('Votre site, prêt en quelques jours.')} text={tt('Envoyez-nous une photo de votre carte et vos photos sur WhatsApp. Nous faisons le reste.')} cta={tt('Je veux mon site')} href={waLink(doneForYou)} wa={wa} waLabel={t.ui.whatsapp} where="site-final"
+    steps={['Message reçu', 'Carte et photos', 'Style choisi', 'Site en ligne'].map(tt)} done={tt('Votre site est en ligne')} secs={540} />
 </Base>
 
 <style is:global>
@@ -539,8 +600,11 @@ const schema = [
   [dir="rtl"] [data-scan].run .scan-arrow { animation-name: nudge-rtl; }
   @keyframes nudge-rtl { 50% { transform: translateX(-5px); } }
 
+  /* premium: the big screen fades in when a thumbnail is chosen */
+  .pm-in { animation: pm-in .45s ease both; }
+  @keyframes pm-in { from { opacity: .2; transform: scale(1.015); } }
   /* the styles: pinned with JS, a wipe from one to the next */
-  .st-root.live { height: 320vh; }
+  .st-root.live { height: 420vh; }
   .st-root.live .st-pin { position: sticky; top: 0; height: 100vh; height: 100svh; }
   .st-root.live .st-inner { height: 100%; padding-top: 5rem; padding-bottom: 1.5rem; }
   .st-root.live .st-frame { width: min(100%, calc((100svh - 19rem) * 1.6)); }
@@ -775,6 +839,16 @@ const schema = [
       }
       running = false;
     }
+  });
+
+  // premium: a thumbnail shows that part of the site in the big screen
+  document.querySelectorAll<HTMLElement>('[data-pm]').forEach(root => {
+    const main = root.querySelector<HTMLImageElement>('[data-main]')!;
+    const ths = [...root.querySelectorAll<HTMLButtonElement>('.pm-th')];
+    ths.forEach(b => b.addEventListener('click', () => {
+      ths.forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+      main.classList.remove('pm-in'); void main.offsetWidth; main.src = b.dataset.src!; main.classList.add('pm-in');
+    }));
   });
 
   // the styles: pinned while scrolling, the next style wipes over the previous one
