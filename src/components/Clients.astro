@@ -1,58 +1,188 @@
 ---
-// The restaurants that already work with Amplify: their real logos, what they use, and a link to
-// the live site when there is one. Only facts we can stand behind: no service is listed unless it runs.
+// "Ils travaillent déjà avec nous": the clients' real work, not just their logos. A list of clients
+// on the left; on the right a phone (their site or menu) and a tablet (their till) showing the real
+// screens, changing by itself every few seconds, and the brand colour of the client glowing behind.
+// Under it, every logo in a slow band. Clients without a screenshot only appear in the band.
+import Device from './Device.astro';
 import { tr, langOf } from '../i18n/t';
+import { CLIENTS, type Svc } from '../lib/clients';
 const tt = tr(langOf(Astro.url));
-type Svc = 'pos' | 'site' | 'qr' | 'online';
-const SVC: Record<Svc, string> = {
-  pos: tt('Caisse'), site: tt('Site web'), qr: tt('Commande QR'), online: tt('Commande en ligne'),
-};
-const clients: { name: string; logo: string; bg: string; kind: string; svc: Svc[]; url?: string; fit?: 'contain' }[] = [
-  { name: 'Gaston Gali', logo: 'gaston-gali', bg: '#241e20', kind: tt('Pâtisserie, café et traiteur'), svc: ['qr'], url: 'https://gastongali.com' },
-  { name: 'Dom’s Café', logo: 'doms', bg: '#0a0404', fit: 'contain', kind: tt('Café et pizzeria, Agdal'), svc: ['pos', 'site'], url: 'https://domscafeagdal.pages.dev' },
-  { name: 'Indian Flavors', logo: 'indian-flavors', bg: '#1b1b1b', kind: tt('Restaurant indien, Agdal'), svc: ['online', 'site'], url: 'https://indianflavor.pages.dev' },
-  { name: 'Relais Marin', logo: 'relais-marin', bg: '#051935', kind: 'Rabat', svc: ['qr', 'site'], url: 'https://site.amplifygrowthstudio.com/relais-marin' },
-  { name: 'L’Atelier by Sam', logo: 'atelier-sam', bg: '#faf7f0', kind: tt('Salon de thé et brunch'), svc: ['pos', 'site'] },
-  { name: 'Zayna Café', logo: 'zayna', bg: '#ffffff', kind: tt('Coffee shop'), svc: ['pos'] },
-  { name: 'Smash’n Cheese', logo: 'smashncheese', bg: '#ffffff', kind: tt('Burgers smash artisanaux'), svc: ['site'], url: 'https://smashncheese.pages.dev' },
-  { name: 'Ba Fares', logo: 'ba-fares', bg: '#f2c63e', kind: tt('Rabat, depuis 1957'), svc: ['site'], url: 'https://bafares.pages.dev' },
-  { name: 'Chez Pino', logo: 'chez-pino', bg: '#ffffff', kind: tt('Restaurant italien, Hay Riad'), svc: ['site'], url: 'https://chezpino.ma' },
-  { name: 'Moë Tea Room', logo: 'moe', bg: '#1c1c1c', kind: tt('Salon de thé, Rabat'), svc: ['site'], url: 'https://moetearoom.pages.dev' },
-];
+const SVC: Record<Svc, string> = { pos: tt('Caisse'), site: tt('Site web'), qr: tt('Commande QR'), online: tt('Commande en ligne') };
+const shown = CLIENTS.filter(c => c.shot || c.pos);
+const stage = shown.length >= 2;
+const band = [...CLIENTS, ...CLIENTS];
 ---
-<section class="mx-auto max-w-6xl px-4 pb-6 pt-14 sm:px-6 md:pt-20">
-  <div class="max-w-2xl">
-    <h2 class="text-[2.2rem] leading-[0.95] sm:text-5xl">{tt('Ils travaillent déjà avec nous')}</h2>
-    <p class="mt-3 text-muted md:text-lg">{tt('Des cafés, restaurants et salons de thé qui nous confient leur caisse, leur menu QR ou leur site.')}</p>
-  </div>
-  <ul class="mt-8 grid grid-cols-2 gap-3 lg:grid-cols-5 md:gap-4">
-    {clients.map(c => {
-      const inner = (
-        <>
-          <span class={`block overflow-hidden aspect-square rounded-[1.1rem] ring-1 ring-line/70`} style={`background:${c.bg}`}>
-            <img src={`/img/clients/${c.logo}.webp`} alt={c.name} width="440" height="440" loading="lazy" decoding="async" class={`size-full transition ${c.fit === 'contain' ? 'object-contain p-[6%]' : 'object-cover'} duration-300 group-hover:scale-[1.04]`} />
-          </span>
-          <span class="mt-3 block px-1">
-            <span class="flex items-baseline justify-between gap-2">
-              <span class="font-bold leading-tight">{c.name}</span>
-              {c.url && <span class="shrink-0 text-sm font-semibold text-green-deep" aria-hidden="true"><span class="inline-block transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 rtl:-scale-x-100">↗</span></span>}
-            </span>
-            <span class="mt-0.5 block text-sm text-muted">{c.kind}</span>
-            {c.svc.length > 0 && (
-              <span class="mt-2 flex flex-wrap gap-1.5">
-                {c.svc.map(s => <span class="rounded-full bg-mint px-2.5 py-0.5 text-xs font-semibold text-green-deep">{SVC[s]}</span>)}
+<section id="clients" class="cs relative overflow-hidden bg-navy text-white" aria-labelledby="cs-h">
+  <div class="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] [background-size:22px_22px]" aria-hidden="true"></div>
+  <div class="relative mx-auto max-w-6xl px-4 pb-10 pt-14 sm:px-6 md:pb-14 md:pt-20">
+    <div class="flex flex-wrap items-end justify-between gap-x-10 gap-y-3">
+      <div class="max-w-2xl">
+        <h2 id="cs-h" class="text-[2.2rem] leading-[0.95] text-white sm:text-5xl">{tt('Ils travaillent déjà avec nous')}</h2>
+        <p class="mt-3 text-white/70 md:text-lg">{tt('Des cafés, restaurants et salons de thé qui nous confient leur caisse, leur menu QR ou leur site.')}</p>
+      </div>
+      <p class="flex items-baseline gap-2 text-white/70"><span class="display text-5xl text-green md:text-6xl" dir="ltr">{CLIENTS.length}</span>{tt('établissements déjà en service')}</p>
+    </div>
+
+    {stage && (
+      <div class="mt-8 grid items-center gap-6 md:mt-12 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-10">
+        <!-- the clients: a column from tablet up, a scrolling strip on phones -->
+        <div role="tablist" aria-label={tt('Nos clients')} class="cs-tabs -mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-col md:overflow-visible md:px-0">
+          {shown.map((c, i) => (
+            <button role="tab" type="button" id={`cs-t${i}`} aria-controls="cs-stage" aria-selected={i === 0 ? 'true' : 'false'} data-i={i} data-accent={c.accent}
+              class={`cs-tab group relative flex shrink-0 snap-start items-center gap-3 overflow-hidden rounded-2xl p-2 pe-4 text-start transition md:w-full md:p-2.5 ${i === 0 ? 'on' : ''}`}>
+              <span class="grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl ring-1 ring-white/15 md:size-14" style={`background:${c.bg}`}>
+                <img src={`/img/clients/${c.logo}.webp`} alt="" width="440" height="440" loading="lazy" decoding="async" class={`size-full ${c.fit ? 'object-contain p-[6%]' : 'object-cover'}`} />
               </span>
-            )}
-          </span>
-        </>
-      );
-      return (
-        <li>
-          {c.url
-            ? <a href={c.url} target="_blank" rel="noopener" class="group block h-full rounded-[1.4rem] bg-paper p-2.5 ring-1 ring-line transition hover:-translate-y-1 hover:ring-green/60" aria-label={`${c.name}, ${tt('voir le site')}`}>{inner}</a>
-            : <div class="group block h-full rounded-[1.4rem] bg-paper p-2.5 ring-1 ring-line">{inner}</div>}
-        </li>
-      );
-    })}
-  </ul>
+              <span class="min-w-0 flex-1">
+                <span class="block whitespace-nowrap font-bold leading-tight md:text-lg">{c.name}</span>
+                <span class="cs-kind hidden text-sm text-white/60 md:block">{tt(c.kind)}</span>
+                <span class="cs-svc mt-1.5 hidden flex-wrap gap-1.5 md:flex">
+                  {c.svc.map(s => <span class="rounded-full bg-green/15 px-2.5 py-0.5 text-xs font-semibold text-green">{SVC[s]}</span>)}
+                </span>
+              </span>
+              <span class="cs-bar absolute inset-x-0 bottom-0 h-[3px] origin-left bg-green rtl:origin-right" aria-hidden="true"></span>
+            </button>
+          ))}
+        </div>
+
+        <!-- the stage -->
+        <div id="cs-stage" role="tabpanel" aria-live="polite" class="relative mx-auto w-full max-w-[34rem]">
+          <div class="cs-glow absolute start-1/2 top-1/2 -z-0 size-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl rtl:translate-x-1/2" style={`background:${shown[0].accent}`} aria-hidden="true"></div>
+          <div class={`cs-box relative aspect-[1/0.92] ${shown[0].pos ? '' : 'solo'}`}>
+            <!-- tablet: the till, behind the phone -->
+            <div class={`cs-tablet absolute start-0 top-[12%] w-[78%] transition duration-700 ${shown[0].pos ? 'on' : ''}`}>
+              <Device w={1600} h={1000}>
+                <div slot="screen" class="relative aspect-[16/10] bg-[#0B1422]">
+                  {shown.map((c, i) => c.pos && (
+                    <img src={c.pos.src} alt={`${tt('La caisse de')} ${c.name}`} width={c.pos.w} height={c.pos.h} loading="lazy" decoding="async"
+                      data-i={i} class={`cs-shot absolute inset-0 size-full object-cover object-top ${i === 0 ? 'on' : ''}`} />
+                  ))}
+                </div>
+              </Device>
+            </div>
+            <!-- phone: their site or menu -->
+            <div class="cs-phone absolute bottom-0 end-[6%] w-[50%] md:w-[42%]">
+              <Device kind="phone" w={390} h={844} screenBg="#fff">
+                <div slot="screen" class="relative aspect-[9/18.5] bg-white">
+                  {shown.map((c, i) => c.shot && (
+                    <img src={c.shot.src} alt={`${tt('Le site de')} ${c.name}`} width={c.shot.w} height={c.shot.h} loading="lazy" decoding="async"
+                      data-i={i} class={`cs-shot absolute inset-0 size-full object-cover object-top ${i === 0 ? 'on' : ''}`} />
+                  ))}
+                  {shown.map((c, i) => !c.shot && (
+                    <span data-i={i} class={`cs-shot absolute inset-0 grid place-items-center p-[12%] ${i === 0 ? 'on' : ''}`} style={`background:${c.bg}`}>
+                      <img src={`/img/clients/${c.logo}.webp`} alt="" width="440" height="440" loading="lazy" decoding="async" class="w-full rounded-xl" />
+                    </span>
+                  ))}
+                </div>
+              </Device>
+            </div>
+          </div>
+          <!-- who it is, and the way to their real site -->
+          <div class="relative mt-4 flex min-h-12 items-center justify-center">
+            {shown.map((c, i) => (
+              <p data-i={i} class={`cs-cap absolute flex items-center gap-3 text-sm ${i === 0 ? 'on' : ''}`}>
+                <span class="font-semibold">{c.name}</span>
+                {c.url
+                  ? <a href={c.url} target="_blank" rel="noopener" tabindex={i === 0 ? 0 : -1} class="inline-flex min-h-10 items-center gap-1.5 rounded-full bg-green px-4 font-semibold text-navy transition hover:bg-white">{tt('Voir le site')} <span aria-hidden="true" class="rtl:-scale-x-100">↗</span></a>
+                  : <span class="text-white/60">{tt(c.kind)}</span>}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+
+  <!-- every logo, in a slow band -->
+  <div class="relative border-t border-white/10 py-6" aria-label={tt('Nos clients')}>
+    <div class="flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
+      <ul class="mk-marquee flex shrink-0 gap-4 pe-4" style="animation-duration:60s">
+        {band.map((c, i) => (
+          <li aria-hidden={i >= CLIENTS.length ? 'true' : undefined}>
+            {c.url
+              ? <a href={c.url} target="_blank" rel="noopener" tabindex={i >= CLIENTS.length ? -1 : undefined} class="flex items-center gap-3 rounded-2xl bg-white/[0.06] p-2 pe-5 ring-1 ring-white/10 transition hover:bg-white/[0.12]">
+                  <span class="grid size-12 place-items-center overflow-hidden rounded-xl" style={`background:${c.bg}`}><img src={`/img/clients/${c.logo}.webp`} alt="" width="440" height="440" loading="lazy" decoding="async" class={`size-full ${c.fit ? 'object-contain p-[6%]' : 'object-cover'}`} /></span>
+                  <span class="whitespace-nowrap font-semibold">{c.name}</span>
+                </a>
+              : <span class="flex items-center gap-3 rounded-2xl bg-white/[0.06] p-2 pe-5 ring-1 ring-white/10">
+                  <span class="grid size-12 place-items-center overflow-hidden rounded-xl" style={`background:${c.bg}`}><img src={`/img/clients/${c.logo}.webp`} alt="" width="440" height="440" loading="lazy" decoding="async" class={`size-full ${c.fit ? 'object-contain p-[6%]' : 'object-cover'}`} /></span>
+                  <span class="whitespace-nowrap font-semibold">{c.name}</span>
+                </span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
 </section>
+
+<style>
+  .cs-tab { background: rgb(255 255 255 / 0.04); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08); }
+  .cs-tab:hover { background: rgb(255 255 255 / 0.08); }
+  .cs-tab.on { background: rgb(255 255 255 / 0.12); box-shadow: inset 0 0 0 1px rgb(5 185 98 / 0.55); }
+  .cs-tab:not(.on) .cs-svc { display: none; }
+  .cs-bar { transform: scaleX(0); }
+  .cs-shot, .cs-cap { opacity: 0; transition: opacity .6s ease, transform .7s cubic-bezier(.2,.8,.2,1); transform: translateY(3%); pointer-events: none; }
+  .cs-shot.on, .cs-cap.on { opacity: 1; transform: none; pointer-events: auto; }
+  .cs-glow { opacity: .4; transition: background-color .8s ease; }
+  .cs-phone { transition: inset-inline-end .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
+  .cs-box.solo .cs-phone { inset-inline-end: 25%; transform: scale(1.04); transform-origin: bottom center; }
+  @media (min-width: 768px) { .cs-box.solo .cs-phone { inset-inline-end: 29%; } }
+  .cs-tablet { opacity: 0; transform: translateX(-6%) scale(.96); }
+  [dir="rtl"] .cs-tablet { transform: translateX(6%) scale(.96); }
+  .cs-tablet.on { opacity: 1; transform: none; }
+  .cs-tabs::-webkit-scrollbar { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cs.play .cs-tab.on .cs-bar { animation: cs-bar var(--cs-ms, 5200ms) linear forwards; }
+    .cs.hold .cs-tab.on .cs-bar { animation-play-state: paused; }
+    @keyframes cs-bar { to { transform: scaleX(1); } }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cs-shot, .cs-cap, .cs-tablet, .cs-glow { transition: none; }
+  }
+</style>
+
+<script>
+  // One client at a time: a click shows it; otherwise the next one comes by itself when the green
+  // bar under the active client is full (only while the section is on screen, paused on hover).
+  document.querySelectorAll<HTMLElement>('.cs').forEach(root => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.cs-tab')];
+    if (tabs.length < 2) return;
+    const glow = root.querySelector<HTMLElement>('.cs-glow');
+    const tablet = root.querySelector<HTMLElement>('.cs-tablet');
+    const bgs = tabs.map(t => t.dataset.accent || '');
+    const box = root.querySelector<HTMLElement>('.cs-box');
+    let cur = 0;
+    const show = (i: number, focus = false) => {
+      cur = (i + tabs.length) % tabs.length;
+      tabs.forEach((t, k) => { t.classList.toggle('on', k === cur); t.setAttribute('aria-selected', String(k === cur)); t.tabIndex = k === cur ? 0 : -1; });
+      root.querySelectorAll<HTMLElement>('.cs-shot, .cs-cap').forEach(n => n.classList.toggle('on', Number(n.dataset.i) === cur));
+      root.querySelectorAll<HTMLAnchorElement>('.cs-cap a').forEach(a => { a.tabIndex = Number(a.closest<HTMLElement>('.cs-cap')!.dataset.i) === cur ? 0 : -1; });
+      const till = !!tablet?.querySelector(`.cs-shot[data-i="${cur}"]`);
+      tablet?.classList.toggle('on', till);
+      box?.classList.toggle('solo', !till);
+      if (glow) glow.style.background = bgs[cur];
+      const t = tabs[cur];
+      if (focus) t.focus();
+      // keep the active client in view in the phone strip, without moving the page
+      const strip = t.parentElement!;
+      if (strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: t.offsetLeft - strip.offsetLeft - 16, behavior: 'smooth' });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      t.addEventListener('keydown', e => {
+        const rtl = document.documentElement.dir === 'rtl';
+        const next = ['ArrowDown', rtl ? 'ArrowLeft' : 'ArrowRight'], prev = ['ArrowUp', rtl ? 'ArrowRight' : 'ArrowLeft'];
+        if (next.includes(e.key)) { e.preventDefault(); show(cur + 1, true); }
+        if (prev.includes(e.key)) { e.preventDefault(); show(cur - 1, true); }
+      });
+      t.querySelector('.cs-bar')?.addEventListener('animationend', () => show(cur + 1));
+    });
+    show(0);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    new IntersectionObserver(es => es.forEach(e => root.classList.toggle('play', e.isIntersecting)), { threshold: 0.35 }).observe(root);
+    root.addEventListener('pointerenter', e => { if ((e as PointerEvent).pointerType === 'mouse') root.classList.add('hold'); });
+    root.addEventListener('pointerleave', () => root.classList.remove('hold'));
+    root.addEventListener('focusin', () => root.classList.add('hold'));
+    root.addEventListener('focusout', () => root.classList.remove('hold'));
+  });
+</script>

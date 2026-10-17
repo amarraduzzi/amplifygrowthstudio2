@@ -977,4 +977,9 @@ export const dictAr: Record<string, string> = {
   "voir le site": "شاهد الموقع",
   "Pâtisserie, café et traiteur": "حلويات ومقهى وتموين",
   "Burgers smash artisanaux": "برغر سماش حرفي",
+  "établissements déjà en service": "مؤسسة تشتغل معنا بالفعل",
+  "Nos clients": "عملاؤنا",
+  "La caisse de": "صندوق",
+  "Le site de": "موقع",
+  "Voir le site": "شاهد الموقع",
 };

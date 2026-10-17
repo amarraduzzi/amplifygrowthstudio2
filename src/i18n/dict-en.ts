@@ -977,4 +977,9 @@ export const dictEn: Record<string, string> = {
   "voir le site": "see the website",
   "Pâtisserie, café et traiteur": "Pastry shop, café and catering",
   "Burgers smash artisanaux": "Handmade smash burgers",
+  "établissements déjà en service": "venues already up and running",
+  "Nos clients": "Our clients",
+  "La caisse de": "The till of",
+  "Le site de": "The website of",
+  "Voir le site": "See the website",
 };
