@@ -975,4 +975,5 @@ export const dictAr: Record<string, string> = {
   "Ils travaillent déjà avec nous": "يشتغلون معنا بالفعل",
   "Des cafés, restaurants et salons de thé qui nous confient leur caisse, leur menu QR ou leur site.": "مقاهٍ ومطاعم وصالونات شاي تثق بنا في الكاشير أو قائمة QR أو موقعها.",
   "voir le site": "شاهد الموقع",
+  "Pâtisserie, café et traiteur": "حلويات ومقهى وتموين",
 };
