@@ -976,4 +976,5 @@ export const dictEn: Record<string, string> = {
   "Des cafés, restaurants et salons de thé qui nous confient leur caisse, leur menu QR ou leur site.": "Cafés, restaurants and tea rooms that trust us with their till, their QR menu or their website.",
   "voir le site": "see the website",
   "Pâtisserie, café et traiteur": "Pastry shop, café and catering",
+  "Burgers smash artisanaux": "Handmade smash burgers",
 };
