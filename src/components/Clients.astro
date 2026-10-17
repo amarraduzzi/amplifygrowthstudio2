@@ -29,12 +29,12 @@ const band = [...CLIENTS, ...CLIENTS];
         <div role="tablist" aria-label={tt('Nos clients')} class="cs-tabs -mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:flex-col md:overflow-visible md:px-0">
           {shown.map((c, i) => (
             <button role="tab" type="button" id={`cs-t${i}`} aria-controls="cs-stage" aria-selected={i === 0 ? 'true' : 'false'} data-i={i} data-accent={c.accent}
-              class={`cs-tab group relative flex shrink-0 snap-start items-center gap-3 overflow-hidden rounded-2xl p-2 pe-4 text-start transition md:w-full md:p-2.5 ${i === 0 ? 'on' : ''}`}>
-              <span class="grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl ring-1 ring-white/15 md:size-14" style={`background:${c.bg}`}>
+              class={`cs-tab group relative flex shrink-0 snap-start items-center gap-3 overflow-hidden rounded-2xl p-2 pe-4 text-start transition md:w-full md:p-2 ${i === 0 ? 'on' : ''}`}>
+              <span class="grid size-11 shrink-0 place-items-center overflow-hidden rounded-xl ring-1 ring-white/15" style={`background:${c.bg}`}>
                 <img src={`/img/clients/${c.logo}.webp`} alt="" width="440" height="440" loading="lazy" decoding="async" class={`size-full ${c.fit ? 'object-contain p-[6%]' : 'object-cover'}`} />
               </span>
               <span class="min-w-0 flex-1">
-                <span class="block whitespace-nowrap font-bold leading-tight md:text-lg">{c.name}</span>
+                <span class="block whitespace-nowrap font-bold leading-tight">{c.name}</span>
                 <span class="cs-kind hidden text-sm text-white/60 md:block">{tt(c.kind)}</span>
                 <span class="cs-svc mt-1.5 hidden flex-wrap gap-1.5 md:flex">
                   {c.svc.map(s => <span class="rounded-full bg-green/15 px-2.5 py-0.5 text-xs font-semibold text-green">{SVC[s]}</span>)}
@@ -48,7 +48,7 @@ const band = [...CLIENTS, ...CLIENTS];
         <!-- the stage -->
         <div id="cs-stage" role="tabpanel" aria-live="polite" class="relative mx-auto w-full max-w-[34rem]">
           <div class="cs-glow absolute start-1/2 top-1/2 -z-0 size-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl rtl:translate-x-1/2" style={`background:${shown[0].accent}`} aria-hidden="true"></div>
-          <div class={`cs-box relative aspect-[1/0.92] ${shown[0].pos ? '' : 'solo'}`}>
+          <div class={`cs-box relative aspect-[1/1.02] md:aspect-[1/0.95] ${shown[0].pos ? '' : 'solo'}`}>
             <!-- tablet: the till, behind the phone -->
             <div class={`cs-tablet absolute start-0 top-[12%] w-[78%] transition duration-700 ${shown[0].pos ? 'on' : ''}`}>
               <Device w={1600} h={1000}>
@@ -61,7 +61,7 @@ const band = [...CLIENTS, ...CLIENTS];
               </Device>
             </div>
             <!-- phone: their site or menu -->
-            <div class="cs-phone absolute bottom-0 end-[6%] w-[50%] md:w-[42%]">
+            <div class="cs-phone absolute bottom-0 end-[6%] w-[46%] md:w-[42%]">
               <Device kind="phone" w={390} h={844} screenBg="#fff">
                 <div slot="screen" class="relative aspect-[9/18.5] bg-white">
                   {shown.map((c, i) => c.shot && (
@@ -119,14 +119,14 @@ const band = [...CLIENTS, ...CLIENTS];
   .cs-tab { background: rgb(255 255 255 / 0.04); box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08); }
   .cs-tab:hover { background: rgb(255 255 255 / 0.08); }
   .cs-tab.on { background: rgb(255 255 255 / 0.12); box-shadow: inset 0 0 0 1px rgb(5 185 98 / 0.55); }
-  .cs-tab:not(.on) .cs-svc { display: none; }
+  .cs-tab:not(.on) .cs-svc, .cs-tab:not(.on) .cs-kind { display: none; }
   .cs-bar { transform: scaleX(0); }
   .cs-shot, .cs-cap { opacity: 0; transition: opacity .6s ease, transform .7s cubic-bezier(.2,.8,.2,1); transform: translateY(3%); pointer-events: none; }
   .cs-shot.on, .cs-cap.on { opacity: 1; transform: none; pointer-events: auto; }
   .cs-glow { opacity: .4; transition: background-color .8s ease; }
   .cs-phone { transition: inset-inline-end .8s cubic-bezier(.2,.8,.2,1), transform .8s cubic-bezier(.2,.8,.2,1); }
-  .cs-box.solo .cs-phone { inset-inline-end: 25%; transform: scale(1.04); transform-origin: bottom center; }
-  @media (min-width: 768px) { .cs-box.solo .cs-phone { inset-inline-end: 29%; } }
+  .cs-box.solo .cs-phone { inset-inline-end: 27%; transform: scale(1.04); transform-origin: bottom center; }
+  @media (min-width: 768px) { .cs-box.solo .cs-phone { inset-inline-end: 25%; transform: scale(1.2); } }
   .cs-tablet { opacity: 0; transform: translateX(-6%) scale(.96); }
   [dir="rtl"] .cs-tablet { transform: translateX(6%) scale(.96); }
   .cs-tablet.on { opacity: 1; transform: none; }
