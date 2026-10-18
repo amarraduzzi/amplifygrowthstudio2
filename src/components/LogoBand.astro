@@ -1,0 +1,30 @@
+---
+// Slim social proof right under the hero: "they already work with us", every client logo in a slow
+// band. The big interactive stage (Clients.astro) is no longer on the homepage, so the visitor
+// reaches the margin story (ScaleBand, MarginSim) without a long detour. Light on purpose: the
+// next section (ScaleBand) is navy, so the two never melt into one dark block.
+import { tr, langOf } from '../i18n/t';
+import { CLIENTS } from '../lib/clients';
+const tt = tr(langOf(Astro.url));
+const band = [...CLIENTS, ...CLIENTS];
+---
+<section class="bg-white py-7 md:py-9" aria-label={tt('Nos clients')}>
+  <p class="px-4 text-center text-sm font-semibold text-muted sm:px-6 md:text-base">{tt('Ils travaillent déjà avec nous')}</p>
+  <div class="mt-5 flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)]">
+    <ul class="mk-marquee flex shrink-0 gap-4 pe-4" style="animation-duration:60s">
+      {band.map((c, i) => (
+        <li aria-hidden={i >= CLIENTS.length ? 'true' : undefined}>
+          {c.url
+            ? <a href={c.url} target="_blank" rel="noopener" tabindex={i >= CLIENTS.length ? -1 : undefined} class="flex items-center gap-3 rounded-2xl bg-paper p-2 pe-5 ring-1 ring-line transition hover:-translate-y-0.5 hover:ring-green/60">
+                <span class="grid size-12 place-items-center overflow-hidden rounded-xl ring-1 ring-line" style={`background:${c.bg}`}><img src={`/img/clients/${c.logo}.webp`} alt="" width="440" height="440" loading="lazy" decoding="async" class={`size-full ${c.fit ? 'object-contain p-[6%]' : 'object-cover'}`} /></span>
+                <span class="whitespace-nowrap font-semibold text-navy">{c.name}</span>
+              </a>
+            : <span class="flex items-center gap-3 rounded-2xl bg-paper p-2 pe-5 ring-1 ring-line">
+                <span class="grid size-12 place-items-center overflow-hidden rounded-xl ring-1 ring-line" style={`background:${c.bg}`}><img src={`/img/clients/${c.logo}.webp`} alt="" width="440" height="440" loading="lazy" decoding="async" class={`size-full ${c.fit ? 'object-contain p-[6%]' : 'object-cover'}`} /></span>
+                <span class="whitespace-nowrap font-semibold text-navy">{c.name}</span>
+              </span>}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

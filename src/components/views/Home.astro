@@ -12,12 +12,11 @@ import Sectors from '../Sectors.astro';
 import ForWho from '../ForWho.astro';
 import MarginSim from '../MarginSim.astro';
 import ScaleBand from '../ScaleBand.astro';
-import SupplierBand from '../SupplierBand.astro';
 import QuickStart from '../QuickStart.astro';
 import ChatFaq from '../ChatFaq.astro';
 import Ph from '../Ph.astro';
 import Mark from '../Mark.astro';
-import Clients from '../Clients.astro';
+import LogoBand from '../LogoBand.astro';
 import ZaynaProof from '../ZaynaProof.astro';
 import { SITE, CONTACT, signupUrl } from '../../config';
 import { copy } from '../../i18n';
@@ -121,22 +120,19 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
     </div>
   </section>
 
-  <!-- CLIENTS: the restaurants already running on Amplify, real logos -->
-  <Clients />
+  <!-- CLIENTS: slim logo band, the restaurants already running on Amplify -->
+  <LogoBand />
 
   <!-- SCALE: the cheese on the scale, 130 g becomes 140 g, and what that costs in a year -->
   <ScaleBand />
 
-  <!-- MARGIN SIMULATOR: the aha, right after the promise -->
+  <!-- MARGIN SIMULATOR: the aha, right after the promise (purchase price included) -->
   <MarginSim />
 
   <!-- PLACES: where to start, by problem -->
   <Sectors lang={lang} />
 
   <ForWho lang={lang} />
-
-  <!-- SUPPLIER: the morning delivery, the price that went up, the price negotiated -->
-  <SupplierBand />
 
   <!-- TOUR: the real product, interactive screenshots -->
   <Tour lang={lang} />
