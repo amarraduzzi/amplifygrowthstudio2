@@ -9,7 +9,7 @@ import Bars from '../Bars.astro';
 import Icon from '../Icon.astro';
 import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
-import ForWho from '../ForWho.astro';
+import VenuePicker from '../VenuePicker.astro';
 import MarginSim from '../MarginSim.astro';
 import ScaleBand from '../ScaleBand.astro';
 import QuickStart from '../QuickStart.astro';
@@ -132,7 +132,8 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <!-- PLACES: where to start, by problem -->
   <Sectors lang={lang} />
 
-  <ForWho lang={lang} />
+  <!-- TRADES: café, restaurant, pastry, caterer: a live scene for each -->
+  <VenuePicker lang={lang} />
 
   <!-- TOUR: the real product, interactive screenshots -->
   <Tour lang={lang} />

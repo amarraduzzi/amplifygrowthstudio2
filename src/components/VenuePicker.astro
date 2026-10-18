@@ -1,0 +1,212 @@
+---
+// "Chaque métier a sa journée": replaces the plain "Pour qui ?" cards. Four trades as tabs; for each,
+// a live scene on a navy stage (a ticket printing, tables changing state, a weight turning into a
+// price, a quote becoming an invoice), the three things Amplify does for that trade, and the way to
+// its page. It rotates by itself while on screen (green bar under the active tab, paused on hover),
+// a click picks a trade. Every scene is an example, labelled as such; every claim is one the product
+// pages already make (Amplify POS, Profit, bakery page).
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+import { ROUTES, type Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const loc = LG === 'en' ? 'en-US' : LG === 'ar' ? 'ar-MA' : 'fr-FR';
+const n = (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+const DH = tt('DH');
+
+const V = [
+  { key: 'cafe', icon: 'cup', tab: tt('Cafés et salons de thé'), h: tt('Servir vite, et les faire revenir.'), href: ROUTES.restaurants[lang],
+    pts: [tt('Le client commande depuis sa table, par QR.'), tt('Le ticket porte le QR de vos avis Google.'), tt('Points de fidélité, en option.')] },
+  { key: 'resto', icon: 'chef', tab: tt('Restaurants'), h: tt('Savoir quels plats rapportent vraiment.'), href: ROUTES.restaurants[lang],
+    pts: [tt('Libre, occupée, en cours : chaque table a son état.'), tt('Le bon part en cuisine, avec le temps d’attente.'), tt('Marge par plat, à chaque vente')] },
+  { key: 'pat', icon: 'cake', tab: tt('Pâtisseries et boulangeries'), h: tt('Combien en préparer demain ?'), href: ROUTES.bakery[lang],
+    pts: [tt('Prix au kilo : la caisse demande le poids.'), tt('Le ticket affiche le poids vendu.'), tt('Le plan de production du jour dit quoi préparer.')] },
+  { key: 'trai', icon: 'briefcase', tab: tt('Traiteurs'), h: tt('Le traiteur, du devis à la facture.'), href: `${ROUTES.bakery[lang]}#traiteur`,
+    pts: [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')] },
+] as const;
+const TABLES: [number, 'free' | 'busy' | 'cook'][] = [[1, 'busy'], [2, 'free'], [3, 'cook'], [4, 'busy'], [5, 'free'], [6, 'cook']];
+const STATE = { free: tt('Libre'), busy: tt('Occupée'), cook: tt('En cours') };
+const SEE = tt('Voir la page');
+---
+<section class="vp relative isolate overflow-hidden border-y border-line bg-paper py-20 md:py-28" data-venues aria-labelledby="vp-h">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <h2 id="vp-h" class="text-center text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Chaque métier a sa journée.')}</span><span class="block text-green-deep">{tt('Voyez la vôtre.')}</span></h2>
+
+    <!-- the trades -->
+    <div role="tablist" aria-label={tt('Votre métier')} class="vp-tabs -mx-4 mt-10 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:mt-12 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
+      {V.map((v, i) => (
+        <button role="tab" type="button" id={`vp-t${i}`} aria-controls={`vp-p${i}`} aria-selected={i === 0 ? 'true' : 'false'} data-i={i}
+          class={`vt group relative flex shrink-0 snap-start items-center gap-3 overflow-hidden rounded-2xl bg-chalk p-2 pe-5 text-start ring-1 ring-line transition hover:ring-green/60 md:shrink ${i === 0 ? 'on' : ''}`}>
+          <span class="grid size-11 shrink-0 place-items-center rounded-xl bg-navy text-green"><Icon name={v.icon} class="size-5" /></span>
+          <span class="font-bold leading-tight">{v.tab}</span>
+          <span class="vt-bar absolute inset-x-0 bottom-0 h-[3px] origin-left bg-green rtl:origin-right" aria-hidden="true"></span>
+        </button>
+      ))}
+    </div>
+
+    <div class="mt-8 grid items-center gap-8 md:mt-12 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] md:gap-14">
+      <!-- the words -->
+      <div>
+        {V.map((v, i) => (
+          <div role="tabpanel" id={`vp-p${i}`} aria-labelledby={`vp-t${i}`} data-i={i} hidden={i !== 0} class="vp-copy">
+            <h3 class="text-[1.9rem] leading-[1] sm:text-[2.5rem]">{v.h}</h3>
+            <ul class="mt-6 space-y-3 text-[1.05rem]">
+              {v.pts.map(p => (
+                <li class="flex gap-3">
+                  <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
+                  <span>{p}</span>
+                </li>
+              ))}
+            </ul>
+            <a href={v.href} class="mt-8 inline-flex min-h-12 items-center gap-3 rounded-full bg-navy px-6 font-bold text-white transition-transform hover:scale-[1.03] active:scale-[.98]">
+              {SEE}
+              <svg viewBox="0 0 24 24" class="size-5 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+            </a>
+          </div>
+        ))}
+      </div>
+
+      <!-- the stage -->
+      <div class="relative">
+        <div class="relative isolate grid min-h-[22rem] place-items-center overflow-hidden rounded-[1.75rem] bg-navy px-5 pb-8 pt-16 md:min-h-[26rem] md:rounded-[2.25rem]">
+          <div class="pointer-events-none absolute inset-0 -z-10 opacity-[0.07] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] [background-size:22px_22px]" aria-hidden="true"></div>
+          <div class="vp-glow pointer-events-none absolute start-1/2 top-1/2 -z-10 size-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl rtl:translate-x-1/2" aria-hidden="true"></div>
+          <span class="absolute start-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{tt('Exemple')}</span>
+
+          <!-- cafe: the ticket prints -->
+          <div class="vs w-full max-w-64" data-i="0" aria-hidden="true">
+            <div class="vs-ticket rounded-lg bg-white px-5 pb-5 pt-4 font-mono text-[0.78rem] text-navy shadow-2xl">
+              <p class="vs-line text-center font-bold" style="--d:150ms">{tt('Table 4')}</p>
+              <p class="vs-line my-2 border-t border-dashed border-navy/30" style="--d:250ms"></p>
+              <p class="vs-line flex justify-between" style="--d:400ms"><span>{tt('Thé à la menthe')}</span><span dir="ltr">16</span></p>
+              <p class="vs-line flex justify-between" style="--d:650ms"><span>{tt('Café au lait')}</span><span dir="ltr">18</span></p>
+              <p class="vs-line flex justify-between" style="--d:900ms"><span>{tt('Crêpe Nutella')}</span><span dir="ltr">25</span></p>
+              <p class="vs-line my-2 border-t border-dashed border-navy/30" style="--d:1050ms"></p>
+              <p class="vs-line flex justify-between font-bold" style="--d:1200ms"><span>{tt('Total')}</span><span dir="ltr">59 {DH}</span></p>
+              <p class="vs-line mt-3 flex items-center gap-2 text-green-deep" style="--d:1500ms"><Icon name="qr" class="size-4 shrink-0" />{tt('QR avis Google sur le ticket')}</p>
+            </div>
+            <p class="vs-pop mt-3 flex items-center justify-between gap-3 rounded-2xl bg-mint px-4 py-2.5 text-sm font-semibold text-green-deep" style="--d:1900ms"><span>{tt('+1 point de fidélité')}</span><span class="rounded-full bg-white px-2 py-0.5 text-[0.7rem] font-semibold text-muted">{tt('En option')}</span></p>
+          </div>
+
+          <!-- restaurant: the tables, the kitchen, the margin -->
+          <div class="vs w-full max-w-72" data-i="1" aria-hidden="true" hidden>
+            <div class="grid grid-cols-3 gap-2">
+              {TABLES.map(([t, s], k) => (
+                <div class={`vs-pop rounded-xl px-2 py-2.5 text-center ${s === 'free' ? 'bg-white/10 text-green ring-1 ring-green/60' : s === 'busy' ? 'bg-green text-navy' : 'bg-[#F5B301] text-navy'}`} style={`--d:${150 + k * 140}ms`}>
+                  <span class="block text-xs font-semibold opacity-80">{tt('Table')}</span>
+                  <span class="display block text-2xl leading-none" dir="ltr">{t}</span>
+                  <span class="mt-1 block text-[0.7rem] font-bold">{STATE[s]}</span>
+                </div>
+              ))}
+            </div>
+            <div class="vs-pop mt-3 rounded-2xl bg-white p-4 text-navy shadow-2xl" style="--d:1100ms">
+              <p class="flex items-center justify-between text-sm font-bold"><span class="flex items-center gap-2"><Icon name="chef" class="size-4 text-green-deep" />{tt('Pizza margherita')}</span><span class="rounded-full bg-chalk px-2 py-0.5 text-[0.7rem] font-semibold text-muted">{tt('En cuisine')} · 6 min</span></p>
+              <p class="mt-3 flex justify-between text-[0.8rem]"><span>{tt('Marge')}</span><span class="font-bold tabular-nums text-green-deep" dir="ltr">70 %</span></p>
+              <span class="mt-1 block h-1.5 overflow-hidden rounded-full bg-chalk"><span class="vs-grow block h-full rounded-full bg-green" style="--w:70%;--d:1500ms"></span></span>
+            </div>
+          </div>
+
+          <!-- pastry: a weight becomes a price -->
+          <div class="vs w-full max-w-64" data-i="2" aria-hidden="true" hidden>
+            <div class="vs-pop rounded-2xl bg-white p-4 text-navy shadow-2xl" style="--d:150ms">
+              <p class="flex items-center justify-between text-xs font-semibold text-muted"><span>{tt('Balance')}</span><span>{tt('Gâteaux secs')}</span></p>
+              <p class="display mt-1 text-5xl leading-none tabular-nums" style="text-transform:none" dir="ltr">{n(0.45, 3)} <span class="text-2xl text-green-deep">kg</span></p>
+              <span class="mt-3 block h-1.5 overflow-hidden rounded-full bg-chalk"><span class="vs-grow block h-full rounded-full bg-green" style="--w:45%;--d:400ms"></span></span>
+              <p class="vs-line mt-3 text-sm text-muted" style="--d:1200ms" dir="ltr">{tt('× 120 DH le kilo')}</p>
+              <p class="vs-line text-lg font-bold" style="--d:1500ms" dir="ltr">= {n(54)} {DH}</p>
+            </div>
+            <div class="vs-ticket mt-3 rounded-lg bg-white px-5 py-3 font-mono text-[0.78rem] text-navy shadow-2xl">
+              <p class="vs-line flex justify-between" style="--d:1900ms"><span>{tt('Gâteaux secs')}</span><span dir="ltr">{n(0.45, 3)} kg</span></p>
+              <p class="vs-line flex justify-between font-bold" style="--d:2150ms"><span>{tt('Total')}</span><span dir="ltr">{n(54)} {DH}</span></p>
+            </div>
+            <p class="vs-pop mt-3 flex items-center justify-between gap-3 rounded-2xl bg-mint px-4 py-2.5 text-sm font-semibold text-green-deep" style="--d:2600ms"><span>{tt('Plan de demain')}</span><span dir="ltr">{tt('Croissants')} 48 · {tt('à produire')}</span></p>
+          </div>
+
+          <!-- caterer: quote, deposit, invoice -->
+          <div class="vs w-full max-w-72" data-i="3" aria-hidden="true" hidden>
+            <div class="rounded-2xl bg-white p-4 text-navy shadow-2xl">
+              <div class="vs-pop flex items-start gap-3 border-b border-line pb-3" style="--d:150ms">
+                <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
+                <span class="flex-1 text-sm"><b class="block">{tt('Devis envoyé sur WhatsApp')}</b><span class="text-muted">{tt('Mariage · 120 personnes')}</span></span>
+                <b class="tabular-nums" dir="ltr">{n(7500)} {DH}</b>
+              </div>
+              <div class="vs-pop flex items-start gap-3 border-b border-line py-3" style="--d:900ms">
+                <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
+                <span class="flex-1 text-sm"><b class="block">{tt('Acompte noté')}</b></span>
+                <b class="tabular-nums" dir="ltr">{n(3000)} {DH}</b>
+              </div>
+              <p class="vs-pop flex justify-between py-3 text-sm" style="--d:1500ms"><span class="text-muted">{tt('Reste à payer')}</span><b class="tabular-nums text-[#B42318]" dir="ltr">{n(4500)} {DH}</b></p>
+              <p class="vs-pop flex items-center gap-2 rounded-xl bg-mint px-3 py-2 text-sm font-semibold text-green-deep" style="--d:2200ms"><Icon name="check" class="size-4 shrink-0" />{tt('Une fois payé : facture numérotée, avec ICE')}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .vt.on { background: #fff; box-shadow: inset 0 0 0 2px #05B962; }
+  .vt-bar { transform: scaleX(0); }
+  .vp-tabs::-webkit-scrollbar { display: none; }
+  .vp-glow { background: rgb(5 185 98 / .35); opacity: .45; }
+  .vs[hidden], .vp-copy[hidden] { display: none; }
+  /* a scene starts from the beginning each time it is shown (display none -> block restarts the animations) */
+  .vp-copy:not([hidden]) { animation: vp-copy .5s cubic-bezier(.2,.8,.2,1) both; }
+  .vs-pop, .vs-line, .vs-grow { animation-duration: .5s; animation-fill-mode: both; animation-delay: var(--d, 0ms); }
+  .vs-pop { animation-name: vs-pop; animation-timing-function: cubic-bezier(.2,.8,.2,1.2); }
+  .vs-line { animation-name: vs-print; animation-duration: .35s; animation-timing-function: steps(4, end); }
+  .vs-grow { animation-name: vs-grow; animation-duration: .9s; animation-timing-function: cubic-bezier(.2,.8,.2,1); width: var(--w); }
+  @keyframes vs-pop { from { opacity: 0; transform: translateY(12px) scale(.96); } }
+  @keyframes vs-print { from { opacity: 0; clip-path: inset(0 100% 0 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
+  @keyframes vs-grow { from { width: 0; } }
+  @keyframes vp-copy { from { opacity: 0; transform: translateY(10px); } }
+  @media (prefers-reduced-motion: no-preference) {
+    .vp.play .vt.on .vt-bar { animation: vt-bar var(--vp-ms, 8000ms) linear forwards; }
+    .vp.hold .vt.on .vt-bar { animation-play-state: paused; }
+    @keyframes vt-bar { to { transform: scaleX(1); } }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .vp-copy:not([hidden]), .vs-pop, .vs-line, .vs-grow { animation: none; }
+  }
+</style>
+
+<script>
+  // One trade at a time: a click shows it; otherwise the next one comes by itself when the green bar
+  // under the active tab is full (only while the section is on screen, paused on hover or focus).
+  document.querySelectorAll<HTMLElement>('[data-venues]').forEach(root => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.vt')];
+    const scenes = [...root.querySelectorAll<HTMLElement>('.vs')];
+    const copies = [...root.querySelectorAll<HTMLElement>('.vp-copy')];
+    scenes.forEach((s, i) => { s.hidden = i !== 0; });
+    let cur = 0;
+    const show = (i: number, focus = false) => {
+      cur = (i + tabs.length) % tabs.length;
+      tabs.forEach((t, k) => { t.classList.toggle('on', k === cur); t.setAttribute('aria-selected', String(k === cur)); t.tabIndex = k === cur ? 0 : -1; });
+      scenes.forEach((s, k) => { s.hidden = k !== cur; });
+      copies.forEach((c, k) => { c.hidden = k !== cur; });
+      if (focus) tabs[cur].focus();
+      const t = tabs[cur], strip = t.parentElement!;
+      if (strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: t.offsetLeft - strip.offsetLeft - 16, behavior: 'smooth' });
+    };
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => show(i));
+      t.addEventListener('keydown', e => {
+        const rtl = document.documentElement.dir === 'rtl';
+        const next = rtl ? 'ArrowLeft' : 'ArrowRight', prev = rtl ? 'ArrowRight' : 'ArrowLeft';
+        if (e.key === next) { e.preventDefault(); show(cur + 1, true); }
+        if (e.key === prev) { e.preventDefault(); show(cur - 1, true); }
+      });
+      t.querySelector('.vt-bar')?.addEventListener('animationend', () => show(cur + 1));
+    });
+    show(0);
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    new IntersectionObserver(es => es.forEach(e => root.classList.toggle('play', e.isIntersecting)), { threshold: 0.35 }).observe(root);
+    root.addEventListener('pointerenter', e => { if ((e as PointerEvent).pointerType === 'mouse') root.classList.add('hold'); });
+    root.addEventListener('pointerleave', () => root.classList.remove('hold'));
+    root.addEventListener('focusin', () => root.classList.add('hold'));
+    root.addEventListener('focusout', () => root.classList.remove('hold'));
+  });
+</script>
