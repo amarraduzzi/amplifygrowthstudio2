@@ -14,11 +14,11 @@ const all = copy(Astro.props.lang);
 const items = all.home.faq;
 const c = all.home.chat;
 ---
-<section class="relative mx-auto grid max-w-6xl gap-10 px-4 py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14" data-chatfaq data-q={tt('Bonjour, j’ai une question sur Amplify.')}>
+<section class="relative mx-auto grid max-w-6xl gap-10 px-4 py-14 md:py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14" data-chatfaq data-q={tt('Bonjour, j’ai une question sur Amplify.')}>
   <div>
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{all.ui.faq}</h2>
     <p class="mt-5 max-w-sm text-lg text-muted">{all.ui.faqCta}</p>
-    <WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-faq" class="mt-6 px-7" />
+    <WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-faq" class="mt-6 px-7 max-lg:hidden" />
   </div>
 
   <div class="overflow-hidden rounded-[2rem] bg-paper shadow-[0_40px_80px_-40px_rgba(0,30,62,0.45)] ring-1 ring-line">
@@ -29,7 +29,7 @@ const c = all.home.chat;
     </div>
 
     <!-- conversation -->
-    <div class="faq-log h-[24rem] space-y-3 overflow-y-auto bg-[#EEF3EF] px-4 py-5 sm:h-[26rem]" aria-live="polite">
+    <div class="faq-log h-[21rem] space-y-3 overflow-y-auto bg-[#EEF3EF] px-4 py-5 sm:h-[26rem]" aria-live="polite">
       <p class="w-fit max-w-[85%] rounded-2xl rounded-ss-md bg-white px-3.5 py-2.5 text-[0.95rem] shadow-sm">{c.hello}</p>
       {items.map(([q, a], i) => (
         <div class="faq-pair space-y-3" data-pair={i}>

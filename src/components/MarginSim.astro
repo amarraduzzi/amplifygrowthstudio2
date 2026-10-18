@@ -45,7 +45,7 @@ const I18N = {
   insightMany: tt('{n} plats rapportent moins qu’avant. Le plus touché : {d}, {m} de moins par plat.'),
 };
 ---
-<section class="ms relative isolate overflow-hidden bg-navy pb-24 pt-16 text-white" data-msim data-i18n={JSON.stringify(I18N)} data-ing={JSON.stringify(ING)} data-dishes={JSON.stringify(DISHES)}>
+<section class="ms relative isolate overflow-hidden bg-navy pb-14 pt-12 text-white md:pb-24 md:pt-16" data-msim data-i18n={JSON.stringify(I18N)} data-ing={JSON.stringify(ING)} data-dishes={JSON.stringify(DISHES)}>
   <div class="pointer-events-none absolute -end-40 -top-40 -z-10 size-[34rem] rounded-full bg-green/20 blur-3xl" aria-hidden="true"></div>
   <div class="pointer-events-none absolute -bottom-48 -start-40 -z-10 size-[30rem] rounded-full bg-blue-2/60 blur-3xl" aria-hidden="true"></div>
 
@@ -153,12 +153,12 @@ const I18N = {
     </div>
     <!-- phones: while the sliders are on screen, the result follows at the top -->
     <div class="ms-float pointer-events-none fixed inset-x-3 z-30 lg:hidden" aria-hidden="true">
-      <div class="rounded-2xl bg-paper px-4 py-2.5 text-navy shadow-[0_18px_40px_-14px_rgba(0,0,0,.65)] ring-1 ring-line">
+      <div class="rounded-2xl bg-paper px-3.5 py-2 text-navy shadow-[0_14px_30px_-12px_rgba(0,0,0,.6)] ring-1 ring-line">
         <div class="flex items-center justify-between gap-3">
-          <div class="min-w-0"><p class="text-[0.7rem] font-semibold text-muted">{tt('Marge brute sur un an')}</p><p class="ms-ftotal display text-[1.6rem] tabular-nums leading-none" dir="ltr"></p></div>
-          <p class="ms-fdelta shrink-0 rounded-full px-2.5 py-1 text-sm font-bold" dir="ltr"></p>
+          <div class="min-w-0"><p class="text-[0.68rem] font-semibold leading-tight text-muted">{tt('Marge brute sur un an')}</p><p class="ms-ftotal display text-[1.4rem] tabular-nums leading-none" dir="ltr"></p></div>
+          <p class="ms-fdelta shrink-0 rounded-full px-2.5 py-1 text-[0.8rem] font-bold" dir="ltr"></p>
         </div>
-        <p class="ms-fleak mt-1 truncate text-xs font-semibold text-[#B42318]"></p>
+        <p class="ms-fleak hidden"></p>
       </div>
     </div>
     <p class="mt-5 text-center text-xs text-white/50">{tt('Restaurant de démonstration, prix et ventes d’exemple. Marge brute hors TVA (10 %), sur 360 jours d’ouverture, avec les mêmes quantités vendues.')}</p>
@@ -192,7 +192,7 @@ const I18N = {
   @keyframes ms-shake { 20% { transform: translateX(-5px); } 40% { transform: translateX(5px); } 60% { transform: translateX(-3px); } 80% { transform: translateX(2px); } }
   /* phones: the five dishes that bring in the most */
   @media (max-width: 1023px) { :global(.ms-list > li:nth-child(n + 6)) { display: none; } }
-  .ms-float { top: 76px; opacity: 0; transform: translateY(-14px); transition: opacity .25s, transform .3s cubic-bezier(.2,.8,.2,1); }
+  .ms-float { top: 72px; opacity: 0; transform: translateY(-14px); transition: opacity .25s, transform .3s cubic-bezier(.2,.8,.2,1); }
   .ms-float.show { opacity: 1; transform: none; }
   :global(.ms-bar) { transition: width .6s cubic-bezier(.2,.8,.2,1), background-color .4s; }
   @media (prefers-reduced-motion: reduce) {
@@ -211,7 +211,7 @@ const I18N = {
     const N = Number(I.days);
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     const $ = <T extends Element>(s: string) => root.querySelector<T>(s)!;
-    const nf = (n: number, d = 0) => n.toLocaleString(I.loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+    const nf = (n: number, d = 0) => n.toLocaleString(I.loc, { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/[  ]/g, ' ');
     const dh = (n: number, d = 0) => `${nf(n, d)} ${I.dh}`;
 
     const BASEP: Record<string, number> = Object.fromEntries(ING.map(g => [g.key, g.base]));

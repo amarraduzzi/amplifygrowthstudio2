@@ -27,7 +27,7 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
   <MkHero waLabel={t.ui.whatsapp} />
 
   <!-- statement -->
-  <section class="border-y border-line bg-paper px-4 py-24 sm:px-6 md:py-32">
+  <section class="border-y border-line bg-paper px-4 py-14 sm:px-6 md:py-32">
     <h2 class="mx-auto max-w-5xl text-center text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-[5rem]" data-scrub="words">
       <span class="block">{c.statement.a}</span>
       <span class="block">{c.statement.b.split(' ').map((w, i, a) => <><span class={`word ${i >= a.length - 4 ? 'mk-red' : ''}`}>{w}</span>{' '}</>)}</span>
@@ -44,7 +44,7 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
 
   <!-- visible or sold -->
   <section class="border-y border-line bg-paper">
-    <div class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+    <div class="mx-auto max-w-6xl px-4 py-14 md:py-24 sm:px-6">
       <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.compare.h2a}</span><span class="block text-green-deep">{c.compare.h2b}</span></h2>
       <div class="mt-12 overflow-hidden rounded-[2rem] bg-white ring-1 ring-line" data-scrub="steps">
         <div class="grid grid-cols-[0.8fr_1fr_1fr] border-b border-line text-sm font-bold sm:text-base">
@@ -64,7 +64,7 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
   </section>
 
   <!-- how we work -->
-  <section class="mx-auto max-w-6xl px-4 py-24 sm:px-6">
+  <section class="mx-auto max-w-6xl px-4 py-14 md:py-24 sm:px-6">
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.process.h2a}</span><span class="block text-green-deep">{c.process.h2b}</span></h2>
     <ol class="relative mt-14 grid gap-5 md:grid-cols-4" data-scrub="steps">
       <span class="absolute start-6 top-0 bottom-0 w-1 rounded-full bg-line md:start-[12.5%] md:end-[12.5%] md:top-7 md:bottom-auto md:h-1 md:w-auto" aria-hidden="true"><span class="mkp-line absolute rounded-full bg-green"></span></span>
@@ -101,7 +101,7 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
   </section>
 
   <!-- what you receive each month -->
-  <section class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[1fr_1fr]" data-mkrep>
+  <section class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 md:py-24 sm:px-6 lg:grid-cols-[1fr_1fr]" data-mkrep>
     <div>
       <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{c.report.h2a}</span><span class="block text-green-deep">{c.report.h2b}</span></h2>
       <p class="mt-5 max-w-md text-lg text-muted">{c.report.p}</p>
@@ -132,7 +132,7 @@ const ICONS = ['🍽️', '💡', '🚀', '📈'];
   <Faq lang={lang} items={c.faq} wa={c.wa} />
 
   <!-- final: the room fills -->
-  <section class="px-4 pb-24 sm:px-6" data-mkfin>
+  <section class="px-4 pb-14 md:pb-24 sm:px-6" data-mkfin>
     <div class="relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14 lg:grid-cols-[1.2fr_1fr]">
       <img src="/img/photos/mk-salle-pleine-1600.webp" srcset="/img/photos/mk-salle-pleine-800.webp 800w, /img/photos/mk-salle-pleine-1600.webp 1536w" sizes="(min-width: 1152px) 1152px, 100vw" alt="" width="1536" height="1024" loading="lazy" class="mkf-photo absolute inset-0 -z-20 size-full object-cover" />
       <span class="absolute inset-0 -z-10 bg-linear-to-r from-navy via-navy/85 to-navy/40" aria-hidden="true"></span>

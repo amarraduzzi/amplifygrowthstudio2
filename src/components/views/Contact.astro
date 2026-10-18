@@ -50,7 +50,7 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
 
   <!-- message builder with live preview -->
   <section class="border-y border-line bg-paper">
-    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-24 sm:px-6 lg:grid-cols-[1.1fr_1fr]">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 py-14 md:py-24 sm:px-6 lg:grid-cols-[1.1fr_1fr]">
       <form id="wa-form" class="space-y-7" data-number={CONTACT.whatsapp} data-i18n={JSON.stringify({ hi: tt('Bonjour'), me: tt(', je suis {n}'), run: tt('J’ai un {type} à {city}.'), need: tt('Ce qui m’intéresse : {list}.'), other: tt('Autre'), place: tt('établissement') })}>
         <div>
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Votre message,</span><span class="block text-green-deep">prêt en 20 secondes.</span></h2>
@@ -94,7 +94,7 @@ const WA_PATH = 'M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2
   </section>
 
   <!-- leave a review -->
-  <section class="relative isolate overflow-hidden bg-navy py-24 text-white" data-review data-url={CONTACT.reviewUrl} data-wa={CONTACT.whatsapp} data-i18n={JSON.stringify({ L: ['', tt('Décevant'), tt('Moyen'), tt('Bien'), tt('Très bien'), tt('Excellent !')], msg: tt('Bonjour, une remarque sur Amplify'), note: tt('ma note') })}>
+  <section class="relative isolate overflow-hidden bg-navy py-14 md:py-24 text-white" data-review data-url={CONTACT.reviewUrl} data-wa={CONTACT.whatsapp} data-i18n={JSON.stringify({ L: ['', tt('Décevant'), tt('Moyen'), tt('Bien'), tt('Très bien'), tt('Excellent !')], msg: tt('Bonjour, une remarque sur Amplify'), note: tt('ma note') })}>
     <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_80%_30%,rgba(245,179,1,.16),transparent_70%),radial-gradient(40%_50%_at_10%_90%,rgba(5,185,98,.18),transparent_70%)]" aria-hidden="true"></span>
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">
       <div>

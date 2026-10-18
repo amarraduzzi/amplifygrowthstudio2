@@ -992,4 +992,12 @@ export const dictAr: Record<string, string> = {
   "Une imprimante de tickets imprime la commande.": "طابعة الفواتير تطبع الطلب.",
   "Voir le site de Zayna Café": "شاهد موقع Zayna Café",
   "La caisse Amplify installée au comptoir de Zayna Café, à Rabat, avec des clients attablés": "صندوق Amplify مُركَّب عند كاونتر Zayna Café في الرباط، مع زبائن جالسين على الطاولات",
+  "Sur cette page": "في هذه الصفحة",
+  "Par où commencer": "من أين تبدأ",
+  "Par métier": "حسب مهنتك",
+  "Le produit": "المنتج",
+  "Commande par QR": "الطلب عبر QR",
+  "Chez Zayna Café": "في Zayna Café",
+  "Démarrer": "ابدأ الآن",
+  "Ce qui est inclus": "ما الذي يشمله",
 };

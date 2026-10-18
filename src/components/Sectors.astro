@@ -7,9 +7,11 @@
 import Icon from './Icon.astro';
 import WaButton from './WaButton.astro';
 import { copy } from '../i18n';
+import { tr, langOf } from '../i18n/t';
 import { ROUTES, type Lang } from '../i18n/routes';
 interface Props { lang: Lang }
 const lang = Astro.props.lang;
+const tt = tr(langOf(Astro.url));
 const all = copy(lang);
 const c = all.home.places;
 const v = c.v;
@@ -20,15 +22,16 @@ const LOOK: Record<string, { bg: string; accent: string; glow: string }> = {
   clients: { bg: 'bg-mint', accent: 'bg-navy text-white', glow: 'rgb(5 185 98 / .25)' },
 };
 ---
-<section class="mx-auto max-w-6xl px-4 py-24 sm:px-6" data-routes>
+<section class="mx-auto max-w-6xl px-4 py-14 md:py-24 sm:px-6" data-routes>
   <h2 class="text-center text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{c.h2a}</span><span class="block text-green-deep">{c.h2b}</span></h2>
   <p class="mx-auto mt-6 max-w-xl text-center text-muted">{c.p}</p>
 
-  <div class="mt-12 grid gap-5 lg:grid-cols-3" style="perspective:1400px">
+  <!-- phones: the three routes are a swipeable row (next card peeks in, dots below); from a laptop up: side by side -->
+  <div class="snap-row scroll-px-4 -mx-4 mt-8 flex gap-4 overflow-x-auto overflow-y-hidden px-4 pb-3 pt-1 lg:mx-0 lg:mt-12 lg:grid lg:grid-cols-3 lg:gap-5 lg:overflow-visible lg:px-0 lg:pb-0 lg:pt-0" style="perspective:1400px" data-rcar>
     {c.sectors.map((s, i) => {
       const L = LOOK[s.key] ?? LOOK.profit;
       return (
-        <article class="rt sec-panel group relative flex flex-col overflow-hidden rounded-[2rem] bg-paper ring-1 ring-line" style={`--i:${i};--glow:${L.glow}`} data-rt>
+        <article class="rt sec-panel group relative flex w-[85%] shrink-0 flex-col overflow-hidden rounded-[2rem] bg-paper ring-1 ring-line sm:w-[58%] lg:w-auto" style={`--i:${i};--glow:${L.glow}`} data-rt>
           <!-- the live visual -->
           <div class={`rt-vis relative grid min-h-52 place-items-center lg:h-[19rem] overflow-hidden ${L.bg} px-5 pb-6 pt-16`} aria-hidden="true">
             <span class={`absolute start-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-bold ${L.accent}`}><Icon name={s.icon} class="size-4" />{s.label}</span>
@@ -77,20 +80,27 @@ const LOOK: Record<string, { bg: string; accent: string; glow: string }> = {
           <!-- the words, the price, the way in -->
           <div class="flex flex-1 flex-col p-6 sm:p-7">
             <p class="text-xl font-semibold leading-snug tracking-tight">{s.quote}</p>
-            <ul class="mt-5 hidden space-y-2.5 text-[0.95rem] sm:block">
-              {s.does.map(d => (
-                <li class="flex gap-2.5">
-                  <span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span>
-                  <span>{d}</span>
-                </li>
-              ))}
-            </ul>
+            <!-- phones: what is included sits behind one tap (nothing is dropped); from a tablet up it is always open -->
+            <details open data-does class="group/d mt-4 sm:mt-5">
+              <summary class="flex min-h-11 cursor-pointer list-none items-center justify-between rounded-full bg-chalk px-4 text-sm font-semibold ring-1 ring-line sm:hidden [&::-webkit-details-marker]:hidden">
+                {tt('Ce qui est inclus')}
+                <svg viewBox="0 0 24 24" class="size-4 transition-transform group-open/d:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </summary>
+              <ul class="mt-3 space-y-2.5 text-[0.95rem] sm:mt-0">
+                {s.does.map(d => (
+                  <li class="flex gap-2.5">
+                    <span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span>
+                    <span>{d}</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
             <div class="mt-auto pt-5 sm:pt-6">
               <p class="text-sm font-semibold text-muted">{s.price.split(/[,،]/)[0]}</p>
               <p class="display mt-1 text-[1.9rem] leading-none text-navy">{s.price.split(/[,،]/).slice(1).join(',').trim()}</p>
               <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-3">
-                <WaButton text={s.wa} label={all.ui.whatsapp} where={`home-route-${s.key}`} class="px-5" />
-                <a href={ROUTES[s.link][lang]} class="font-semibold underline underline-offset-4 hover:text-green-deep">{c.more} {s.price.split(/[,،]/)[0]}</a>
+                <WaButton text={s.wa} label={all.ui.whatsapp} where={`home-route-${s.key}`} class="px-5 max-md:hidden" />
+                <a href={ROUTES[s.link][lang]} class="font-semibold underline underline-offset-4 hover:text-green-deep max-md:flex max-md:min-h-12 max-md:w-full max-md:items-center max-md:justify-center max-md:rounded-full max-md:bg-navy max-md:text-white max-md:no-underline">{c.more} {s.price.split(/[,،]/)[0]}</a>
               </div>
             </div>
           </div>
@@ -98,9 +108,13 @@ const LOOK: Record<string, { bg: string; accent: string; glow: string }> = {
       );
     })}
   </div>
+  <div class="mt-4 flex justify-center gap-2 lg:hidden" data-rdots>
+    {c.sectors.map((s, i) => <button type="button" class="rdot h-2.5 w-2.5 rounded-full bg-navy/20 transition-all" aria-label={s.label} aria-current={i === 0 ? 'true' : undefined} data-i={i}></button>)}
+  </div>
 </section>
 
 <style>
+  .rdot[aria-current='true'] { width: 1.6rem; background: var(--color-green-deep); }
   /* the cards rise one after the other; on hover the card lifts and glows in its colour */
   :global(.js) .rt { opacity: 0; transform: translateY(40px) rotateX(8deg); transition: opacity .6s ease, transform .8s cubic-bezier(.2,.8,.2,1), box-shadow .4s; transition-delay: calc(var(--i) * 140ms); transform-origin: 50% 100%; }
   :global(.js) .rt.is-on { opacity: 1; transform: none; }
@@ -116,6 +130,15 @@ const LOOK: Record<string, { bg: string; accent: string; glow: string }> = {
 
 <script>
   document.querySelectorAll<HTMLElement>('[data-routes]').forEach((root) => {
+    // phones: the "what is included" lists start closed (they are open in the HTML, so nothing is lost without JS)
+    if (matchMedia('(max-width: 639px)').matches) root.querySelectorAll<HTMLDetailsElement>('[data-does]').forEach(d => { d.open = false; });
+    // the dots follow the swipe and jump to a card when tapped
+    const row = root.querySelector<HTMLElement>('[data-rcar]')!;
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('.rdot')];
+    const cardsEl = [...row.children] as HTMLElement[];
+    const near = () => { const c = row.scrollLeft + row.clientWidth / 2; let b = 0, bd = 1e9; cardsEl.forEach((el, i) => { const d = Math.abs(el.offsetLeft + el.offsetWidth / 2 - c); if (d < bd) { bd = d; b = i; } }); return b; };
+    row.addEventListener('scroll', () => { const n = near(); dots.forEach((d, i) => d.setAttribute('aria-current', i === n ? 'true' : 'false')); }, { passive: true });
+    dots.forEach((d, i) => d.addEventListener('click', () => row.scrollTo({ left: cardsEl[i].offsetLeft - row.offsetLeft - 16, behavior: 'smooth' })));
     const cards = [...root.querySelectorAll<HTMLElement>('[data-rt]')];
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
     // the visuals play when the cards come into view (all three, one after the other)

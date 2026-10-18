@@ -36,7 +36,7 @@ const yearly = (10 / 1000) * 50 * 360 * 75;
         </div>
       </div>
       <p class="sb-calc mt-4 text-white/75">{tt('× 50 pizzas par jour, 360 jours par an, fromage à 75 DH le kilo')}</p>
-      <p class="sb-res mt-2 w-fit max-w-full rounded-2xl bg-[#E5484D] px-4 py-2 text-lg font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= {yearly.toLocaleString(loc)} {tt('DH')}</span> {tt('perdus par an, rien que sur la pizza')}</p>
+      <p class="sb-res mt-2 w-fit max-w-full rounded-2xl bg-[#E5484D] px-4 py-2 text-lg font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= {yearly.toLocaleString(loc).replace(/[\u202f\u00a0]/g, ' ')} {tt('DH')}</span> {tt('perdus par an, rien que sur la pizza')}</p>
     </figcaption>
   </figure>
 </section>

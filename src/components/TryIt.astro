@@ -16,7 +16,7 @@ const c = all.home.tryit;
 const qr = await QRCode.toString(SITE.demoMenuUrl, { type: 'svg', margin: 0, color: { dark: '#001E3EFF', light: '#FFFFFF00' } });
 const showReview = !isPlaceholder(REVIEW.text);
 ---
-<section id={Astro.props.id} data-try class="relative isolate scroll-mt-20 overflow-hidden bg-green py-20 text-navy md:py-28">
+<section id={Astro.props.id} data-try class="relative isolate scroll-mt-20 overflow-hidden bg-green py-14 text-navy md:py-28">
   <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32" color="rgba(0,30,62,0.08)" />
   <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">
     <div>

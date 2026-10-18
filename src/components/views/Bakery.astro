@@ -78,7 +78,7 @@ const blocks = [
   </section>
 
   <!-- the recipe card and the margins -->
-  <section class="border-y border-line bg-paper py-24">
+  <section class="border-y border-line bg-paper py-14 md:py-24">
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
       <div>
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une recette')}</span><span class="block text-green-deep">{tt('dans la recette.')}</span></h2>
@@ -96,7 +96,7 @@ const blocks = [
 
   <!-- production, catering, weight -->
   {blocks.map((b, i) => (
-    <section id={b.k === 'cat' ? 'traiteur' : b.k === 'kg' ? 'poids' : 'production'} class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-20 sm:px-6 lg:grid-cols-2">
+    <section id={b.k === 'cat' ? 'traiteur' : b.k === 'kg' ? 'poids' : 'production'} class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-14 md:py-20 sm:px-6 lg:grid-cols-2">
       <div class={i % 2 ? 'lg:order-2' : ''}>
         <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{b.h2}</h2>
         <p class="mt-5 max-w-md text-lg text-muted">{b.p}</p>
@@ -122,7 +122,7 @@ const blocks = [
 
   <Faq lang={lang} items={faq} wa={wa} />
 
-  <section class="px-4 pb-24 sm:px-6">
+  <section class="px-4 pb-14 md:pb-24 sm:px-6">
     <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
       <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
       <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Voyez votre pâtisserie')}</span><span class="block text-green">{tt('dans Amplify.')}</span></h2>

@@ -33,9 +33,19 @@ const schema = [
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: abs(ROUTES.home[lang]), inLanguage: lang },
   faqSchema(c.faq),
 ].filter(Boolean) as Record<string, unknown>[];
+const toc = [
+  { id: 'marge', label: tt('Simulateur de marge') },
+  { id: 'parcours', label: tt('Par où commencer') },
+  { id: 'metiers', label: tt('Par métier') },
+  { id: 'produit', label: tt('Le produit') },
+  { id: 'qr', label: tt('Commande par QR') },
+  { id: 'zayna', label: tt('Chez Zayna Café') },
+  { id: 'demarrer', label: tt('Démarrer') },
+  { id: 'faq', label: t.ui.faq },
+];
 const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [1600, 937], cuisine: [1600, 937], marges: [1400, 714], 'menu-qr': [780, 1688] };
 ---
-<Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema}>
+<Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema} toc={toc}>
 
   <!-- HERO: light, the promise left, the real product on a mint panel right.
        One orchestrated moment: an order travels from the QR menu to the kitchen to the margin. -->
@@ -128,28 +138,28 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
   <ScaleBand />
 
   <!-- MARGIN SIMULATOR: the aha, right after the promise (purchase price included) -->
-  <MarginSim />
+  <div id="marge"><MarginSim /></div>
 
   <!-- PLACES: where to start, by problem -->
-  <Sectors lang={lang} />
+  <div id="parcours"><Sectors lang={lang} /></div>
 
   <!-- TRADES: café, restaurant, pastry, caterer: a live scene for each -->
-  <VenuePicker lang={lang} />
+  <div id="metiers"><VenuePicker lang={lang} /></div>
 
   <!-- TOUR: the real product, interactive screenshots -->
-  <Tour lang={lang} />
+  <div id="produit"><Tour lang={lang} /></div>
 
   <!-- QR ORDERING: the customer scans, you receive; with or without a till -->
-  <QrOrders lang={lang} />
+  <div id="qr"><QrOrders lang={lang} /></div>
 
   <!-- PROOF: one real installation, right before the button -->
   <ZaynaProof lang={lang} />
 
   <!-- START: on your own, today; help as a safety net -->
-  <QuickStart lang={lang} wa={c.wa} />
+  <div id="demarrer"><QuickStart lang={lang} wa={c.wa} /></div>
 
   <!-- FAQ: a WhatsApp conversation -->
-  <ChatFaq lang={lang} wa={c.wa} />
+  <div id="faq"><ChatFaq lang={lang} wa={c.wa} /></div>
 <script>
   // the facts under the hero count up when they come into view
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;

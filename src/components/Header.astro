@@ -2,10 +2,12 @@
 import Logo from './Logo.astro';
 import WaButton from './WaButton.astro';
 import { copy } from '../i18n';
+import { tr } from '../i18n/t';
 import { loginUrl, signupUrl } from '../config';
 import { ROUTES, liveLanguages, type Lang, type PageKey } from '../i18n/routes';
-interface Props { lang: Lang; page: PageKey; wa: string; langs?: Lang[] }
-const { lang, page, wa, langs: langsProp } = Astro.props;
+interface Props { lang: Lang; page: PageKey; wa: string; langs?: Lang[]; toc?: { id: string; label: string }[] }
+const { lang, page, wa, langs: langsProp, toc } = Astro.props;
+const tt = tr(lang);
 const t = copy(lang);
 const nav = (['pos', 'profit', 'site', 'marketing', 'restaurants', ...(lang === 'fr' ? ['blog' as const] : []), 'contact'] as const).map(k => ({ k, label: k === 'blog' ? 'Blog' : t.nav[k], href: ROUTES[k][lang] }));
 const active = (k: string) => k === page || (k === 'pos' && page === 'features');
@@ -48,6 +50,14 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         <svg viewBox="0 0 24 24" class="hidden size-5 group-open:block" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </summary>
       <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto bg-chalk px-4 pb-6 pt-2 shadow-2xl" aria-label="Navigation">
+        {toc && toc.length > 0 && (
+          <div class="border-b border-line pb-4 pt-3">
+            <p class="text-xs font-bold uppercase tracking-wide text-muted">{tt('Sur cette page')}</p>
+            <div class="mt-2.5 flex flex-wrap gap-2">
+              {toc.map(i => <a href={`#${i.id}`} data-toc class="inline-flex min-h-10 items-center rounded-full bg-paper px-4 text-[0.95rem] font-semibold ring-1 ring-line active:bg-mint">{i.label}</a>)}
+            </div>
+          </div>
+        )}
         {nav.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl">{n.label}</a>)}
         <div class="mt-5 grid grid-cols-2 gap-2">
           <a href={loginUrl(lang)} class="grid min-h-12 place-items-center rounded-full border border-navy/25 font-medium">{t.nav.login}</a>
@@ -58,6 +68,8 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
   </div>
 </header>
 <script>
+  // the in-page index closes the menu, then the page scrolls to the section
+  document.querySelectorAll<HTMLAnchorElement>('[data-toc]').forEach((a) => a.addEventListener('click', () => { const d = a.closest('details'); if (d) d.open = false; }));
   // language menu: closes on outside click and on Escape
   document.querySelectorAll<HTMLDetailsElement>('[data-lang-dd]').forEach((dd) => {
     document.addEventListener('click', (e) => { if (dd.open && !dd.contains(e.target as Node)) dd.open = false; });

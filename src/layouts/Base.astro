@@ -12,8 +12,10 @@ interface Props {
   schema?: Record<string, unknown>[];
   /** pages that exist in some languages only (e.g. a French article): no hreflang or language menu for the others */
   langsOnly?: Lang[];
+  /** in-page index shown at the top of the phone menu */
+  toc?: { id: string; label: string }[];
 }
-const { lang, page, title, description, wa, schema = [], langsOnly } = Astro.props;
+const { lang, page, title, description, wa, schema = [], langsOnly, toc } = Astro.props;
 const t = copy(lang);
 const canonical = abs(ROUTES[page][lang]);
 const langs = langsOnly ?? liveLanguages();
@@ -63,23 +65,39 @@ const ld = [business, ...crumbs, ...schema];
 </head>
 <body class="min-h-dvh overflow-x-clip">
   <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-paper focus:px-4 focus:py-2">{t.ui.skip}</a>
-  <Header lang={lang} page={page} wa={wa} langs={langs} />
+  <Header lang={lang} page={page} wa={wa} langs={langs} toc={toc} />
   <main id="main"><slot /></main>
   <Footer lang={lang} />
   <!-- on phones the WhatsApp button stays at the bottom of the screen -->
-  <div id="sticky-wa" class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 p-3 backdrop-blur transition-transform duration-300 md:hidden">
-    <WaButton text={wa} label={t.ui.whatsapp} where={`${page}-sticky`} class="w-full" />
+  <div id="sticky-wa" class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-paper/95 px-3 py-2 backdrop-blur transition-transform duration-300 md:hidden">
+    <WaButton text={wa} label={t.ui.whatsapp} where={`${page}-sticky`} class="min-h-11! w-full" />
   </div>
-  <div class="h-20 bg-navy md:hidden" aria-hidden="true"></div>
+  <div class="h-16 bg-navy md:hidden" aria-hidden="true"></div>
   <script>
-    // Phones: the bottom WhatsApp bar only appears once the hero button has scrolled away (no double button).
+    // Phones: the bottom WhatsApp bar stays out of the way. It appears once the hero button has scrolled
+    // away, and hides again whenever another WhatsApp button is on screen (no double button, nothing covered).
     const heroCta = document.getElementById('hero-cta');
     const bar = document.getElementById('sticky-wa');
-    if (heroCta && bar && 'IntersectionObserver' in window) {
-      const hide = (h: boolean) => { bar.style.transform = h ? 'translateY(110%)' : ''; bar.inert = h; };
-      hide(true);
-      new IntersectionObserver(([e]) => hide(e.isIntersecting || e.boundingClientRect.top > 0)).observe(heroCta);
+    if (bar && 'IntersectionObserver' in window) {
+      let heroPast = !heroCta;
+      const seen = new Set<Element>();
+      const apply = () => { const h = !heroPast || seen.size > 0; bar.style.transform = h ? 'translateY(110%)' : ''; bar.inert = h; };
+      if (heroCta) { apply(); new IntersectionObserver(([e]) => { heroPast = !e.isIntersecting && e.boundingClientRect.top <= 0; apply(); }).observe(heroCta); }
+      const io = new IntersectionObserver((es) => { es.forEach(e => e.isIntersecting ? seen.add(e.target) : seen.delete(e.target)); apply(); }, { rootMargin: '-64px 0px -72px 0px' });
+      document.querySelectorAll('a[data-wa]').forEach(a => { if (!bar.contains(a) && !a.closest('header')) io.observe(a); });
     }
+    // Swipeable rows (tabs, chips): a soft fade on the side where more is hidden, so visitors know they can swipe.
+    const rows = [...document.querySelectorAll<HTMLElement>('.snap-row, .vp-tabs, .cs-tabs')];
+    const edge = (el: HTMLElement) => {
+      const max = el.scrollWidth - el.clientWidth, pos = Math.abs(el.scrollLeft), rtl = getComputedStyle(el).direction === 'rtl';
+      const more = max > 4;
+      const startMore = more && pos > 4, endMore = more && pos < max - 4;
+      el.style.setProperty('--fl', String(+(rtl ? endMore : startMore)));
+      el.style.setProperty('--fr', String(+(rtl ? startMore : endMore)));
+    };
+    rows.forEach(el => { el.classList.add('edge-fade'); edge(el); el.addEventListener('scroll', () => edge(el), { passive: true }); });
+    addEventListener('resize', () => rows.forEach(edge));
+    addEventListener('load', () => rows.forEach(edge));
     // Scroll-linked blocks: --p from 0 (block enters at the bottom) to 1 (block reaches the upper part of the screen).
     const scrubs = [...document.querySelectorAll<HTMLElement>('[data-scrub]')];
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;

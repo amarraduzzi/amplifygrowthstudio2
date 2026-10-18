@@ -45,6 +45,13 @@ h3 { font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
 /* placeholders that still need real data: visible on purpose */
 .ph { background: #FFF1B8; color: #5A4300; padding: 0 .3em; border-radius: 4px; font-weight: 500; text-transform: none; font-stretch: 100%; letter-spacing: 0; }
 
+/* in-page anchors land below the sticky header */
+main [id] { scroll-margin-top: 4.5rem; }
+/* swipeable rows fade out on the side where more is hidden (--fl / --fr are set by a small script) */
+.edge-fade { --fl: 0; --fr: 0; -webkit-mask-image: linear-gradient(to right, transparent 0, #000 calc(var(--fl) * 1.75rem), #000 calc(100% - var(--fr) * 1.75rem), transparent 100%); mask-image: linear-gradient(to right, transparent 0, #000 calc(var(--fl) * 1.75rem), #000 calc(100% - var(--fr) * 1.75rem), transparent 100%); }
+@media (min-width: 768px) { .edge-fade { -webkit-mask-image: none; mask-image: none; } }
+/* figures with thousands separators: a real space, and a little room for it in the tall display face */
+.display.tabular-nums { word-spacing: .12em; }
 .snap-row { scroll-snap-type: x mandatory; scrollbar-width: none; }
 .snap-row::-webkit-scrollbar { display: none; }
 .snap-row > * { scroll-snap-align: start; }

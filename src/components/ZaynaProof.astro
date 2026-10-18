@@ -40,7 +40,7 @@ const FACTS = [
         {FACTS.map(f => (
           <li class="flex items-start gap-3">
             <span class="mt-2 size-2.5 shrink-0 rounded-full bg-green" aria-hidden="true"></span>
-            <p><strong class="block font-bold leading-snug">{f.h}</strong><span class="text-muted">{f.p}</span></p>
+            <p class="min-w-0 flex-1 [text-wrap:wrap]"><strong class="block font-bold leading-snug">{f.h}</strong><span class="block leading-snug text-muted">{f.p}</span></p>
           </li>
         ))}
       </ul>

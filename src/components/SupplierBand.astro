@@ -7,7 +7,7 @@ import { tr, langOf } from '../i18n/t';
 const LG = langOf(Astro.url);
 const tt = tr(LG);
 const loc = LG === 'en' ? 'en-US' : LG === 'ar' ? 'ar-MA' : 'fr-FR';
-const n = (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+const n = (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/[  ]/g, ' ');
 const sep = LG === 'fr' ? ' : ' : ': ', comma = LG === 'ar' ? '، ' : ', ';
 const perPlate = 0.13 * (82 - 75), lost = perPlate * 50 * 360, kept = lost - 0.13 * (78 - 75) * 50 * 360;
 ---

@@ -13,7 +13,7 @@ const { lang } = Astro.props;
 const LG = langOf(Astro.url);
 const tt = tr(LG);
 const loc = LG === 'en' ? 'en-US' : LG === 'ar' ? 'ar-MA' : 'fr-FR';
-const n = (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d });
+const n = (v: number, d = 0) => v.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/[  ]/g, ' ');
 const DH = tt('DH');
 
 const V = [
@@ -30,7 +30,7 @@ const TABLES: [number, 'free' | 'busy' | 'cook'][] = [[1, 'busy'], [2, 'free'], 
 const STATE = { free: tt('Libre'), busy: tt('Occupée'), cook: tt('En cours') };
 const SEE = tt('Voir la page');
 ---
-<section class="vp relative isolate overflow-hidden border-y border-line bg-paper py-20 md:py-28" data-venues aria-labelledby="vp-h">
+<section class="vp relative isolate overflow-hidden border-y border-line bg-paper py-14 md:py-28" data-venues aria-labelledby="vp-h">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
     <h2 id="vp-h" class="text-center text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Chaque métier a sa journée.')}</span><span class="block text-green-deep">{tt('Voyez la vôtre.')}</span></h2>
 
