@@ -10,6 +10,7 @@ import Icon from '../Icon.astro';
 import Tour from '../Tour.astro';
 import Sectors from '../Sectors.astro';
 import VenuePicker from '../VenuePicker.astro';
+import QrOrders from '../QrOrders.astro';
 import MarginSim from '../MarginSim.astro';
 import ScaleBand from '../ScaleBand.astro';
 import QuickStart from '../QuickStart.astro';
@@ -137,6 +138,9 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
 
   <!-- TOUR: the real product, interactive screenshots -->
   <Tour lang={lang} />
+
+  <!-- QR ORDERING: the customer scans, you receive; with or without a till -->
+  <QrOrders lang={lang} />
 
   <!-- PROOF: one real installation, right before the button -->
   <ZaynaProof lang={lang} />

@@ -1,0 +1,154 @@
+---
+// "Le client scanne. Vous recevez la commande.": the QR ordering offer. A phone sends an order, the
+// Commandes screen receives it (sound, accept with a preparation time, ready). Below: the two ways to
+// get it, without a till (Amplify Commandes: 500 DH once, then 100 DH per month) or with the till
+// (included in the Restaurant plan). Everything shown is what the app does (guest order page: table QR,
+// takeaway, delivery; orders screen with sound, accept, ready; no online payment, the guest pays the
+// staff). The scene is an example, labelled as such, and loops only while on screen.
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+import { CLIENTS } from '../lib/clients';
+import { tr, langOf } from '../i18n/t';
+import { ROUTES, type Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+const DH = tt('DH');
+const rm = CLIENTS.find(c => c.name === 'Relais Marin');
+const PTS = [
+  tt('Le client scanne le QR de sa table et commande depuis son téléphone.'),
+  tt('La commande arrive avec un signal sonore. Vous acceptez et donnez le temps de préparation.'),
+  tt('À emporter et livraison : un message WhatsApp prévient le client quand c’est prêt.'),
+];
+const NO_TILL = [
+  tt('Votre page de commande, avec votre carte en français, arabe et anglais'),
+  tt('L’écran des commandes : signal sonore, acceptation, temps de préparation'),
+  tt('Pause en un clic, export Excel des ventes'),
+];
+const WITH_TILL = [
+  tt('Un bouton Accepter directement dans la caisse'),
+  tt('Bons cuisine et état des tables'),
+  tt('Commande en ligne sans commission, à emporter et livraison'),
+];
+---
+<section class="q relative isolate overflow-hidden border-y border-line bg-paper py-20 md:py-28" data-qr aria-labelledby="q-h">
+  <div class="mx-auto max-w-6xl px-4 sm:px-6">
+    <div class="grid items-center gap-10 md:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] md:gap-14">
+      <div>
+        <h2 id="q-h" class="text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Le client scanne.')}</span><span class="block text-green-deep">{tt('Vous recevez la commande.')}</span></h2>
+        <p class="mt-6 max-w-xl text-lg text-muted">{tt('QR à table, à emporter ou livraison. Les commandes arrivent sur un écran dédié, ou directement dans votre caisse. Sans commission.')}</p>
+        <ul class="mt-6 space-y-3 text-[1.05rem]">
+          {PTS.map(p => (
+            <li class="flex gap-3">
+              <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
+              <span>{p}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <!-- the stage -->
+      <div class="relative isolate grid min-h-[22rem] place-items-center overflow-hidden rounded-[1.75rem] bg-navy px-4 pb-8 pt-16 md:rounded-[2.25rem]" aria-hidden="true">
+        <div class="pointer-events-none absolute inset-0 -z-10 opacity-[0.07] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] [background-size:22px_22px]"></div>
+        <span class="absolute start-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</span>
+        <div class="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-5">
+          <!-- the guest's phone -->
+          <div class="w-44 shrink-0 rounded-[1.6rem] bg-white p-3 text-navy shadow-2xl">
+            <p class="text-center text-[0.7rem] font-bold">{tt('Dar Nour')} · {tt('Table 7')}</p>
+            <div class="mt-2 space-y-1.5 text-[0.75rem]">
+              <p class="flex justify-between rounded-lg bg-mint px-2 py-1.5"><span>{tt('Thé à la menthe')}</span><span dir="ltr">16</span></p>
+              <p class="flex justify-between rounded-lg bg-mint px-2 py-1.5"><span>{tt('Crêpe Nutella')}</span><span dir="ltr">25</span></p>
+              <p class="flex justify-between rounded-lg bg-chalk px-2 py-1.5 text-muted"><span>{tt('Café au lait')}</span><span dir="ltr">18</span></p>
+            </div>
+            <div class="mt-3 grid">
+              <span class="q-a col-start-1 row-start-1 whitespace-nowrap rounded-full bg-navy px-2 py-2 text-center text-[0.68rem] font-bold text-white" dir="ltr">{tt('Commander')} · 41 {DH}</span>
+              <span class="q-b col-start-1 row-start-1 flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-green px-2 py-2 text-center text-[0.68rem] font-bold text-navy"><Icon name="check" class="size-3.5 shrink-0" />{tt('Commande envoyée')}</span>
+            </div>
+          </div>
+          <svg viewBox="0 0 24 24" class="size-6 shrink-0 rotate-90 text-green sm:rotate-0 rtl:sm:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          <!-- the orders screen -->
+          <div class="w-full max-w-60 rounded-2xl bg-white p-3.5 text-navy shadow-2xl">
+            <p class="flex items-center justify-between text-[0.7rem] font-bold"><span>Commandes</span><span class="rounded-full bg-chalk px-2 py-0.5 font-semibold text-muted">{tt('Aujourd’hui')}</span></p>
+            <div class="q-card mt-3 rounded-xl p-3 ring-2">
+              <p class="flex items-center justify-between text-sm font-bold"><span class="flex items-center gap-1.5"><Icon name="qr" class="size-4 text-green-deep" />{tt('Table 7')}</span><span class="tabular-nums" dir="ltr">41 {DH}</span></p>
+              <p class="mt-1 text-[0.72rem] text-muted">{tt('Thé à la menthe')} ×1 · {tt('Crêpe Nutella')} ×1</p>
+              <div class="mt-3 grid text-[0.72rem] font-bold">
+                <span class="q-c1 col-start-1 row-start-1 flex items-center justify-between rounded-full bg-green px-3 py-2 text-navy"><span>{tt('Nouvelle')}</span><span>{tt('Accepter')}</span></span>
+                <span class="q-c2 col-start-1 row-start-1 flex items-center justify-between rounded-full bg-[#F5B301] px-3 py-2 text-navy"><span>{tt('En préparation')}</span><span dir="ltr">15 min</span></span>
+                <span class="q-c3 col-start-1 row-start-1 flex items-center justify-center gap-1.5 rounded-full bg-navy px-3 py-2 text-white"><Icon name="check" class="size-3.5 text-green" />{tt('Prêt')}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- the two ways to get it -->
+    <div class="mt-14 grid gap-5 md:mt-20 md:grid-cols-2">
+      <div class="flex flex-col rounded-3xl bg-chalk p-6 ring-1 ring-line sm:p-8">
+        <p class="text-sm font-bold text-green-deep">{tt('Sans caisse')}</p>
+        <h3 class="mt-1 text-3xl leading-none">Amplify Commandes</h3>
+        <p class="mt-4 flex flex-wrap items-baseline gap-x-2"><span class="display text-5xl leading-tight tabular-nums" style="text-transform:none" dir="ltr">500 {DH}</span><span class="text-muted">{tt('une fois, puis 100 DH par mois')}</span></p>
+        <ul class="mt-6 flex-1 space-y-3">
+          {NO_TILL.map(p => (
+            <li class="flex gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span><span>{p}</span></li>
+          ))}
+        </ul>
+        <WaButton text="Bonjour, je voudrais en savoir plus sur Amplify Commandes (commande par QR sans caisse)." label={tt('Parler de Commandes')} where="home-commandes" class="mt-8 self-start" />
+      </div>
+      <div class="flex flex-col rounded-3xl bg-navy p-6 text-white sm:p-8">
+        <p class="text-sm font-bold text-green">{tt('Avec la caisse')}</p>
+        <h3 class="mt-1 text-3xl leading-none">Amplify POS</h3>
+        <p class="mt-4 flex flex-wrap items-baseline gap-x-2"><span class="display text-5xl leading-tight text-green" style="text-transform:none">{tt('Inclus')}</span><span class="text-white/70">{tt('avec le forfait Restaurant')}</span></p>
+        <ul class="mt-6 flex-1 space-y-3">
+          {WITH_TILL.map(p => (
+            <li class="flex gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span><span>{p}</span></li>
+          ))}
+        </ul>
+        <a href={ROUTES.pos[lang]} class="mt-8 inline-flex min-h-12 items-center gap-3 self-start rounded-full bg-paper px-6 font-bold text-navy transition-transform hover:scale-[1.03] active:scale-[.98]">
+          {tt('Voir Amplify POS')}
+          <svg viewBox="0 0 24 24" class="size-5 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+    </div>
+
+    {rm?.url && (
+      <p class="mt-8 text-center text-muted">
+        {tt('Relais Marin, à Rabat, travaille ainsi : un site web et la commande par QR, sans caisse.')}
+        <a href={rm.url} target="_blank" rel="noopener" class="ms-1 font-bold text-green-deep underline underline-offset-4">{tt('Voir leur page')}</a>
+      </p>
+    )}
+  </div>
+</section>
+
+<style>
+  /* resting state (reduced motion, or before the section is seen): the order is accepted */
+  .q-a { opacity: 0; }
+  .q-b { opacity: 1; }
+  .q-c1, .q-c3 { opacity: 0; }
+  .q-c2 { opacity: 1; }
+  .q-card { background: #fff; --tw-ring-color: #F5B301; }
+  @media (prefers-reduced-motion: no-preference) {
+    .q.play .q-a { animation: q-a 10s infinite; }
+    .q.play .q-b { animation: q-b 10s infinite; }
+    .q.play .q-card { animation: q-card 10s infinite; }
+    .q.play .q-c1 { animation: q-c1 10s infinite; }
+    .q.play .q-c2 { animation: q-c2 10s infinite; }
+    .q.play .q-c3 { animation: q-c3 10s infinite; }
+    @keyframes q-a { 0%, 34% { opacity: 1; } 36%, 100% { opacity: 0; } }
+    @keyframes q-b { 0%, 34% { opacity: 0; } 36%, 96% { opacity: 1; } 98%, 100% { opacity: 0; } }
+    @keyframes q-card { 0%, 37% { opacity: 0; transform: translateY(10px); } 41%, 96% { opacity: 1; transform: none; } 98%, 100% { opacity: 0; } }
+    @keyframes q-c1 { 0%, 40% { opacity: 0; } 42%, 54% { opacity: 1; } 56%, 100% { opacity: 0; } }
+    @keyframes q-c2 { 0%, 54% { opacity: 0; } 56%, 76% { opacity: 1; } 78%, 100% { opacity: 0; } }
+    @keyframes q-c3 { 0%, 76% { opacity: 0; } 78%, 96% { opacity: 1; } 98%, 100% { opacity: 0; } }
+  }
+</style>
+
+<script>
+  // The scene only loops while the section is on screen.
+  document.querySelectorAll<HTMLElement>('[data-qr]').forEach(root => {
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    new IntersectionObserver(es => es.forEach(e => root.classList.toggle('play', e.isIntersecting)), { threshold: 0.3 }).observe(root);
+  });
+</script>
