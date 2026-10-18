@@ -18,6 +18,7 @@ import ChatFaq from '../ChatFaq.astro';
 import Ph from '../Ph.astro';
 import Mark from '../Mark.astro';
 import Clients from '../Clients.astro';
+import ZaynaProof from '../ZaynaProof.astro';
 import { SITE, CONTACT, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
@@ -139,6 +140,9 @@ const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [
 
   <!-- TOUR: the real product, interactive screenshots -->
   <Tour lang={lang} />
+
+  <!-- PROOF: one real installation, right before the button -->
+  <ZaynaProof lang={lang} />
 
   <!-- START: on your own, today; help as a safety net -->
   <QuickStart lang={lang} wa={c.wa} />
