@@ -7,6 +7,7 @@ import Icon from '../Icon.astro';
 import Device from '../Device.astro';
 import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
+import QrOrders from '../QrOrders.astro';
 import ProductFinal from '../ProductFinal.astro';
 import { SITE, OFFER, signupUrl, waLink } from '../../config';
 import { copy } from '../../i18n';
@@ -412,6 +413,9 @@ const schema = [
       ))}
     </ol>
   </section>
+
+  <!-- the other way to take orders: QR ordering on a dedicated screen -->
+  <QrOrders lang={lang} variant="site" />
 
   <!-- what is included: a bento of small live scenes -->
   <section class="relative overflow-hidden border-y border-line bg-paper" data-as data-bento>

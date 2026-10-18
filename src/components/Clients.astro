@@ -7,7 +7,7 @@ import Device from './Device.astro';
 import { tr, langOf } from '../i18n/t';
 import { CLIENTS, type Svc } from '../lib/clients';
 const tt = tr(langOf(Astro.url));
-const SVC: Record<Svc, string> = { pos: tt('Caisse'), site: tt('Site web'), qr: tt('Commande QR'), online: tt('Commande en ligne') };
+const SVC: Record<Svc, string> = { pos: tt('Caisse'), site: tt('Site web'), qr: tt('Commande QR'), online: tt('Commande en ligne'), orders: tt('Commandes sans caisse') };
 const shown = CLIENTS.filter(c => c.shot || c.pos);
 const stage = shown.length >= 2;
 const band = [...CLIENTS, ...CLIENTS];

@@ -64,6 +64,10 @@ export const venuesEn: Record<string, string> = {
   "Voir Amplify POS": "See Amplify POS",
   "Relais Marin, à Rabat, travaille ainsi : un site web et la commande par QR, sans caisse.": "Relais Marin, in Rabat, works this way: a website and QR ordering, no till.",
   "Voir leur page": "See their page",
+  "Autre option : la commande par QR": "Another option: ordering by QR",
+  "Pas besoin d’une caisse ? Amplify Commandes.": "No till needed? Amplify Commandes.",
+  "La page de commande et l’écran des commandes, sans la caisse : 500 DH une fois, puis 100 DH par mois.": "The ordering page and the orders screen, without the till: 500 DH once, then 100 DH per month.",
+  "Commandes sans caisse": "Orders without a till",
 };
 export const venuesAr: Record<string, string> = {
   "Chaque métier a sa journée.": "لكل مهنة يومها.",
@@ -129,4 +133,8 @@ export const venuesAr: Record<string, string> = {
   "Voir Amplify POS": "اكتشف Amplify POS",
   "Relais Marin, à Rabat, travaille ainsi : un site web et la commande par QR, sans caisse.": "Relais Marin في الرباط يشتغل هكذا: موقع إلكتروني وطلب عبر QR، بدون كاشير.",
   "Voir leur page": "شاهد صفحتهم",
+  "Autre option : la commande par QR": "خيار آخر: الطلب عبر QR",
+  "Pas besoin d’une caisse ? Amplify Commandes.": "لا تحتاج إلى كاشير؟ Amplify Commandes.",
+  "La page de commande et l’écran des commandes, sans la caisse : 500 DH une fois, puis 100 DH par mois.": "صفحة الطلب وشاشة الطلبات، بدون كاشير: 500 درهم مرة واحدة، ثم 100 درهم شهريًا.",
+  "Commandes sans caisse": "طلبات بدون كاشير",
 };

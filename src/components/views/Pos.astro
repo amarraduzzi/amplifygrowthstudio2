@@ -15,6 +15,7 @@ import BillingToggle from '../BillingToggle.astro';
 import InstallInfo from '../InstallInfo.astro';
 import Faq from '../Faq.astro';
 import ProductFinal from '../ProductFinal.astro';
+import QrOrders from '../QrOrders.astro';
 import OwnChannels from '../OwnChannels.astro';
 import OwnerLive from '../OwnerLive.astro';
 import OwnSite from '../OwnSite.astro';
@@ -110,6 +111,9 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 
   <!-- own channels: online ordering, bookings, waitlist, kiosk -->
   <OwnChannels />
+
+  <!-- QR ordering: the guest scans, the till receives (and the till-less option) -->
+  <QrOrders lang={lang} variant="pos" />
 
   <PhotoBand name="pos-service" alt="Le passe d’un restaurant au moment du rush, un serveur emporte les assiettes" kicker="12:30" title="Le rush. La caisse suit." w={1600} h={686} class="pt-24" pos="60% 50%" />
 
