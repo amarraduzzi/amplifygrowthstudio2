@@ -973,6 +973,7 @@ export const dictAr: Record<string, string> = {
   "Restaurant italien, Hay Riad": "مطعم إيطالي، حي الرياض",
   "Salon de thé, Rabat": "صالون شاي، الرباط",
   "Ils travaillent déjà avec nous": "يشتغلون معنا بالفعل",
+  "restaurants et cafés à Rabat": "مطاعم ومقاهٍ في الرباط",
   "Des cafés, restaurants et salons de thé qui nous confient leur caisse, leur menu QR ou leur site.": "مقاهٍ ومطاعم وصالونات شاي تثق بنا في الكاشير أو قائمة QR أو موقعها.",
   "voir le site": "شاهد الموقع",
   "Pâtisserie, café et traiteur": "حلويات ومقهى وتموين",
