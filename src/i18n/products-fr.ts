@@ -169,7 +169,7 @@ export const profitFr = {
       ['Food cost et marge par plat', 'En vert, orange ou rouge. Vous voyez tout de suite quel plat revoir.', true],
       ['Prix conseillé', 'Le prix de vente qui respecte votre objectif de marge, arrondi au dirham.', true],
       ['Votre carte importée en photo', 'Une photo de votre menu ou un fichier Excel : vos plats sont créés automatiquement.', true],
-      ['Factures fournisseurs en photo', 'Même les bons du souk écrits à la main. Les prix se mettent à jour et vous êtes alerté.', false],
+      ['Factures fournisseurs en photo', 'Photographiez la facture ou le bon de livraison : l’IA lit les lignes, vous vérifiez, le stock et les prix se mettent à jour.', true],
       ['Stock et écarts', 'Comptez en 10 minutes. Voyez ce qui manque, en kilos et en dirhams.', true],
       ['Loyer, salaires, point mort', 'Le chiffre à faire chaque jour pour être rentable.', true],
       ['Personnel', 'Heures, coût du personnel en % du chiffre d’affaires, remises et annulations par employé.', true],

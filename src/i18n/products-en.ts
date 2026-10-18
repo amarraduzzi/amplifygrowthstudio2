@@ -166,7 +166,7 @@ export const profitEn = {
       ['Food cost and margin per dish', 'In green, orange or red. You instantly see which dish needs a second look.', true],
       ['Suggested price', 'The selling price that meets your margin target, rounded to the dirham.', true],
       ['Your menu imported from a photo', 'A photo of your menu or an Excel file: your dishes are created automatically.', true],
-      ['Supplier invoices from a photo', 'Even handwritten slips from the souk. Prices update and you get an alert.', false],
+      ['Supplier invoices from a photo', 'Photograph the invoice or delivery note: AI reads the lines, you check them, and stock and prices update.', true],
       ['Stock and differences', 'Count in 10 minutes. See what’s missing, in kilos and in dirhams.', true],
       ['Rent, salaries, break-even', 'The revenue you need each day to be profitable.', true],
       ['Staff', 'Hours, staff costs as a % of revenue, discounts and voids per employee.', true],
