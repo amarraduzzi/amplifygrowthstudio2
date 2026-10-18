@@ -40,8 +40,8 @@ const WITH_TILL = [
         <h2 id="q-h" class="text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Le client scanne.')}</span><span class="block text-green-deep">{tt('Vous recevez la commande.')}</span></h2>
         <p class="mt-6 max-w-xl text-lg text-muted">{tt('QR à table, à emporter ou livraison. Les commandes arrivent sur un écran dédié, ou directement dans votre caisse. Sans commission.')}</p>
         <ul class="mt-6 space-y-3 text-[1.05rem]">
-          {PTS.map(p => (
-            <li class="flex gap-3">
+          {PTS.map((p, i) => (
+            <li class="q-pt flex gap-3" data-step={i}>
               <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
               <span>{p}</span>
             </li>
@@ -50,35 +50,47 @@ const WITH_TILL = [
       </div>
 
       <!-- the stage -->
-      <div class="relative isolate grid min-h-[22rem] place-items-center overflow-hidden rounded-[1.75rem] bg-navy px-4 pb-8 pt-16 md:rounded-[2.25rem]" aria-hidden="true">
+      <div class="q-stage relative isolate grid min-h-[24rem] place-items-center overflow-hidden rounded-[1.75rem] bg-navy px-4 pb-8 pt-16 md:min-h-[27rem] md:rounded-[2.25rem]" aria-hidden="true">
         <div class="pointer-events-none absolute inset-0 -z-10 opacity-[0.07] [background-image:radial-gradient(circle_at_1px_1px,#fff_1px,transparent_0)] [background-size:22px_22px]"></div>
         <span class="absolute start-4 top-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</span>
+        <span class="q-fly pointer-events-none absolute start-0 top-0 z-10 rounded-full bg-green px-2.5 py-1 text-[0.7rem] font-bold text-navy opacity-0 shadow-lg" dir="ltr">41 {DH}</span>
         <div class="flex w-full flex-col items-center gap-4 sm:flex-row sm:items-center sm:justify-center sm:gap-5">
           <!-- the guest's phone -->
-          <div class="w-44 shrink-0 rounded-[1.6rem] bg-white p-3 text-navy shadow-2xl">
+          <div class="q-phone w-44 shrink-0 rounded-[1.6rem] bg-white p-3 text-navy shadow-2xl">
             <p class="text-center text-[0.7rem] font-bold">{tt('Dar Nour')} · {tt('Table 7')}</p>
             <div class="mt-2 space-y-1.5 text-[0.75rem]">
-              <p class="flex justify-between rounded-lg bg-mint px-2 py-1.5"><span>{tt('Thé à la menthe')}</span><span dir="ltr">16</span></p>
-              <p class="flex justify-between rounded-lg bg-mint px-2 py-1.5"><span>{tt('Crêpe Nutella')}</span><span dir="ltr">25</span></p>
-              <p class="flex justify-between rounded-lg bg-chalk px-2 py-1.5 text-muted"><span>{tt('Café au lait')}</span><span dir="ltr">18</span></p>
+              <p class="q-it sel flex justify-between rounded-lg px-2 py-1.5" data-it="0"><span>{tt('Thé à la menthe')}</span><span dir="ltr">16</span></p>
+              <p class="q-it sel flex justify-between rounded-lg px-2 py-1.5" data-it="1"><span>{tt('Crêpe Nutella')}</span><span dir="ltr">25</span></p>
+              <p class="q-it flex justify-between rounded-lg px-2 py-1.5 text-muted" data-it="2"><span>{tt('Café au lait')}</span><span dir="ltr">18</span></p>
             </div>
-            <div class="mt-3 grid">
-              <span class="q-a col-start-1 row-start-1 whitespace-nowrap rounded-full bg-navy px-2 py-2 text-center text-[0.68rem] font-bold text-white" dir="ltr">{tt('Commander')} · 41 {DH}</span>
-              <span class="q-b col-start-1 row-start-1 flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-green px-2 py-2 text-center text-[0.68rem] font-bold text-navy"><Icon name="check" class="size-3.5 shrink-0" />{tt('Commande envoyée')}</span>
+            <div class="q-btn sent mt-3 grid">
+              <span class="q-b0 col-start-1 row-start-1 whitespace-nowrap rounded-full bg-navy px-2 py-2 text-center text-[0.68rem] font-bold text-white" dir="ltr">{tt('Commander')} · <span data-total>41</span> {DH}</span>
+              <span class="q-b1 col-start-1 row-start-1 flex items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-green px-2 py-2 text-center text-[0.68rem] font-bold text-navy"><Icon name="check" class="size-3.5 shrink-0" />{tt('Commande envoyée')}</span>
             </div>
           </div>
           <svg viewBox="0 0 24 24" class="size-6 shrink-0 rotate-90 text-green sm:rotate-0 rtl:sm:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
           <!-- the orders screen -->
-          <div class="w-full max-w-60 rounded-2xl bg-white p-3.5 text-navy shadow-2xl">
-            <p class="flex items-center justify-between text-[0.7rem] font-bold"><span>Commandes</span><span class="rounded-full bg-chalk px-2 py-0.5 font-semibold text-muted">{tt('Aujourd’hui')}</span></p>
-            <div class="q-card mt-3 rounded-xl p-3 ring-2">
-              <p class="flex items-center justify-between text-sm font-bold"><span class="flex items-center gap-1.5"><Icon name="qr" class="size-4 text-green-deep" />{tt('Table 7')}</span><span class="tabular-nums" dir="ltr">41 {DH}</span></p>
-              <p class="mt-1 text-[0.72rem] text-muted">{tt('Thé à la menthe')} ×1 · {tt('Crêpe Nutella')} ×1</p>
-              <div class="mt-3 grid text-[0.72rem] font-bold">
-                <span class="q-c1 col-start-1 row-start-1 flex items-center justify-between rounded-full bg-green px-3 py-2 text-navy"><span>{tt('Nouvelle')}</span><span>{tt('Accepter')}</span></span>
-                <span class="q-c2 col-start-1 row-start-1 flex items-center justify-between rounded-full bg-[#F5B301] px-3 py-2 text-navy"><span>{tt('En préparation')}</span><span dir="ltr">15 min</span></span>
-                <span class="q-c3 col-start-1 row-start-1 flex items-center justify-center gap-1.5 rounded-full bg-navy px-3 py-2 text-white"><Icon name="check" class="size-3.5 text-green" />{tt('Prêt')}</span>
-              </div>
+          <div class="q-screen w-full max-w-64 rounded-2xl bg-white p-3.5 text-navy shadow-2xl">
+            <p class="flex items-center justify-between text-[0.7rem] font-bold">
+              <span class="flex items-center gap-1.5"><span class="q-bell inline-grid"><Icon name="bell" class="size-4 text-green-deep" /></span>Commandes</span>
+              <span class="rounded-full bg-chalk px-2 py-0.5 font-semibold text-muted">{tt('Aujourd’hui')} <b class="tabular-nums text-navy" dir="ltr"><span data-day>102</span> {DH}</b></span>
+            </p>
+            <div class="mt-3 space-y-2">
+              {[
+                { s: 'ready', icon: 'qr', label: tt('Table 7'), price: 41, text: `${tt('Thé à la menthe')} ×1 · ${tt('Crêpe Nutella')} ×1`, min: '15 min' },
+                { s: 'prep', icon: 'qr', label: tt('Table 3'), price: 36, text: `${tt('Café au lait')} ×2`, min: '10 min' },
+                { s: 'ready', icon: 'bag', label: tt('À emporter'), price: 25, text: `${tt('Crêpe Nutella')} ×1`, min: '10 min', wa: true },
+              ].map((o, i) => (
+                <div class="q-o in rounded-xl p-2.5 ring-2" data-o={i} data-s={o.s}>
+                  <p class="flex items-center justify-between text-[0.8rem] font-bold"><span class="flex items-center gap-1.5"><Icon name={o.icon as 'qr' | 'bag'} class="size-3.5 text-green-deep" />{o.label}</span><span class="tabular-nums" dir="ltr">{o.price} {DH}</span></p>
+                  <p class="mt-0.5 text-[0.66rem] text-muted">{o.text}</p>
+                  <div class="mt-2 grid text-[0.66rem] font-bold">
+                    <span class="q-new col-start-1 row-start-1 flex items-center justify-between rounded-full bg-green px-2.5 py-1.5 text-navy"><span>{tt('Nouvelle')}</span><span>{tt('Accepter')}</span></span>
+                    <span class="q-prep col-start-1 row-start-1 flex items-center justify-between rounded-full bg-[#F5B301] px-2.5 py-1.5 text-navy"><span>{tt('En préparation')}</span><span dir="ltr">{o.min}</span></span>
+                    <span class="q-ready col-start-1 row-start-1 flex items-center justify-center gap-1.5 rounded-full bg-navy px-2.5 py-1.5 text-white"><Icon name="check" class="size-3 text-green" />{tt('Prêt')}{o.wa && <span class="font-semibold text-green"> · WhatsApp</span>}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -87,7 +99,7 @@ const WITH_TILL = [
 
     <!-- the two ways to get it -->
     {variant === 'pos' ? (
-      <div class="mt-14 flex flex-col gap-6 rounded-3xl bg-chalk p-6 ring-1 ring-line sm:p-8 md:mt-20 md:flex-row md:items-center md:justify-between">
+      <div class="q-rise mt-14 flex flex-col gap-6 rounded-3xl bg-chalk p-6 ring-1 ring-line sm:p-8 md:mt-20 md:flex-row md:items-center md:justify-between">
         <div class="max-w-2xl">
           <p class="text-sm font-bold text-green-deep">{tt('Sans caisse')}</p>
           <h3 class="mt-1 text-3xl leading-none">{tt('Pas besoin d’une caisse ? Amplify Commandes.')}</h3>
@@ -98,10 +110,10 @@ const WITH_TILL = [
     ) : (
       <>
     <div class="mt-14 grid gap-5 md:mt-20 md:grid-cols-2">
-      <div class="flex flex-col rounded-3xl bg-chalk p-6 ring-1 ring-line sm:p-8">
+      <div class="q-rise flex flex-col rounded-3xl bg-chalk p-6 ring-1 ring-line sm:p-8">
         <p class="text-sm font-bold text-green-deep">{tt('Sans caisse')}</p>
         <h3 class="mt-1 text-3xl leading-none">Amplify Commandes</h3>
-        <p class="mt-4 flex flex-wrap items-baseline gap-x-2"><span class="display text-5xl leading-tight tabular-nums" style="text-transform:none" dir="ltr">500 {DH}</span><span class="text-muted">{tt('une fois, puis 100 DH par mois')}</span></p>
+        <p class="mt-4 flex flex-wrap items-baseline gap-x-2"><span class="display text-5xl leading-tight tabular-nums" style="text-transform:none" dir="ltr"><span data-count="500">500</span> {DH}</span><span class="text-muted">{tt('une fois, puis 100 DH par mois')}</span></p>
         <ul class="mt-6 flex-1 space-y-3">
           {NO_TILL.map(p => (
             <li class="flex gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span><span>{p}</span></li>
@@ -109,7 +121,7 @@ const WITH_TILL = [
         </ul>
         <WaButton text="Bonjour, je voudrais en savoir plus sur Amplify Commandes (commande par QR sans caisse)." label={tt('Parler de Commandes')} where="home-commandes" class="mt-8 self-start" />
       </div>
-      <div class="flex flex-col rounded-3xl bg-navy p-6 text-white sm:p-8">
+      <div class="q-rise flex flex-col rounded-3xl bg-navy p-6 text-white sm:p-8" style="--d:150ms">
         <p class="text-sm font-bold text-green">{tt('Avec la caisse')}</p>
         <h3 class="mt-1 text-3xl leading-none">Amplify POS</h3>
         <p class="mt-4 flex flex-wrap items-baseline gap-x-2"><span class="display text-5xl leading-tight text-green" style="text-transform:none">{tt('Inclus')}</span><span class="text-white/70">{tt('avec le forfait Restaurant')}</span></p>
@@ -137,32 +149,106 @@ const WITH_TILL = [
 </section>
 
 <style>
-  /* resting state (reduced motion, or before the section is seen): the order is accepted */
-  .q-a { opacity: 0; }
-  .q-b { opacity: 1; }
-  .q-c1, .q-c3 { opacity: 0; }
-  .q-c2 { opacity: 1; }
-  .q-card { background: #fff; --tw-ring-color: #F5B301; }
-  @media (prefers-reduced-motion: no-preference) {
-    .q.play .q-a { animation: q-a 10s infinite; }
-    .q.play .q-b { animation: q-b 10s infinite; }
-    .q.play .q-card { animation: q-card 10s infinite; }
-    .q.play .q-c1 { animation: q-c1 10s infinite; }
-    .q.play .q-c2 { animation: q-c2 10s infinite; }
-    .q.play .q-c3 { animation: q-c3 10s infinite; }
-    @keyframes q-a { 0%, 34% { opacity: 1; } 36%, 100% { opacity: 0; } }
-    @keyframes q-b { 0%, 34% { opacity: 0; } 36%, 96% { opacity: 1; } 98%, 100% { opacity: 0; } }
-    @keyframes q-card { 0%, 37% { opacity: 0; transform: translateY(10px); } 41%, 96% { opacity: 1; transform: none; } 98%, 100% { opacity: 0; } }
-    @keyframes q-c1 { 0%, 40% { opacity: 0; } 42%, 54% { opacity: 1; } 56%, 100% { opacity: 0; } }
-    @keyframes q-c2 { 0%, 54% { opacity: 0; } 56%, 76% { opacity: 1; } 78%, 100% { opacity: 0; } }
-    @keyframes q-c3 { 0%, 76% { opacity: 0; } 78%, 96% { opacity: 1; } 98%, 100% { opacity: 0; } }
+  /* the resting picture (reduced motion, no script): everything delivered, nothing animating */
+  .q-it { background: var(--color-chalk); }
+  .q-it.sel { background: var(--color-mint); }
+  .q-b0 { opacity: 0; }
+  .q-b1 { opacity: 1; }
+  .q-btn:not(.sent) .q-b0 { opacity: 1; }
+  .q-btn:not(.sent) .q-b1 { opacity: 0; }
+  .q-btn.press { transform: scale(.94); }
+  .q-btn { transition: transform .15s; }
+  .q-it { transition: background-color .3s, transform .2s; }
+  .q-it.tap { transform: scale(.96); }
+  .q-o { background: #fff; --tw-ring-color: var(--color-line); transition: opacity .5s, transform .5s cubic-bezier(.2,.8,.2,1.2), --tw-ring-color .3s; }
+  .q-js .q-o:not(.in) { opacity: 0; transform: translateY(14px) scale(.97); }
+  .q-new, .q-prep, .q-ready { opacity: 0; transition: opacity .25s; }
+  .q-o[data-s="new"] .q-new, .q-o[data-s="prep"] .q-prep, .q-o[data-s="ready"] .q-ready { opacity: 1; }
+  .q-o[data-s="new"] { --tw-ring-color: #05B962; animation: q-blink 1s ease-in-out infinite; }
+  .q-o[data-s="prep"] { --tw-ring-color: #F5B301; }
+  .q-o[data-s="ready"] { --tw-ring-color: var(--color-navy); }
+  .q-o.tap .q-new { transform: scale(.94); }
+  .q-new { transition: opacity .25s, transform .15s; }
+  .q-bell.bell-on { animation: q-ring .7s ease-in-out 2; transform-origin: 50% 10%; }
+  .q-js .q-pt { opacity: .45; transition: opacity .4s; }
+  .q-js .q-pt.on { opacity: 1; }
+  .q-rise { transition: opacity .7s, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .q-js .q-rise:not(.seen) { opacity: 0; transform: translateY(18px); }
+  @keyframes q-blink { 50% { box-shadow: 0 0 0 5px rgb(5 185 98 / .25); } }
+  @keyframes q-ring { 0%, 100% { transform: rotate(0); } 20% { transform: rotate(18deg); } 40% { transform: rotate(-16deg); } 60% { transform: rotate(10deg); } 80% { transform: rotate(-6deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .q-o[data-s="new"] { animation: none; }
+    .q-bell.bell-on { animation: none; }
   }
 </style>
 
 <script>
-  // The scene only loops while the section is on screen.
+  // The scene is a short story that loops while the section is on screen: the guest taps two dishes (the
+  // total adds up), orders, the order flies to the screen (the bell rings, the card blinks), it is accepted,
+  // two more orders arrive and the day's total grows, then everything is ready. Reduced motion: the resting
+  // picture stays. The prices below count up when they come into view.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>('[data-qr]').forEach(root => {
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    new IntersectionObserver(es => es.forEach(e => root.classList.toggle('play', e.isIntersecting)), { threshold: 0.3 }).observe(root);
+    const $ = <T extends HTMLElement>(sel: string) => root.querySelector<T>(sel)!;
+    const $$ = (sel: string) => [...root.querySelectorAll<HTMLElement>(sel)];
+    const rise = $$('.q-rise');
+    if (reduce) return;
+    root.classList.add('q-js');
+
+    // prices rise and count up once
+    const count = (el: HTMLElement) => {
+      const to = Number(el.dataset.count), t0 = performance.now(), d = 900;
+      const tick = (t: number) => { const k = Math.min(1, (t - t0) / d); el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); };
+      el.textContent = '0'; requestAnimationFrame(tick);
+    };
+    new IntersectionObserver((es, o) => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target as HTMLElement; el.classList.add('seen'); o.unobserve(el);
+      el.querySelectorAll<HTMLElement>('[data-count]').forEach(count);
+    }), { threshold: 0.25 }).observe(rise[0] ?? root);
+    rise.forEach((el, i) => { if (i) new IntersectionObserver((es, o) => es.forEach(e => { if (e.isIntersecting) { el.classList.add('seen'); o.unobserve(el); } }), { threshold: 0.2 }).observe(el); });
+
+    // the story
+    const phoneBtn = $('.q-btn'), items = $$('.q-it'), total = $('[data-total]'), day = $('[data-day]'), bell = $('.q-bell'), fly = $('.q-fly'), stage = $('.q-stage');
+    const orders = $$('.q-o'), pts = $$('.q-pt');
+    let timers: number[] = [], running = false;
+    const at = (ms: number, fn: () => void) => { timers.push(window.setTimeout(fn, ms)); };
+    const setDay = (n: number) => { day.textContent = String(n); };
+    const step = (k: number) => pts.forEach((p, i) => p.classList.toggle('on', i === k));
+    const tap = (el: HTMLElement) => { el.classList.add('tap'); setTimeout(() => el.classList.remove('tap'), 180); };
+    const reset = () => {
+      items.forEach((it, i) => it.classList.toggle('sel', false));
+      total.textContent = '0'; phoneBtn.classList.remove('sent', 'press'); setDay(0);
+      orders.forEach(o => { o.classList.remove('in', 'tap'); o.dataset.s = 'new'; });
+    };
+    const send = () => {
+      const a = $('.q-btn').getBoundingClientRect(), b = orders[0].getBoundingClientRect(), s = stage.getBoundingClientRect();
+      const x1 = a.left + a.width / 2 - s.left - 24, y1 = a.top + a.height / 2 - s.top - 12;
+      const x2 = b.left + b.width / 2 - s.left - 24, y2 = b.top + 10 - s.top - 12;
+      fly.animate([{ transform: `translate(${x1}px,${y1}px) scale(.8)`, opacity: 0 }, { transform: `translate(${x1}px,${y1}px) scale(1)`, opacity: 1, offset: .15 }, { transform: `translate(${x2}px,${y2}px) scale(1)`, opacity: 1, offset: .85 }, { transform: `translate(${x2}px,${y2}px) scale(.6)`, opacity: 0 }], { duration: 900, easing: 'ease-in-out' });
+    };
+    const arrive = (i: number, sum: number) => { orders[i].dataset.s = 'new'; orders[i].classList.add('in'); setDay(sum); bell.classList.remove('bell-on'); void bell.offsetWidth; bell.classList.add('bell-on'); };
+    const accept = (i: number) => { tap(orders[i]); setTimeout(() => { orders[i].dataset.s = 'prep'; }, 200); };
+    const ready = (i: number) => { orders[i].dataset.s = 'ready'; };
+    const play = () => {
+      reset(); step(0);
+      at(600, () => { tap(items[0]); items[0].classList.add('sel'); total.textContent = '16'; });
+      at(1500, () => { tap(items[1]); items[1].classList.add('sel'); total.textContent = '41'; });
+      at(2500, () => { phoneBtn.classList.add('press'); });
+      at(2750, () => { phoneBtn.classList.remove('press'); phoneBtn.classList.add('sent'); send(); });
+      at(3600, () => { step(1); arrive(0, 41); });
+      at(5200, () => accept(0));
+      at(6000, () => arrive(1, 77));
+      at(6900, () => arrive(2, 102));
+      at(7800, () => { step(2); ready(0); });
+      at(8500, () => accept(1));
+      at(9200, () => accept(2));
+      at(10300, () => ready(2));
+      at(11200, () => ready(1));
+      at(13800, () => { if (running) play(); });
+    };
+    const start = () => { if (running) return; running = true; play(); };
+    const stop = () => { running = false; timers.forEach(clearTimeout); timers = []; };
+    new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? start() : stop()), { threshold: 0.35 }).observe(stage);
   });
 </script>

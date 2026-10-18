@@ -68,6 +68,8 @@ export const venuesEn: Record<string, string> = {
   "Pas besoin d’une caisse ? Amplify Commandes.": "No till needed? Amplify Commandes.",
   "La page de commande et l’écran des commandes, sans la caisse : 500 DH une fois, puis 100 DH par mois.": "The ordering page and the orders screen, without the till: 500 DH once, then 100 DH per month.",
   "Commandes sans caisse": "Orders without a till",
+  "Table 3": "Table 3",
+  "À emporter": "Takeaway",
 };
 export const venuesAr: Record<string, string> = {
   "Chaque métier a sa journée.": "لكل مهنة يومها.",
@@ -137,4 +139,6 @@ export const venuesAr: Record<string, string> = {
   "Pas besoin d’une caisse ? Amplify Commandes.": "لا تحتاج إلى كاشير؟ Amplify Commandes.",
   "La page de commande et l’écran des commandes, sans la caisse : 500 DH une fois, puis 100 DH par mois.": "صفحة الطلب وشاشة الطلبات، بدون كاشير: 500 درهم مرة واحدة، ثم 100 درهم شهريًا.",
   "Commandes sans caisse": "طلبات بدون كاشير",
+  "Table 3": "الطاولة 3",
+  "À emporter": "للأخذ",
 };
