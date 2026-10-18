@@ -87,7 +87,7 @@ export const posFr = {
     plans: [
       { name: 'Essentiel', tag: 'Amplify POS', price: '199', text: 'Pour les cafés et snacks.', product: 'pos', items: ['1 caisse', 'Menu QR (consultation seule)', 'Bons cuisine et bar', 'Rapports X et Z', 'Français et arabe', 'Réservations et file d’attente', 'Happy hours et codes promo'] },
       { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'Pour les restaurants avec service à table.', product: 'pos', items: ['Caisses illimitées', 'Commande QR à table', 'Tables, zones et transferts', 'À emporter, livraison, Glovo', 'Fonctionne sans internet', 'Commande en ligne sans commission', 'Borne de commande'] },
-      { name: 'Profit', tag: 'Amplify Profit', price: '249', text: 'Avec votre caisse actuelle.', items: ['Fiches techniques par l’IA', 'Food cost et marge par plat', 'Prix conseillé', 'Import de votre carte en photo'], product: 'profit' },
+      { name: 'Profit', tag: 'Amplify Profit', price: '249', text: 'Avec votre caisse actuelle.', items: ['Fiches techniques par l’IA', 'Food cost et marge par plat', 'Prix conseillé', 'Import de votre carte en photo', 'Factures fournisseurs en photo', 'Stock et inventaires', 'Équipe, charges et seuil de rentabilité'], product: 'profit' },
       { name: 'Contrôle', tag: 'POS + Profit', price: '499', text: 'Tout Restaurant et tout Profit.', items: ['Tout Restaurant', 'Tout Profit', 'Marges réelles depuis la caisse', 'Briefing du soir avec l’IA'], featured: true },
     ] as Plan[],
   },
@@ -191,7 +191,7 @@ export const profitFr = {
     title: 'Un seul plat mal calculé vous coûte plus cher.',
     per: 'DH HT / mois',
     note: '14 jours gratuits. Sans engagement. Prix hors taxes, par restaurant.',
-    alone: { name: 'Amplify Profit', text: 'Avec votre caisse actuelle.', items: ['Fiches techniques par l’IA', 'Food cost, marge et prix conseillé', 'Import de votre carte en photo', 'Français et arabe'] },
+    alone: { name: 'Amplify Profit', text: 'Avec votre caisse actuelle.', items: ['Fiches techniques par l’IA', 'Food cost, marge et prix conseillé', 'Import de votre carte en photo', 'Factures fournisseurs en photo', 'Stock et inventaires', 'Équipe, charges et seuil de rentabilité', 'Français, arabe et anglais'] },
     both: { name: 'Contrôle', tag: 'POS + Profit', text: 'La caisse et les marges ensemble.', items: ['Tout Amplify Profit', 'Caisse, tables et menu QR', 'Marges réelles depuis les ventes', 'Briefing du soir avec l’IA'] },
     choose: 'Commencer', best: 'Le plus complet',
   },
