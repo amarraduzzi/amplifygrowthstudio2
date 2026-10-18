@@ -985,11 +985,11 @@ export const dictAr: Record<string, string> = {
   "À quoi ça ressemble chez Zayna Café": "هكذا يبدو الأمر في Zayna Café",
   "Une tablette en caisse, une imprimante de tickets, les tables à l’écran. Installé à Rabat, pendant le service.": "جهاز لوحي عند الصندوق، وطابعة للتذاكر، والطاولات على الشاشة. مُركَّب في الرباط، أثناء الخدمة.",
   "La caisse sur tablette": "الصندوق على جهاز لوحي",
-  "Une iPad sur son support, au comptoir.": "جهاز iPad على حامله عند الكاونتر.",
+  "Une tablette sur son support, au comptoir.": "جهاز لوحي على حامله عند الكاونتر.",
   "Les tables d’un coup d’œil": "الطاولات بنظرة واحدة",
   "Libre, occupée, en cours : chaque table a son état.": "شاغرة، مشغولة، قيد التنفيذ: لكل طاولة حالتها.",
   "Le ticket au comptoir": "التذكرة عند الكاونتر",
-  "Une imprimante Epson imprime la commande.": "طابعة Epson تطبع الطلب.",
+  "Une imprimante de tickets imprime la commande.": "طابعة الفواتير تطبع الطلب.",
   "Voir le site de Zayna Café": "شاهد موقع Zayna Café",
   "La caisse Amplify installée au comptoir de Zayna Café, à Rabat, avec des clients attablés": "صندوق Amplify مُركَّب عند كاونتر Zayna Café في الرباط، مع زبائن جالسين على الطاولات",
 };
