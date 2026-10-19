@@ -19,6 +19,12 @@ export const SITE = {
 };
 
 /**
+ * Features whose text is written but only shown once they really work.
+ * tpe: the card terminal link. Set to true on the day the integration is tested (OPEN-PUNTEN.md).
+ */
+export const FEATURES = { tpe: false };
+
+/**
  * The apps (separate projects). When the domain is live these become subdomains of the same domain:
  * app.amplifygrowthstudio.com and menu.amplifygrowthstudio.com. Change them here only.
  */

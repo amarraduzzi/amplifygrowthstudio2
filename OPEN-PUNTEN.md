@@ -13,6 +13,8 @@ Alles staat in `src/config.ts` (contact) en `src/i18n/fr.ts` (teksten). Placehol
 | Cases met echte cijfers en toestemming | fr.ts `proof` (home, marketing, restaurants) | Open |
 | Analytics-ID en Search Console | Base.astro | Open (WhatsApp-klikken worden al als event klaargezet) |
 | Oprichters (Over ons) | nog te bouwen | Open |
+| TPE-koppeling live | config.ts `FEATURES.tpe` | Staat op false. Tekst is klaar (FR/EN/AR). Op true zetten zodra de koppeling getest werkt, en invullen welke terminals en banken |
+| Corne de gazelle-voorbeeld (80 DH/kg, 150 stuks per dag) | Bakery.astro | Indicatief, controleer met je leverancier. Staat als « Exemple » op de pagina |
 | Arabische en Engelse versie | `src/i18n/ar.ts`, `en.ts` | Na akkoord op het Frans |
 
 ## Op de dag dat het domein live gaat

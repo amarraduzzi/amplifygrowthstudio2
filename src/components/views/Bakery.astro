@@ -7,7 +7,7 @@ import Base from '../../layouts/Base.astro';
 import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
-import { signupUrl } from '../../config';
+import { signupUrl, FEATURES } from '../../config';
 import { tr, langOf } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -17,11 +17,17 @@ const tt = tr(langOf(Astro.url));
 const title = tt('Logiciel de caisse et de production pour pâtisserie au Maroc | Amplify');
 const description = tt('Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, plan de production du jour, commandes traiteur avec acompte et facture, vente au poids. Pour pâtisseries, boulangeries et traiteurs au Maroc.');
 const wa = tt('Bonjour, j’ai une pâtisserie et je voudrais voir Amplify.');
+// the corne de gazelle example (indicative prices): 10 g x 150 pieces a day x 360 days at 80 DH/kg
+const loc = lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-MA' : 'fr-FR';
+const yearly = ((10 / 1000) * 150 * 360 * 80).toLocaleString(loc).replace(/[\u202f\u00a0]/g, ' ');
 const faq = [
   [tt('Mes recettes sont dans Excel. Faut-il tout retaper ?'), tt('Non. Les recettes s’importent en une fois depuis Excel ou CSV : une ligne par ingrédient, avec le produit, la quantité et l’unité. Les préparations comme la pâte feuilletée ou la crème pâtissière sont reconnues. Envoyez-nous votre fichier, nous le mettons en forme avec vous.')],
   [tt('Je vends à la pièce et au kilo. Ça marche ?'), tt('Oui. Un produit vendu au poids a un prix au kilo : la caisse demande le poids lu sur la balance, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.')],
   [tt('Les commandes traiteur passent-elles dans la comptabilité ?'), tt('Oui. Quand la commande est payée, la facture est émise par le système de la caisse : numérotée, avec l’ICE de votre client si c’est une société, et comptée dans le Z du jour.')],
   [tt('J’ai un laboratoire et plusieurs boutiques.'), tt('Aujourd’hui, le laboratoire et la boutique partagent un même stock. Le transfert de marchandise entre un dépôt et plusieurs boutiques n’est pas encore disponible : parlons de votre organisation avant de commencer.')],
+  [tt('Et si internet coupe en plein service ?'), tt('Vous continuez à prendre les commandes, imprimer les bons et encaisser. Tout est envoyé automatiquement au retour de la connexion.')],
+  [tt('Quand la prévision de production est-elle fiable ?'), tt('Après une semaine de ventes en caisse. Avec un historique de ventes importé, elle est disponible tout de suite. Avant cela, vous saisissez vous-même la quantité.')],
+  ...(FEATURES.tpe ? [[tt('Puis-je encaisser avec mon TPE ?'), tt('Oui : la caisse envoie le montant au terminal de votre banque.')]] : []),
   [tt('La caisse est-elle reliée à la balance ?'), tt('Pas automatiquement : la vendeuse tape le poids affiché sur la balance, en grammes ou en kilos. Le prix est calculé par la caisse.')],
 ];
 const schema = [serviceSchema(tt('Amplify pour pâtisseries'), description, abs(ROUTES.bakery[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
@@ -31,7 +37,7 @@ const shot = 'w-full rounded-[1.25rem] bg-white shadow-[0_40px_80px_-40px_rgba(0
 const blocks = [
   { k: 'prod', img: 'pat-production', w: 1200, h: 491, alt: tt('Plan de production du lendemain dans Amplify'),
     h2: tt('Combien en préparer demain ?'), p: tt('Chaque matin, la liste de ce qu’il faut produire : les ventes du même jour de la semaine, plus les commandes traiteur, moins ce qui est déjà en vitrine.'),
-    pts: [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les invendus du soir se voient en dirhams'), tt('Les pièces faites à l’avance et les préparations faites à la minute')] },
+    pts: [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les invendus du soir se voient en dirhams'), tt('Les pièces faites à l’avance et les préparations faites à la minute'), tt('Un bouton « 1 fournée » remplit la quantité d’une fournée entière'), tt('Vous ajustez la quantité avant de produire'), tt('La prévision apparaît après une semaine de ventes en caisse, ou tout de suite si vous importez votre historique de ventes par produit')] },
   { k: 'cat', img: 'pat-traiteur', w: 1200, h: 885, alt: tt('Commande traiteur avec acompte dans Amplify'),
     h2: tt('Le traiteur, du devis à la facture.'), p: tt('Mariage, séminaire, fiançailles : le devis part sur WhatsApp ou s’imprime. Le client accepte, la commande entre dans le plan de production de son jour.'),
     pts: [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')] },
@@ -77,6 +83,24 @@ const blocks = [
     </div>
   </section>
 
+  <!-- the cost of 10 grams, on the house's own product -->
+  <section class="px-4 sm:px-6">
+    <div class="mx-auto max-w-6xl rounded-[2rem] bg-navy px-6 py-10 text-white sm:px-10 md:py-12">
+      <p class="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</p>
+      <p class="display mt-3 text-[2.2rem] leading-[0.95] sm:text-5xl lg:text-6xl">{tt('10 g de pâte d’amande en trop.')} <span class="text-green">{tt('Sur chaque corne de gazelle.')}</span></p>
+      <div class="mt-5 flex flex-wrap items-center gap-3">
+        <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-navy shadow-2xl">
+          <span class="text-xs font-semibold leading-tight text-muted">{tt('Balance')}<br /><span class="font-normal">{tt('fiche : 30 g')}</span></span>
+          <span class="display whitespace-nowrap text-4xl tabular-nums text-[#E5484D]" style="text-transform:none" dir="ltr">40&nbsp;g</span>
+          <span class="whitespace-nowrap rounded-full bg-[#E5484D] px-2 py-0.5 text-sm font-bold text-white" dir="ltr">+10 g</span>
+        </div>
+      </div>
+      <p class="mt-4 text-white/75">{tt('× 150 pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo')}</p>
+      <p class="mt-2 w-fit max-w-full rounded-2xl bg-[#E5484D] px-4 py-2 text-lg font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= {yearly} {tt('DH')}</span> {tt('perdus par an, rien que sur la corne de gazelle')}</p>
+      <p class="mt-4 text-xs text-white/50">{tt('Exemple avec des prix indicatifs. Avec vos prix d’achat, Amplify fait ce calcul pour chaque produit.')}</p>
+    </div>
+  </section>
+
   <!-- the recipe card and the margins -->
   <section class="border-y border-line bg-paper py-14 md:py-24">
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
@@ -107,6 +131,24 @@ const blocks = [
       <img src={`/img/${b.img}-${b.w === 896 ? 900 : 1200}.webp`} srcset={`/img/${b.img}-${b.w === 896 ? 560 : 700}.webp ${b.w === 896 ? 560 : 700}w, /img/${b.img}-${b.w === 896 ? 900 : 1200}.webp ${b.w}w`} sizes="(min-width: 1024px) 560px, 100vw" alt={b.alt} width={b.w} height={b.h} loading="lazy" class={`${shot} ${b.k === 'kg' ? 'mx-auto max-w-md bg-[#0B1A2E]' : ''}`} />
     </section>
   ))}
+
+  <!-- offline, and the payment terminal once it is live -->
+  <section class="px-4 py-14 sm:px-6 md:py-20">
+    <div class={`mx-auto grid max-w-6xl gap-6 ${FEATURES.tpe ? 'md:grid-cols-2' : ''}`}>
+      <div class="rounded-[2rem] bg-paper p-8 ring-1 ring-line">
+        <span class="grid size-12 place-items-center rounded-2xl bg-navy text-green"><Icon name="check" class="size-6" /></span>
+        <h2 class="mt-4 text-3xl sm:text-4xl">{tt('Le service continue, même sans internet.')}</h2>
+        <p class="mt-3 max-w-xl text-lg text-muted">{tt('Commandes, bons et encaissements continuent sans connexion. Tout se synchronise tout seul dès que le réseau revient.')}</p>
+      </div>
+      {FEATURES.tpe && (
+        <div class="rounded-[2rem] bg-paper p-8 ring-1 ring-line">
+          <span class="grid size-12 place-items-center rounded-2xl bg-navy text-green"><Icon name="check" class="size-6" /></span>
+          <h2 class="mt-4 text-3xl sm:text-4xl">{tt('Reliée au terminal de paiement.')}</h2>
+          <p class="mt-3 max-w-xl text-lg text-muted">{tt('Le montant part de la caisse vers le TPE de votre banque : plus d’erreur de saisie au comptoir.')}</p>
+        </div>
+      )}
+    </div>
+  </section>
 
   <!-- recipes from Excel -->
   <section class="px-4 sm:px-6">
