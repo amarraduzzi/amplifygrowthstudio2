@@ -9,16 +9,17 @@ import WaButton from './WaButton.astro';
 import { CONTACT } from '../config';
 import { copy } from '../i18n';
 import type { Lang } from '../i18n/routes';
-interface Props { lang: Lang; wa: string }
+interface Props { lang: Lang; wa: string; items?: string[][]; where?: string }
 const all = copy(Astro.props.lang);
-const items = all.home.faq;
+const items = Astro.props.items ?? all.home.faq;
+const where = Astro.props.where ?? 'home';
 const c = all.home.chat;
 ---
-<section class="relative mx-auto grid max-w-6xl gap-10 px-4 py-14 md:py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14" data-chatfaq data-q={tt('Bonjour, j’ai une question sur Amplify.')}>
+<section class="relative mx-auto grid max-w-6xl gap-10 px-4 py-14 md:py-24 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-14" data-chatfaq data-q={tt('Bonjour, j’ai une question sur Amplify.')} data-where={where}>
   <div>
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{all.ui.faq}</h2>
     <p class="mt-5 max-w-sm text-lg text-muted">{all.ui.faqCta}</p>
-    <WaButton text={Astro.props.wa} label={all.ui.whatsapp} where="home-faq" class="mt-6 px-7 max-lg:hidden" />
+    <WaButton text={Astro.props.wa} label={all.ui.whatsapp} where={`${where}-faq`} class="mt-6 px-7 max-lg:hidden" />
   </div>
 
   <div class="overflow-hidden rounded-[2rem] bg-paper shadow-[0_40px_80px_-40px_rgba(0,30,62,0.45)] ring-1 ring-line">
@@ -98,7 +99,7 @@ const c = all.home.chat;
       e.preventDefault();
       const q = String(new FormData(form).get('q') ?? '').trim();
       const text = q || root.dataset.q!;
-      (window as any).dataLayer?.push({ event: 'whatsapp_click', where: 'home-faq-input', lang: document.documentElement.lang });
+      (window as any).dataLayer?.push({ event: 'whatsapp_click', where: `${root.dataset.where ?? 'home'}-faq-input`, lang: document.documentElement.lang });
       window.open(`https://wa.me/${form.dataset.number}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
     });
   });

@@ -1,20 +1,26 @@
 ---
-// Pâtisseries, boulangeries and traiteurs. The memorable element is the hero: the cost of a croissant
-// computed live from the price of butter, through the house dough (the same calculation Amplify does
-// with its preparations). Then the real screens of the demo pâtisserie: production plan, recipe card,
-// catering order, selling by weight. Only what exists today; the demo data is labelled as such.
+// Pâtisseries, boulangeries and traiteurs. Same language as the home page: an opening moment (the cost of a
+// croissant computed live from the price of butter), a count-up facts band, the "10 g too much" scale that
+// lands and climbs, a chain that lights up from the butter to the plateau, the real screens in device frames,
+// a "Produire" button that moves the stock, a catering timeline, a weighing ticket you can try, the FAQ as a
+// WhatsApp conversation and a closing card with a light that follows the mouse.
+// Only what exists today; every number that comes from the demo pâtisserie is labelled as an example.
 import Base from '../../layouts/Base.astro';
-import Faq from '../Faq.astro';
+import ChatFaq from '../ChatFaq.astro';
+import Device from '../Device.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import OfflineDemo from '../OfflineDemo.astro';
-import { signupUrl } from '../../config';
+import { CONTACT, signupUrl } from '../../config';
+import { copy } from '../../i18n';
 import { tr, langOf } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(langOf(Astro.url));
+const all = copy(lang);
+const loc = lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-MA' : 'fr-FR';
 const title = tt('Logiciel de caisse et de production pour pâtisserie au Maroc | Amplify');
 const description = tt('Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, plan de production du jour, commandes traiteur avec acompte et facture, vente au poids. Pour pâtisseries, boulangeries et traiteurs au Maroc.');
 // TPE (bank card terminal) link: set to true on the day the integration works and is tested.
@@ -35,76 +41,122 @@ const schema = [serviceSchema(tt('Amplify pour pâtisseries'), description, abs(
 const shot = 'w-full rounded-[1.25rem] bg-white shadow-[0_40px_80px_-40px_rgba(0,30,62,0.55)] ring-1 ring-line';
 // the demo recipe behind the hero (DH): dough = flour 9 + milk 3,60 + sugar 0,77 + yeast 1,60 + salt 0,06 + butter 0,55 kg;
 // a batch of 30 croissants = one batch of dough + 2 eggs (2,60). Sold 8 DH incl. 10 % VAT.
-const blocks = [
-  { k: 'prod', img: 'pat-production', w: 1200, h: 491, alt: tt('Plan de production du lendemain dans Amplify'),
-    h2: tt('Combien en préparer demain ?'), p: tt('Chaque matin, la liste de ce qu’il faut produire : les ventes du même jour de la semaine, plus les commandes traiteur, moins ce qui est déjà en vitrine.'),
-    pts: [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les invendus du soir se voient en dirhams'), tt('Les pièces faites à l’avance et les préparations faites à la minute'), tt('Un bouton « 1 fournée » remplit la quantité d’une fournée entière'), tt('La prévision apparaît après une semaine de ventes en caisse, ou tout de suite avec votre historique de ventes importé')] },
-  { k: 'cat', img: 'pat-traiteur', w: 1200, h: 885, alt: tt('Commande traiteur avec acompte dans Amplify'),
-    h2: tt('Le traiteur, du devis à la facture.'), p: tt('Mariage, séminaire, fiançailles : le devis part sur WhatsApp ou s’imprime. Le client accepte, la commande entre dans le plan de production de son jour.'),
-    pts: [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')] },
-  { k: 'kg', img: 'pat-poids', w: 896, h: 644, alt: tt('Vente au poids sur la caisse Amplify'),
-    h2: tt('Au kilo comme à la pièce.'), p: tt('Gâteaux secs, chocolats, msemen : la caisse demande le poids, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.'),
-    pts: [tt('Prix au kilo dans le menu'), tt('250 g, 500 g, 1 kg en un geste'), tt('Le ticket affiche « 0,450 kg »')] },
+// the corne de gazelle example: 10 g x 150 pieces x 360 days at 80 DH/kg (indicative)
+const yearly = (10 / 1000) * 150 * 360 * 80;
+const facts: [number, string, string][] = [
+  [6, '', tt('niveaux de recettes imbriquées')],
+  [1, tt('clic'), tt('pour produire : le stock suit')],
+  [14, tt('jours'), tt('d’essai gratuit')],
 ];
+const chain: [string, string, string][] = [
+  [tt('Ingrédient'), tt('Beurre'), '95 DH/kg'],
+  [tt('Préparation maison'), tt('Pâte levée feuilletée'), '67,28 DH'],
+  [tt('Produit'), tt('Croissant'), '2,33 DH'],
+  [tt('Plateau'), tt('Plateaux et coffrets'), tt('mis à jour')],
+];
+const steps: [string, string][] = [
+  [tt('Devis'), tt('sur WhatsApp ou imprimé')],
+  [tt('Acompte'), tt('noté au fil de l’eau')],
+  [tt('Production'), tt('dans le plan de son jour')],
+  [tt('Facture'), tt('avec l’ICE de la société')],
+];
+const prodPts = [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les invendus du soir se voient en dirhams'), tt('Les pièces faites à l’avance et les préparations faites à la minute'), tt('Un bouton « 1 fournée » remplit la quantité d’une fournée entière'), tt('La prévision apparaît après une semaine de ventes en caisse, ou tout de suite avec votre historique de ventes importé')];
+const catPts = [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')];
+const kgPts = [tt('Prix au kilo dans le menu'), tt('250 g, 500 g, 1 kg en un geste'), tt('Le ticket affiche « 0,450 kg »')];
+const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.split(' ');
 ---
 <Base lang={lang} page="bakery" title={title} description={description} wa={wa} schema={schema}>
-  <!-- hero: the cost of a croissant, from the price of butter -->
-  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-20 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1fr] lg:gap-14">
-    <div>
-      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><Icon name="cake" class="size-4 text-green-deep" />{tt('Pâtisseries, boulangeries, traiteurs')}</p>
-      <h1 class="mt-5 text-[clamp(2.9rem,5.6vw,5rem)]">
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Combien vous coûte')}</span></span>
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{tt('vraiment un croissant ?')}</span></span>
-      </h1>
-      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Le beurre augmente, la pâte aussi, et vos prix restent les mêmes. Amplify calcule le coût de chaque pièce à partir de vos recettes et de vos préparations maison, et vous dit combien produire demain.')}</p>
-      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
-        <WaButton text={wa} label={tt('Voir une démo pâtisserie')} where="bakery-hero" class="px-7 text-lg" />
-        <a href={signupUrl(lang, 'profit')} class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg font-semibold hover:border-navy">{tt('Essai gratuit 14 jours')}</a>
+  <!-- HERO: the promise left, the cost of a croissant right; the butter slider moves everything -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-14 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1fr] lg:gap-14">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><Icon name="cake" class="size-4 text-green-deep" />{tt('Pâtisseries, boulangeries, traiteurs')}</p>
+        <h1 class="mt-5 text-[clamp(2.9rem,5.6vw,5rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Combien vous coûte')}</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">{tt('vraiment un croissant ?')}<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.05em] origin-left rounded-full bg-green md:h-[0.07em] rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Le beurre augmente, la pâte aussi, et vos prix restent les mêmes. Amplify calcule le coût de chaque pièce à partir de vos recettes et de vos préparations maison, et vous dit combien produire demain.')}</p>
+        <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Voir une démo pâtisserie')} where="bakery-hero" class="px-7 text-lg" />
+          <a href={signupUrl(lang, 'profit')} class="inline-flex min-h-12 items-center rounded-full border border-navy/25 px-6 text-lg font-semibold hover:border-navy">{tt('Essai gratuit 14 jours')}</a>
+        </div>
+        <ul class="fade-up mt-6 flex items-center gap-x-6 text-[0.95rem]" style="--d:500ms">
+          <li>
+            <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-2 hover:underline">
+              <span class="flex text-[#F5B301]" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-4"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
+              <span><strong class="font-semibold">{CONTACT.googleRating}</strong> {all.home.hero.rating}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="fade-up relative isolate overflow-hidden rounded-[2rem] bg-navy p-6 text-white shadow-[0_50px_90px_-50px_rgba(0,30,62,0.8)] sm:p-8" style="--d:250ms" data-croissant>
+        <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_100%_0%,rgba(5,185,98,.28),transparent_70%)]" aria-hidden="true"></span>
+        <label class="block">
+          <span class="flex items-baseline justify-between gap-3"><span class="font-semibold">{tt('Prix du beurre')}</span><span class="display text-3xl tabular-nums text-green" dir="ltr"><span data-v="butter">95</span> DH/kg</span></span>
+          <input type="range" min="60" max="140" step="1" value="95" class="mt-3 w-full accent-[#05B962]" data-butter aria-label={tt('Prix du beurre')} />
+        </label>
+        <ol class="mt-7 space-y-3">
+          <li class="cr-node flex items-center justify-between gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 ring-1 ring-white/10">
+            <span><span class="block text-sm text-white/60">{tt('Préparation maison')}</span><span class="font-semibold">{tt('Pâte levée feuilletée, 2,1 kg')}</span></span>
+            <span class="bk-num whitespace-nowrap font-bold tabular-nums" dir="ltr"><span data-v="dough">67,28</span> DH</span>
+          </li>
+          <li class="ms-6 border-s-2 border-dashed border-green/40 ps-4 text-sm text-white/60">{tt('+ dorure à l’œuf, pour une fournée de 30')}</li>
+          <li class="cr-node rounded-2xl bg-white px-4 py-3 text-navy">
+            <div class="flex items-center justify-between gap-3">
+              <span><span class="block text-sm text-muted">{tt('Coût d’un croissant')}</span><span class="bk-num display text-4xl tabular-nums" dir="ltr"><span data-v="piece">2,33</span> DH</span></span>
+              <span class="text-end"><span class="block text-sm text-muted">{tt('Marge à 8 DH')}</span><span class="bk-num text-xl font-bold tabular-nums text-green-deep" dir="ltr" data-margin><span data-v="margin">4,94</span> DH</span></span>
+            </div>
+            <!-- cost against margin, in the price of one croissant -->
+            <div class="mt-3 flex h-2.5 overflow-hidden rounded-full bg-chalk" aria-hidden="true"><span class="h-full bg-[#E5484D] transition-[width] duration-300" data-bar style="width:32%"></span><span class="h-full flex-1 bg-green"></span></div>
+            <div class="mt-1.5 flex items-center justify-between text-xs font-semibold text-muted"><span>{tt('Coût')}</span><span class="rounded-full bg-[#E5484D]/10 px-2 py-0.5 tabular-nums text-[#C4282D] transition-opacity" dir="ltr" data-delta style="opacity:0"></span><span>{tt('Marge')}</span></div>
+          </li>
+        </ol>
+        <p class="mt-5 text-xs text-white/50">{tt('Exemple calculé avec une recette de démonstration (TVA 10 %). Avec vos recettes, Amplify fait ce calcul pour chaque produit, à chaque nouveau prix d’achat.')}</p>
       </div>
     </div>
 
-    <div class="fade-up relative isolate overflow-hidden rounded-[2rem] bg-navy p-6 text-white sm:p-8" style="--d:250ms" data-croissant>
-      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_100%_0%,rgba(5,185,98,.28),transparent_70%)]" aria-hidden="true"></span>
-      <label class="block">
-        <span class="flex items-baseline justify-between gap-3"><span class="font-semibold">{tt('Prix du beurre')}</span><span class="display text-3xl tabular-nums text-green" dir="ltr"><span data-v="butter">95</span> DH/kg</span></span>
-        <input type="range" min="60" max="140" step="1" value="95" class="mt-3 w-full accent-[#05B962]" data-butter aria-label={tt('Prix du beurre')} />
-      </label>
-      <ol class="mt-7 space-y-3">
-        <li class="cr-node flex items-center justify-between gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 ring-1 ring-white/10">
-          <span><span class="block text-sm text-white/60">{tt('Préparation maison')}</span><span class="font-semibold">{tt('Pâte levée feuilletée, 2,1 kg')}</span></span>
-          <span class="whitespace-nowrap font-bold tabular-nums" dir="ltr"><span data-v="dough">67,28</span> DH</span>
-        </li>
-        <li class="ms-6 border-s-2 border-dashed border-green/40 ps-4 text-sm text-white/60">{tt('+ dorure à l’œuf, pour une fournée de 30')}</li>
-        <li class="cr-node flex items-center justify-between gap-3 rounded-2xl bg-white px-4 py-3 text-navy">
-          <span><span class="block text-sm text-muted">{tt('Coût d’un croissant')}</span><span class="display text-4xl tabular-nums" dir="ltr"><span data-v="piece">2,33</span> DH</span></span>
-          <span class="text-end"><span class="block text-sm text-muted">{tt('Marge à 8 DH')}</span><span class="text-xl font-bold tabular-nums text-green-deep" dir="ltr" data-margin><span data-v="margin">4,94</span> DH</span></span>
-        </li>
-      </ol>
-      <p class="mt-5 text-xs text-white/50">{tt('Exemple calculé avec une recette de démonstration (TVA 10 %). Avec vos recettes, Amplify fait ce calcul pour chaque produit, à chaque nouveau prix d’achat.')}</p>
+    <!-- facts: count up when they come into view -->
+    <div class="border-y border-line bg-paper">
+      <dl class="mx-auto grid max-w-6xl gap-3 px-4 py-5 sm:grid-cols-3 sm:px-6 md:gap-6 md:py-7">
+        {facts.map(([n, u, l]) => (
+          <div class="flex items-center gap-4"><dt class="display w-[5.5rem] shrink-0 whitespace-nowrap text-[2rem] text-navy sm:w-auto sm:text-5xl md:text-6xl"><span data-count={n} dir="ltr">{n}</span>{u && <span class="ms-2 text-[0.55em] normal-case text-green-deep">{u}</span>}</dt><dd class="text-sm leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</dd></div>
+        ))}
+      </dl>
     </div>
   </section>
 
-  <!-- example: what 10 g of almond paste cost in a year (indicative prices, said as such) -->
-  <section class="px-4 sm:px-6">
-    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-navy px-6 py-10 text-white md:px-12 md:py-14">
+  <!-- SCALE: 10 g of almond paste too much, on every corne de gazelle; the pastry lands, the reading climbs, the cost lands -->
+  <section class="bg-navy px-4 py-14 sm:px-6 md:py-20" data-bk>
+    <div class="bk-sc relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2rem] bg-blue px-6 py-10 text-white md:grid-cols-[1.1fr_0.9fr] md:rounded-[2.5rem] md:px-12 md:py-14">
       <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_80%_at_90%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
-      <p class="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</p>
-      <p class="display mt-3 text-[2.2rem] leading-[0.95] sm:text-5xl lg:text-6xl">{tt('10 g de pâte d’amande en trop.')} <span class="text-green">{tt('Sur chaque corne de gazelle.')}</span></p>
-      <div class="mt-5 flex flex-wrap items-center gap-3">
-        <div class="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 text-navy shadow-2xl">
-          <span class="text-xs font-semibold leading-tight text-muted">{tt('Balance')}<br /><span class="font-normal">{tt('fiche : 30 g')}</span></span>
-          <span class="display whitespace-nowrap text-4xl tabular-nums" style="text-transform:none" dir="ltr">40&nbsp;g</span>
-          <span class="whitespace-nowrap rounded-full bg-[#E5484D] px-2 py-0.5 text-sm font-bold text-white" dir="ltr">+10 g</span>
+      <div>
+        <p class="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</p>
+        <p class="display mt-3 text-[2.2rem] leading-[0.95] sm:text-5xl lg:text-6xl">{tt('10 g de pâte d’amande en trop.')} <span class="text-green">{tt('Sur chaque corne de gazelle.')}</span></p>
+        <p class="bk-calc mt-5 text-white/75">{tt('× 150 pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo')}</p>
+        <p class="bk-res mt-2 w-fit max-w-full rounded-2xl bg-[#E5484D] px-4 py-2 text-lg font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= <span data-count={yearly} data-loc={loc}>{yearly.toLocaleString(loc).replace(/[\u202f\u00a0]/g, ' ')}</span> {tt('DH')}</span> {tt('perdus par an, rien que sur la corne de gazelle')}</p>
+        <p class="mt-4 text-xs text-white/50">{tt('Prix indicatifs. Avec vos prix d’achat, Amplify fait ce calcul pour chaque produit.')}</p>
+      </div>
+      <!-- the pastry on the scale (illustration) -->
+      <div class="relative mx-auto w-full max-w-sm" aria-hidden="true">
+        <svg viewBox="0 0 220 90" class="bk-corne relative z-10 mx-auto -mb-5 h-24 w-auto">
+          <ellipse cx="110" cy="84" rx="82" ry="5" fill="rgba(0,0,0,.25)" />
+          <path d="M18 70 C 30 22, 92 6, 152 20 C 186 28, 204 50, 202 68 C 186 48, 160 38, 128 38 C 84 38, 46 52, 18 70 Z" fill="#E0A458" />
+          <path d="M26 66 C 44 36, 92 22, 148 30 C 178 35, 194 48, 197 62" fill="none" stroke="#F4D9A6" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9" />
+        </svg>
+        <div class="relative rounded-[1.5rem] bg-blue-2 p-5 shadow-[0_40px_70px_-30px_rgba(0,0,0,.7)] ring-1 ring-white/15">
+          <div class="rounded-xl bg-[#071C38] px-4 py-3 text-end ring-1 ring-white/10"><span class="bk-g display whitespace-nowrap text-6xl tabular-nums transition-colors duration-300" style="text-transform:none" dir="ltr">30&nbsp;g</span></div>
+          <div class="mt-4 flex items-center justify-between gap-3">
+            <span class="text-xs font-semibold leading-tight text-white/70">{tt('Balance')}<br /><span class="font-normal">{tt('fiche : 30 g')}</span></span>
+            <span class="bk-plus whitespace-nowrap rounded-full bg-[#E5484D] px-3 py-1 text-sm font-bold text-white" dir="ltr">+10 g</span>
+          </div>
         </div>
       </div>
-      <p class="mt-4 text-white/75">{tt('× 150 pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo')}</p>
-      <p class="mt-2 w-fit max-w-full rounded-2xl bg-[#E5484D] px-4 py-2 text-lg font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= 43 200 {tt('DH')}</span> {tt('perdus par an, rien que sur la corne de gazelle')}</p>
-      <p class="mt-4 text-xs text-white/50">{tt('Prix indicatifs. Avec vos prix d’achat, Amplify fait ce calcul pour chaque produit.')}</p>
     </div>
   </section>
 
-  <!-- the recipe card and the margins -->
-  <section class="border-y border-line bg-paper py-14 md:py-24">
+  <!-- THE RECIPE IN THE RECIPE: the butter lights up the whole chain -->
+  <section class="border-b border-line bg-paper py-14 md:py-24">
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
       <div>
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une recette')}</span><span class="block text-green-deep">{tt('dans la recette.')}</span></h2>
@@ -113,26 +165,99 @@ const blocks = [
           {[tt('Coût par fournée et par pièce'), tt('Prix conseillé selon votre objectif de marge'), tt('Jusqu’à six niveaux : pâte, viennoiserie, plateau')].map(x => <li class="flex items-center gap-3 font-semibold"><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}
         </ul>
       </div>
-      <div class="relative">
-        <img src="/img/pat-marges-1200.webp" srcset="/img/pat-marges-700.webp 700w, /img/pat-marges-1200.webp 1200w" sizes="(min-width: 1024px) 620px, 100vw" alt={tt('Marges par produit dans Amplify')} width="1200" height="513" loading="lazy" class={shot} />
-        <img src="/img/pat-preparation-600.webp" srcset="/img/pat-preparation-600.webp 600w, /img/pat-preparation-1000.webp 1000w" sizes="(min-width: 1024px) 300px, 55vw" alt={tt('Fiche d’une préparation maison dans Amplify')} width="1000" height="1013" loading="lazy" class={`${shot} relative -mt-16 ms-auto w-[55%] sm:-mt-24 sm:w-[48%]`} />
+      <div class="relative" data-bk>
+        <Device src="/img/pat-marges-1200.webp" alt={tt('Marges par produit dans Amplify')} w={1200} h={513} class="bk-tilt" />
+        <img src="/img/pat-preparation-600.webp" srcset="/img/pat-preparation-600.webp 600w, /img/pat-preparation-1000.webp 1000w" sizes="(min-width: 1024px) 300px, 55vw" alt={tt('Fiche d’une préparation maison dans Amplify')} width="1000" height="1013" loading="lazy" class={`${shot} bk-r relative -mt-16 ms-auto w-[55%] sm:-mt-24 sm:w-[48%]`} style="--d:350ms" />
+      </div>
+    </div>
+
+    <div class="mx-auto mt-14 max-w-6xl px-4 sm:px-6" data-bk>
+      <div class="bk-chain relative rounded-[2rem] bg-chalk p-5 ring-1 ring-line sm:p-8">
+        <p class="mb-5 text-sm font-semibold text-muted">{tt('Le prix du beurre monte : tout ce qui l’utilise suit.')}</p>
+        <ol class="flex flex-col items-stretch md:flex-row md:items-center">
+          {chain.map(([k, n, v], i) => (
+            <>
+              <li class="bk-node rounded-2xl bg-white p-4 shadow-sm ring-1 ring-line md:flex-1" style={`--i:${i}`}>
+                <span class="block text-xs font-semibold uppercase tracking-wide text-green-deep">{k}</span>
+                <span class="mt-1 block font-bold leading-tight">{n}</span>
+                <span class="display mt-2 block text-3xl tabular-nums" dir="ltr" style="text-transform:none">{v}</span>
+              </li>
+              {i < chain.length - 1 && <li class="bk-link-wrap flex justify-center md:w-12 md:shrink-0" aria-hidden="true"><span class="bk-link block h-8 w-0.5 rounded-full bg-green md:h-0.5 md:w-full" style={`--i:${i}`}></span></li>}
+            </>
+          ))}
+        </ol>
+        <p class="mt-4 text-xs text-muted">{tt('Exemple calculé avec une recette de démonstration (TVA 10 %). Avec vos recettes, Amplify fait ce calcul pour chaque produit, à chaque nouveau prix d’achat.')}</p>
       </div>
     </div>
   </section>
 
-  <!-- production, catering, weight -->
-  {blocks.map((b, i) => (
-    <section id={b.k === 'cat' ? 'traiteur' : b.k === 'kg' ? 'poids' : 'production'} class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-14 md:py-20 sm:px-6 lg:grid-cols-2">
-      <div class={i % 2 ? 'lg:order-2' : ''}>
-        <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{b.h2}</h2>
-        <p class="mt-5 max-w-md text-lg text-muted">{b.p}</p>
-        <ul class="mt-6 space-y-3">
-          {b.pts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}
-        </ul>
+  <!-- PRODUCTION: the real screen, and a "Produire" you can press -->
+  <section id="production" class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-[0.9fr_1.1fr]">
+    <div>
+      <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{tt('Combien en préparer demain ?')}</h2>
+      <p class="mt-5 max-w-md text-lg text-muted">{tt('Chaque matin, la liste de ce qu’il faut produire : les ventes du même jour de la semaine, plus les commandes traiteur, moins ce qui est déjà en vitrine.')}</p>
+      <ul class="mt-6 space-y-3">{prodPts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}</ul>
+    </div>
+    <div class="relative pb-24 sm:pb-14" data-bk>
+      <Device src="/img/pat-production-1200.webp" alt={tt('Plan de production du lendemain dans Amplify')} w={1200} h={491} class="bk-tilt" />
+      <!-- stock moves when you produce (demo figures, taken from the recipe above: 0,55 kg of butter and 30 croissants per batch) -->
+      <div class="bk-r absolute -bottom-2 start-3 w-[17.5rem] rounded-2xl bg-white p-4 text-navy shadow-[0_30px_60px_-25px_rgba(0,30,62,0.6)] ring-1 ring-line sm:-bottom-6 sm:start-6" style="--d:500ms" data-produce>
+        <div class="flex items-center justify-between"><span class="text-sm font-bold">{tt('Croissants')} · {tt('1 fournée')}</span><span class="rounded-full bg-mint px-2 py-0.5 text-[0.7rem] font-bold text-green-deep">{tt('Exemple')}</span></div>
+        <dl class="mt-3 space-y-2 text-sm">
+          <div class="flex items-center justify-between"><dt class="text-muted">{tt('Beurre en stock')}</dt><dd class="bk-num font-bold tabular-nums" dir="ltr"><span data-p="butter">8,00</span> kg</dd></div>
+          <div class="flex items-center justify-between"><dt class="text-muted">{tt('Croissants en vitrine')}</dt><dd class="bk-num font-bold tabular-nums text-green-deep" dir="ltr" data-p="pieces">0</dd></div>
+        </dl>
+        <button type="button" class="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-green font-bold text-navy transition-transform hover:bg-[#04A859] active:scale-95" data-p="btn"><Icon name="chef" class="size-4" />{tt('Produire')}</button>
       </div>
-      <img src={`/img/${b.img}-${b.w === 896 ? 900 : 1200}.webp`} srcset={`/img/${b.img}-${b.w === 896 ? 560 : 700}.webp ${b.w === 896 ? 560 : 700}w, /img/${b.img}-${b.w === 896 ? 900 : 1200}.webp ${b.w}w`} sizes="(min-width: 1024px) 560px, 100vw" alt={b.alt} width={b.w} height={b.h} loading="lazy" class={`${shot} ${b.k === 'kg' ? 'mx-auto max-w-md bg-[#0B1A2E]' : ''}`} />
-    </section>
-  ))}
+    </div>
+  </section>
+
+  <!-- CATERING: from the quote to the invoice -->
+  <section id="traiteur" class="border-y border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
+      <div data-bk><Device src="/img/pat-traiteur-1200.webp" alt={tt('Commande traiteur avec acompte dans Amplify')} w={1200} h={885} class="bk-tilt" /></div>
+      <div>
+        <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{tt('Le traiteur, du devis à la facture.')}</h2>
+        <p class="mt-5 max-w-md text-lg text-muted">{tt('Mariage, séminaire, fiançailles : le devis part sur WhatsApp ou s’imprime. Le client accepte, la commande entre dans le plan de production de son jour.')}</p>
+        <ul class="mt-6 space-y-3">{catPts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}</ul>
+      </div>
+    </div>
+    <div class="mx-auto mt-12 max-w-6xl px-4 sm:px-6" data-bk>
+      <ol class="bk-steps relative grid gap-4 sm:grid-cols-4">
+        <span class="bk-rail absolute start-[12.5%] top-6 hidden h-0.5 w-[75%] origin-left rounded-full bg-green sm:block rtl:origin-right" aria-hidden="true"></span>
+        {steps.map(([a, b], i) => (
+          <li class="bk-step relative flex items-center gap-4 rounded-2xl bg-chalk p-4 ring-1 ring-line sm:flex-col sm:text-center" style={`--i:${i}`}>
+            <span class="bk-dot relative z-10 grid size-12 shrink-0 place-items-center rounded-full bg-navy text-lg font-bold text-white ring-4 ring-paper">{i + 1}</span>
+            <span><span class="block font-bold">{a}</span><span class="block text-sm text-muted">{b}</span></span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- WEIGHT: try the till -->
+  <section id="poids" class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-2">
+    <div class="lg:order-2">
+      <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{tt('Au kilo comme à la pièce.')}</h2>
+      <p class="mt-5 max-w-md text-lg text-muted">{tt('Gâteaux secs, chocolats, msemen : la caisse demande le poids, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.')}</p>
+      <ul class="mt-6 space-y-3">{kgPts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}</ul>
+    </div>
+    <div class="grid items-center gap-5 sm:grid-cols-[1fr_0.9fr] lg:order-1" data-bk data-weigh data-loc={loc}>
+      <div class="bk-r mx-auto w-full max-w-md" style="--d:100ms"><Device src="/img/pat-poids-900.webp" alt={tt('Vente au poids sur la caisse Amplify')} w={900} h={648} /></div>
+      <div class="bk-r rounded-2xl bg-white p-4 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.5)] ring-1 ring-line" style="--d:300ms">
+        <p class="text-xs font-bold uppercase tracking-wide text-green-deep">{tt('Essayez la pesée')}</p>
+        <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label={tt('Poids')}>
+          {[250, 450, 500, 1000].map(g => <button type="button" class={`bk-chip min-h-10 rounded-full px-4 text-sm font-bold ring-1 ring-line transition-colors hover:ring-green ${g === 450 ? 'is-on' : ''}`} data-g={g}>{g === 1000 ? '1 kg' : `${g} g`}</button>)}
+        </div>
+        <div class="bk-ticket mt-4 rounded-xl bg-[#FAF8F3] p-4 font-mono text-[0.85rem] text-navy ring-1 ring-line" aria-live="polite">
+          <p class="bk-tl font-bold" style="--i:0">{tt('Gâteaux secs')}</p>
+          <p class="bk-tl mt-1 flex justify-between gap-3" style="--i:1" dir="ltr"><span data-w="kg">0,450 kg</span><span>× 120,00 DH/kg</span></p>
+          <p class="bk-tl mt-2 flex justify-between border-t border-dashed border-navy/30 pt-2 text-base font-bold" style="--i:2" dir="ltr"><span>TOTAL</span><span data-w="total">54,00 DH</span></p>
+        </div>
+        <p class="mt-2 text-xs text-muted">{tt('Exemple')} · {tt('Prix indicatifs. Avec vos prix d’achat, Amplify fait ce calcul pour chaque produit.')}</p>
+      </div>
+    </div>
+  </section>
 
   <!-- internet cut: the till keeps working (same live demo as the POS page) -->
   <OfflineDemo />
@@ -145,47 +270,243 @@ const blocks = [
   )}
 
   <!-- recipes from Excel -->
-  <section class="px-4 sm:px-6">
+  <section class="px-4 pt-14 sm:px-6 md:pt-20">
     <div class="mx-auto flex max-w-6xl flex-col items-start gap-6 rounded-[2rem] bg-mint px-6 py-10 md:flex-row md:items-center md:px-12">
       <span class="grid size-16 shrink-0 place-items-center rounded-2xl bg-navy text-green"><Icon name="box" class="size-8" /></span>
       <div class="flex-1">
         <h2 class="text-3xl sm:text-4xl">{tt('Vos recettes sont dans Excel ?')}</h2>
         <p class="mt-2 max-w-2xl text-lg text-navy/75">{tt('Envoyez-nous le fichier. Les recettes, les préparations et les ingrédients entrent en une fois, avec un aperçu avant d’enregistrer. Vous ajoutez ensuite vos prix d’achat.')}</p>
+        <p class="mt-3 flex gap-2 text-sm font-bold" aria-hidden="true"><span class="rounded-md bg-white px-2.5 py-1 text-green-deep ring-1 ring-green/30">.xlsx</span><span class="rounded-md bg-white px-2.5 py-1 text-green-deep ring-1 ring-green/30">.csv</span></p>
       </div>
       <WaButton text={tt('Bonjour, j’ai mes recettes dans Excel. Comment les mettre dans Amplify ?')} label={tt('Envoyer mon fichier')} where="bakery-excel" class="px-6" />
     </div>
   </section>
 
-  <Faq lang={lang} items={faq} wa={wa} />
+  <!-- FAQ: a WhatsApp conversation, like the home page -->
+  <ChatFaq lang={lang} wa={wa} items={faq} where="bakery" />
 
-  <section class="px-4 pb-14 md:pb-24 sm:px-6">
-    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
-      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
-      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Voyez votre pâtisserie')}</span><span class="block text-green">{tt('dans Amplify.')}</span></h2>
-      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Nous vous montrons une pâtisserie de démonstration, puis nous mettons vos propres recettes en place. Caisse, marges, production et traiteur dans un seul système.')}</p>
-      <div class="mt-8 flex flex-wrap items-center gap-3">
-        <WaButton text={wa} label={tt('Voir une démo pâtisserie')} where="bakery-final" class="px-8 text-lg" />
-        <a href={ROUTES.profit[lang]} class="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 text-lg font-semibold hover:border-white">{tt('Voir Amplify Profit')}</a>
+  <!-- CLOSING: the light follows the mouse, the setup ticks itself off -->
+  <section class="px-4 pb-14 sm:px-6 md:pb-24" data-final>
+    <div class="fin relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14 md:py-16 lg:grid-cols-[1.15fr_0.85fr]">
+      <div class="fin-light pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute inset-0 -z-20 opacity-[0.07] [background-image:linear-gradient(white_1px,transparent_1px),linear-gradient(90deg,white_1px,transparent_1px)] [background-size:44px_44px] [mask-image:radial-gradient(ellipse_at_70%_50%,black,transparent_75%)]" aria-hidden="true"></div>
+      <div>
+        <h2 class="text-[2.9rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl">
+          {finalWords.map((w, i) => <><span class="-mt-[0.15em] inline-block overflow-hidden pb-[0.06em] pt-[0.15em] align-bottom"><span class={`fin-w inline-block ${i >= finalWords.length - 2 ? 'text-green' : ''}`} style={`--d:${i * 70}ms`}>{w}</span></span>{i < finalWords.length - 1 ? ' ' : ''}</>)}
+        </h2>
+        <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Nous vous montrons une pâtisserie de démonstration, puis nous mettons vos propres recettes en place. Caisse, marges, production et traiteur dans un seul système.')}</p>
+        <div class="mt-8 flex flex-wrap items-center gap-3">
+          <WaButton text={wa} label={tt('Voir une démo pâtisserie')} where="bakery-final" class="fin-cta relative overflow-hidden px-8 text-lg" />
+          <a href={ROUTES.profit[lang]} class="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 text-lg font-semibold hover:border-white">{tt('Voir Amplify Profit')}</a>
+        </div>
+      </div>
+      <div class="fin-panel rounded-[1.75rem] bg-white/[0.06] p-5 ring-1 ring-white/15 backdrop-blur sm:p-6" aria-hidden="true">
+        <span class="text-sm font-semibold text-white/60">{tt('Mise en route')}</span>
+        <ol class="mt-4 space-y-2.5">
+          {[tt('Vos recettes importées'), tt('Coûts calculés pour chaque produit'), tt('Plan de production prêt')].map((s, i) => (
+            <li class="fin-step flex items-center gap-3 rounded-xl bg-white/[0.04] px-3.5 py-3 ring-1 ring-white/10 transition-all duration-500" data-i={i}>
+              <span class="fin-dot grid size-7 shrink-0 place-items-center rounded-full border-2 border-white/25 text-navy transition-all duration-300"><Icon name="check" class="size-4 opacity-0 transition-opacity" /></span>
+              <span class="text-[0.95rem]">{s}</span>
+            </li>
+          ))}
+        </ol>
+        <p class="fin-done mt-4 flex items-center justify-center gap-2 rounded-full bg-green py-3 font-bold text-navy">
+          <span class="relative flex size-2.5"><span class="absolute inline-flex size-full animate-ping rounded-full bg-navy opacity-40"></span><span class="relative size-2.5 rounded-full bg-navy"></span></span>{tt('Votre plan de production est prêt')}
+        </p>
       </div>
     </div>
   </section>
 </Base>
 
+<style is:global>
+  /* reveal: things settle in when their block comes into view (without JS or with reduced motion: always shown) */
+  .js [data-bk] .bk-r { opacity: 0; transform: translateY(18px); }
+  .js [data-bk].in .bk-r { opacity: 1; transform: none; transition: opacity .6s ease, transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: var(--d, 0ms); }
+  .js [data-bk] .bk-tilt { transform: perspective(1400px) rotateY(-7deg) rotateX(3deg) translateY(20px); opacity: 0; }
+  .js [data-bk].in .bk-tilt { transform: none; opacity: 1; transition: transform 1.2s cubic-bezier(.2,.8,.2,1), opacity .7s ease; }
+  [dir="rtl"] .js [data-bk] .bk-tilt { transform: perspective(1400px) rotateY(7deg) rotateX(3deg) translateY(20px); }
+
+  /* corne de gazelle: lands on the scale, reading climbs, the cost lands */
+  .bk-corne { transition: transform .9s cubic-bezier(.3,1.5,.5,1), opacity .4s; }
+  .js .bk-sc:not(.in) .bk-corne { transform: translateY(-60px) rotate(-14deg); opacity: 0; }
+  .js .bk-sc .bk-plus { opacity: 0; transform: scale(.4); }
+  .js .bk-sc.in .bk-plus { opacity: 1; transform: none; transition: opacity .3s 1.9s, transform .5s 1.9s cubic-bezier(.3,1.8,.5,1); }
+  .js .bk-sc .bk-calc, .js .bk-sc .bk-res { opacity: 0; transform: translateY(12px); }
+  .js .bk-sc.in .bk-calc { opacity: 1; transform: none; transition: opacity .5s 2.2s, transform .6s 2.2s cubic-bezier(.2,.8,.2,1.2); }
+  .js .bk-sc.in .bk-res { opacity: 1; transform: none; transition: opacity .5s 2.7s, transform .6s 2.7s cubic-bezier(.2,.8,.2,1.2); }
+
+  /* the chain: the price travels from the butter to the plateau */
+  .bk-node { transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * .55s); }
+  .js .bk-chain:not(.in) .bk-node { opacity: .3; transform: scale(.94); }
+  .bk-chain.in .bk-node { animation: bk-ring 1.2s ease-out both; animation-delay: calc(var(--i) * .55s + .25s); }
+  @keyframes bk-ring { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .65); } 100% { box-shadow: 0 0 0 16px rgb(5 185 98 / 0); } }
+  .bk-link { transition: transform .5s cubic-bezier(.6,0,.2,1); transition-delay: calc(var(--i) * .55s + .3s); transform-origin: top; }
+  @media (min-width: 768px) { .bk-link { transform-origin: left; } [dir="rtl"] .bk-link { transform-origin: right; } }
+  .js .bk-chain:not(.in) .bk-link { transform: scaleY(0); }
+  @media (min-width: 768px) { .js .bk-chain:not(.in) .bk-link { transform: scaleX(0); } }
+
+  /* catering timeline */
+  .bk-rail { transition: transform 1.6s cubic-bezier(.6,0,.2,1) .2s; }
+  .js .bk-steps:not(.in) .bk-rail { transform: scaleX(0); }
+  .bk-step { transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .4s; transition-delay: calc(var(--i) * .35s); }
+  .bk-dot { transition: background-color .4s, color .4s, transform .5s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--i) * .35s + .2s); }
+  .js .bk-steps:not(.in) .bk-step { opacity: 0; transform: translateY(14px); }
+  .js .bk-steps:not(.in) .bk-dot { background-color: var(--color-line); color: var(--color-muted); transform: scale(.8); }
+  .bk-steps.in .bk-dot { background-color: var(--color-green); color: var(--color-navy); }
+
+  /* weighing ticket */
+  .bk-chip.is-on { background: var(--color-navy); color: #fff; box-shadow: none; }
+  .bk-chip:not(.is-on) { background: var(--color-chalk); }
+  .bk-ticket.print .bk-tl { animation: print .35s steps(4, end) both; animation-delay: calc(var(--i) * .12s); }
+  .bk-pop { animation: bk-pop .45s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes bk-pop { 40% { transform: scale(1.12); color: var(--color-green-deep); } }
+  .bk-flash { animation: bk-flash .5s ease-out; }
+  @keyframes bk-flash { 0% { color: var(--color-green); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .js [data-bk] .bk-r, .js [data-bk] .bk-tilt, .js .bk-sc .bk-plus, .js .bk-sc .bk-calc, .js .bk-sc .bk-res, .js .bk-sc .bk-corne { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .js .bk-chain .bk-node, .js .bk-chain .bk-link, .js .bk-steps .bk-rail, .js .bk-steps .bk-step, .js .bk-steps .bk-dot { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
+    .js .bk-steps .bk-dot { background-color: var(--color-green) !important; color: var(--color-navy) !important; }
+    .bk-ticket.print .bk-tl, .bk-pop, .bk-flash { animation: none; }
+  }
+</style>
+
 <script>
-  // the demo recipe: dough = 15,03 DH + 0,55 kg of butter; 30 croissants = dough + 2,60 DH of egg; sold 8 DH incl. 10 % VAT
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const comma = document.documentElement.lang !== 'en';
+  const dec = (n: number, d = 2) => n.toFixed(d).replace('.', comma ? ',' : '.');
+  const nbsp = (s: string) => s.replace(/[\u202f\u00a0\s]/g, '\u00a0');
+  const restart = (el: Element, cls: string) => { el.classList.remove(cls); void (el as HTMLElement).offsetWidth; el.classList.add(cls); };
+
+  // 1. hero: the butter slider moves the cost, the margin, the bar and the difference with today's price
   document.querySelectorAll<HTMLElement>('[data-croissant]').forEach((root) => {
     const input = root.querySelector<HTMLInputElement>('[data-butter]')!;
     const v = (k: string) => root.querySelector<HTMLElement>(`[data-v="${k}"]`)!;
-    const fmt = (n: number) => n.toFixed(2).replace('.', ',');
+    const bar = root.querySelector<HTMLElement>('[data-bar]')!;
+    const delta = root.querySelector<HTMLElement>('[data-delta]')!;
+    const nums = [...root.querySelectorAll<HTMLElement>('.bk-num')];
+    // the demo recipe: dough = 15,03 DH + 0,55 kg of butter; 30 croissants = dough + 2,60 DH of egg; sold 8 DH incl. 10 % VAT
+    const cost = (b: number) => (15.03 + 0.55 * b + 2.6) / 30;
+    const base = cost(95), ht = 8 / 1.1;
     const run = () => {
-      const b = Number(input.value);
-      const dough = 15.03 + 0.55 * b, piece = (dough + 2.6) / 30, margin = 8 / 1.1 - piece;
+      const b = Number(input.value), dough = 15.03 + 0.55 * b, piece = cost(b), margin = ht - piece, d = piece - base;
       v('butter').textContent = String(b);
-      v('dough').textContent = fmt(dough);
-      v('piece').textContent = fmt(piece);
-      v('margin').textContent = fmt(margin);
+      v('dough').textContent = dec(dough);
+      v('piece').textContent = dec(piece);
+      v('margin').textContent = dec(margin);
+      bar.style.width = `${Math.min(100, (piece / ht) * 100)}%`;
+      delta.textContent = `${d > 0 ? '+' : '−'}${dec(Math.abs(d))} DH`;
+      delta.style.opacity = Math.abs(d) < 0.005 ? '0' : '1';
+      if (!still) nums.forEach(n => restart(n, 'bk-flash'));
     };
     input.addEventListener('input', run);
     run();
+    delta.style.opacity = '0';
+    nums.forEach(n => n.classList.remove('bk-flash'));
+  });
+
+  // 2. count up: the facts under the hero and the yearly loss (once, when they come into view)
+  const fmtCount = (n: number, loc?: string) => (loc ? nbsp(Math.round(n).toLocaleString(loc)) : String(Math.round(n)));
+  const countUp = (el: HTMLElement, delay = 0, dur = 1200) => {
+    const to = Number(el.dataset.count), loc = el.dataset.loc;
+    if (still) { el.textContent = fmtCount(to, loc); return; }
+    setTimeout(() => {
+      const t0 = performance.now();
+      const step = (now: number) => {
+        const k = Math.min(1, (now - t0) / dur);
+        el.textContent = fmtCount(Math.max(k > 0 ? 1 : 0, to * (1 - Math.pow(1 - k, 3))), loc);
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }, delay);
+  };
+  const cio = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return; cio.unobserve(e.target);
+    countUp(e.target as HTMLElement);
+  }), { threshold: 0.6 });
+  document.querySelectorAll<HTMLElement>('dl [data-count]').forEach(n => cio.observe(n));
+
+  // 3. reveal blocks + the corne de gazelle on the scale
+  const g = document.querySelector<HTMLElement>('.bk-g');
+  const loss = document.querySelector<HTMLElement>('.bk-res [data-count]');
+  if (loss) loss.textContent = fmtCount(0, loss.dataset.loc);
+  const reveal = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    reveal.unobserve(e.target);
+    const el = e.target as HTMLElement;
+    el.classList.add('in');
+    el.querySelectorAll('.bk-chain, .bk-steps, .bk-sc').forEach(x => x.classList.add('in'));
+    if (el.classList.contains('bk-sc')) return;
+    if (el.querySelector('.bk-sc') && g && loss) {
+      if (still) { g.textContent = '40\u00a0g'; g.style.color = '#E5484D'; countUp(loss); return; }
+      setTimeout(() => {
+        const t0 = performance.now();
+        const step = (t: number) => {
+          const k = Math.min(1, (t - t0) / 1000);
+          g.textContent = `${Math.round(30 + 10 * k)}\u00a0g`;
+          if (k < 1) requestAnimationFrame(step); else g.style.color = '#E5484D';
+        };
+        requestAnimationFrame(step);
+      }, 1000);
+      countUp(loss, 2700, 1400);
+    }
+  }), { threshold: 0.3 });
+  document.querySelectorAll('[data-bk]').forEach(n => reveal.observe(n));
+  if (!('IntersectionObserver' in window)) document.querySelectorAll('[data-bk], .bk-chain, .bk-steps, .bk-sc').forEach(n => n.classList.add('in'));
+
+  // 4. "Produire": each press takes one batch of butter out of the stock and puts 30 croissants in the display
+  document.querySelectorAll<HTMLElement>('[data-produce]').forEach((root) => {
+    const p = (k: string) => root.querySelector<HTMLElement>(`[data-p="${k}"]`)!;
+    const btn = p('btn') as HTMLButtonElement;
+    let butter = 8, pieces = 0;
+    const press = () => {
+      if (butter < 0.55) return;
+      butter -= 0.55; pieces += 30;
+      p('butter').textContent = dec(butter);
+      p('pieces').textContent = String(pieces);
+      if (!still) [p('butter'), p('pieces')].forEach(n => restart(n.closest('.bk-num') ?? n, 'bk-pop'));
+      if (butter < 0.55) { btn.disabled = true; btn.classList.add('opacity-50'); }
+    };
+    btn.addEventListener('click', press);
+    if (!still && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); setTimeout(press, 1400); } }, { threshold: 0.6 });
+      io.observe(root);
+    }
+  });
+
+  // 5. weighing: the ticket prints again for each weight (example price: 120 DH/kg)
+  document.querySelectorAll<HTMLElement>('[data-weigh]').forEach((root) => {
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('[data-g]')];
+    const kg = root.querySelector<HTMLElement>('[data-w="kg"]')!;
+    const total = root.querySelector<HTMLElement>('[data-w="total"]')!;
+    const ticket = root.querySelector<HTMLElement>('.bk-ticket')!;
+    chips.forEach((c) => c.addEventListener('click', () => {
+      const grams = Number(c.dataset.g);
+      chips.forEach(x => x.classList.toggle('is-on', x === c));
+      kg.textContent = `${dec(grams / 1000, 3)} kg`;
+      total.textContent = `${dec((grams / 1000) * 120)} DH`;
+      if (!still) restart(ticket, 'print');
+    }));
+  });
+
+  // 6. closing card: the light follows the mouse, the setup ticks itself off
+  document.querySelectorAll<HTMLElement>('[data-final]').forEach((root) => {
+    const card = root.querySelector<HTMLElement>('.fin')!;
+    const steps = [...root.querySelectorAll<HTMLElement>('.fin-step')];
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', `${e.clientX - r.left}px`); card.style.setProperty('--my', `${e.clientY - r.top}px`);
+    });
+    const finish = () => { steps.forEach(s => s.classList.add('is-done')); root.classList.add('fin-open'); };
+    if (still || !('IntersectionObserver' in window)) { root.classList.add('fin-seen'); finish(); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); root.classList.add('fin-seen'); } }, { threshold: 0.25 });
+    io.observe(root);
+    const io2 = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io2.disconnect();
+      steps.forEach((s, i) => setTimeout(() => s.classList.add('is-done'), 900 + i * 800));
+      setTimeout(() => root.classList.add('fin-open'), 900 + steps.length * 800);
+    }, { threshold: 0.6 });
+    io2.observe(root.querySelector('.fin-panel')!);
   });
 </script>
