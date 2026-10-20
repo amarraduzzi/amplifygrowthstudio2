@@ -21,11 +21,13 @@ const PRODUCTS = [
 const MODULE_ICON: Record<string, string> = { bakery: 'cake', pos: 'till', waiter: 'phone', qr: 'qr', online: 'bag', loyalty: 'heart', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
 const fx = featuresOf(lang);
 const fxTotal = fx.modules.reduce((n, m) => n + m.items.length, 0);
-// The 11 modules in three groups. The group decides the colour of the icon: sell = blue, produce and buy = green, steer = amber (three colours that cannot be confused).
+// The 11 modules in three groups. The group heading carries the meaning, so every icon has the same calm brand colour.
+const CHIP = 'bg-mint text-green-deep ring-1 ring-green/30';
+const DOT = 'bg-green';
 const GROUPS = [
-  { k: 'sell', label: 'Vendre', chip: 'bg-blue-2 text-white', dot: 'bg-blue-2', keys: ['pos', 'waiter', 'qr', 'online', 'loyalty'] },
-  { k: 'make', label: 'Produire et acheter', chip: 'bg-green text-navy', dot: 'bg-green', keys: ['margins', 'stock', 'bakery'] },
-  { k: 'steer', label: 'Piloter', chip: 'bg-[#F5B301] text-navy', dot: 'bg-[#F5B301]', keys: ['team', 'money', 'trust'] },
+  { k: 'sell', label: 'Vendre', chip: CHIP, dot: DOT, keys: ['pos', 'waiter', 'qr', 'online', 'loyalty'] },
+  { k: 'make', label: 'Produire et acheter', chip: CHIP, dot: DOT, keys: ['margins', 'stock', 'bakery'] },
+  { k: 'steer', label: 'Piloter', chip: CHIP, dot: DOT, keys: ['team', 'money', 'trust'] },
 ] as const;
 const groups = GROUPS.map(g => ({ ...g, label: tt(g.label), modules: g.keys.map(k => fx.modules.find(m => m.key === k)).filter((m): m is (typeof fx.modules)[number] => !!m) }));
 const fxLeft = fx.modules.filter(m => !GROUPS.some(g => (g.keys as readonly string[]).includes(m.key)));   // a module added later still shows up
@@ -77,11 +79,13 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         <button type="button" aria-haspopup="true" class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep ${activeFeatures ? 'font-semibold text-green-deep' : 'text-navy'}`}>{t.nav.features}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
         <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
           <div class="mx-auto grid max-w-6xl gap-6 px-6 py-6 lg:grid-cols-[15rem_1fr] 2xl:max-w-7xl">
-            <a href={ROUTES.features[lang]} class="group/all relative isolate flex flex-col justify-between overflow-hidden rounded-[1.4rem] bg-navy p-6 text-white transition-transform duration-300 hover:-translate-y-0.5">
+            <a href={ROUTES.features[lang]} class="group/all relative isolate flex min-h-80 flex-col justify-between overflow-hidden rounded-[1.4rem] bg-navy p-6 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5">
+              <img src="/img/nav-features.webp" alt="" width="540" height="720" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover object-[50%_40%] transition-transform duration-700 ease-out group-hover/all:scale-105" />
+              <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/60 to-navy/80" aria-hidden="true"></span>
               <span class="display text-[4.5rem] leading-none text-green">{fxTotal}</span>
               <span>
                 <span class="display block text-2xl leading-tight">{tt('fonctionnalités')}</span>
-                <span class="mt-2 block text-sm leading-snug text-white/75">{tt('Tout est inclus, sans option payante.')}</span>
+                <span class="mt-2 block text-sm leading-snug text-white/85">{tt('Tout est inclus, sans option payante.')}</span>
                 <span class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-green px-5 text-[0.95rem] font-semibold text-navy transition-transform group-hover/all:translate-x-0.5 rtl:group-hover/all:-translate-x-0.5">{tt('Tout voir')} <span aria-hidden="true" class="rtl:-scale-x-100">→</span></span>
               </span>
             </a>
