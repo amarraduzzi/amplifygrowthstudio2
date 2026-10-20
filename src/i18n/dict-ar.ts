@@ -1,4 +1,13 @@
 export const dictAr: Record<string, string> = {
+  "Produits": "المنتجات",
+  "Tarifs": "الأسعار",
+  "La caisse, le menu QR et les commandes.": "الكاشير، قائمة QR والطلبات.",
+  "Food cost, marges et stock, plat par plat.": "تكلفة الأطباق والهوامش والمخزون، طبقًا بطبق.",
+  "Le site de votre restaurant, fait pour vous.": "موقع مطعمك، نصنعه لك.",
+  "Du marketing qui amène des clients à table.": "تسويق يجلب الزبناء إلى الطاولة.",
+  "Deux systèmes qui se parlent, et un marketing qui remplit la salle.": "نظامان يتواصلان معًا، وتسويق يملأ القاعة.",
+  "Tout est inclus, sans option payante.": "كل شيء مشمول، بدون خيارات مدفوعة.",
+  "Voir les {n} fonctionnalités": "عرض الوظائف الـ {n}",
   "Fidélité": "الولاء",
   "Facturation": "الفوترة",
   "Mensuel": "شهري",

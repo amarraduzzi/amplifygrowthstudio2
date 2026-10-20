@@ -1,4 +1,13 @@
 export const dictEn: Record<string, string> = {
+  "Produits": "Products",
+  "Tarifs": "Pricing",
+  "La caisse, le menu QR et les commandes.": "The till, the QR menu and orders.",
+  "Food cost, marges et stock, plat par plat.": "Food cost, margins and stock, dish by dish.",
+  "Le site de votre restaurant, fait pour vous.": "Your restaurant’s website, made for you.",
+  "Du marketing qui amène des clients à table.": "Marketing that brings customers to the table.",
+  "Deux systèmes qui se parlent, et un marketing qui remplit la salle.": "Two systems that talk to each other, and marketing that fills the room.",
+  "Tout est inclus, sans option payante.": "Everything included, no paid options.",
+  "Voir les {n} fonctionnalités": "See all {n} features",
   "Fidélité": "Loyalty",
   "Facturation": "Billing",
   "Mensuel": "Monthly",
