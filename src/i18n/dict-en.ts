@@ -1152,4 +1152,7 @@ export const dictEn: Record<string, string> = {
   "Péremption et traçabilité": "Expiry and traceability",
   "Traiteur et devis": "Catering and quotes",
   "Dès 3 services, regardez Essentiel : la caisse pour 199 DH.": "From 3 services, look at Essential: the till for 199 DH.",
+  "Amplify Fidélité": "Amplify Loyalty",
+  "Une carte de fidélité sur le téléphone de vos clients, un écran au comptoir pour créditer les points, et des messages WhatsApp pour les faire revenir. Pas de caisse nécessaire.": "A loyalty card on your customers’ phones, a counter screen to credit points, and WhatsApp messages to bring them back. No till needed.",
+  "Essayer Amplify Fidélité": "Try Amplify Loyalty",
 };

@@ -161,22 +161,23 @@ const rows = [
         </li>
       ))}
     </ul>
-    <div class="mt-4 grid gap-4 md:grid-cols-2">
+    <div class="mt-4 grid gap-4 md:grid-cols-3">
       {[
         { k: 'Amplify Site', text: 'Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.', once: 'Création par nos soins : 250 DH une fois.', link: ROUTES.site[lang], cta: 'Voir Amplify Site' },
         { k: 'Amplify Commandes', text: 'Vos clients commandent depuis la table ou votre site, et les commandes arrivent sur un écran. Pas de caisse nécessaire.', once: 'Mise en place : 500 DH une fois.', link: ROUTES.pos[lang], cta: 'Voir Amplify POS' },
+        { k: 'Amplify Fidélité', text: 'Une carte de fidélité sur le téléphone de vos clients, un écran au comptoir pour créditer les points, et des messages WhatsApp pour les faire revenir. Pas de caisse nécessaire.', once: '', link: signupUrl(lang, 'loyalty'), cta: 'Essayer Amplify Fidélité' },
       ].map((c, i) => (
         <div class="tf flex flex-col rounded-[1.75rem] bg-paper p-6 ring-1 ring-line sm:p-8" style={`--d:${i * 120}ms`}>
           <p class="text-sm font-semibold text-green-deep">{tt(c.k)}</p>
           <p class="mt-3 flex-1 text-lg">{tt(c.text)}</p>
-          <p class="mt-3 font-semibold">{tt(c.once)}</p>
+          {c.once && <p class="mt-3 font-semibold">{tt(c.once)}</p>}
           <a href={c.link} class="mt-4 inline-flex font-semibold text-green-deep underline underline-offset-4">{tt(c.cta)} →</a>
         </div>
       ))}
     </div>
     <p class="tf mt-6 text-sm font-semibold text-muted" style="--d:200ms">{p.pricing.soon}</p>
     <ul class="mt-2 flex flex-wrap gap-2">
-      {['Réservations et file d’attente', 'Fidélité', 'Écran d’accueil', 'Péremption et traçabilité', 'Traiteur et devis'].map((x, i) => (
+      {['Réservations et file d’attente', 'Écran d’accueil','Péremption et traçabilité', 'Traiteur et devis'].map((x, i) => (
         <li class="tf rounded-full bg-paper px-4 py-2 text-[0.95rem] ring-1 ring-line" style={`--d:${200 + i * 70}ms`}>{tt(x)}</li>
       ))}
     </ul>

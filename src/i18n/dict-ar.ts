@@ -1152,4 +1152,7 @@ export const dictAr: Record<string, string> = {
   "Péremption et traçabilité": "تواريخ الصلاحية والتتبع",
   "Traiteur et devis": "التموين وعروض الأسعار",
   "Dès 3 services, regardez Essentiel : la caisse pour 199 DH.": "ابتداءً من 3 خدمات، انظر إلى Essentiel: الكاشير بـ 199 درهمًا.",
+  "Amplify Fidélité": "Amplify Fidélité",
+  "Une carte de fidélité sur le téléphone de vos clients, un écran au comptoir pour créditer les points, et des messages WhatsApp pour les faire revenir. Pas de caisse nécessaire.": "بطاقة ولاء على هاتف زبائنك، وشاشة عند الكونتوار لإضافة النقاط، ورسائل واتساب لإرجاعهم. لا حاجة إلى كاشير.",
+  "Essayer Amplify Fidélité": "جرّب Amplify Fidélité",
 };
