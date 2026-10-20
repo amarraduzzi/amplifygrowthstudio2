@@ -21,6 +21,15 @@ const PRODUCTS = [
 const MODULE_ICON: Record<string, string> = { bakery: 'cake', pos: 'till', waiter: 'phone', qr: 'qr', online: 'bag', loyalty: 'heart', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
 const fx = featuresOf(lang);
 const fxTotal = fx.modules.reduce((n, m) => n + m.items.length, 0);
+// The 11 modules in three groups. The group decides the colour of the icon: sell = blue, produce and buy = green, steer = amber (three colours that cannot be confused).
+const GROUPS = [
+  { k: 'sell', label: 'Vendre', chip: 'bg-blue-2 text-white', dot: 'bg-blue-2', keys: ['pos', 'waiter', 'qr', 'online', 'loyalty'] },
+  { k: 'make', label: 'Produire et acheter', chip: 'bg-green text-navy', dot: 'bg-green', keys: ['margins', 'stock', 'bakery'] },
+  { k: 'steer', label: 'Piloter', chip: 'bg-[#F5B301] text-navy', dot: 'bg-[#F5B301]', keys: ['team', 'money', 'trust'] },
+] as const;
+const groups = GROUPS.map(g => ({ ...g, label: tt(g.label), modules: g.keys.map(k => fx.modules.find(m => m.key === k)).filter((m): m is (typeof fx.modules)[number] => !!m) }));
+const fxLeft = fx.modules.filter(m => !GROUPS.some(g => (g.keys as readonly string[]).includes(m.key)));   // a module added later still shows up
+if (fxLeft.length) groups[groups.length - 1].modules.push(...fxLeft);
 const products = PRODUCTS.map(p => ({ ...p, label: t.nav[p.k], href: ROUTES[p.k][lang] }));
 const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems'];
 const links = [
@@ -67,17 +76,30 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
       <div class="group">
         <button type="button" aria-haspopup="true" class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep ${activeFeatures ? 'font-semibold text-green-deep' : 'text-navy'}`}>{t.nav.features}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
         <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
-          <div class="mx-auto grid max-w-6xl grid-cols-4 gap-x-4 gap-y-1 px-6 py-6 2xl:max-w-7xl">
-            {fx.modules.map(m => (
-              <a href={`${ROUTES.features[lang]}#${m.key}`} class="flex items-center gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-paper">
-                <span class={`grid size-9 shrink-0 place-items-center rounded-lg ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : m.tag === 'Amplify' ? 'bg-paper text-navy ring-1 ring-line' : 'bg-blue text-white'}`}><Icon name={MODULE_ICON[m.key] as any} class="size-5" /></span>
-                <span class="min-w-0 text-[0.95rem] font-medium leading-tight">{m.title}<span class="block text-xs font-normal text-muted">{m.items.length} {tt('fonctions')}</span></span>
-              </a>
-            ))}
-          </div>
-          <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 border-t border-line px-6 py-3 text-sm 2xl:max-w-7xl">
-            <span class="text-muted">{tt('Tout est inclus, sans option payante.')}</span>
-            <a href={ROUTES.features[lang]} class="font-semibold text-green-deep underline underline-offset-4">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
+          <div class="mx-auto grid max-w-6xl gap-6 px-6 py-6 lg:grid-cols-[15rem_1fr] 2xl:max-w-7xl">
+            <a href={ROUTES.features[lang]} class="group/all relative isolate flex flex-col justify-between overflow-hidden rounded-[1.4rem] bg-navy p-6 text-white transition-transform duration-300 hover:-translate-y-0.5">
+              <span class="display text-[4.5rem] leading-none text-green">{fxTotal}</span>
+              <span>
+                <span class="display block text-2xl leading-tight">{tt('fonctionnalités')}</span>
+                <span class="mt-2 block text-sm leading-snug text-white/75">{tt('Tout est inclus, sans option payante.')}</span>
+                <span class="mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-green px-5 text-[0.95rem] font-semibold text-navy transition-transform group-hover/all:translate-x-0.5 rtl:group-hover/all:-translate-x-0.5">{tt('Tout voir')} <span aria-hidden="true" class="rtl:-scale-x-100">→</span></span>
+              </span>
+            </a>
+            <div class="grid grid-cols-3 gap-x-5">
+              {groups.map(g => (
+                <div>
+                  <p class="mb-2 flex items-center gap-2 px-3 text-xs font-bold uppercase tracking-wider text-muted"><span class={`size-2 rounded-full ${g.dot}`} aria-hidden="true"></span>{g.label}</p>
+                  <ul class="space-y-0.5">
+                    {g.modules.map(m => (
+                      <li><a href={`${ROUTES.features[lang]}#${m.key}`} class="flex items-center gap-3 rounded-xl px-3 py-2 transition-colors hover:bg-paper">
+                        <span class={`grid size-9 shrink-0 place-items-center rounded-lg ${g.chip}`}><Icon name={MODULE_ICON[m.key] as any} class="size-5" /></span>
+                        <span class="min-w-0 text-[0.95rem] font-medium leading-tight">{m.title}<span class="block text-xs font-normal text-muted">{m.items.length} {tt('fonctions')}</span></span>
+                      </a></li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -127,12 +149,19 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         </details>
         <details class="group/m border-b border-line">
           <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-          <div class="grid grid-cols-2 gap-2 pb-3">
-            {fx.modules.map(m => (
-              <a href={`${ROUTES.features[lang]}#${m.key}`} class="flex items-start gap-2.5 rounded-2xl bg-paper p-3 ring-1 ring-line active:bg-mint">
-                <span class={`grid size-9 shrink-0 place-items-center rounded-lg ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : m.tag === 'Amplify' ? 'bg-chalk text-navy ring-1 ring-line' : 'bg-blue text-white'}`}><Icon name={MODULE_ICON[m.key] as any} class="size-[1.15rem]" /></span>
-                <span class="min-w-0 text-[0.88rem] font-semibold leading-tight">{m.title}<span class="mt-0.5 block text-xs font-normal text-muted">{m.items.length} {tt('fonctions')}</span></span>
-              </a>
+          <div class="space-y-4 pb-3">
+            {groups.map(g => (
+              <div>
+                <p class="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted"><span class={`size-2 rounded-full ${g.dot}`} aria-hidden="true"></span>{g.label}</p>
+                <div class="grid grid-cols-2 gap-2">
+                  {g.modules.map(m => (
+                    <a href={`${ROUTES.features[lang]}#${m.key}`} class="flex items-start gap-2.5 rounded-2xl bg-paper p-3 ring-1 ring-line active:bg-mint">
+                      <span class={`grid size-9 shrink-0 place-items-center rounded-lg ${g.chip}`}><Icon name={MODULE_ICON[m.key] as any} class="size-[1.15rem]" /></span>
+                      <span class="min-w-0 text-[0.88rem] font-semibold leading-tight">{m.title}<span class="mt-0.5 block text-xs font-normal text-muted">{m.items.length} {tt('fonctions')}</span></span>
+                    </a>
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
           <a href={ROUTES.features[lang]} class="mb-4 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>

@@ -1068,4 +1068,9 @@ export const dictAr: Record<string, string> = {
   "Coûts calculés pour chaque produit": "تكلفة كل منتج محسوبة",
   "Plan de production prêt": "خطة الإنتاج جاهزة",
   "Votre plan de production est prêt": "خطة إنتاجك جاهزة",
+  "Vendre": "البيع",
+  "Produire et acheter": "الإنتاج والشراء",
+  "Piloter": "التسيير",
+  "fonctionnalités": "ميزة",
+  "Tout voir": "عرض الكل",
 };

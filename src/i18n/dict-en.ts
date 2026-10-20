@@ -1068,4 +1068,9 @@ export const dictEn: Record<string, string> = {
   "Coûts calculés pour chaque produit": "Costs calculated for every product",
   "Plan de production prêt": "Production plan ready",
   "Votre plan de production est prêt": "Your production plan is ready",
+  "Vendre": "Sell",
+  "Produire et acheter": "Produce and buy",
+  "Piloter": "Manage",
+  "fonctionnalités": "features",
+  "Tout voir": "See all",
 };
