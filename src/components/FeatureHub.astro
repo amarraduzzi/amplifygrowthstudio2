@@ -10,7 +10,7 @@ const f = featuresOf(LG);
 interface Props { icons: Record<string, string> }
 const { icons } = Astro.props;
 const n = f.modules.length;
-const SHORT: Record<string, string> = { bakery: 'Pâtisserie', pos: 'Caisse', waiter: 'Serveurs', qr: 'Menu QR', online: 'En ligne', margins: 'Marges', stock: 'Stock', team: 'Équipe', money: 'Charges', trust: 'Sécurité' };
+const SHORT: Record<string, string> = { bakery: 'Pâtisserie', pos: 'Caisse', waiter: 'Serveurs', qr: 'Menu QR', online: 'En ligne', loyalty: 'Fidélité', margins: 'Marges', stock: 'Stock', team: 'Équipe', money: 'Charges', trust: 'Sécurité' };
 const pos = f.modules.map((m, i) => {
   const a = (i / n) * Math.PI * 2 - Math.PI / 2;
   return { ...m, x: 50 + Math.cos(a) * 40, y: 50 + Math.sin(a) * 40 };
@@ -42,7 +42,7 @@ const story = [
       <span class={`hub-ico grid size-[clamp(2.6rem,9vw,3.8rem)] place-items-center rounded-2xl shadow-lg ring-4 ring-chalk transition-transform duration-300 group-hover:scale-110 ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : m.tag === 'Amplify' ? 'bg-white text-navy ring-line' : 'bg-blue text-white'}`}>
         <Icon name={icons[m.key] as any} class="size-[45%]" />
       </span>
-      <span class="absolute start-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap text-[clamp(0.65rem,1.9vw,0.85rem)] font-semibold rtl:translate-x-1/2">{SHORT[m.key]}</span>
+      <span class="absolute start-1/2 top-full mt-1.5 -translate-x-1/2 whitespace-nowrap text-[clamp(0.65rem,1.9vw,0.85rem)] font-semibold rtl:translate-x-1/2">{tt(SHORT[m.key])}</span>
       <span class="hub-count absolute -end-1 -top-1 grid size-6 place-items-center rounded-full bg-navy text-[0.65rem] font-bold text-white ring-2 ring-chalk">{m.items.length}</span>
     </a>
   ))}

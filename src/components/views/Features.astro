@@ -19,9 +19,9 @@ const { lang } = Astro.props;
 const t = copy(lang);
 const total = f.modules.reduce((n, m) => n + m.items.length, 0);
 const title = tt('Toutes les fonctionnalités de la caisse | Amplify POS');
-const description = tt('Les {n} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.').replace('{n}', String(total));
+const description = tt('Les {n} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, fidélité, équipe et charges. Tout est inclus.').replace('{n}', String(total));
 const wa = tt('Bonjour, j’ai une question sur les fonctionnalités d’Amplify.');
-const ICON: Record<string, string> = { bakery: 'cake', pos: 'till', waiter: 'phone', qr: 'qr', online: 'bag', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
+const ICON: Record<string, string> = { bakery: 'cake', pos: 'till', waiter: 'phone', qr: 'qr', online: 'bag', loyalty: 'heart', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
 const stats = [[f.modules.length, f.hero.stats[0]], [total, f.hero.stats[1]], [3, f.hero.stats[2]]] as [number, [string, string]][];
 const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélité'];
 ---

@@ -1,5 +1,5 @@
 ---
-interface Props { name: 'till' | 'chef' | 'qr' | 'chart' | 'megaphone' | 'store' | 'cup' | 'bag' | 'cake' | 'check' | 'briefcase' | 'phone' | 'box' | 'users' | 'coins' | 'shield' | 'search' | 'book' | 'bell'; class?: string }
+interface Props { name: 'till' | 'chef' | 'qr' | 'chart' | 'megaphone' | 'store' | 'cup' | 'bag' | 'cake' | 'check' | 'briefcase' | 'phone' | 'box' | 'users' | 'coins' | 'shield' | 'search' | 'book' | 'bell' | 'heart'; class?: string }
 const { name, class: cls = 'size-6' } = Astro.props;
 const P: Record<string, string> = {
   till: 'M4 10h16v10H4zM7 10V5h10v5M8 14h2M14 14h2M8 17h8',
@@ -20,6 +20,7 @@ const P: Record<string, string> = {
   users: 'M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM2 21a7 7 0 0 1 14 0M16 3.5a4 4 0 0 1 0 7.5M18 14a6 6 0 0 1 4 7',
   coins: 'M12 7a8 3 0 1 0 0-.01zM4 7v5c0 1.7 3.6 3 8 3s8-1.3 8-3V7M4 12v5c0 1.7 3.6 3 8 3s8-1.3 8-3v-5',
   shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-4.5',
+  heart: 'M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z',
   search: 'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM21 21l-5-5',
 };
 ---

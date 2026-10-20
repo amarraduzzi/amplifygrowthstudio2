@@ -3,7 +3,7 @@
 // Upcoming features are labelled "Bientôt".
 
 export type Plan = { name: string; tag: string; price: string; text: string; items: string[]; product?: 'pos' | 'profit'; featured?: boolean };
-export type ModuleKey = 'pos' | 'waiter' | 'qr' | 'margins' | 'stock' | 'team' | 'money' | 'trust';
+export type ModuleKey = 'pos' | 'waiter' | 'qr' | 'online' | 'loyalty' | 'bakery' | 'margins' | 'stock' | 'team' | 'money' | 'trust';
 export interface FeatureModule { key: ModuleKey; tag: string; title: string; text: string; items: [string, string][] }
 
 export const posFr = {
@@ -217,7 +217,7 @@ export const featuresFr = {
     kicker: 'Toutes les fonctionnalités',
     title1: 'Le système tout-en-un',
     title2: 'pour votre restaurant.',
-    text: 'Caisse, menu QR, commande en ligne sans commission, réservations, promotions, stock en direct, marges, planning et équipe. Tout est relié, en français, en arabe et en anglais.',
+    text: 'Caisse, menu QR, commande en ligne sans commission, réservations, promotions, fidélité client, stock en direct, marges, planning et équipe. Tout est relié, en français, en arabe et en anglais.',
     stats: [['modules', 'reliés entre eux'], ['fonctions', 'incluses, sans option payante'], ['langues', 'français, arabe et anglais partout']] as [string, string][],
     cta: 'Essayer gratuitement 14 jours',
     cta2: 'Voir les tarifs',
@@ -250,6 +250,7 @@ export const featuresFr = {
         ['Happy hours et codes promo', '−30 % sur les boissons de 15 h à 18 h, un code BIENVENUE10 : appliqués tout seuls, à la caisse comme en ligne, et visibles sur le ticket.'],
         ['Envoi par service', 'Entrée, plat, dessert : la suite attend à la caisse et part en cuisine avec « Envoyer la suite ». La cuisine voit ce qui arrive ensuite.'],
         ['Postes de préparation et passe', 'Grill, pizza, dessert : chaque poste a ses bons et son écran. Le passe voit, table par table, ce qui est prêt à servir.'],
+        ['Journées non clôturées', 'Un Z oublié ? Les jours avec des ventes jamais clôturés (60 derniers jours) s’affichent, et un manager les clôture après coup.'],
       ],
     },
     {
@@ -261,6 +262,7 @@ export const featuresFr = {
         ['Rapide à apprendre', 'Choisir la table, toucher les plats, envoyer. Recherche par nom, catégories en un geste, précisions pour la cuisine.'],
         ['Un bon imprimé une seule fois', 'Même avec deux caisses équipées d’imprimante, chaque bon ne sort qu’une fois.'],
         ['L’encaissement reste à la caisse', 'Les espèces et les tickets fiscaux restent au même endroit : la caisse tombe juste et la clôture simple.'],
+        ['Populaires selon l’heure', 'Du café le matin, des tajines le soir : les 12 plats les plus vendus de chaque moment de la journée, et les remarques les plus tapées (« sans oignon », « bien cuit ») en un tap.'],
       ],
     },
     {
@@ -291,6 +293,23 @@ export const featuresFr = {
       ],
     },
     {
+      key: 'loyalty', tag: 'Amplify POS', title: 'Clients et fidélité',
+      text: 'Vos clients reviennent, et vous savez qui ils sont. Une carte de fidélité sur leur téléphone, sans application à télécharger.',
+      items: [
+        ['Inscription en un scan', 'Le client scanne le QR au comptoir ou sur la table, tape son prénom et son numéro : c’est fait. Avec son accord pour les offres WhatsApp (loi 09-08).'],
+        ['QR de dégustation', 'Un QR par événement : vous voyez qui s’est inscrit à quelle dégustation, même s’il était déjà client.'],
+        ['Carte de fidélité sur le téléphone', 'Un lien privé : le client y voit ses points, sa récompense et ses dernières visites. Un numéro de téléphone seul n’ouvre jamais une carte, personne ne peut voir les points d’un autre.'],
+        ['Sur l’écran d’accueil', 'Le client ajoute sa carte à l’écran d’accueil de son téléphone et la rouvre en un tap. Vous lui envoyez le lien sur WhatsApp en un geste depuis sa fiche.'],
+        ['Plusieurs récompenses', 'Un café offert à 50 points, 50 DH de remise à 100 : jusqu’à 8 récompenses, en plats offerts ou en remise. Amplify vous montre ce que chacune vous coûte vraiment.'],
+        ['Plusieurs récompenses par addition', 'Le client peut en cumuler jusqu’à 10 sur une addition (vous fixez le maximum). Si elles couvrent tout, l’addition est clôturée à 0 DH avec son ticket numéroté. Récompense retirée ou addition annulée : les points reviennent.'],
+        ['Faire revenir les clients perdus', 'Les clients absents depuis 30 jours (à vous de choisir) : un bouton ouvre WhatsApp avec le message prêt, une invitation ou une offre, avec des points bonus ajoutés une seule fois. Seulement pour ceux qui ont dit oui.'],
+        ['Message d’anniversaire', 'Chaque mois, les anniversaires à souhaiter : message WhatsApp prêt, cadeau ou points bonus, une fois par an et par client.'],
+        ['Story « J’étais là »', 'Après sa commande, le client reçoit une story prête à poster : son plat, un tampon et votre logo. Vous choisissez la suite : rien, un cadeau à table, ou un code personnel à usage unique pour la prochaine visite.'],
+        ['Importer votre fichier clients', 'Excel ou CSV de votre ancien système : numéros, points, visites, dépenses et anniversaires sont repris. Ce qui existe déjà ne baisse jamais.'],
+        ['Un client à la fois, jamais la liste', 'À la caisse, seul le client recherché s’affiche. La liste est réservée au propriétaire et aux managers, et l’option est désactivée tant que vous ne l’activez pas.'],
+      ],
+    },
+    {
       key: 'margins', tag: 'Amplify Profit', title: 'Marges et fiches techniques',
       text: 'Ce que coûte vraiment chaque plat, ce qu’il vous rapporte, et le bon prix de vente.',
       items: [
@@ -317,6 +336,12 @@ export const featuresFr = {
         ['Pertes déclarées', 'Un produit jeté ou cassé se déclare depuis la caisse, avec le motif, et compte dans les écarts.'],
         ['Comptes fournisseurs', 'Ce que vous devez à chaque fournisseur, ce qui est en retard et la prochaine échéance. Paiements, avoirs et relevé.'],
         ['Comparer les fournisseurs', 'Pour un même produit : prix moyen et dernier prix chez chaque fournisseur, et ce que vous auriez payé en moins chez le moins cher.'],
+        ['Dates de péremption par livraison', 'Notez la date à chaque achat reçu, ou une durée de conservation par défaut (marquée « estimée »). Chaque livraison est suivie comme un lot.'],
+        ['Le plus ancien sort en premier', 'Vente, perte ou production : le lot qui expire le premier part d’abord, tout seul.'],
+        ['À utiliser aujourd’hui', 'Le briefing montre ce qui est périmé, ce qui expire aujourd’hui ou bientôt, avec sa valeur en dirhams.'],
+        ['Ce que la péremption vous coûte', 'Ce qui a été jeté parce que périmé, comparé à la période précédente, par produit et par jour.'],
+        ['Jeter ce qui est périmé', 'D’un bouton, ou automatiquement à la clôture de la journée. Chaque lot jeté est noté comme perte, avec son motif.'],
+        ['Traçabilité en cas de rappel', 'Quels lots sont entrés dans quelle production, et à l’inverse, quelles productions ont utilisé tel lot.'],
       ],
     },
     {
@@ -332,6 +357,8 @@ export const featuresFr = {
         ['Acomptes et solde', 'Chaque versement est noté : espèces, carte, virement ou chèque. Le reste à payer est toujours visible.'],
         ['Facture traiteur avec ICE', 'Une fois payée, la commande devient une facture numérotée de la caisse, au nom de la société, comptée dans le Z.'],
         ['Recettes importées depuis Excel', 'Une ligne par ingrédient : plats, préparations et ingrédients entrent en une fois, avec un aperçu avant d’enregistrer.'],
+        ['Durée de vie des préparations', 'Chaque production de crème ou de pâte reçoit sa date limite. Un lot périmé ne compte plus dans le plan de production.'],
+        ['Traiteur : encore bon le jour J ?', 'Pour chaque commande confirmée, Amplify vérifie ce qui sera encore bon à la date de l’événement. Les lots qui expirent avant ne comptent pas.'],
       ],
     },
     {
@@ -361,6 +388,11 @@ export const featuresFr = {
         ['Export pour le comptable', 'Vos ventes en un fichier lisible par votre comptable, quand vous voulez.'],
         ['En direct sur votre téléphone', 'Chiffre du jour comparé à la semaine dernière à la même heure, commandes ouvertes, équipe présente, et ce qui demande votre attention : grosses remises, plats retirés après la cuisine, sorties de caisse, stock bas.'],
         ['Rapport Z sur WhatsApp', 'Après la clôture, la caisse envoie le rapport Z au patron sur WhatsApp en un geste : chiffre, paiements, remises et écart de caisse.'],
+        ['Écritures pour votre comptable', 'Ventes (une pièce par jour), achats, caisse et banque, selon le plan comptable marocain (PCGE), toujours équilibrées, avec la TVA par taux. Fichiers prêts pour Sage, Odoo et autres.'],
+        ['Un lien pour le comptable', 'Il ouvre une page sans compte et télécharge lui-même chaque mois. Vous coupez le lien quand vous voulez.'],
+        ['Trésorerie des 30 prochains jours', 'Entrées prévues, achats, charges à leur date et dettes fournisseurs : le solde jour par jour, le point le plus bas et le premier jour sous zéro.'],
+        ['Ce qui se vendra demain', 'Plat par plat, d’après le même jour des 8 dernières semaines, avec les commandes traiteur en plus. Et ce qu’il vous manque en ingrédients.'],
+        ['Historique de votre ancienne caisse', 'Importez vos ventes d’avant Amplify (CSV ou Excel) pour comparer ce mois à l’an dernier. Elles restent à part : jamais dans un Z ni dans l’export comptable.'],
       ],
     },
     {

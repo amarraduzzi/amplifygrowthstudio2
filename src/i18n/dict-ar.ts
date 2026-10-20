@@ -1,4 +1,5 @@
 export const dictAr: Record<string, string> = {
+  "Fidélité": "الولاء",
   "Facturation": "الفوترة",
   "Mensuel": "شهري",
   "Annuel": "سنوي",
@@ -214,7 +215,7 @@ export const dictAr: Record<string, string> = {
   "Les 58 fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.": "الوظائف الـ 58 في Amplify POS و Amplify Profit: الكاشير، الطلب من الطاولة، قائمة QR، هوامش الربح، المخزون، الفريق والمصاريف. كل شيء مشمول.",
   "Les bons partent tout seuls": "التذاكر تُرسَل تلقائيًا",
   "Les ventes du serveur montent.": "مبيعات النادل ترتفع.",
-  "Les {n} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.": "الوظائف الـ {n} في Amplify POS و Amplify Profit: الكاشير، الطلب من الطاولة، قائمة QR، هوامش الربح، المخزون، الفريق والمصاريف. كل شيء مشمول.",
+  "Les {n} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, fidélité, équipe et charges. Tout est inclus.": "الوظائف الـ {n} في Amplify POS و Amplify Profit: الكاشير، الطلب من الطاولة، قائمة QR، هوامش الربح، المخزون، الولاء، الفريق والمصاريف. كل شيء مشمول.",
   "Liste de diffusion · 12 destinataires": "قائمة بث · 12 مستلمًا",
   "Logiciel de caisse restaurant au Maroc | Amplify POS": "برنامج كاشير للمطاعم في المغرب | Amplify POS",
   "Loyer": "الإيجار",
@@ -1055,10 +1056,4 @@ export const dictAr: Record<string, string> = {
   "Coûts calculés pour chaque produit": "تكلفة كل منتج محسوبة",
   "Plan de production prêt": "خطة الإنتاج جاهزة",
   "Votre plan de production est prêt": "خطة إنتاجك جاهزة",
-  // pâtisseries: scale block (worked example, own pieces per day, call to action)
-  "Exemple de calcul": "مثال حسابي",
-  "pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo": "قطعة يوميًا، 360 يومًا في السنة، عجينة اللوز بـ 80 درهمًا للكيلو",
-  "Vos pièces par jour": "عدد قطعكم في اليوم",
-  "Bonjour, je voudrais calculer mes pertes de matière avec Amplify.": "السلام عليكم، أريد حساب خسائري من المواد مع Amplify.",
-  "Calculer pour ma pâtisserie": "احسبوا لمحل حلوياتي",
 };

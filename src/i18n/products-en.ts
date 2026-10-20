@@ -214,7 +214,7 @@ export const featuresEn = {
     kicker: 'All features',
     title1: 'The all-in-one system',
     title2: 'for your restaurant.',
-    text: 'POS, QR menu, commission-free online ordering, bookings, promotions, live stock, margins, planning and team. Everything works together, in French, Arabic and English.',
+    text: 'POS, QR menu, commission-free online ordering, bookings, promotions, customer loyalty, live stock, margins, planning and team. Everything works together, in French, Arabic and English.',
     stats: [['modules', 'connected to each other'], ['features', 'included, no paid add-ons'], ['languages', 'French, Arabic and English everywhere']] as [string, string][],
     cta: 'Try it free for 14 days',
     cta2: 'See pricing',
@@ -247,6 +247,7 @@ export const featuresEn = {
         ['Happy hours and promo codes', '-30% on drinks from 3 to 6 pm, a WELCOME10 code: applied automatically, at the till and online, and shown on the receipt.'],
         ['Courses', 'Starter, main, dessert: the next course waits at the till and goes to the kitchen with "Send next". The kitchen sees what comes next.'],
         ['Kitchen stations and the pass', 'Grill, pizza, dessert: each station has its own tickets and screen. The pass sees, table by table, what is ready to serve.'],
+        ['Days never closed', 'Forgot a Z? Days with sales that were never closed (last 60 days) are listed, and a manager closes them afterwards.'],
       ],
     },
     {
@@ -258,6 +259,7 @@ export const featuresEn = {
         ['Quick to learn', 'Pick the table, tap the dishes, send. Search by name, categories in one tap, notes for the kitchen.'],
         ['Each ticket prints only once', 'Even with two POS stations with printers, each ticket comes out only once.'],
         ['Payment stays at the POS', 'Cash and fiscal receipts stay in one place: the till stays accurate and closing stays simple.'],
+        ['Popular by time of day', 'Coffee in the morning, tajines at night: the 12 best sellers of each part of the day, and the most typed remarks (“no onion”, “well done”) in one tap.'],
       ],
     },
     {
@@ -288,6 +290,23 @@ export const featuresEn = {
       ],
     },
     {
+      key: 'loyalty', tag: 'Amplify POS', title: 'Customers and loyalty',
+      text: 'Your customers come back, and you know who they are. A loyalty card on their phone, with no app to download.',
+      items: [
+        ['Sign-up in one scan', 'The guest scans the QR at the counter or on the table and types a first name and a number: done. With their consent to WhatsApp offers (law 09-08).'],
+        ['Tasting QR code', 'One QR per event: you see who signed up at which tasting, even if they were already a customer.'],
+        ['Loyalty card on the phone', 'A private link: the customer sees their points, their reward and their last visits. A phone number alone never opens a card, so nobody can see someone else’s points.'],
+        ['On the home screen', 'The customer adds the card to their phone’s home screen and reopens it in one tap. You send them the link on WhatsApp in one tap from their file.'],
+        ['Several rewards', 'A free coffee at 50 points, 50 DH off at 100: up to 8 rewards, as free dishes or discounts. Amplify shows what each one really costs you.'],
+        ['Several rewards on one bill', 'A customer can combine up to 10 on one bill (you set the maximum). If they cover everything, the bill closes at 0 DH with its numbered ticket. Reward removed or bill cancelled: the points come back.'],
+        ['Win back lost customers', 'Customers who haven’t been in for 30 days (you choose): a button opens WhatsApp with the message ready, an invitation or an offer, with bonus points added only once. Only for those who said yes.'],
+        ['Birthday message', 'Each month, the birthdays to celebrate: a WhatsApp message ready to send, a gift or bonus points, once a year per customer.'],
+        ['“I was here” story', 'After ordering, the customer gets a story ready to post: their dish, a stamp and your logo. You choose what follows: nothing, a gift at the table, or a personal one-time code for the next visit.'],
+        ['Import your customer list', 'Excel or CSV from your old system: numbers, points, visits, spending and birthdays come across. What already exists never goes down.'],
+        ['One customer at a time, never the list', 'At the till, only the customer you search for is shown. The list is for the owner and managers only, and the option stays off until you switch it on.'],
+      ],
+    },
+    {
       key: 'margins', tag: 'Amplify Profit', title: 'Margins and recipe cards',
       text: 'What each dish really costs, what it earns you, and the right selling price.',
       items: [
@@ -314,6 +333,12 @@ export const featuresEn = {
         ['Recorded waste', 'A product thrown away or broken is recorded from the till, with the reason, and counts in the differences.'],
         ['Supplier accounts', 'What you owe each supplier, what is overdue and the next due date. Payments, credit notes and statement.'],
         ['Compare suppliers', 'For the same product: average and last price at each supplier, and what you would have saved at the cheapest.'],
+        ['Expiry date per delivery', 'Note the date on each purchase received, or a default shelf life (marked “estimated”). Every delivery is tracked as a lot.'],
+        ['Oldest goes first', 'Sale, loss or production: the lot that expires first leaves first, by itself.'],
+        ['Use today', 'The briefing shows what is expired and what expires today or soon, with its value in dirhams.'],
+        ['What expiry costs you', 'What was thrown away because it expired, compared with the previous period, by product and by day.'],
+        ['Throw out what has expired', 'With one button, or automatically when the day is closed. Every lot thrown away is recorded as waste, with its reason.'],
+        ['Traceability for a recall', 'Which lots went into which production and, the other way round, which productions used a given lot.'],
       ],
     },
     {
@@ -329,6 +354,8 @@ export const featuresEn = {
         ['Deposits and balance', 'Every payment is recorded: cash, card, transfer or cheque. The balance due is always visible.'],
         ['Catering invoice with ICE', 'Once paid, the order becomes a numbered invoice from the till, in the company’s name, counted in the Z report.'],
         ['Recipes imported from Excel', 'One line per ingredient: dishes, preparations and ingredients come in at once, with a preview before saving.'],
+        ['Shelf life of preparations', 'Every batch of cream or dough gets its expiry date. An expired lot no longer counts in the production plan.'],
+        ['Catering: still good on the day?', 'For each confirmed order, Amplify checks what will still be good on the event date. Lots that expire before it don’t count.'],
       ],
     },
     {
@@ -358,6 +385,11 @@ export const featuresEn = {
         ['Export for your accountant', 'Your sales in one file your accountant can read, whenever you want.'],
         ['Live on your phone', 'Today’s revenue against last week at the same hour, open orders, staff on duty, and what deserves a look: big discounts, dishes removed after the kitchen, cash taken out, low stock.'],
         ['Z report on WhatsApp', 'After closing, the till sends the Z report to the owner on WhatsApp in one tap: revenue, payments, discounts and cash difference.'],
+        ['Entries for your accountant', 'Sales (one entry per day), purchases, cash and bank, following the Moroccan chart of accounts (PCGE), always balanced, with VAT per rate. Files ready for Sage, Odoo and others.'],
+        ['A link for the accountant', 'They open a page with no account and download each month themselves. You switch the link off whenever you like.'],
+        ['Cash for the next 30 days', 'Expected sales, purchases, costs on their due day and supplier debts: the balance day by day, the lowest point and the first day below zero.'],
+        ['What will sell tomorrow', 'Dish by dish, from the same weekday over the last 8 weeks, with catering orders on top. And what you are short of in ingredients.'],
+        ['History from your old till', 'Import your sales from before Amplify (CSV or Excel) to compare this month with last year. They stay apart: never in a Z or in the accounting export.'],
       ],
     },
     {

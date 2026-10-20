@@ -1,4 +1,5 @@
 export const dictEn: Record<string, string> = {
+  "Fidélité": "Loyalty",
   "Facturation": "Billing",
   "Mensuel": "Monthly",
   "Annuel": "Yearly",
@@ -214,7 +215,7 @@ export const dictEn: Record<string, string> = {
   "Les 58 fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.": "The 58 features of Amplify POS and Amplify Profit: POS, table ordering, QR menu, margins, stock, team and expenses. Everything included.",
   "Les bons partent tout seuls": "Tickets go out on their own",
   "Les ventes du serveur montent.": "The waiter’s sales go up.",
-  "Les {n} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, équipe et charges. Tout est inclus.": "The {n} features of Amplify POS and Amplify Profit: POS, table ordering, QR menu, margins, stock, team and expenses. Everything included.",
+  "Les {n} fonctionnalités d’Amplify POS et Amplify Profit : caisse, commande à table, menu QR, marges, stock, fidélité, équipe et charges. Tout est inclus.": "The {n} features of Amplify POS and Amplify Profit: POS, table ordering, QR menu, margins, stock, loyalty, team and expenses. Everything included.",
   "Liste de diffusion · 12 destinataires": "Broadcast list · 12 recipients",
   "Logiciel de caisse restaurant au Maroc | Amplify POS": "Restaurant POS software in Morocco | Amplify POS",
   "Loyer": "Rent",
@@ -1055,10 +1056,4 @@ export const dictEn: Record<string, string> = {
   "Coûts calculés pour chaque produit": "Costs calculated for every product",
   "Plan de production prêt": "Production plan ready",
   "Votre plan de production est prêt": "Your production plan is ready",
-  // pâtisseries: scale block (worked example, own pieces per day, call to action)
-  "Exemple de calcul": "Worked example",
-  "pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo": "pieces a day, 360 days a year, almond paste at 80 DH a kilo",
-  "Vos pièces par jour": "Your pieces a day",
-  "Bonjour, je voudrais calculer mes pertes de matière avec Amplify.": "Hello, I would like to work out my ingredient losses with Amplify.",
-  "Calculer pour ma pâtisserie": "Work it out for my pastry shop",
 };
