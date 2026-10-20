@@ -13,10 +13,10 @@ const tt = tr(lang);
 const t = copy(lang);
 // Main menu: two panels (Products, Features) and plain links (Pricing, Blog, Contact).
 const PRODUCTS = [
-  { k: 'pos', icon: 'till', text: 'La caisse, le menu QR et les commandes.' },
-  { k: 'profit', icon: 'chart', text: 'Food cost, marges et stock, plat par plat.' },
-  { k: 'site', icon: 'store', text: 'Le site de votre restaurant, fait pour vous.' },
-  { k: 'marketing', icon: 'megaphone', text: 'Du marketing qui amène des clients à table.' },
+  { k: 'pos', icon: 'till', img: '/img/nav-pos.webp', pos: '60% 60%', text: 'La caisse, le menu QR et les commandes.' },
+  { k: 'profit', icon: 'chart', img: '/img/nav-profit.webp', pos: '70% 65%', text: 'Food cost, marges et stock, plat par plat.' },
+  { k: 'site', icon: 'store', img: '/img/nav-site.webp', pos: '60% 45%', text: 'Le site de votre restaurant, fait pour vous.' },
+  { k: 'marketing', icon: 'megaphone', img: '/img/nav-clients.webp', pos: '50% 55%', text: 'Du marketing qui amène des clients à table.' },
 ] as const;
 const MODULE_ICON: Record<string, string> = { bakery: 'cake', pos: 'till', waiter: 'phone', qr: 'qr', online: 'bag', loyalty: 'heart', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
 const fx = featuresOf(lang);
@@ -47,10 +47,13 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
           <div class="mx-auto grid max-w-6xl gap-3 px-6 py-6 lg:grid-cols-4 2xl:max-w-7xl">
             {products.map(p => (
-              <a href={p.href} class="group/c flex flex-col gap-3 rounded-[1.25rem] bg-paper p-5 ring-1 ring-line transition-[box-shadow,transform] hover:-translate-y-0.5 hover:ring-navy">
-                <span class="grid size-11 place-items-center rounded-xl bg-mint text-green-deep"><Icon name={p.icon} class="size-6" /></span>
-                <span class="display text-2xl leading-none">{p.label}</span>
-                <span class="text-sm leading-snug text-muted">{tt(p.text)}</span>
+              <a href={p.href} class="group/c relative isolate flex h-56 flex-col justify-end overflow-hidden rounded-[1.4rem] bg-navy p-5 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5">
+                <img src={p.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover/c:scale-105" style={`object-position:${p.pos}`} />
+                <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/90 via-navy/35 to-transparent" aria-hidden="true"></span>
+                <span class="absolute start-4 top-4 grid size-10 place-items-center rounded-xl bg-white/20 text-white ring-1 ring-white/30 backdrop-blur-md"><Icon name={p.icon} class="size-5" /></span>
+                <span class="display text-[1.7rem] leading-none">{p.label}</span>
+                <span class="mt-1.5 text-sm leading-snug text-white/85">{tt(p.text)}</span>
+                <span class="absolute end-4 top-4 grid size-8 place-items-center rounded-full bg-green text-navy opacity-0 transition-opacity duration-300 group-hover/c:opacity-100" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-4 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
               </a>
             ))}
           </div>
@@ -118,7 +121,7 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         <details class="group/m border-b border-line">
           <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
           <div class="grid gap-2 pb-4">
-            {products.map(p => <a href={p.href} class="flex items-center gap-3 rounded-2xl bg-paper p-3.5 ring-1 ring-line"><span class="grid size-10 shrink-0 place-items-center rounded-xl bg-mint text-green-deep"><Icon name={p.icon} class="size-5" /></span><span class="font-semibold leading-tight">{p.label}<span class="block text-sm font-normal text-muted">{tt(p.text)}</span></span></a>)}
+            {products.map(p => <a href={p.href} class="flex items-center gap-3 rounded-2xl bg-paper p-3.5 ring-1 ring-line"><img src={p.img} alt="" width="56" height="56" loading="lazy" class="size-14 shrink-0 rounded-xl object-cover" style={`object-position:${p.pos}`} /><span class="font-semibold leading-tight">{p.label}<span class="block text-sm font-normal text-muted">{tt(p.text)}</span></span></a>)}
             <a href={ROUTES.restaurants[lang]} class="px-1 pt-1 text-sm font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} →</a>
           </div>
         </details>
