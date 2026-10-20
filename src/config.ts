@@ -72,6 +72,8 @@ export const OFFER = {
   siteMonthly: 100,
   siteSetup: 250,
   siteDomain: 150,
+  /** Amplify Fidélité: one-off setup, like Site. Each service has a one-off setup price; the monthly price depends on how many services (100 / 150 / 200). */
+  loyaltySetup: 250,
   /** Amplify Site Premium (the Maison and Signature styles), one-off */
   sitePremium: 750,
 };
