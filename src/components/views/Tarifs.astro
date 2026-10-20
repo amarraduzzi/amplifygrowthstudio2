@@ -1,0 +1,166 @@
+---
+// One pricing page for everything: pick your situation, the plans, what is taken separately, the one-off costs.
+import Base from '../../layouts/Base.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import Pricing from '../Pricing.astro';
+import PriceBuilder from '../PriceBuilder.astro';
+import BillingToggle from '../BillingToggle.astro';
+import Faq from '../Faq.astro';
+import { OFFER, signupUrl, waLink } from '../../config';
+import { copy } from '../../i18n';
+import { posOf } from '../../i18n/content';
+import { tr } from '../../i18n/t';
+import { ROUTES, type Lang } from '../../i18n/routes';
+import { faqSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const p = posOf(lang);
+const ui = copy(lang).ui;
+const title = tt('Tarifs Amplify Growth Studio : caisse, marges, site | Maroc');
+const description = tt('Tous les tarifs en dirhams : Amplify POS dès 199 DH HT, Profit 249 DH, Contrôle 499 DH, site 250 DH puis 100 DH par mois. 14 jours gratuits, sans engagement.');
+const wa = tt('Bonjour, j’ai une question sur vos tarifs.');
+const price = (i: number) => p.pricing.plans[i].price;
+const from = (n: string) => tt('Dès {n} DH HT par mois').replace('{n}', n);
+const situations = [
+  { h: tt('Je n’ai pas de caisse'), t: tt('Amplify POS : la caisse, le menu QR et les bons cuisine.'), plan: from(price(0)), icon: 'till' },
+  { h: tt('J’ai déjà une caisse'), t: tt('Amplify Profit : food cost, marge par plat et stock, avec votre caisse actuelle.'), plan: from(price(2)), icon: 'chart' },
+  { h: tt('Je veux tout'), t: tt('Contrôle : la caisse et les marges, ensemble.'), plan: from(price(3)), icon: 'check' },
+] as const;
+const faqItems = [
+  ['Les prix sont-ils avec ou sans TVA ?', 'Tous les prix sont hors taxes (HT). La TVA s’ajoute sur la facture.'],
+  ['Y a-t-il un engagement ?', 'Non. 14 jours gratuits sans carte bancaire, puis vous payez chaque mois et vous pouvez arrêter quand vous voulez. En annuel, vous payez 10 mois et profitez de 12.'],
+  ['Quelle formule choisir ?', 'Sans caisse : POS. Avec une caisse que vous gardez : Profit. Les deux ensemble : Contrôle, à 499 DH au lieu de 598 DH.'],
+  ['L’installation est-elle payante ?', 'À Rabat, l’installation sur place est offerte pour le moment. Partout au Maroc, l’installation guidée en vidéo est incluse.'],
+  ['Le matériel est-il compris ?', 'Non, le matériel est vendu à part. Écrivez-nous sur WhatsApp et nous vous disons ce qu’il vous faut.'],
+  ['Comment payer ?', 'Par virement ou CashPlus. Pas de carte bancaire demandée pour l’essai.'],
+].map(([q, a]) => [tt(q), tt(a)]);
+const schema = [
+  {
+    '@context': 'https://schema.org', '@type': 'ItemList', name: 'Amplify Growth Studio',
+    itemListElement: p.pricing.plans.map((x, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Offer', name: x.name, price: x.price, priceCurrency: 'MAD' } })),
+  },
+  faqSchema(faqItems),
+].filter(Boolean) as Record<string, unknown>[];
+const rows = [
+  [tt('Installation sur place à Rabat'), OFFER.installFreeNow ? tt('Offerte pour le moment') : `${OFFER.installRabat} ${tt('DH HT')}`],
+  [tt('Création de votre site par nos soins'), `${OFFER.siteSetup} ${tt('DH HT')}`],
+  [tt('Votre propre nom de domaine'), `${OFFER.siteDomain} ${tt('DH HT')}`],
+  [tt('Style Premium pour votre site'), `${OFFER.sitePremium} ${tt('DH HT')}`],
+];
+---
+<Base lang={lang} page="pricing" title={title} description={description} wa={wa} schema={schema}>
+  <!-- hero -->
+  <section class="mx-auto max-w-6xl px-4 pb-6 pt-8 sm:px-6 md:pt-16">
+    <p class="inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt('Tarifs')}</p>
+    <h1 class="mt-4 max-w-4xl text-[clamp(2.9rem,11vw,3.6rem)] leading-[0.95] lg:text-[clamp(3.4rem,6vw,5.6rem)]">{tt('Des prix clairs, en dirhams.')}</h1>
+    <p class="mt-5 max-w-2xl text-[1.05rem] leading-snug text-muted md:text-xl">{tt('14 jours gratuits, sans carte bancaire et sans engagement. Choisissez selon votre situation, nous vous montrons le prix exact.')}</p>
+    <p class="mt-3 text-sm font-semibold text-green-deep">{tt('Prix hors taxes (HT), TVA en sus.')}</p>
+  </section>
+
+  <!-- pick your situation -->
+  <section class="mx-auto max-w-6xl px-4 py-8 sm:px-6" aria-labelledby="situation">
+    <h2 id="situation" class="text-3xl sm:text-4xl">{tt('Quelle est votre situation ?')}</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      {situations.map((s, i) => (
+        <a href="#formules" class={`group flex flex-col rounded-[1.75rem] p-6 transition-transform duration-300 hover:-translate-y-1 ${i === 2 ? 'bg-navy text-white' : 'bg-paper ring-1 ring-line'}`}>
+          <span class={`grid size-11 place-items-center rounded-xl ${i === 2 ? 'bg-green text-navy' : 'bg-mint text-green-deep ring-1 ring-green/30'}`}><Icon name={s.icon} class="size-5" /></span>
+          <h3 class="display mt-4 text-3xl">{s.h}</h3>
+          <p class={`mt-2 flex-1 ${i === 2 ? 'text-white/70' : 'text-muted'}`}>{s.t}</p>
+          <p class={`mt-4 font-semibold ${i === 2 ? 'text-green' : 'text-green-deep'}`}>{s.plan} <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1">→</span></p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- the four plans -->
+  <section id="formules" class="mx-auto max-w-6xl scroll-mt-28 px-4 py-10 sm:px-6" aria-labelledby="plans">
+    <h2 id="plans" class="text-3xl sm:text-4xl">{tt('Les formules')}</h2>
+    <div class="mt-6"><BillingToggle /></div>
+    <div class="mt-8"><Pricing plans={p.pricing.plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.popular} lang={lang} /></div>
+    <p class="mt-4 flex items-center gap-2 font-semibold text-green-deep"><Icon name="check" class="size-5" />{tt('99 DH moins cher que Restaurant et Profit séparément.')}</p>
+    <p class="mt-2 text-sm text-muted">{p.pricing.note}</p>
+  </section>
+
+  <!-- the highlighted offer: free setup in Rabat -->
+  {OFFER.installFreeNow && (
+    <section class="px-4 py-6 sm:px-6" aria-labelledby="offre">
+      <div class="mx-auto grid max-w-6xl items-center gap-6 rounded-[2rem] bg-green p-7 text-navy sm:p-10 md:grid-cols-[1.3fr_auto]">
+        <div>
+          <p class="inline-flex rounded-full bg-navy px-3 py-1 text-xs font-bold text-green">★ {tt('Offre en cours')}</p>
+          <h2 id="offre" class="display mt-3 text-4xl leading-[0.95] sm:text-6xl">{tt('Installation sur place à Rabat offerte')}</h2>
+          <p class="mt-3 max-w-xl text-navy/80">{tt('Au lieu de {n} DH HT. Nous venons installer la caisse et former votre équipe, sans frais, pour le moment.').replace('{n}', String(OFFER.installRabat))}</p>
+        </div>
+        <a href={waLink(tt('Bonjour, je voudrais réserver l’installation offerte à Rabat.'))} target="_blank" rel="noopener" data-wa="pricing-offer" class="inline-flex min-h-12 items-center justify-center whitespace-nowrap rounded-full bg-navy px-7 text-lg font-semibold text-white hover:bg-blue">{tt('Réserver mon installation')}</a>
+      </div>
+    </section>
+  )}
+
+  <!-- taken separately -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="separe">
+    <h2 id="separe" class="text-3xl sm:text-4xl">{tt('À prendre séparément')}</h2>
+    <div class="mt-6 grid gap-4 md:grid-cols-2">
+      <div class="flex flex-col rounded-[1.75rem] bg-paper p-6 ring-1 ring-line">
+        <p class="text-sm font-semibold text-green-deep">{tt('Amplify Site')}</p>
+        <p class="display mt-2 text-5xl" dir="auto">{tt('250 DH une fois')}</p>
+        <p class="text-muted">{tt('puis 100 DH par mois pour l’hébergement et la maintenance.')}</p>
+        <p class="mt-3 flex-1 text-muted">{tt('Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.')}</p>
+        <a href={ROUTES.site[lang]} class="mt-5 inline-flex font-semibold text-green-deep underline underline-offset-4">{tt('Voir Amplify Site')} →</a>
+      </div>
+      <div class="flex flex-col rounded-[1.75rem] bg-paper p-6 ring-1 ring-line">
+        <p class="text-sm font-semibold text-green-deep">{tt('Amplify Commandes')}</p>
+        <p class="display mt-2 text-5xl" dir="auto">{tt('500 DH une fois')}</p>
+        <p class="text-muted">{tt('puis 100 DH par mois.')}</p>
+        <p class="mt-3 flex-1 text-muted">{tt('La page de commande et l’écran des commandes, sans la caisse : 500 DH une fois, puis 100 DH par mois.')}</p>
+        <a href={ROUTES.pos[lang]} class="mt-5 inline-flex font-semibold text-green-deep underline underline-offset-4">{tt('Voir Amplify POS')} →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- one-off costs -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="uniques">
+    <h2 id="uniques" class="text-3xl sm:text-4xl">{tt('Les coûts uniques')}</h2>
+    <p class="mt-2 text-muted">{tt('Tout ce qui n’est pas mensuel, au même endroit, pour que rien ne vous surprenne.')}</p>
+    <ul class="mt-6 divide-y divide-line rounded-[1.75rem] bg-paper px-6 ring-1 ring-line">
+      {rows.map(([label, value], i) => (
+        <li class="flex items-center justify-between gap-4 py-4">
+          <span class="font-medium">{label}</span>
+          <span class={`display shrink-0 text-2xl ${i === 0 && OFFER.installFreeNow ? 'text-green-deep' : ''}`}>{value}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- everything included + calculator -->
+  <section class="mx-auto max-w-6xl px-4 py-10 sm:px-6" aria-labelledby="inclus">
+    <h2 id="inclus" class="text-3xl sm:text-4xl">{p.pricing.included.title}</h2>
+    <p class="mt-2 max-w-2xl text-muted">{p.pricing.included.text}</p>
+    <ul class="mt-6 grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      {p.pricing.included.items.map(it => <li class="flex gap-2 rounded-xl bg-paper px-4 py-3 ring-1 ring-line"><Icon name="check" class="mt-0.5 size-4 shrink-0 text-green-deep" />{it}</li>)}
+    </ul>
+    <div class="mt-10"><PriceBuilder lang={lang} /></div>
+  </section>
+
+  <!-- one line of proof -->
+  <section class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+    <div class="rounded-[1.75rem] bg-mint p-6 sm:p-8">
+      <p class="display text-3xl leading-tight sm:text-5xl">{tt('10 g de fromage en trop × 100 plats par jour = 27 000 DH par an')}</p>
+      <p class="mt-2 font-semibold text-green-deep">{tt('Amplify Profit coûte 249 DH par mois.')}</p>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faqItems} wa={wa} />
+
+  <!-- closing -->
+  <section class="px-4 pb-14 sm:px-6 md:pb-24">
+    <div class="mx-auto flex max-w-6xl flex-col items-start gap-6 rounded-[2.5rem] bg-navy px-6 py-12 text-white md:px-14">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl">{tt('Essayez 14 jours, sans carte.')}</h2>
+      <p class="max-w-xl text-lg text-white/75">{tt('Créez votre restaurant en quelques minutes. Une question sur le prix ? Écrivez-nous sur WhatsApp.')}</p>
+      <div class="flex flex-wrap items-center gap-3">
+        <a href={signupUrl(lang)} class="inline-flex min-h-12 items-center rounded-full bg-green px-8 text-lg font-semibold text-navy hover:bg-[#04A859]">{p.pricing.choose} →</a>
+        <WaButton text={wa} label={ui.whatsapp} where="pricing-final" tone="light" class="px-6" />
+      </div>
+    </div>
+  </section>
+</Base>

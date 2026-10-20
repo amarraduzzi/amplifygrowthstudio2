@@ -65,6 +65,8 @@ export const CONTACT = {
 export const OFFER = {
   yearPaidMonths: 10,
   installRabat: 490,
+  /** On-site installation in Rabat is free for now: shown as the highlighted offer on the pricing page */
+  installFreeNow: true,
   launchFreeInstall: 10,
   /** Amplify Site: monthly subscription, "we make it for you" (launch offer), connecting an own domain */
   siteMonthly: 100,

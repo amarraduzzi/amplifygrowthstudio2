@@ -35,7 +35,7 @@ if (fxLeft.length) groups[groups.length - 1].modules.push(...fxLeft);
 const products = PRODUCTS.map(p => ({ ...p, label: t.nav[p.k], href: ROUTES[p.k][lang] }));
 const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems'];
 const links = [
-  { k: 'pricing', label: tt('Tarifs'), href: `${ROUTES.pos[lang]}#tarifs` },
+  { k: 'pricing', label: tt('Tarifs'), href: ROUTES.pricing[lang] },
   ...(lang === 'fr' ? [{ k: 'blog', label: 'Blog', href: ROUTES.blog[lang] }] : []),
   { k: 'contact', label: t.nav.contact, href: ROUTES.contact[lang] },
 ];

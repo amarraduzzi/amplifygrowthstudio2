@@ -2,10 +2,11 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
+  pricing: { fr: '/tarifs/', ar: '/ar/tarifs/', en: '/en/pricing/' },
   systems: { fr: '/systemes/', ar: '/ar/systemes/', en: '/en/systems/' },
   pos: { fr: '/amplify-pos/', ar: '/ar/amplify-pos/', en: '/en/amplify-pos/' },
   profit: { fr: '/amplify-profit/', ar: '/ar/amplify-profit/', en: '/en/amplify-profit/' },
