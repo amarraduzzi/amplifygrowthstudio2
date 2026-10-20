@@ -1,4 +1,7 @@
 export const dictAr: Record<string, string> = {
+  "Caisse et menu QR": "الكاشير وقائمة QR",
+  "Marges et stock": "الهوامش والمخزون",
+  "Votre site web": "موقعك الإلكتروني",
   "Produits": "المنتجات",
   "Tarifs": "الأسعار",
   "La caisse, le menu QR et les commandes.": "الكاشير، قائمة QR والطلبات.",

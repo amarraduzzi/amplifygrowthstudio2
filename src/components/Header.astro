@@ -13,10 +13,10 @@ const tt = tr(lang);
 const t = copy(lang);
 // Main menu: two panels (Products, Features) and plain links (Pricing, Blog, Contact).
 const PRODUCTS = [
-  { k: 'pos', icon: 'till', img: '/img/nav-pos.webp', pos: '60% 60%', text: 'La caisse, le menu QR et les commandes.' },
-  { k: 'profit', icon: 'chart', img: '/img/nav-profit.webp', pos: '70% 65%', text: 'Food cost, marges et stock, plat par plat.' },
-  { k: 'site', icon: 'store', img: '/img/nav-site.webp', pos: '60% 45%', text: 'Le site de votre restaurant, fait pour vous.' },
-  { k: 'marketing', icon: 'megaphone', img: '/img/nav-clients.webp', pos: '50% 55%', text: 'Du marketing qui amène des clients à table.' },
+  { k: 'pos', short: 'Caisse et menu QR', icon: 'till', img: '/img/nav-pos.webp', pos: '60% 60%', text: 'La caisse, le menu QR et les commandes.' },
+  { k: 'profit', short: 'Marges et stock', icon: 'chart', img: '/img/nav-profit.webp', pos: '70% 65%', text: 'Food cost, marges et stock, plat par plat.' },
+  { k: 'site', short: 'Votre site web', icon: 'store', img: '/img/nav-site.webp', pos: '60% 45%', text: 'Le site de votre restaurant, fait pour vous.' },
+  { k: 'marketing', short: 'Plus de clients', icon: 'megaphone', img: '/img/nav-clients.webp', pos: '50% 55%', text: 'Du marketing qui amène des clients à table.' },
 ] as const;
 const MODULE_ICON: Record<string, string> = { bakery: 'cake', pos: 'till', waiter: 'phone', qr: 'qr', online: 'bag', loyalty: 'heart', margins: 'chart', stock: 'box', team: 'users', money: 'coins', trust: 'shield' };
 const fx = featuresOf(lang);
@@ -110,29 +110,42 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         <svg viewBox="0 0 24 24" class="hidden size-5 group-open:block" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </summary>
       <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto bg-chalk px-4 pb-6 pt-2 shadow-2xl" aria-label="Navigation">
+        <details class="group/m border-b border-line" open>
+          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="grid grid-cols-2 gap-2.5 pb-4">
+            {products.map(p => (
+              <a href={p.href} class="relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.25rem] bg-navy p-3.5 text-white active:scale-[0.98]">
+                <img src={p.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover" style={`object-position:${p.pos}`} />
+                <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/90 via-navy/25 to-transparent" aria-hidden="true"></span>
+                <span class="absolute start-3 top-3 grid size-9 place-items-center rounded-xl bg-white/20 ring-1 ring-white/30 backdrop-blur-md"><Icon name={p.icon} class="size-[1.15rem]" /></span>
+                <span class="display text-[1.35rem] leading-none">{p.label.replace('Amplify ', '')}</span>
+                <span class="mt-1 text-[0.8rem] leading-tight text-white/85">{tt(p.short)}</span>
+              </a>
+            ))}
+          </div>
+          <a href={ROUTES.restaurants[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
+        </details>
+        <details class="group/m border-b border-line">
+          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <div class="grid grid-cols-2 gap-2 pb-3">
+            {fx.modules.map(m => (
+              <a href={`${ROUTES.features[lang]}#${m.key}`} class="flex items-start gap-2.5 rounded-2xl bg-paper p-3 ring-1 ring-line active:bg-mint">
+                <span class={`grid size-9 shrink-0 place-items-center rounded-lg ${m.tag === 'Amplify Profit' ? 'bg-green text-navy' : m.tag === 'Amplify' ? 'bg-chalk text-navy ring-1 ring-line' : 'bg-blue text-white'}`}><Icon name={MODULE_ICON[m.key] as any} class="size-[1.15rem]" /></span>
+                <span class="min-w-0 text-[0.88rem] font-semibold leading-tight">{m.title}<span class="mt-0.5 block text-xs font-normal text-muted">{m.items.length} {tt('fonctions')}</span></span>
+              </a>
+            ))}
+          </div>
+          <a href={ROUTES.features[lang]} class="mb-4 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
+        </details>
+        {links.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl">{n.label}</a>)}
         {toc && toc.length > 0 && (
-          <div class="border-b border-line pb-4 pt-3">
+          <div class="mt-6 border-t border-line pt-4">
             <p class="text-xs font-bold uppercase tracking-wide text-muted">{tt('Sur cette page')}</p>
             <div class="mt-2.5 flex flex-wrap gap-2">
               {toc.map(i => <a href={`#${i.id}`} data-toc class="inline-flex min-h-10 items-center rounded-full bg-paper px-4 text-[0.95rem] font-semibold ring-1 ring-line active:bg-mint">{i.label}</a>)}
             </div>
           </div>
         )}
-        <details class="group/m border-b border-line">
-          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-          <div class="grid gap-2 pb-4">
-            {products.map(p => <a href={p.href} class="flex items-center gap-3 rounded-2xl bg-paper p-3.5 ring-1 ring-line"><img src={p.img} alt="" width="56" height="56" loading="lazy" class="size-14 shrink-0 rounded-xl object-cover" style={`object-position:${p.pos}`} /><span class="font-semibold leading-tight">{p.label}<span class="block text-sm font-normal text-muted">{tt(p.text)}</span></span></a>)}
-            <a href={ROUTES.restaurants[lang]} class="px-1 pt-1 text-sm font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} →</a>
-          </div>
-        </details>
-        <details class="group/m border-b border-line">
-          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-          <div class="grid grid-cols-2 gap-2 pb-4">
-            {fx.modules.map(m => <a href={`${ROUTES.features[lang]}#${m.key}`} class="rounded-2xl bg-paper p-3 text-[0.92rem] font-medium leading-tight ring-1 ring-line">{m.title}<span class="mt-0.5 block text-xs font-normal text-muted">{m.items.length} {tt('fonctions')}</span></a>)}
-            <a href={ROUTES.features[lang]} class="col-span-2 px-1 pt-1 text-sm font-semibold text-green-deep underline underline-offset-4">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
-          </div>
-        </details>
-        {links.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl">{n.label}</a>)}
         <div class="mt-5 grid grid-cols-2 gap-2">
           <a href={loginUrl(lang)} class="grid min-h-12 place-items-center rounded-full border border-navy/25 font-medium">{t.nav.login}</a>
           <a href={trial} class="grid min-h-12 place-items-center rounded-full bg-navy font-medium text-white">{t.nav.trial}</a>

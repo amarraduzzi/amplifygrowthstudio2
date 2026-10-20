@@ -1,4 +1,7 @@
 export const dictEn: Record<string, string> = {
+  "Caisse et menu QR": "Till and QR menu",
+  "Marges et stock": "Margins and stock",
+  "Votre site web": "Your website",
   "Produits": "Products",
   "Tarifs": "Pricing",
   "La caisse, le menu QR et les commandes.": "The till, the QR menu and orders.",
