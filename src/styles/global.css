@@ -678,3 +678,24 @@ x-notr { display: contents; }
   .af-step { transition: opacity .45s; }
   .js .af-step:not(.on) { opacity: .35; }
   @media (prefers-reduced-motion: reduce) { .fn-bar, .af-step { transition: none; } }
+
+/* Pricing page: sections slide in as they scroll into view, the struck-out price draws itself, the offer shines */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-tf] .tf { opacity: 0; transform: translateY(28px); }
+  .js [data-tf] .tf-x { opacity: 0; transform: translateX(-26px); }
+  html[dir="rtl"].js [data-tf] .tf-x { transform: translateX(26px); }
+  .js [data-tf].in .tf, .js [data-tf].in .tf-x { opacity: 1; transform: none; transition: opacity .6s var(--d, 0ms), transform .7s var(--d, 0ms) cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
+  .js [data-tf].in .tf:hover { transform: translateY(-6px); transition-delay: 0s; }
+  .tf-strike { transform: scaleX(0); transform-origin: left; }
+  [dir="rtl"] .tf-strike { transform-origin: right; }
+  [data-tf].in .tf-strike { transform: scaleX(1); transition: transform .5s .7s cubic-bezier(.6,0,.2,1); }
+  .tf-shine::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgb(255 255 255 / .45) 50%, transparent 65%); transform: translateX(-120%); animation: tf-shine 4.5s 1.2s ease-in-out infinite; pointer-events: none; }
+  @keyframes tf-shine { 40%, 100% { transform: translateX(120%); } }
+  .tf-ping { animation: tf-ping 2s infinite; }
+  @keyframes tf-ping { 0% { box-shadow: 0 0 0 0 rgb(0 30 62 / .45); } 70%, 100% { box-shadow: 0 0 0 12px rgb(0 30 62 / 0); } }
+  .tf-pick { animation: tf-pick 1.6s ease-out; }
+  @keyframes tf-pick { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .9); } 40% { box-shadow: 0 0 0 10px rgb(5 185 98 / .35), 0 30px 60px -30px rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 0 rgb(5 185 98 / 0); } }
+  .tf-float { animation: pf-float 6s ease-in-out infinite; animation-delay: var(--d, 0ms); }
+  .tf-icon { transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+  a:hover > .tf-icon { transform: rotate(-8deg) scale(1.12); }
+}
