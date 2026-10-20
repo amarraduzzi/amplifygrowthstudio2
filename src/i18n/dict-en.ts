@@ -1055,4 +1055,10 @@ export const dictEn: Record<string, string> = {
   "Coûts calculés pour chaque produit": "Costs calculated for every product",
   "Plan de production prêt": "Production plan ready",
   "Votre plan de production est prêt": "Your production plan is ready",
+  // pâtisseries: scale block (worked example, own pieces per day, call to action)
+  "Exemple de calcul": "Worked example",
+  "pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo": "pieces a day, 360 days a year, almond paste at 80 DH a kilo",
+  "Vos pièces par jour": "Your pieces a day",
+  "Bonjour, je voudrais calculer mes pertes de matière avec Amplify.": "Hello, I would like to work out my ingredient losses with Amplify.",
+  "Calculer pour ma pâtisserie": "Work it out for my pastry shop",
 };

@@ -126,29 +126,42 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     </div>
   </section>
 
-  <!-- SCALE: 10 g of almond paste too much, on every corne de gazelle; the pastry lands, the reading climbs, the cost lands -->
+  <!-- SCALE: 10 g of almond paste too much, on every corne de gazelle; the pastry lands, the reading climbs, the cost lands.
+       The baker can set the pieces per day, so the number is his own, then goes to WhatsApp or the free trial. -->
   <section class="bg-navy px-4 py-14 sm:px-6 md:py-20" data-bk>
-    <div class="bk-sc relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2rem] bg-blue px-6 py-10 text-white md:grid-cols-[1.1fr_0.9fr] md:rounded-[2.5rem] md:px-12 md:py-14">
+    <div class="bk-sc relative isolate mx-auto grid max-w-6xl items-center gap-12 overflow-hidden rounded-[2rem] bg-blue px-6 py-12 text-white md:grid-cols-[1.1fr_0.9fr] md:rounded-[2.5rem] md:px-12 md:py-16">
       <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_80%_at_90%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
       <div>
-        <p class="inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold"><span class="size-2 rounded-full bg-green"></span>{tt('Exemple')}</p>
-        <p class="display mt-3 text-[2.2rem] leading-[0.95] sm:text-5xl lg:text-6xl">{tt('10 g de pâte d’amande en trop.')} <span class="text-green">{tt('Sur chaque corne de gazelle.')}</span></p>
-        <p class="bk-calc mt-5 text-white/75">{tt('× 150 pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo')}</p>
-        <p class="bk-res mt-2 w-fit max-w-full rounded-2xl bg-[#E5484D] px-4 py-2 text-lg font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= <span data-count={yearly} data-loc={loc}>{yearly.toLocaleString(loc).replace(/[\u202f\u00a0]/g, ' ')}</span> {tt('DH')}</span> {tt('perdus par an, rien que sur la corne de gazelle')}</p>
-        <p class="mt-4 text-xs text-white/50">{tt('Prix indicatifs. Avec vos prix d’achat, Amplify fait ce calcul pour chaque produit.')}</p>
+        <p class="inline-flex w-fit items-center gap-2 rounded-full bg-green px-4 py-1.5 text-base font-bold text-navy"><Icon name="chef" class="size-4" />{tt('Exemple de calcul')}</p>
+        <p class="display mt-5 text-[2.2rem] leading-[1.06] sm:text-5xl lg:text-6xl"><span class="block">{tt('10 g de pâte d’amande en trop.')}</span><span class="mt-1 block text-green">{tt('Sur chaque corne de gazelle.')}</span></p>
+        <p class="bk-calc mt-6 text-lg text-white/80"><span dir="ltr">× <strong class="font-bold tabular-nums text-white" data-pcs>150</strong></span> {tt('pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo')}</p>
+        <div class="bk-calc mt-3 max-w-md rounded-2xl bg-white/[0.07] px-4 py-3 ring-1 ring-white/10">
+          <label class="block">
+            <span class="flex items-baseline justify-between gap-3 text-sm font-semibold"><span>{tt('Vos pièces par jour')}</span><span class="tabular-nums text-green" dir="ltr" data-pcs-out>150</span></span>
+            <input type="range" min="30" max="500" step="10" value="150" class="mt-2 w-full accent-[#05B962]" data-pcs-input aria-label={tt('Vos pièces par jour')} />
+          </label>
+        </div>
+        <p class="bk-res mt-8 w-fit max-w-full rounded-2xl bg-[#E5484D] px-5 py-3 text-xl font-bold leading-snug"><span class="whitespace-nowrap" dir="ltr">= <span data-count={yearly} data-loc={loc}>{yearly.toLocaleString(loc).replace(/[\u202f\u00a0]/g, ' ')}</span> {tt('DH')}</span> {tt('perdus par an, rien que sur la corne de gazelle')}</p>
+        <div class="bk-cta mt-6 flex flex-wrap items-center gap-3">
+          <WaButton text={tt('Bonjour, je voudrais calculer mes pertes de matière avec Amplify.')} label={tt('Calculer pour ma pâtisserie')} where="bakery-scale" class="px-7 text-lg" />
+          <a href={signupUrl(lang, 'profit')} class="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 text-lg font-semibold hover:border-white">{tt('Essai gratuit 14 jours')}</a>
+        </div>
+        <p class="mt-5 text-xs text-white/50">{tt('Prix indicatifs. Avec vos prix d’achat, Amplify fait ce calcul pour chaque produit.')}</p>
       </div>
       <!-- the pastry on the scale (illustration) -->
-      <div class="relative mx-auto w-full max-w-sm" aria-hidden="true">
-        <svg viewBox="0 0 220 90" class="bk-corne relative z-10 mx-auto -mb-5 h-24 w-auto">
-          <ellipse cx="110" cy="84" rx="82" ry="5" fill="rgba(0,0,0,.25)" />
-          <path d="M18 70 C 30 22, 92 6, 152 20 C 186 28, 204 50, 202 68 C 186 48, 160 38, 128 38 C 84 38, 46 52, 18 70 Z" fill="#E0A458" />
-          <path d="M26 66 C 44 36, 92 22, 148 30 C 178 35, 194 48, 197 62" fill="none" stroke="#F4D9A6" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9" />
+      <div class="relative mx-auto w-full max-w-md" aria-hidden="true">
+        <svg viewBox="0 0 240 100" class="bk-corne relative z-10 mx-auto -mb-6 h-32 w-auto sm:h-36">
+          <ellipse cx="120" cy="94" rx="92" ry="5" fill="rgba(0,0,0,.28)" />
+          <path d="M10 80 C 22 26, 96 2, 164 18 C 204 28, 228 54, 230 78 C 208 54, 176 42, 138 42 C 90 42, 44 56, 10 80 Z" fill="#D9963F" />
+          <path d="M16 74 C 34 36, 98 14, 160 22 C 196 28, 218 48, 224 70 C 204 54, 176 46, 140 46 C 96 46, 52 58, 16 74 Z" fill="#E8B168" />
+          <path d="M24 68 C 46 40, 100 24, 156 30 C 186 35, 205 48, 214 64" fill="none" stroke="#F8E3B8" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 10" />
+          <path d="M40 62 C 62 46, 100 36, 140 38" fill="none" stroke="#FFF4DA" stroke-opacity=".55" stroke-width="3" stroke-linecap="round" />
         </svg>
-        <div class="relative rounded-[1.5rem] bg-blue-2 p-5 shadow-[0_40px_70px_-30px_rgba(0,0,0,.7)] ring-1 ring-white/15">
-          <div class="rounded-xl bg-[#071C38] px-4 py-3 text-end ring-1 ring-white/10"><span class="bk-g display whitespace-nowrap text-6xl tabular-nums transition-colors duration-300" style="text-transform:none" dir="ltr">30&nbsp;g</span></div>
-          <div class="mt-4 flex items-center justify-between gap-3">
-            <span class="text-xs font-semibold leading-tight text-white/70">{tt('Balance')}<br /><span class="font-normal">{tt('fiche : 30 g')}</span></span>
-            <span class="bk-plus whitespace-nowrap rounded-full bg-[#E5484D] px-3 py-1 text-sm font-bold text-white" dir="ltr">+10 g</span>
+        <div class="relative rounded-[1.75rem] bg-blue-2 p-6 shadow-[0_40px_70px_-30px_rgba(0,0,0,.7)] ring-1 ring-white/15 sm:p-7">
+          <div class="rounded-xl bg-[#071C38] px-5 py-4 text-end ring-1 ring-white/10"><span class="bk-g display whitespace-nowrap text-6xl tabular-nums transition-colors duration-300 sm:text-7xl" style="text-transform:none" dir="ltr">30&nbsp;g</span></div>
+          <div class="mt-5 flex items-center justify-between gap-3">
+            <span class="text-sm font-semibold leading-tight text-white/70">{tt('Balance')}<br /><span class="font-normal">{tt('fiche : 30 g')}</span></span>
+            <span class="bk-plus whitespace-nowrap rounded-full bg-[#E5484D] px-4 py-1.5 text-base font-bold text-white" dir="ltr">+10 g</span>
           </div>
         </div>
       </div>
@@ -331,9 +344,10 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
   .js .bk-sc:not(.in) .bk-corne { transform: translateY(-60px) rotate(-14deg); opacity: 0; }
   .js .bk-sc .bk-plus { opacity: 0; transform: scale(.4); }
   .js .bk-sc.in .bk-plus { opacity: 1; transform: none; transition: opacity .3s 1.9s, transform .5s 1.9s cubic-bezier(.3,1.8,.5,1); }
-  .js .bk-sc .bk-calc, .js .bk-sc .bk-res { opacity: 0; transform: translateY(12px); }
+  .js .bk-sc .bk-calc, .js .bk-sc .bk-res, .js .bk-sc .bk-cta { opacity: 0; transform: translateY(12px); }
   .js .bk-sc.in .bk-calc { opacity: 1; transform: none; transition: opacity .5s 2.2s, transform .6s 2.2s cubic-bezier(.2,.8,.2,1.2); }
   .js .bk-sc.in .bk-res { opacity: 1; transform: none; transition: opacity .5s 2.7s, transform .6s 2.7s cubic-bezier(.2,.8,.2,1.2); }
+  .js .bk-sc.in .bk-cta { opacity: 1; transform: none; transition: opacity .5s 3.3s, transform .6s 3.3s cubic-bezier(.2,.8,.2,1.2); }
 
   /* the chain: the price travels from the butter to the plateau */
   .bk-node { transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * .55s); }
@@ -364,7 +378,7 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
   @keyframes bk-flash { 0% { color: var(--color-green); } }
 
   @media (prefers-reduced-motion: reduce) {
-    .js [data-bk] .bk-r, .js [data-bk] .bk-tilt, .js .bk-sc .bk-plus, .js .bk-sc .bk-calc, .js .bk-sc .bk-res, .js .bk-sc .bk-corne { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .js [data-bk] .bk-r, .js [data-bk] .bk-tilt, .js .bk-sc .bk-plus, .js .bk-sc .bk-calc, .js .bk-sc .bk-res, .js .bk-sc .bk-cta, .js .bk-sc .bk-corne { opacity: 1 !important; transform: none !important; transition: none !important; }
     .js .bk-chain .bk-node, .js .bk-chain .bk-link, .js .bk-steps .bk-rail, .js .bk-steps .bk-step, .js .bk-steps .bk-dot { opacity: 1 !important; transform: none !important; transition: none !important; animation: none !important; }
     .js .bk-steps .bk-dot { background-color: var(--color-green) !important; color: var(--color-navy) !important; }
     .bk-ticket.print .bk-tl, .bk-pop, .bk-flash { animation: none; }
@@ -452,6 +466,22 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     }
   }), { threshold: 0.3 });
   document.querySelectorAll('[data-bk]').forEach(n => reveal.observe(n));
+
+  // 3b. the baker sets his own pieces per day: 10 g x pieces x 360 days x 80 DH/kg = pieces x 288 DH
+  const pcsIn = document.querySelector<HTMLInputElement>('[data-pcs-input]');
+  if (pcsIn && loss) {
+    const pcsOut = document.querySelector<HTMLElement>('[data-pcs-out]')!;
+    const pcsInline = document.querySelector<HTMLElement>('[data-pcs]')!;
+    // while the opening animation runs the slider waits, so the two never fight over the number
+    if (!still) { pcsIn.disabled = true; setTimeout(() => { pcsIn.disabled = false; }, 4300); }
+    pcsIn.addEventListener('input', () => {
+      const n = Number(pcsIn.value);
+      pcsOut.textContent = String(n);
+      pcsInline.textContent = String(n);
+      loss.dataset.count = String(n * 288);
+      loss.textContent = fmtCount(n * 288, loss.dataset.loc);
+    });
+  }
   if (!('IntersectionObserver' in window)) document.querySelectorAll('[data-bk], .bk-chain, .bk-steps, .bk-sc').forEach(n => n.classList.add('in'));
 
   // 4. "Produire": each press takes one batch of butter out of the stock and puts 30 croissants in the display

@@ -1055,4 +1055,10 @@ export const dictAr: Record<string, string> = {
   "Coûts calculés pour chaque produit": "تكلفة كل منتج محسوبة",
   "Plan de production prêt": "خطة الإنتاج جاهزة",
   "Votre plan de production est prêt": "خطة إنتاجك جاهزة",
+  // pâtisseries: scale block (worked example, own pieces per day, call to action)
+  "Exemple de calcul": "مثال حسابي",
+  "pièces par jour, 360 jours par an, pâte d’amande à 80 DH le kilo": "قطعة يوميًا، 360 يومًا في السنة، عجينة اللوز بـ 80 درهمًا للكيلو",
+  "Vos pièces par jour": "عدد قطعكم في اليوم",
+  "Bonjour, je voudrais calculer mes pertes de matière avec Amplify.": "السلام عليكم، أريد حساب خسائري من المواد مع Amplify.",
+  "Calculer pour ma pâtisserie": "احسبوا لمحل حلوياتي",
 };
