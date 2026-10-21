@@ -158,47 +158,44 @@ const rows = [
   <section class="mx-auto max-w-6xl px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="separe" data-tf>
     <h2 id="separe" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Les services à la carte')}</h2>
     <p class="tf mt-4 max-w-2xl text-muted" style="--d:80ms">{tt('Prenez seulement ce dont vous avez besoin. Dans les formules avec caisse, Site et Commandes sont inclus.')}</p>
-    <!-- how it works: one-off setup per service, then one monthly price by number of services -->
-    <h3 class="tf mt-8 text-2xl font-semibold" style="--d:120ms">{tt('Comment ça marche')}</h3>
-    <ol class="mt-4 grid gap-3 md:grid-cols-2">
-      {[
-        { n: '1', h: 'Une fois : la mise en place', t: 'Chaque service a un prix de mise en place, payé une seule fois.', figs: [['Site', OFFER.siteSetup], ['Site Premium', OFFER.sitePremium], ['Commandes', 500], ['Fidélité', OFFER.loyaltySetup]] },
-        { n: '2', h: 'Chaque mois : 100, 150 ou 200 DH', t: 'Le prix mensuel dépend seulement du nombre de services : 100 DH pour un, 150 DH pour deux, 200 DH pour trois ou plus.', figs: [] },
-      ].map((s, i) => (
-        <li class={`tf rounded-[1.5rem] p-5 sm:p-6 ${i === 1 ? 'bg-navy text-white' : 'bg-paper ring-1 ring-line'}`} style={`--d:${i * 100}ms`}>
-          <p class="flex items-center gap-3"><span class={`grid size-8 place-items-center rounded-full text-sm font-bold ${i === 1 ? 'bg-green text-navy' : 'bg-mint text-green-deep'}`}>{s.n}</span><span class="display text-2xl">{tt(s.h)}</span></p>
-          <p class={`mt-3 ${i === 1 ? 'text-white/70' : 'text-muted'}`}>{tt(s.t)}</p>
-          {s.figs.length > 0 && (
-            <ul class="mt-3 flex flex-wrap gap-2">
-              {s.figs.map(([k, v]) => (<li class="rounded-full bg-chalk px-3 py-1 text-sm font-semibold ring-1 ring-line">{k} <span dir="ltr" class="tabular-nums">{v} {tt('DH HT')}</span></li>))}
-            </ul>
-          )}
-        </li>
-      ))}
-    </ol>
-    <p class="tf mt-3 rounded-2xl bg-mint px-5 py-3 font-semibold text-green-deep" style="--d:180ms">{tt('Exemple : Site et Fidélité, c’est 500 DH une fois (250 + 250), puis 150 DH par mois.')}</p>
-    <p class="tf mt-8 text-sm font-semibold text-muted" style="--d:80ms">{tt('Chaque mois, selon le nombre de services')}</p>
-    <ul class="mt-2 grid gap-3 sm:grid-cols-3">
-      {[['1 service', '100'], ['2 services', '150'], ['3 services ou plus', '200']].map(([l, n], i) => (
-        <li class={`tf rounded-[1.5rem] p-5 ${i === 1 ? 'bg-navy text-white' : 'bg-paper ring-1 ring-line'}`} style={`--d:${i * 100}ms`}>
-          <p class={`text-sm font-semibold ${i === 1 ? 'text-green' : 'text-green-deep'}`}>{tt(l)}</p>
-          <p class="mt-1 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr" data-count={n}>{n}</span><span class={`text-sm ${i === 1 ? 'text-white/60' : 'text-muted'}`}>{p.pricing.per}</span></p>
-        </li>
-      ))}
-    </ul>
-    <div class="mt-4 grid gap-4 md:grid-cols-3">
-      {[
-        { k: 'Amplify Site', text: 'Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.', once: 'Création par nos soins : 250 DH une fois. Style Premium : 750 DH.', link: ROUTES.site[lang], cta: 'Voir Amplify Site' },
-        { k: 'Amplify Commandes', text: 'Vos clients commandent depuis la table ou votre site, et les commandes arrivent sur un écran. Pas de caisse nécessaire.', once: 'Mise en place : 500 DH une fois.', link: ROUTES.pos[lang], cta: 'Voir Amplify POS' },
-        { k: 'Amplify Fidélité', text: 'Une carte de fidélité sur le téléphone de vos clients, un écran au comptoir pour créditer les points, et des messages WhatsApp pour les faire revenir. Pas de caisse nécessaire.', once: 'Mise en place : 250 DH une fois.', link: signupUrl(lang, 'loyalty'), cta: 'Essayer Amplify Fidélité' },
-      ].map((c, i) => (
-        <div class="tf flex flex-col rounded-[1.75rem] bg-paper p-6 ring-1 ring-line sm:p-8" style={`--d:${i * 120}ms`}>
-          <p class="text-sm font-semibold text-green-deep">{tt(c.k)}</p>
-          <p class="mt-3 flex-1 text-lg">{tt(c.text)}</p>
-          {c.once && <p class="mt-3 font-semibold">{tt(c.once)}</p>}
-          <a href={c.link} class="mt-4 inline-flex font-semibold text-green-deep underline underline-offset-4">{tt(c.cta)} →</a>
-        </div>
-      ))}
+    <!-- build your pack: pick services, see the one-off and monthly price live -->
+    <h3 class="tf mt-8 text-2xl font-semibold" style="--d:120ms">{tt('Composez votre pack')}</h3>
+    <p class="tf mt-1 text-muted" style="--d:140ms">{tt('Touchez les services dont vous avez besoin.')}</p>
+    <div class="mt-5" data-builder data-wa={waLink('')} data-tiers="100,150,200"
+      data-i18n={JSON.stringify({ per: p.pricing.per, once: tt('DH HT'), none: tt('Choisissez au moins un service.'), msg: tt('Bonjour, je voudrais ces services Amplify : {s}. Mise en place {a} DH, puis {b} DH par mois.') })}>
+      <div class="grid gap-4 md:grid-cols-3">
+        {[
+          { id: 'site', k: 'Amplify Site', text: 'Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.', setup: OFFER.siteSetup, img: '/img/nav-site.webp', pos: '60% 45%', link: ROUTES.site[lang], cta: 'Voir Amplify Site' },
+          { id: 'orders', k: 'Amplify Commandes', text: 'Vos clients commandent depuis la table ou votre site, et les commandes arrivent sur un écran. Pas de caisse nécessaire.', setup: 500, img: '/img/svc-commandes.webp', pos: '70% 50%', link: ROUTES.pos[lang], cta: 'Voir Amplify POS' },
+          { id: 'loyalty', k: 'Amplify Fidélité', text: 'Une carte de fidélité sur le téléphone de vos clients, un écran au comptoir pour créditer les points, et des messages WhatsApp pour les faire revenir. Pas de caisse nécessaire.', setup: OFFER.loyaltySetup, img: '/img/svc-fidelite.webp', pos: '50% 40%', link: signupUrl(lang, 'loyalty'), cta: 'Essayer Amplify Fidélité' },
+        ].map((c, i) => (
+          <div class="tf flex flex-col" style={`--d:${i * 120}ms`}>
+            <label class="group relative isolate flex min-h-[22rem] flex-1 cursor-pointer flex-col justify-end overflow-hidden rounded-[1.75rem] bg-navy p-6 text-white ring-1 ring-line transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 has-[:checked]:ring-4 has-[:checked]:ring-green has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-blue">
+              <input type="checkbox" class="sr-only" data-svc={c.id} data-setup={c.setup} data-name={tt(c.k)} />
+              <img src={c.img} alt="" width="900" height="670" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 group-hover:scale-105" style={`object-position:${c.pos}`} />
+              <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy via-navy/80 to-navy/10" aria-hidden="true"></span>
+              <span class="absolute end-4 top-4 grid size-9 place-items-center rounded-full bg-white/25 text-transparent ring-1 ring-white/50 backdrop-blur-md transition-colors group-has-[:checked]:bg-green group-has-[:checked]:text-navy group-has-[:checked]:ring-green" aria-hidden="true"><Icon name="check" class="size-5" /></span>
+              <span class="text-sm font-semibold text-green">{tt(c.k)}</span>
+              <span class="mt-2 text-[1.05rem] leading-snug text-white/90">{tt(c.text)}</span>
+              <span class="mt-4 inline-flex w-fit rounded-full bg-white/15 px-3 py-1 text-sm font-semibold ring-1 ring-white/25 backdrop-blur-md">{tt('Mise en place : {n} DH').replace('{n}', String(c.setup))}</span>
+            </label>
+            <a href={c.link} class="mt-3 inline-flex font-semibold text-green-deep underline underline-offset-4">{tt(c.cta)} →</a>
+          </div>
+        ))}
+      </div>
+      <label class="mt-4 hidden cursor-pointer items-center gap-3 rounded-2xl bg-paper px-5 py-3 ring-1 ring-line has-[:checked]:ring-2 has-[:checked]:ring-green" data-premium-row>
+        <input type="checkbox" class="size-5 accent-[#05B962]" data-premium data-extra={OFFER.sitePremium} />
+        <span class="font-semibold">{tt('Style Premium : Maison ou Signature')}</span>
+        <span class="text-muted">{tt('Premium : {n} DH au lieu de {m} DH').replace('{n}', String(OFFER.sitePremium)).replace('{m}', String(OFFER.siteSetup))}</span>
+      </label>
+      <!-- the live total -->
+      <div class="mt-4 grid items-center gap-5 rounded-[1.75rem] bg-navy p-6 text-white sm:p-8 md:grid-cols-[1fr_1fr_auto]" aria-live="polite">
+        <p><span class="text-sm font-semibold text-green">{tt('Une seule fois')}</span><span class="mt-1 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr" data-once>0</span><span class="text-sm text-white/60">{tt('DH HT')}</span></span></p>
+        <p><span class="text-sm font-semibold text-green">{tt('Chaque mois')}</span><span class="mt-1 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr" data-month>0</span><span class="text-sm text-white/60">{p.pricing.per}</span></span></p>
+        <a href={waLink('')} target="_blank" rel="noopener" data-wa="pricing-builder" data-cta class="pointer-events-none inline-flex min-h-14 items-center justify-center whitespace-nowrap rounded-full bg-green px-8 text-lg font-semibold text-navy opacity-40 transition-opacity">{tt('Démarrer avec ces services')}</a>
+        <p class="text-sm text-white/70 md:col-span-3" data-hint>{tt('Choisissez au moins un service.')}</p>
+      </div>
+      <p class="mt-3 text-sm text-muted">{tt('1 service = 100 DH, 2 = 150 DH, 3 ou plus = 200 DH par mois.')} {tt('Dans les formules avec caisse, Site et Commandes sont inclus.')}</p>
     </div>
     <p class="tf mt-6 text-sm font-semibold text-muted" style="--d:200ms">{p.pricing.soon}</p>
     <ul class="mt-2 flex flex-wrap gap-2">
@@ -254,6 +251,38 @@ const rows = [
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
     roots.forEach(r => io.observe(r));
   }
+  // pack builder: tick services, the totals follow
+  document.querySelectorAll<HTMLElement>('[data-builder]').forEach((root) => {
+    const L = JSON.parse(root.dataset.i18n!);
+    const tiers = root.dataset.tiers!.split(',').map(Number);
+    const boxes = [...root.querySelectorAll<HTMLInputElement>('input[data-svc]')];
+    const prem = root.querySelector<HTMLInputElement>('input[data-premium]')!;
+    const row = root.querySelector<HTMLElement>('[data-premium-row]')!;
+    const onceEl = root.querySelector<HTMLElement>('[data-once]')!, monthEl = root.querySelector<HTMLElement>('[data-month]')!;
+    const cta = root.querySelector<HTMLAnchorElement>('[data-cta]')!, hint = root.querySelector<HTMLElement>('[data-hint]')!;
+    const shown = new WeakMap<HTMLElement, number>();
+    const tween = (el: HTMLElement, to: number) => {
+      const from = shown.get(el) ?? 0; shown.set(el, to);
+      if (still || from === to) { el.textContent = String(to); return; }
+      const t0 = performance.now();
+      const step = (t: number) => { const k = Math.min(1, (t - t0) / 450); el.textContent = String(Math.round(from + (to - from) * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    };
+    const update = () => {
+      const on = boxes.filter(b => b.checked);
+      const siteOn = on.some(b => b.dataset.svc === 'site');
+      row.classList.toggle('hidden', !siteOn); row.classList.toggle('flex', siteOn);
+      if (!siteOn) prem.checked = false;
+      const once = on.reduce((n, b) => n + Number(b.dataset.setup), 0) + (siteOn && prem.checked ? Number(prem.dataset.extra) - Number(boxes.find(b => b.dataset.svc === 'site')!.dataset.setup) : 0);
+      const month = on.length === 0 ? 0 : tiers[Math.min(on.length, tiers.length) - 1];
+      tween(onceEl, once); tween(monthEl, month);
+      const names = on.map(b => b.dataset.name! + (b.dataset.svc === 'site' && prem.checked ? ' Premium' : '')).join(', ');
+      cta.classList.toggle('pointer-events-none', on.length === 0); cta.classList.toggle('opacity-40', on.length === 0);
+      cta.href = root.dataset.wa! + encodeURIComponent(L.msg.replace('{s}', names).replace('{a}', String(once)).replace('{b}', String(month)));
+      hint.classList.toggle('hidden', on.length > 0);
+    };
+    boxes.forEach(b => b.addEventListener('change', update)); prem.addEventListener('change', update); update();
+  });
   document.querySelectorAll<HTMLAnchorElement>('[data-pick]').forEach((a) => a.addEventListener('click', (ev) => {
     const card = document.querySelectorAll<HTMLElement>('#formules .pr-card')[Number(a.dataset.pick)];
     if (!card) return;
