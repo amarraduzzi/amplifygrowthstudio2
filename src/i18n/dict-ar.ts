@@ -1191,4 +1191,5 @@ export const dictAr: Record<string, string> = {
   "Dès 3 services, regardez Restaurant : toute la caisse pour {n} DH de plus ({p} DH HT par mois).": "ابتداءً من 3 خدمات، انظروا إلى باقة المطعم: الكاشير كاملًا مقابل {n} درهم إضافية ({p} درهم شهريًا دون ضريبة).",
   "Dans Restaurant et Contrôle, Site, Commandes et Fidélité sont inclus.": "في باقتي المطعم والتحكم، الموقع والطلبات والولاء مشمولة.",
   "Prenez seulement ce dont vous avez besoin. Dans Restaurant et Contrôle, Site, Commandes et Fidélité sont inclus.": "خذوا فقط ما تحتاجونه. في باقتي المطعم والتحكم، الموقع والطلبات والولاء مشمولة.",
+  "Blog": "المدونة",
 };

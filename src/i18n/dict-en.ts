@@ -1191,4 +1191,5 @@ export const dictEn: Record<string, string> = {
   "Dès 3 services, regardez Restaurant : toute la caisse pour {n} DH de plus ({p} DH HT par mois).": "From 3 services, look at Restaurant: the whole till for {n} DH more ({p} DH excl. VAT per month).",
   "Dans Restaurant et Contrôle, Site, Commandes et Fidélité sont inclus.": "In Restaurant and Control, Site, Orders and Loyalty are included.",
   "Prenez seulement ce dont vous avez besoin. Dans Restaurant et Contrôle, Site, Commandes et Fidélité sont inclus.": "Take only what you need. In Restaurant and Control, Site, Orders and Loyalty are included.",
+  "Blog": "Blog",
 };
