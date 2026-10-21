@@ -18,30 +18,68 @@ const posts = [
     title: 'Que vaut votre restaurant, sur le papier ?', text: 'Banque, acheteur, futur franchisé : ils ne regardent pas ce que vous gagnez, mais ce que vous pouvez prouver. Un exemple chiffré et quatre étapes.' },
   { href: ROUTES.blogCouts.fr, img: '/img/photos/metier-restaurant', imgBig: '1600', w: 1536, alt: 'Une salle de restaurant bien remplie, avec des serveurs qui circulent entre les tables', date: '2026-10-11', label: '11 octobre 2026', min: 6,
     title: 'Les coûts bas cachent des défauts', text: 'Personnel peu cher, achats en hausse : ce qui reste de vos ventes quand les coûts bougent, et quatre réflexes pour rendre votre restaurant sain.' },
-  { href: ROUTES.blogPlateforme.fr, img: '/img/photos/metier-snack', imgBig: '1600', w: 1536, alt: 'Le comptoir très animé d’un snack : des cuisiniers préparent des plats pendant que des clients attendent', date: '2026-10-11', label: '11 octobre 2026', min: 5,
+  { href: ROUTES.blogPlateforme.fr, img: '/img/photos/metier-salon-the', imgBig: '1600', w: 1536, alt: 'Le comptoir très animé d’un snack : des cuisiniers préparent des plats pendant que des clients attendent', date: '2026-10-11', label: '11 octobre 2026', min: 5,
     title: 'Que reste-t-il d’une commande de 100 DH ?', text: 'Commission, ingrédients, emballage : ce qu’il vous reste vraiment d’une commande via une plateforme, comparé à une commande directe.' },
   { href: ROUTES.blogCout.fr, img: '/img/photos/balance', imgBig: '1376', w: 1376, alt: 'Un cuisinier ajoute du fromage râpé sur une pizza posée sur une balance', date: '2026-10-11', label: '11 octobre 2026', min: 5,
     title: 'Combien coûte vraiment votre plat ?', text: 'Fiche technique, foodcost et prix : un exemple chiffré sur une pizza, et comment lire le prix du voisin sans le copier.' },
   { href: ROUTES.blogVues.fr, img: '/img/blog/vues-1-hero', imgBig: '1376', w: 1376, alt: 'Un patron de café à Rabat, seul dans sa salle presque vide, son téléphone à la main', date: '2026-10-11', label: '11 octobre 2026', min: 5,
     title: '80 000 vues, combien de clients ?', text: 'Agence, publicité Meta, tournage : la facture complète d’une vidéo virale, et ce qu’il en reste vraiment en caisse.' },
 ];
+
+// The strongest figure of each article, big on its card. The amounts are the examples of the articles.
+const HOOK: Record<string, [string, string]> = {
+  [ROUTES.blogChiffres.fr]: ['18 DH', 'qui restent de chaque 100 DH vendus'],
+  [ROUTES.blogPointMort.fr]: ['≈ 71 000 DH', 'à vendre par mois pour ne rien perdre'],
+  [ROUTES.blogValeur.fr]: ['108 000 DH', 'par an prouvés, au lieu de 216 000, si la moitié seulement est enregistrée'],
+  [ROUTES.blogCouts.fr]: ['−7 400 DH', 'par mois, sans un client de moins'],
+  [ROUTES.blogPlateforme.fr]: ['30 %', 'de commission sur une commande de plateforme'],
+  [ROUTES.blogCout.fr]: ['38 %', 'de food cost : le prix d’une pizza, au gramme près'],
+  [ROUTES.blogVues.fr]: ['5 000 DH', 'la facture d’une vidéo à 80 000 vues'],
+};
+const [first, ...rest] = posts;
+const minutes = posts.reduce((n, p) => n + p.min, 0);
 const schema = [{ '@context': 'https://schema.org', '@type': 'Blog', name: 'Blog Amplify Growth Studio', inLanguage: 'fr', url: abs(ROUTES.blog.fr),
   blogPost: posts.map(p => ({ '@type': 'BlogPosting', headline: p.title, url: abs(p.href), datePublished: p.date })) }];
 ---
 <Base lang={lang} page="blog" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
-  <PageHero lang={lang} page="blog" wa={wa} h1="Le blog" lead="Des chiffres, pas des opinions. Des articles courts pour les restaurateurs qui veulent savoir ce qu’il leur reste." />
+  <PageHero lang={lang} page="blog" wa={wa} h1="Le blog" lead="Des chiffres, pas des opinions. Des articles courts pour les restaurateurs qui veulent savoir ce qu’il leur reste.">
+    <dl class="mt-10 flex flex-wrap gap-x-10 gap-y-4">
+      <div><dt class="sr-only">Articles</dt><dd class="flex items-baseline gap-2"><span class="display text-5xl text-green" dir="ltr">{posts.length}</span><span class="text-white/75">articles</span></dd></div>
+      <div><dt class="sr-only">Temps de lecture</dt><dd class="flex items-baseline gap-2"><span class="display text-5xl text-green" dir="ltr">{minutes}</span><span class="text-white/75">minutes pour tout lire</span></dd></div>
+      <div><dt class="sr-only">Exemples chiffrés</dt><dd class="flex items-baseline gap-2"><span class="display text-5xl text-green" dir="ltr">0</span><span class="text-white/75">opinion, des calculs</span></dd></div>
+    </dl>
+  </PageHero>
 
-  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
-    <ul class="grid gap-6 md:grid-cols-2">
-      {posts.map(p => (
+  <section class="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
+    <!-- featured: start here -->
+    <a href={first.href} class="group relative isolate flex min-h-[28rem] flex-col justify-end overflow-hidden rounded-[2rem] bg-navy p-6 text-white shadow-[0_30px_60px_-35px_rgba(0,30,62,0.6)] sm:p-10 md:min-h-[32rem] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-green">
+      <img src={`${first.img}-${first.imgBig}.webp`} srcset={`${first.img}-800.webp 800w, ${first.img}-${first.imgBig}.webp ${first.w}w`} sizes="(min-width: 1152px) 1100px, 100vw" alt="" width="1376" height="768" loading="eager" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+      <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/55 to-navy/40 md:bg-linear-to-r md:from-navy/95 md:via-navy/65 md:to-navy/10" aria-hidden="true"></span>
+      <div class="max-w-2xl">
+        <span class="mb-5 inline-block rounded-full bg-green px-3.5 py-1.5 text-sm font-bold text-navy">Commencez ici</span>
+        <p class="display text-[3.6rem] leading-none text-green sm:text-[5rem]" dir="ltr">{HOOK[first.href][0]}</p>
+        <p class="mt-1 text-lg text-white/85">{HOOK[first.href][1]}</p>
+        <h2 class="mt-6 text-[2.2rem] leading-[0.95] sm:text-5xl">{first.title}</h2>
+        <p class="mt-3 max-w-xl text-white/80">{first.text}</p>
+        <p class="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/70"><span><time datetime={first.date}>{first.label}</time> · {first.min} min de lecture</span><span class="inline-flex min-h-11 items-center gap-2 rounded-full bg-green px-5 text-[0.95rem] font-semibold text-navy transition-transform group-hover:translate-x-0.5">Lire l’article <span aria-hidden="true">→</span></span></p>
+      </div>
+    </a>
+
+    <!-- the others: the figure first -->
+    <ul class="mt-6 grid gap-6 md:grid-cols-2">
+      {rest.map(p => (
         <li class="flex">
-          <a href={p.href} class="group flex w-full flex-col overflow-hidden rounded-3xl bg-paper ring-1 ring-line transition-shadow hover:shadow-xl focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-green">
-            <div class="overflow-hidden"><img src={`${p.img}-${p.imgBig}.webp`} srcset={`${p.img}-800.webp 800w, ${p.img}-${p.imgBig}.webp ${p.w}w`} sizes="(min-width: 1152px) 560px, (min-width: 768px) 50vw, 100vw" alt={p.alt} width="1376" height="768" loading="lazy" decoding="async" class="aspect-video w-full object-cover transition-transform duration-700 group-hover:scale-105" /></div>
-            <div class="flex flex-1 flex-col p-6 sm:p-7">
-              <p class="text-sm text-muted"><time datetime={p.date}>{p.label}</time> · {p.min} min de lecture</p>
-              <h2 class="mt-2 text-3xl sm:text-4xl">{p.title}</h2>
-              <p class="mt-3 text-muted">{p.text}</p>
-              <p class="mt-auto pt-5 font-semibold text-green-deep">Lire l’article <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1">→</span></p>
+          <a href={p.href} class="group relative isolate flex min-h-[24rem] w-full flex-col justify-between overflow-hidden rounded-[1.75rem] bg-navy p-6 text-white shadow-[0_24px_50px_-32px_rgba(0,30,62,0.55)] transition-transform duration-300 hover:-translate-y-1 sm:p-7 focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-green">
+            <img src={`${p.img}-800.webp`} alt="" width="800" height="533" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+            <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/60 to-navy/75" aria-hidden="true"></span>
+            <div>
+              <p class="display text-[3.4rem] leading-none text-green sm:text-[4rem]" dir="ltr">{HOOK[p.href][0]}</p>
+              <p class="mt-1 max-w-[18rem] text-[0.95rem] leading-snug text-white/85">{HOOK[p.href][1]}</p>
+            </div>
+            <div>
+              <h2 class="text-[1.9rem] leading-[0.98] sm:text-4xl">{p.title}</h2>
+              <p class="mt-3 line-clamp-2 text-[0.95rem] text-white/75">{p.text}</p>
+              <p class="mt-4 flex items-center justify-between gap-3 text-sm text-white/70"><span><time datetime={p.date}>{p.label}</time> · {p.min} min</span><span class="font-semibold text-green">Lire <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1">→</span></span></p>
             </div>
           </a>
         </li>
