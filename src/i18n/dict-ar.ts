@@ -128,7 +128,7 @@ export const dictAr: Record<string, string> = {
   "Café noir": "قهوة كحلة",
   "Caisse": "الكاشير",
   "Caisse prête": "الكاشير جاهز",
-  "Caisse tactile, menu QR, bons cuisine et chiffres du jour pour cafés et restaurants au Maroc. En français et en arabe, même quand internet tombe.": "كاشير باللمس، قائمة QR، تذاكر المطبخ وأرقام اليوم للمقاهي والمطاعم في المغرب. بالفرنسية والعربية. حتى عند انقطاع الإنترنت.",
+  "Caisse tactile, menu QR, bons cuisine et chiffres du jour pour cafés et restaurants au Maroc. En français, arabe et anglais, même quand internet tombe.": "كاشير باللمس، قائمة QR، تذاكر المطبخ وأرقام اليوم للمقاهي والمطاعم في المغرب. بالفرنسية والعربية والإنجليزية. حتى عند انقطاع الإنترنت.",
   "Cappuccino": "كابتشينو",
   "Carte importée en photo": "القائمة مستوردة من صورة",
   "Casablanca": "الدار البيضاء",

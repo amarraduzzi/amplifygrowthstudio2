@@ -262,7 +262,7 @@ export const en: Copy = {
     },
     hero: {
       h1: 'POS and management software for restaurants in Morocco',
-      lead: 'A POS that keeps working without internet, and the management to match: margin per dish, stock, team and costs. In French and Arabic, built for restaurants and cafés in Morocco.',
+      lead: 'A POS that keeps working without internet, and the management to match: margin per dish, stock, team and costs. In French, Arabic and English, built for restaurants and cafés in Morocco.',
       demoNote: 'The demo opens in a new tab.',
     },
     pos: {

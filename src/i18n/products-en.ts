@@ -82,7 +82,7 @@ export const posEn = {
       items: ['Customer invoices with ICE', 'Google review QR on every receipt', 'QR menu in French, Arabic and English', 'Works without internet', 'Updates and backups', 'Guided setup by video', 'WhatsApp support with a real person', 'No commitment'],
     },
     plans: [
-      { name: 'Essential', tag: 'Amplify POS', price: '199', text: 'For cafés and snack bars.', product: 'pos', items: ['1 POS', 'Works offline', 'View-only QR menu', 'Kitchen and bar tickets', 'X and Z reports', 'French and Arabic', 'Bookings and waitlist', 'Happy hours and promo codes'] },
+      { name: 'Essential', tag: 'Amplify POS', price: '199', text: 'For cafés and snack bars.', product: 'pos', items: ['1 POS', 'Works offline', 'View-only QR menu', 'Kitchen and bar tickets', 'X and Z reports', 'French, Arabic and English', 'Bookings and waitlist', 'Happy hours and promo codes'] },
       { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'For restaurants with table service.', product: 'pos', items: ['Unlimited POS stations', 'QR ordering at the table', 'Tables, zones and transfers', 'Takeaway, delivery, Glovo', 'Commission-free online ordering', 'Ordering kiosk', 'Loyalty: points card on the phone and WhatsApp messages'] },
       { name: 'Profit', tag: 'Amplify Profit', price: '249', text: 'With your current POS.', items: ['Recipe cards by AI', 'Food cost and margin per dish', 'Suggested price', 'Import your menu from a photo', 'Supplier invoices from a photo', 'Stock and inventory counts', 'Staff, charges and break-even'], product: 'profit' },
       { name: 'Control', tag: 'POS + Profit', price: '499', text: 'All of Restaurant and all of Profit.', items: ['All of Restaurant', 'All of Profit', 'Real margins from the POS', 'AI evening briefing'], featured: true },
@@ -241,7 +241,7 @@ export const featuresEn = {
         ['Blind cash count', 'At closing, the manager counts the cash without seeing the expected amount. The difference shows afterwards and stays on record.'],
         ['Cash float and cash out', 'Morning float, paying a supplier from the till, bank deposit: expected cash always stays accurate.'],
         ['Personal codes', 'Each employee logs in with their own code. Automatic lock after a few minutes of inactivity.'],
-        ['Arabic or French, per employee', 'Each employee picks their language on the POS. Kitchen tickets and receipts stay in the restaurant’s language.'],
+        ['French, Arabic or English, per employee', 'Each employee picks their language on the POS. Kitchen tickets and receipts stay in the restaurant’s language.'],
         ['Customer display', 'A tablet or second screen facing the guest shows the order live, the total, then the cash received and the change. In French and Arabic.'],
         ['House accounts', 'Regulars pay later: a limit per guest, an up-to-date balance, a statement to print or send.'],
         ['Happy hours and promo codes', '-30% on drinks from 3 to 6 pm, a WELCOME10 code: applied automatically, at the till and online, and shown on the receipt.'],

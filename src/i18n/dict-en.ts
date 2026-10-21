@@ -128,7 +128,7 @@ export const dictEn: Record<string, string> = {
   "Café noir": "Black coffee",
   "Caisse": "POS",
   "Caisse prête": "POS ready",
-  "Caisse tactile, menu QR, bons cuisine et chiffres du jour pour cafés et restaurants au Maroc. En français et en arabe, même quand internet tombe.": "Touchscreen POS, QR menu, kitchen tickets and daily figures for cafés and restaurants in Morocco. In French and Arabic. Even when the internet goes down.",
+  "Caisse tactile, menu QR, bons cuisine et chiffres du jour pour cafés et restaurants au Maroc. En français, arabe et anglais, même quand internet tombe.": "Touchscreen POS, QR menu, kitchen tickets and daily figures for cafés and restaurants in Morocco. In French, Arabic and English. Even when the internet goes down.",
   "Cappuccino": "Cappuccino",
   "Carte importée en photo": "Menu imported from a photo",
   "Casablanca": "Casablanca",

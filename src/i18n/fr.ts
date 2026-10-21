@@ -262,7 +262,7 @@ export const fr = {
     },
     hero: {
       h1: 'Logiciel de caisse et de gestion pour restaurants au Maroc',
-      lead: 'Une caisse qui continue de fonctionner sans internet, et la gestion qui va avec : marge par plat, stock, équipe et charges. En français et en arabe, pensé pour les restaurants et cafés au Maroc.',
+      lead: 'Une caisse qui continue de fonctionner sans internet, et la gestion qui va avec : marge par plat, stock, équipe et charges. En français, arabe et anglais, pensé pour les restaurants et cafés au Maroc.',
       demoNote: 'La démo s’ouvre dans un nouvel onglet.',
     },
     pos: {

@@ -85,7 +85,7 @@ export const posFr = {
       items: ['Factures clients avec ICE', 'QR avis Google sur chaque ticket', 'Menu QR en français, arabe et anglais', 'Fonctionne sans internet', 'Mises à jour et sauvegardes', 'Installation guidée en vidéo', 'Support WhatsApp avec un vrai interlocuteur', 'Sans engagement'],
     },
     plans: [
-      { name: 'Essentiel', tag: 'Amplify POS', price: '199', text: 'Pour les cafés et snacks.', product: 'pos', items: ['1 caisse', 'Fonctionne sans internet', 'Menu QR (consultation seule)', 'Bons cuisine et bar', 'Rapports X et Z', 'Français et arabe', 'Réservations et file d’attente', 'Happy hours et codes promo'] },
+      { name: 'Essentiel', tag: 'Amplify POS', price: '199', text: 'Pour les cafés et snacks.', product: 'pos', items: ['1 caisse', 'Fonctionne sans internet', 'Menu QR (consultation seule)', 'Bons cuisine et bar', 'Rapports X et Z', 'Français, arabe et anglais', 'Réservations et file d’attente', 'Happy hours et codes promo'] },
       { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'Pour les restaurants avec service à table.', product: 'pos', items: ['Caisses illimitées', 'Commande QR à table', 'Tables, zones et transferts', 'À emporter, livraison, Glovo', 'Commande en ligne sans commission', 'Borne de commande', 'Fidélité : carte sur le téléphone et messages WhatsApp'] },
       { name: 'Profit', tag: 'Amplify Profit', price: '249', text: 'Avec votre caisse actuelle.', items: ['Fiches techniques par l’IA', 'Food cost et marge par plat', 'Prix conseillé', 'Import de votre carte en photo', 'Factures fournisseurs en photo', 'Stock et inventaires', 'Équipe, charges et seuil de rentabilité'], product: 'profit' },
       { name: 'Contrôle', tag: 'POS + Profit', price: '499', text: 'Tout Restaurant et tout Profit.', items: ['Tout Restaurant', 'Tout Profit', 'Marges réelles depuis la caisse', 'Briefing du soir avec l’IA'], featured: true },
@@ -244,7 +244,7 @@ export const featuresFr = {
         ['Comptage de caisse à l’aveugle', 'À la clôture, le manager compte les espèces sans voir le montant attendu. L’écart s’affiche ensuite et reste enregistré.'],
         ['Fond de caisse et sorties', 'Fond du matin, paiement d’un fournisseur depuis la caisse, dépôt en banque : les espèces attendues restent justes.'],
         ['Codes personnels', 'Chaque employé se connecte avec son code. Verrouillage automatique après quelques minutes sans activité.'],
-        ['Arabe ou français, par employé', 'Chaque employé choisit sa langue sur la caisse. Les bons cuisine et les tickets restent dans la langue du restaurant.'],
+        ['Français, arabe ou anglais, par employé', 'Chaque employé choisit sa langue sur la caisse. Les bons cuisine et les tickets restent dans la langue du restaurant.'],
         ['Écran client', 'Une tablette ou un 2e écran tourné vers le client affiche la commande en direct, le total, puis le montant reçu et la monnaie à rendre. En français et en arabe.'],
         ['Ardoise client', 'Les habitués paient plus tard : plafond par client, solde à jour, relevé à imprimer ou à envoyer.'],
         ['Happy hours et codes promo', '−30 % sur les boissons de 15 h à 18 h, un code BIENVENUE10 : appliqués tout seuls, à la caisse comme en ligne, et visibles sur le ticket.'],
