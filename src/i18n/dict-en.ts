@@ -1143,7 +1143,7 @@ export const dictEn: Record<string, string> = {
   "1 service": "1 service",
   "2 services": "2 services",
   "3 services ou plus": "3 services or more",
-  "Création par nos soins : 250 DH une fois.": "We build it for you: 250 DH once.",
+  "Création par nos soins : 250 DH une fois. Style Premium : 750 DH.": "We build it for you: 250 DH once. Premium style: 750 DH.",
   "Vos clients commandent depuis la table ou votre site, et les commandes arrivent sur un écran. Pas de caisse nécessaire.": "Your guests order from the table or your website, and the orders arrive on a screen. No till needed.",
   "Mise en place : 500 DH une fois.": "Setup: 500 DH once.",
   "Réservations et file d’attente": "Bookings and waitlist",
@@ -1163,5 +1163,5 @@ export const dictEn: Record<string, string> = {
   "Chaque mois, selon le nombre de services": "Every month, based on the number of services",
   "Mise en place : 250 DH une fois.": "Setup: 250 DH once.",
   "Mise en place de Fidélité": "Loyalty setup",
-  "Chaque service a un prix de mise en place, payé une seule fois (Site 250 DH, Commandes 500 DH, Fidélité 250 DH). Ensuite vous payez chaque mois : 100 DH pour un service, 150 DH pour deux, 200 DH pour trois ou plus. Les formules avec caisse incluent déjà Site et Commandes.": "Each service has a setup price, paid once (Site 250 DH, Orders 500 DH, Loyalty 250 DH). After that you pay every month: 100 DH for one service, 150 DH for two, 200 DH for three or more. The plans with a till already include Site and Orders.",
+  "Chaque service a un prix de mise en place, payé une seule fois (Site 250 DH, Site Premium 750 DH, Commandes 500 DH, Fidélité 250 DH). Ensuite vous payez chaque mois : 100 DH pour un service, 150 DH pour deux, 200 DH pour trois ou plus. Les formules avec caisse incluent déjà Site et Commandes.": "Each service has a setup price, paid once (Site 250 DH, Site Premium 750 DH, Orders 500 DH, Loyalty 250 DH). After that you pay every month: 100 DH for one service, 150 DH for two, 200 DH for three or more. The plans with a till already include Site and Orders.",
 };

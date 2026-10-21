@@ -35,7 +35,7 @@ const situations = [
 const faqItems = [
   ['Les prix sont-ils avec ou sans TVA ?', 'Tous les prix sont hors taxes (HT). La TVA s’ajoute sur la facture.'],
   ['Y a-t-il un engagement ?', 'Non. 14 jours gratuits sans carte bancaire, puis vous payez chaque mois et vous pouvez arrêter quand vous voulez. En annuel, vous payez 10 mois et profitez de 12.'],
-  ['Comment fonctionnent les services à la carte ?', 'Chaque service a un prix de mise en place, payé une seule fois (Site 250 DH, Commandes 500 DH, Fidélité 250 DH). Ensuite vous payez chaque mois : 100 DH pour un service, 150 DH pour deux, 200 DH pour trois ou plus. Les formules avec caisse incluent déjà Site et Commandes.'],
+  ['Comment fonctionnent les services à la carte ?', 'Chaque service a un prix de mise en place, payé une seule fois (Site 250 DH, Site Premium 750 DH, Commandes 500 DH, Fidélité 250 DH). Ensuite vous payez chaque mois : 100 DH pour un service, 150 DH pour deux, 200 DH pour trois ou plus. Les formules avec caisse incluent déjà Site et Commandes.'],
   ['Quelle formule choisir ?', 'Sans caisse : POS. Avec une caisse que vous gardez : Profit. Les deux ensemble : Contrôle, à 499 DH au lieu de 598 DH.'],
   ['L’installation est-elle payante ?', 'À Rabat, l’installation sur place est offerte pour le moment. Partout au Maroc, l’installation guidée en vidéo est incluse.'],
   ['Le matériel est-il compris ?', 'Non, le matériel est vendu à part. Écrivez-nous sur WhatsApp et nous vous disons ce qu’il vous faut.'],
@@ -158,7 +158,7 @@ const rows = [
     <h3 class="tf mt-8 text-2xl font-semibold" style="--d:120ms">{tt('Comment ça marche')}</h3>
     <ol class="mt-4 grid gap-3 md:grid-cols-2">
       {[
-        { n: '1', h: 'Une fois : la mise en place', t: 'Chaque service a un prix de mise en place, payé une seule fois.', figs: [['Site', OFFER.siteSetup], ['Commandes', 500], ['Fidélité', OFFER.loyaltySetup]] },
+        { n: '1', h: 'Une fois : la mise en place', t: 'Chaque service a un prix de mise en place, payé une seule fois.', figs: [['Site', OFFER.siteSetup], ['Site Premium', OFFER.sitePremium], ['Commandes', 500], ['Fidélité', OFFER.loyaltySetup]] },
         { n: '2', h: 'Chaque mois : 100, 150 ou 200 DH', t: 'Le prix mensuel dépend seulement du nombre de services : 100 DH pour un, 150 DH pour deux, 200 DH pour trois ou plus.', figs: [] },
       ].map((s, i) => (
         <li class={`tf rounded-[1.5rem] p-5 sm:p-6 ${i === 1 ? 'bg-navy text-white' : 'bg-paper ring-1 ring-line'}`} style={`--d:${i * 100}ms`}>
@@ -184,7 +184,7 @@ const rows = [
     </ul>
     <div class="mt-4 grid gap-4 md:grid-cols-3">
       {[
-        { k: 'Amplify Site', text: 'Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.', once: 'Création par nos soins : 250 DH une fois.', link: ROUTES.site[lang], cta: 'Voir Amplify Site' },
+        { k: 'Amplify Site', text: 'Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.', once: 'Création par nos soins : 250 DH une fois. Style Premium : 750 DH.', link: ROUTES.site[lang], cta: 'Voir Amplify Site' },
         { k: 'Amplify Commandes', text: 'Vos clients commandent depuis la table ou votre site, et les commandes arrivent sur un écran. Pas de caisse nécessaire.', once: 'Mise en place : 500 DH une fois.', link: ROUTES.pos[lang], cta: 'Voir Amplify POS' },
         { k: 'Amplify Fidélité', text: 'Une carte de fidélité sur le téléphone de vos clients, un écran au comptoir pour créditer les points, et des messages WhatsApp pour les faire revenir. Pas de caisse nécessaire.', once: 'Mise en place : 250 DH une fois.', link: signupUrl(lang, 'loyalty'), cta: 'Essayer Amplify Fidélité' },
       ].map((c, i) => (

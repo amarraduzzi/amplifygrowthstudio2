@@ -1143,7 +1143,7 @@ export const dictAr: Record<string, string> = {
   "1 service": "خدمة واحدة",
   "2 services": "خدمتان",
   "3 services ou plus": "3 خدمات أو أكثر",
-  "Création par nos soins : 250 DH une fois.": "نصممه لك: 250 درهمًا مرة واحدة.",
+  "Création par nos soins : 250 DH une fois. Style Premium : 750 DH.": "نصممه لك: 250 درهمًا مرة واحدة. نمط Premium: 750 درهم.",
   "Vos clients commandent depuis la table ou votre site, et les commandes arrivent sur un écran. Pas de caisse nécessaire.": "يطلب زبائنك من الطاولة أو من موقعك، وتصل الطلبات إلى شاشة. لا حاجة إلى كاشير.",
   "Mise en place : 500 DH une fois.": "الإعداد: 500 درهم مرة واحدة.",
   "Réservations et file d’attente": "الحجوزات وقائمة الانتظار",
@@ -1163,5 +1163,5 @@ export const dictAr: Record<string, string> = {
   "Chaque mois, selon le nombre de services": "كل شهر، حسب عدد الخدمات",
   "Mise en place : 250 DH une fois.": "الإعداد: 250 درهمًا مرة واحدة.",
   "Mise en place de Fidélité": "إعداد Fidélité",
-  "Chaque service a un prix de mise en place, payé une seule fois (Site 250 DH, Commandes 500 DH, Fidélité 250 DH). Ensuite vous payez chaque mois : 100 DH pour un service, 150 DH pour deux, 200 DH pour trois ou plus. Les formules avec caisse incluent déjà Site et Commandes.": "لكل خدمة سعر إعداد يُدفع مرة واحدة (Site 250 درهمًا، Commandes 500 درهم، Fidélité 250 درهمًا). بعد ذلك تدفع كل شهر: 100 درهم لخدمة واحدة، 150 درهمًا لخدمتين، 200 درهم لثلاث خدمات أو أكثر. الباقات التي تتضمن كاشير تشمل Site وCommandes.",
+  "Chaque service a un prix de mise en place, payé une seule fois (Site 250 DH, Site Premium 750 DH, Commandes 500 DH, Fidélité 250 DH). Ensuite vous payez chaque mois : 100 DH pour un service, 150 DH pour deux, 200 DH pour trois ou plus. Les formules avec caisse incluent déjà Site et Commandes.": "لكل خدمة سعر إعداد يُدفع مرة واحدة (Site 250 درهمًا، Site Premium 750 درهم، Commandes 500 درهم، Fidélité 250 درهمًا). بعد ذلك تدفع كل شهر: 100 درهم لخدمة واحدة، 150 درهمًا لخدمتين، 200 درهم لثلاث خدمات أو أكثر. الباقات التي تتضمن كاشير تشمل Site وCommandes.",
 };
