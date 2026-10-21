@@ -1,4 +1,11 @@
 export const dictEn: Record<string, string> = {
+  "Pack complet": "Full pack",
+  "Les trois ensemble, c’est moins cher.": "All three together cost less.",
+  "Puis {n} DH HT par mois": "Then {n} DH excl. VAT per month",
+  "Choisir le pack complet": "Choose the full pack",
+  "Prenez les trois : {a} DH au lieu de {b} DH.": "Take all three: {a} DH instead of {b} DH.",
+  "Ajoutez la troisième : le pack complet vaut {a} DH au lieu de {b} DH.": "Add the third: the full pack is {a} DH instead of {b} DH.",
+  "Pack complet appliqué : vous économisez {n} DH.": "Full pack applied: you save {n} DH.",
   "Dans les formules avec caisse, Site et Commandes sont inclus.": "In the plans with a till, Site and Commandes are included.",
   "Composez votre pack": "Build your pack",
   "Touchez les services dont vous avez besoin.": "Tap the services you need.",

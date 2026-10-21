@@ -1,4 +1,11 @@
 export const dictAr: Record<string, string> = {
+  "Pack complet": "الباقة الكاملة",
+  "Les trois ensemble, c’est moins cher.": "الخدمات الثلاث معًا أرخص.",
+  "Puis {n} DH HT par mois": "ثم {n} درهم شهريًا (بدون ضريبة)",
+  "Choisir le pack complet": "اختر الباقة الكاملة",
+  "Prenez les trois : {a} DH au lieu de {b} DH.": "خذ الثلاث: {a} درهم بدل {b} درهم.",
+  "Ajoutez la troisième : le pack complet vaut {a} DH au lieu de {b} DH.": "أضف الثالثة: الباقة الكاملة بـ {a} درهم بدل {b} درهم.",
+  "Pack complet appliqué : vous économisez {n} DH.": "تم تطبيق الباقة الكاملة: توفّر {n} درهم.",
   "Dans les formules avec caisse, Site et Commandes sont inclus.": "في الباقات التي تتضمن كاشير، Site وCommandes مشمولتان.",
   "Composez votre pack": "ركّب باقتك",
   "Touchez les services dont vous avez besoin.": "اضغط على الخدمات التي تحتاجها.",
