@@ -136,9 +136,9 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         <svg viewBox="0 0 24 24" class="hidden size-5 group-open:block" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </summary>
       <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-chalk px-4 pb-6 pt-2 shadow-2xl sm:px-6" aria-label="Navigation">
-        <div class="mx-auto max-w-5xl">
+        <div class="mx-auto max-w-6xl">
         <details class="group/m border-b border-line" open>
-          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl md:py-5 md:text-[1.9rem] [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
           <div class="grid grid-cols-2 gap-2.5 pb-4 md:grid-cols-4 md:gap-3">
             {products.map(p => (
               <a href={p.href} class="relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.25rem] bg-navy p-3.5 text-white active:scale-[0.98] md:aspect-auto md:h-48 md:p-4">
@@ -150,10 +150,10 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
               </a>
             ))}
           </div>
-          <a href={ROUTES.restaurants[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:max-w-sm">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
+          <a href={ROUTES.restaurants[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:mt-1 md:px-6">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
         </details>
         <details class="group/m border-b border-line">
-          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl md:py-5 md:text-[1.9rem] [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
           <div class="space-y-4 pb-3 md:grid md:grid-cols-3 md:gap-5 md:space-y-0">
             {groups.map(g => (
               <div>
@@ -169,16 +169,16 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
               </div>
             ))}
           </div>
-          <a href={ROUTES.features[lang]} class="mb-4 mt-2 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy md:mt-4 md:max-w-sm">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
+          <a href={ROUTES.features[lang]} class="mb-4 mt-2 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy md:mt-5">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
         </details>
-        <div class="md:flex md:gap-10 md:border-b md:border-line">
-          {links.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl md:border-b-0 md:text-[1.7rem]">{n.label}</a>)}
+        <div class="md:grid md:grid-cols-3 md:gap-3 md:border-b md:border-line md:py-5">
+          {links.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl md:flex md:min-h-14 md:items-center md:justify-between md:rounded-2xl md:border md:bg-paper md:px-6 md:py-0 md:text-[1.5rem] md:active:bg-mint">{n.label}<span class="hidden text-base text-green-deep md:inline rtl:-scale-x-100" aria-hidden="true">→</span></a>)}
         </div>
         {toc && toc.length > 0 && (
-          <div class="mt-6 border-t border-line pt-4">
+          <div class="mt-6 border-t border-line pt-4 md:mt-0 md:border-t-0 md:pt-5">
             <p class="text-xs font-bold uppercase tracking-wide text-muted">{tt('Sur cette page')}</p>
-            <div class="mt-2.5 flex flex-wrap gap-2">
-              {toc.map(i => <a href={`#${i.id}`} data-toc class="inline-flex min-h-10 items-center rounded-full bg-paper px-4 text-[0.95rem] font-semibold ring-1 ring-line active:bg-mint">{i.label}</a>)}
+            <div class="mt-2.5 flex flex-wrap gap-2 md:grid md:grid-cols-4 md:gap-2.5">
+              {toc.map(i => <a href={`#${i.id}`} data-toc class="inline-flex min-h-10 items-center rounded-full bg-paper px-4 text-[0.95rem] font-semibold ring-1 ring-line active:bg-mint md:min-h-11 md:justify-center md:px-3 md:text-center md:text-[0.9rem] md:leading-tight">{i.label}</a>)}
             </div>
           </div>
         )}
