@@ -135,29 +135,30 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         <svg viewBox="0 0 24 24" class="size-5 group-open:hidden" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
         <svg viewBox="0 0 24 24" class="hidden size-5 group-open:block" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </summary>
-      <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto bg-chalk px-4 pb-6 pt-2 shadow-2xl" aria-label="Navigation">
+      <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-chalk px-4 pb-6 pt-2 shadow-2xl sm:px-6" aria-label="Navigation">
+        <div class="mx-auto max-w-5xl">
         <details class="group/m border-b border-line" open>
           <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-          <div class="grid grid-cols-2 gap-2.5 pb-4">
+          <div class="grid grid-cols-2 gap-2.5 pb-4 md:grid-cols-4 md:gap-3">
             {products.map(p => (
-              <a href={p.href} class="relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.25rem] bg-navy p-3.5 text-white active:scale-[0.98]">
+              <a href={p.href} class="relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.25rem] bg-navy p-3.5 text-white active:scale-[0.98] md:aspect-auto md:h-48 md:p-4">
                 <img src={p.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover" style={`object-position:${p.pos}`} />
                 <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/90 via-navy/25 to-transparent" aria-hidden="true"></span>
                 <span class="absolute start-3 top-3 grid size-9 place-items-center rounded-xl bg-white/20 ring-1 ring-white/30 backdrop-blur-md"><Icon name={p.icon} class="size-[1.15rem]" /></span>
-                <span class="display text-[1.35rem] leading-none">{p.label.replace('Amplify ', '')}</span>
-                <span class="mt-1 text-[0.8rem] leading-tight text-white/85">{tt(p.short)}</span>
+                <span class="display text-[1.35rem] leading-none md:text-[1.5rem]">{p.label.replace('Amplify ', '')}</span>
+                <span class="mt-1 text-[0.8rem] leading-tight text-white/85 md:text-[0.85rem]">{tt(p.short)}</span>
               </a>
             ))}
           </div>
-          <a href={ROUTES.restaurants[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
+          <a href={ROUTES.restaurants[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:max-w-sm">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
         </details>
         <details class="group/m border-b border-line">
           <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
-          <div class="space-y-4 pb-3">
+          <div class="space-y-4 pb-3 md:grid md:grid-cols-3 md:gap-5 md:space-y-0">
             {groups.map(g => (
               <div>
                 <p class="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted"><span class={`size-2 rounded-full ${g.dot}`} aria-hidden="true"></span>{g.label}</p>
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-2 md:grid-cols-1">
                   {g.modules.map(m => (
                     <a href={`${ROUTES.features[lang]}#${m.key}`} class="flex items-start gap-2.5 rounded-2xl bg-paper p-3 ring-1 ring-line active:bg-mint">
                       <span class={`grid size-9 shrink-0 place-items-center rounded-lg ${g.chip}`}><Icon name={MODULE_ICON[m.key] as any} class="size-[1.15rem]" /></span>
@@ -168,9 +169,11 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
               </div>
             ))}
           </div>
-          <a href={ROUTES.features[lang]} class="mb-4 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
+          <a href={ROUTES.features[lang]} class="mb-4 mt-2 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy md:mt-4 md:max-w-sm">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
         </details>
-        {links.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl">{n.label}</a>)}
+        <div class="md:flex md:gap-10 md:border-b md:border-line">
+          {links.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl md:border-b-0 md:text-[1.7rem]">{n.label}</a>)}
+        </div>
         {toc && toc.length > 0 && (
           <div class="mt-6 border-t border-line pt-4">
             <p class="text-xs font-bold uppercase tracking-wide text-muted">{tt('Sur cette page')}</p>
@@ -179,9 +182,10 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
             </div>
           </div>
         )}
-        <div class="mt-5 grid grid-cols-2 gap-2">
+        <div class="mt-5 grid grid-cols-2 gap-2 md:hidden">
           <a href={loginUrl(lang)} class="grid min-h-12 place-items-center rounded-full border border-navy/25 font-medium">{t.nav.login}</a>
           <a href={trial} class="grid min-h-12 place-items-center rounded-full bg-navy font-medium text-white">{t.nav.trial}</a>
+        </div>
         </div>
       </nav>
     </details>

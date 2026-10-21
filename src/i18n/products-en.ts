@@ -82,8 +82,8 @@ export const posEn = {
       items: ['Customer invoices with ICE', 'Google review QR on every receipt', 'QR menu in French, Arabic and English', 'Works without internet', 'Updates and backups', 'Guided setup by video', 'WhatsApp support with a real person', 'No commitment'],
     },
     plans: [
-      { name: 'Essential', tag: 'Amplify POS', price: '199', text: 'For cafés and snack bars.', product: 'pos', items: ['1 POS', 'View-only QR menu', 'Kitchen and bar tickets', 'X and Z reports', 'French and Arabic', 'Bookings and waitlist', 'Happy hours and promo codes'] },
-      { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'For restaurants with table service.', product: 'pos', items: ['Unlimited POS stations', 'QR ordering at the table', 'Tables, zones and transfers', 'Takeaway, delivery, Glovo', 'Works offline', 'Commission-free online ordering', 'Ordering kiosk'] },
+      { name: 'Essential', tag: 'Amplify POS', price: '199', text: 'For cafés and snack bars.', product: 'pos', items: ['1 POS', 'Works offline', 'View-only QR menu', 'Kitchen and bar tickets', 'X and Z reports', 'French and Arabic', 'Bookings and waitlist', 'Happy hours and promo codes'] },
+      { name: 'Restaurant', tag: 'Amplify POS', price: '349', text: 'For restaurants with table service.', product: 'pos', items: ['Unlimited POS stations', 'QR ordering at the table', 'Tables, zones and transfers', 'Takeaway, delivery, Glovo', 'Commission-free online ordering', 'Ordering kiosk', 'Loyalty: points card on the phone and WhatsApp messages'] },
       { name: 'Profit', tag: 'Amplify Profit', price: '249', text: 'With your current POS.', items: ['Recipe cards by AI', 'Food cost and margin per dish', 'Suggested price', 'Import your menu from a photo', 'Supplier invoices from a photo', 'Stock and inventory counts', 'Staff, charges and break-even'], product: 'profit' },
       { name: 'Control', tag: 'POS + Profit', price: '499', text: 'All of Restaurant and all of Profit.', items: ['All of Restaurant', 'All of Profit', 'Real margins from the POS', 'AI evening briefing'], featured: true },
     ] as Plan[],
