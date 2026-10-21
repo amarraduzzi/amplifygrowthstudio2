@@ -108,6 +108,7 @@ export const posFr = {
         ['stock', 'Stock et achats'],
         ['marges', 'Marge par plat'],
         ['equipe', 'Pointage et coût de l’équipe'],
+        ['maitre', 'Service à table haut de gamme (option Maître)'],
       ] as [string, string][],
       result: 'Votre formule',
       total: 'Total',

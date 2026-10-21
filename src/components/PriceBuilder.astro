@@ -82,13 +82,16 @@ const plans = Object.fromEntries(posFr.pricing.plans.map((p, i) => [['essentiel'
     const months = Number(root.dataset.months) || 10;
     const update = () => {
       const on = (k: string) => (form.elements.namedItem(k) as HTMLInputElement).checked;
-      const till = on('caisse') || on('multi') || on('qr');
+      const till = on('caisse') || on('multi') || on('qr') || on('maitre');
       const gestion = on('stock') || on('marges') || on('equipe');
       empty.classList.toggle('hidden', till || gestion);
       if (!till && !gestion) return;
       // which plan covers the needs
-      const plan = till && gestion ? plans.controle : gestion ? plans.profit : (on('multi') || on('qr')) ? plans.restaurant : plans.essentiel;
-      name.textContent = plan.name; text.textContent = plan.text; count(year ? Math.round(Number(plan.price) * months / 12) : Number(plan.price));
+      // Amplify Maître: an option of Restaurant or Contrôle (it needs the table QR), +249
+      const maitre = on('maitre');
+      const plan = (till || maitre) && gestion ? plans.controle : gestion ? plans.profit : (on('multi') || on('qr') || maitre) ? plans.restaurant : plans.essentiel;
+      const total = Number(plan.price) + (maitre ? 249 : 0);
+      name.textContent = plan.name + (maitre ? ' + Maître' : ''); text.textContent = plan.text; count(year ? Math.round(total * months / 12) : total);
       start.href = !till && gestion ? root.dataset.signupProfit! : till && !gestion ? root.dataset.signupPos! : root.dataset.signup!;
     };
     form.addEventListener('change', update);

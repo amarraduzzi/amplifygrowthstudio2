@@ -1,0 +1,57 @@
+---
+// Amplify Maître: the option for restaurants where the service makes the difference. Not a plan of
+// its own: +249 DH HT per month on top of Restaurant or Contrôle. Real screenshots of demo café Dar Nour.
+import Device from './Device.astro';
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const points = [
+  ['bell', 'Le service discret', 'Depuis le QR de sa table, le client demande un serveur, de l’eau ou l’addition. La table s’allume sur la caisse et sur les téléphones des serveurs.'],
+  ['chart', 'Le rythme de la soirée', 'Chaque table montre où elle en est : en cuisine, prête à servir, en attente du dessert. Celles qui attendent trop changent de couleur.'],
+  ['users', 'La fiche client', 'VIP, préférences, plats préférés, dernières visites. Les allergies s’impriment sur chaque bon cuisine.'],
+  ['book', 'L’avant-service', 'Avant d’ouvrir, l’équipe voit qui vient ce soir : allergies, anniversaires, habitués et clients déjà absents.'],
+  ['shield', 'L’acompte', 'Pour les grandes tables, un acompte garantit la réservation. Il se déduit de l’addition, ou reste au restaurant si personne ne vient.'],
+  ['cake', 'Les formules', 'Ftour du Ramadan, menus de groupe, soirées spéciales : réservés en ligne, avec la liste pour la cuisine chaque soir.'],
+] as const;
+---
+<section id="maitre" class="scroll-mt-20 bg-navy text-white">
+  <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+      <div>
+        <p class="inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/15">
+          <span class="text-green">Option</span><span class="text-white/40" aria-hidden="true">/</span><span>+249 DH HT / mois</span><span class="text-white/40" aria-hidden="true">/</span><span class="text-white/70">avec Restaurant ou Contrôle</span>
+        </p>
+        <h2 class="mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Amplify Maître.</span><span class="block text-green">Le service à table, sans un oubli.</span></h2>
+        <p class="mt-5 max-w-md text-lg text-white/70">Pour les restaurants où chaque client compte. Votre équipe sait qui arrive, ce qu’il aime, et quelle table l’attend. Ajoutez-la à votre caisse quand vous en avez besoin.</p>
+        <div class="mt-7 flex flex-wrap items-center gap-4">
+          <WaButton text="Bonjour, je voudrais voir Amplify Maître en démo." label="Demander une démo" where="maitre" class="px-7 text-lg" />
+          <a href="#tarifs" class="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white">Voir les tarifs</a>
+        </div>
+      </div>
+      <!-- the room on the till, and the guest's phone calling the bill -->
+      <div class="relative pb-[12%] pe-[10%]">
+        <Device src="/img/maitre-salle.webp" alt="La salle sur la caisse : chaque table avec son plat en cours, une table qui demande l’addition" w={1200} h={878} />
+        <div class="absolute bottom-0 end-0 w-[30%]"><Device kind="phone" src="/img/maitre-service-phone.webp" alt="Sur le téléphone du client : un serveur, de l’eau, l’addition" w={600} h={1298} class="rotate-[3deg]" /></div>
+      </div>
+    </div>
+
+    <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+      {points.map(([i, h, x]) => (
+        <li class="flex gap-4">
+          <span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
+          <div><p class="font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p></div>
+        </li>
+      ))}
+    </ul>
+
+    <div class="mt-16 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+      <Device src="/img/maitre-avant-service.webp" alt="L’avant-service : couverts par demi-heure, ftour du soir, allergies et VIP" w={1200} h={878} />
+      <div>
+        <p class="display text-3xl leading-[0.95] sm:text-[2.6rem]">Une table qui ne vient pas coûte souvent plus qu’un mois de Maître.</p>
+        <p class="mt-4 text-white/70">Un acompte pour les grandes tables, un rappel des habitués, une allergie qui n’arrive jamais en cuisine par oubli. C’est là que se joue la réputation d’un restaurant.</p>
+        <p class="mt-4 text-sm text-white/50">{tt('Option sans engagement : vous l’activez ou l’arrêtez d’un mois à l’autre.')}</p>
+      </div>
+    </div>
+  </div>
+</section>

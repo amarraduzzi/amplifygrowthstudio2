@@ -105,6 +105,7 @@ export const posEn = {
         ['stock', 'Stock and purchasing'],
         ['marges', 'Margin per dish'],
         ['equipe', 'Clock-in and team costs'],
+        ['maitre', 'Fine dining service (Maître option)'],
       ] as [string, string][],
       result: 'Your plan',
       total: 'Total',

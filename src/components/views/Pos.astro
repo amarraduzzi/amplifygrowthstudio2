@@ -11,6 +11,7 @@ import TryIt from '../TryIt.astro';
 import PhotoBand from '../PhotoBand.astro';
 import Pricing from '../Pricing.astro';
 import PriceBuilder from '../PriceBuilder.astro';
+import MaitreOption from '../MaitreOption.astro';
 import BillingToggle from '../BillingToggle.astro';
 import InstallInfo from '../InstallInfo.astro';
 import Faq from '../Faq.astro';
@@ -131,6 +132,9 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
   <!-- live demo -->
   <TryIt lang={lang} id="demo" />
 
+  <!-- the option for fine dining: Amplify Maître -->
+  <MaitreOption />
+
   <!-- pricing -->
   <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 md:py-24 sm:px-6">
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.pricing.title}</h2>
@@ -138,6 +142,12 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
     <div class="mt-8"><BillingToggle /></div>
     <div class="mt-8"><PriceBuilder lang={lang} /></div>
     <div class="mt-5"><Pricing plans={p.pricing.plans} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.popular} lang={lang} /></div>
+    <a href="#maitre" class="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 rounded-[1.75rem] bg-navy px-6 py-5 text-white transition-colors hover:bg-[#0A2A50]">
+      <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-bold text-green ring-1 ring-white/15">Option</span>
+      <span class="display text-2xl">Amplify Maître</span>
+      <span class="text-white/70">Service discret, fiche client, avant-service, acomptes et formules. Avec Restaurant ou Contrôle.</span>
+      <span class="ms-auto whitespace-nowrap font-semibold"><span class="display text-3xl text-green" dir="ltr">+249</span> <span class="text-sm text-white/60">DH HT / mois</span></span>
+    </a>
     <div class="mt-5"><InstallInfo /></div>
   </section>
 

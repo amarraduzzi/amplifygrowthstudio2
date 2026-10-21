@@ -104,6 +104,7 @@ export const posAr = {
         ['stock', 'المخزون والمشتريات'],
         ['marges', 'هامش الربح لكل طبق'],
         ['equipe', 'تسجيل الحضور وتكلفة الفريق'],
+        ['maitre', 'خدمة راقية على الطاولة (خيار Maître)'],
       ] as [string, string][],
       result: 'باقتك',
       total: 'المجموع',
