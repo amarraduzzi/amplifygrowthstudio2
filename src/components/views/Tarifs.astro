@@ -139,13 +139,17 @@ const rows = [
   <!-- the highlighted offer: free setup in Rabat -->
   {OFFER.installFreeNow && (
     <section class="px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="offre" data-tf>
-      <div class="tf tf-shine relative isolate mx-auto grid max-w-6xl items-center gap-6 overflow-hidden rounded-[2.5rem] bg-green p-7 text-navy sm:p-10 md:grid-cols-[1.4fr_auto] md:p-14">
-        <div>
+      <div class="tf tf-shine relative isolate mx-auto grid max-w-6xl overflow-hidden rounded-[2.5rem] bg-green text-navy md:grid-cols-[1.05fr_1fr]">
+        <!-- photo: on a phone above the text, fading into the green; from md on the right half, fading to the left -->
+        <div class="relative order-first h-56 md:order-last md:h-auto" aria-hidden="true">
+          <img src="/img/install-rabat.webp" alt="" width="1300" height="726" loading="lazy" decoding="async" class="absolute inset-0 size-full object-cover object-[60%_40%] [mask-image:linear-gradient(to_bottom,black_55%,transparent)] md:object-[55%_50%] md:[mask-image:linear-gradient(to_right,transparent,black_38%)] md:rtl:[mask-image:linear-gradient(to_left,transparent,black_38%)]" />
+        </div>
+        <div class="relative z-10 p-7 pt-2 sm:p-10 sm:pt-2 md:p-14 md:pe-6">
           <p class="tf-ping inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1 text-xs font-bold text-green"><span class="size-2 rounded-full bg-green"></span>{tt('Offre en cours')}</p>
           <h2 id="offre" class="display mt-4 text-[2.9rem] leading-[0.95] sm:text-6xl lg:text-7xl">{tt('Installation sur place à Rabat offerte')}</h2>
           <p class="mt-4 max-w-xl text-lg text-navy/80">{tt('Au lieu de {n} DH HT. Nous venons installer la caisse et former votre équipe, sans frais, pour le moment.').split('{n}')[0]}<span class="relative font-bold text-navy" dir="ltr">{OFFER.installRabat}<span class="tf-strike absolute inset-x-0 top-1/2 h-[2px] rounded-full bg-navy" aria-hidden="true"></span></span>{tt('Au lieu de {n} DH HT. Nous venons installer la caisse et former votre équipe, sans frais, pour le moment.').split('{n}')[1]}</p>
+        <a href={waLink(tt('Bonjour, je voudrais réserver l’installation offerte à Rabat.'))} target="_blank" rel="noopener" data-wa="pricing-offer" class="mt-7 inline-flex min-h-14 items-center justify-center whitespace-nowrap rounded-full bg-navy px-8 text-lg font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-blue">{tt('Réserver mon installation')}</a>
         </div>
-        <a href={waLink(tt('Bonjour, je voudrais réserver l’installation offerte à Rabat.'))} target="_blank" rel="noopener" data-wa="pricing-offer" class="inline-flex min-h-14 items-center justify-center whitespace-nowrap rounded-full bg-navy px-8 text-lg font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-blue">{tt('Réserver mon installation')}</a>
       </div>
     </section>
   )}
