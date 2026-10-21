@@ -140,31 +140,6 @@ const schema = [
     <p class="tf mt-1 text-muted" style="--d:140ms">{tt('Touchez les services dont vous avez besoin.')}</p>
     <div class="mt-5" data-builder data-wa={waLink('')} data-tiers="100,150,200" data-pack-price={PACK_SETUP}
       data-i18n={JSON.stringify({ per: p.pricing.per, once: tt('DH HT'), none: tt('Choisissez au moins un service.'), msg: tt('Bonjour, je voudrais ces services Amplify : {s}. Mise en place {a} DH, puis {b} DH par mois.'), h1: tt('Prenez les trois : {a} DH au lieu de {b} DH.'), h2: tt('Ajoutez la troisième : le pack complet vaut {a} DH au lieu de {b} DH.'), h3: tt('Pack complet appliqué : vous économisez {n} DH.') })}>
-      <!-- the full pack: the one offer on this page that should stand out -->
-      <div class="tf relative isolate mb-5 overflow-hidden rounded-[2rem] bg-green p-6 text-navy shadow-[0_30px_60px_-30px_rgba(5,185,98,0.7)] sm:p-8 md:p-10" data-pack-card>
-        <span class="pointer-events-none absolute -end-24 -top-24 -z-10 size-72 rounded-full bg-white/20 blur-2xl" aria-hidden="true"></span>
-        <div class="grid items-center gap-6 md:grid-cols-[1.2fr_auto_auto]">
-          <div>
-            <p class="inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1 text-xs font-bold text-green"><span class="size-2 rounded-full bg-green"></span>{tt('Pack complet')}</p>
-            <h4 class="display mt-3 text-[2.4rem] leading-[0.95] sm:text-5xl">{tt('Les trois ensemble, c’est moins cher.')}</h4>
-            <div class="mt-4 flex items-center gap-3">
-              <span class="flex -space-x-3 rtl:space-x-reverse" aria-hidden="true">
-                {['/img/nav-site.webp', '/img/svc-commandes.webp', '/img/svc-fidelite.webp'].map(src => <img src={src} alt="" width="48" height="48" loading="lazy" class="size-12 rounded-full object-cover ring-2 ring-green" />)}
-              </span>
-              <span class="font-semibold">Site + Commandes + Fidélité</span>
-            </div>
-          </div>
-          <p class="md:text-end">
-            <span class="block text-sm font-semibold text-navy/70"><span class="relative" dir="ltr">{PACK_REGULAR}<span class="absolute inset-x-0 top-1/2 h-[2px] rounded-full bg-navy" aria-hidden="true"></span></span> {tt('DH HT')}</span>
-            <span class="flex items-baseline gap-2 md:justify-end"><span class="display text-[5.5rem] leading-none tabular-nums sm:text-[6.5rem]" dir="ltr">{PACK_SETUP}</span><span class="text-sm font-semibold">{tt('DH HT')}<br />{tt('Une seule fois')}</span></span>
-            <span class="mt-1 block text-sm text-navy/70">{tt('Puis {n} DH HT par mois').replace('{n}', '200')}</span>
-          </p>
-          <div class="md:self-center">
-            <button type="button" data-pick-pack class="inline-flex min-h-14 w-full items-center justify-center whitespace-nowrap rounded-full bg-navy px-8 text-lg font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-blue">{tt('Choisir le pack complet')}</button>
-            <p class="mt-2 text-center text-sm font-bold text-navy/80"><span dir="ltr">−{PACK_REGULAR - PACK_SETUP} DH</span></p>
-          </div>
-        </div>
-      </div>
       <div class="grid gap-4 md:grid-cols-3">
         {[
           { id: 'site', k: 'Amplify Site', text: 'Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.', setup: OFFER.siteSetup, img: '/img/nav-site.webp', pos: '60% 45%', link: ROUTES.site[lang], cta: 'Voir Amplify Site' },
@@ -190,8 +165,33 @@ const schema = [
         <span class="font-semibold">{tt('Style Premium : Maison ou Signature')}</span>
         <span class="text-muted">{tt('Premium : {n} DH au lieu de {m} DH').replace('{n}', String(OFFER.sitePremium)).replace('{m}', String(OFFER.siteSetup))}</span>
       </label>
+      <!-- the full pack: the one offer on this page that should stand out -->
+      <div class="tf relative isolate mt-4 overflow-hidden rounded-[2rem] bg-green p-6 text-navy shadow-[0_30px_60px_-30px_rgba(5,185,98,0.7)] sm:p-8 md:p-10" data-pack-card>
+        <span class="pointer-events-none absolute -end-24 -top-24 -z-10 size-72 rounded-full bg-white/20 blur-2xl" aria-hidden="true"></span>
+        <div class="grid items-center gap-6 md:grid-cols-[1.2fr_auto_auto]">
+          <div>
+            <p class="inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1 text-xs font-bold text-green"><span class="size-2 rounded-full bg-green"></span>{tt('Pack complet')}</p>
+            <h4 class="display mt-3 text-[2.4rem] leading-[0.95] sm:text-5xl">{tt('Les trois ensemble, c’est moins cher.')}</h4>
+            <div class="mt-4 flex items-center gap-3">
+              <span class="flex -space-x-3 rtl:space-x-reverse" aria-hidden="true">
+                {['/img/nav-site.webp', '/img/svc-commandes.webp', '/img/svc-fidelite.webp'].map(src => <img src={src} alt="" width="48" height="48" loading="lazy" class="size-12 rounded-full object-cover ring-2 ring-green" />)}
+              </span>
+              <span class="font-semibold">Site + Commandes + Fidélité</span>
+            </div>
+          </div>
+          <p class="md:text-end">
+            <span class="block text-sm font-semibold text-navy/70"><span class="relative" dir="ltr">{PACK_REGULAR}<span class="absolute inset-x-0 top-1/2 h-[2px] rounded-full bg-navy" aria-hidden="true"></span></span> {tt('DH HT')}</span>
+            <span class="flex items-baseline gap-2 md:justify-end"><span class="display text-[5.5rem] leading-none tabular-nums sm:text-[6.5rem]" dir="ltr">{PACK_SETUP}</span><span class="text-sm font-semibold">{tt('DH HT')}<br />{tt('Une seule fois')}</span></span>
+            <span class="mt-1 block text-sm text-navy/70">{tt('Puis {n} DH HT par mois').replace('{n}', '200')}</span>
+          </p>
+          <div class="md:self-center">
+            <button type="button" data-pick-pack class="inline-flex min-h-14 w-full items-center justify-center whitespace-nowrap rounded-full bg-navy px-8 text-lg font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-blue">{tt('Choisir le pack complet')}</button>
+            <p class="mt-2 text-center text-sm font-bold text-navy/80"><span dir="ltr">−{PACK_REGULAR - PACK_SETUP} DH</span></p>
+          </div>
+        </div>
+      </div>
       <!-- the live total -->
-      <div class="mt-4 grid items-center gap-5 rounded-[1.75rem] bg-navy p-6 text-white sm:p-8 md:grid-cols-[1fr_1fr_auto]" aria-live="polite">
+      <div class="mt-5 grid items-center gap-5 rounded-[1.75rem] bg-navy p-6 text-white sm:p-8 md:grid-cols-[1fr_1fr_auto]" aria-live="polite">
         <p><span class="text-sm font-semibold text-green">{tt('Une seule fois')}</span><span class="mt-1 flex items-baseline gap-2"><span class="hidden display text-3xl text-white/45 line-through" dir="ltr" data-was></span><span class="display text-6xl tabular-nums" dir="ltr" data-once>0</span><span class="text-sm text-white/60">{tt('DH HT')}</span><span class="hidden rounded-full bg-green px-3 py-1 text-sm font-bold text-navy" data-save></span></span></p>
         <p><span class="text-sm font-semibold text-green">{tt('Chaque mois')}</span><span class="mt-1 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr" data-month>0</span><span class="text-sm text-white/60">{p.pricing.per}</span></span></p>
         <a href={waLink('')} target="_blank" rel="noopener" data-wa="pricing-builder" data-cta class="pointer-events-none inline-flex min-h-14 items-center justify-center whitespace-nowrap rounded-full bg-green px-8 text-lg font-semibold text-navy opacity-40 transition-opacity">{tt('Démarrer avec ces services')}</a>
