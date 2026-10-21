@@ -1,0 +1,313 @@
+---
+// One pricing page for everything: pick your situation, the plans, what is taken separately, the one-off costs.
+import Base from '../../layouts/Base.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import Pricing from '../Pricing.astro';
+import BillingToggle from '../BillingToggle.astro';
+import Faq from '../Faq.astro';
+import CountUp from '../CountUp.astro';
+import LeakTicker from '../LeakTicker.astro';
+import PhotoBand from '../PhotoBand.astro';
+import ProductFinal from '../ProductFinal.astro';
+import { OFFER, signupUrl, waLink } from '../../config';
+import { copy } from '../../i18n';
+import { posOf } from '../../i18n/content';
+import { tr } from '../../i18n/t';
+import { ROUTES, type Lang } from '../../i18n/routes';
+import { faqSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const p = posOf(lang);
+const ui = copy(lang).ui;
+const title = tt('Tarifs Amplify Growth Studio : caisse, marges, site | Maroc');
+const description = tt('Tous les tarifs en dirhams : Amplify POS dès 199 DH HT, Profit 249 DH, Contrôle 499 DH, pack complet Site + Commandes + Fidélité 799 DH une fois, puis 200 DH par mois. 14 jours gratuits, sans engagement.');
+const wa = tt('Bonjour, j’ai une question sur vos tarifs.');
+// Full pack: the three services together, set up once for less. The monthly price stays on the normal scale (200 for three).
+const PACK_SETUP = 799;
+const PACK_REGULAR = OFFER.siteSetup + 500 + OFFER.loyaltySetup;
+const price = (i: number) => p.pricing.plans[i].price;
+const from = (n: string) => tt('Dès {n} DH HT par mois').replace('{n}', n);
+const situations = [
+  { h: tt('Je n’ai pas de caisse'), t: tt('Amplify POS : la caisse, le menu QR et les bons cuisine.'), plan: from(price(0)), icon: 'till', to: 0 },
+  { h: tt('J’ai déjà une caisse'), t: tt('Amplify Profit : food cost, marge par plat et stock, avec votre caisse actuelle.'), plan: from(price(2)), icon: 'chart', to: 3 },
+  { h: tt('Je veux tout'), t: tt('Contrôle : la caisse et les marges, ensemble.'), plan: from(price(3)), icon: 'check', to: 2 },
+  { h: tt('Je veux seulement un site ou la fidélité'), t: tt('Amplify Site, Commandes et Fidélité : seulement ce dont vous avez besoin, sans caisse.'), plan: from('100'), icon: 'check', to: -1 },
+] as const;
+const faqItems = [
+  ['Les prix sont-ils avec ou sans TVA ?', 'Tous les prix sont hors taxes (HT). La TVA s’ajoute sur la facture.'],
+  ['Y a-t-il un engagement ?', 'Non. 14 jours gratuits sans carte bancaire, puis vous payez chaque mois et vous pouvez arrêter quand vous voulez. En annuel, vous payez 10 mois et profitez de 12.'],
+  ['Comment fonctionnent les services à la carte ?', 'Chaque service a un prix de mise en place, payé une seule fois (Site 250 DH, Site Premium 750 DH, Commandes 500 DH, Fidélité 250 DH). Les trois ensemble : 799 DH au lieu de 1000 DH. Ensuite vous payez chaque mois : 100 DH pour un service, 150 DH pour deux, 200 DH pour trois ou plus. Les formules Restaurant et Contrôle incluent déjà Site, Commandes et Fidélité.'],
+  ['Quelle formule choisir ?', 'Sans caisse : POS. Avec une caisse que vous gardez : Profit. Les deux ensemble : Contrôle, à 499 DH au lieu de 598 DH.'],
+  ['L’installation est-elle payante ?', 'À Rabat, l’installation sur place est offerte pour le moment. Partout au Maroc, l’installation guidée en vidéo est incluse.'],
+  ['Le matériel est-il compris ?', 'Non, le matériel est vendu à part. Écrivez-nous sur WhatsApp et nous vous disons ce qu’il vous faut.'],
+  ['Comment payer ?', 'Par virement ou CashPlus. Pas de carte bancaire demandée pour l’essai.'],
+].map(([q, a]) => [tt(q), tt(a)]);
+const schema = [
+  {
+    '@context': 'https://schema.org', '@type': 'ItemList', name: 'Amplify Growth Studio',
+    itemListElement: p.pricing.plans.map((x, i) => ({ '@type': 'ListItem', position: i + 1, item: { '@type': 'Offer', name: x.name, price: x.price, priceCurrency: 'MAD' } })),
+  },
+  faqSchema(faqItems),
+].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="pricing" title={title} description={description} wa={wa} schema={schema}>
+  <!-- hero: the price tags land on the counter, like the till on the POS page -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl gap-8 px-4 pb-10 pt-5 sm:px-6 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-12 lg:pb-14 lg:pt-12">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt('Tarifs')}</p>
+        <h1 class="mt-4 text-[clamp(2.9rem,12vw,3.6rem)] lg:mt-5 lg:text-[clamp(3.4rem,5.4vw,5.4rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block whitespace-nowrap" style="--d:80ms">{tt('Des prix clairs,')}</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block whitespace-nowrap text-green-deep" style="--d:200ms">{tt('en dirhams.')}<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-4 max-w-xl text-[1.05rem] leading-snug text-muted md:mt-5 md:text-xl" style="--d:300ms">{tt('14 jours gratuits, sans carte bancaire et sans engagement. Choisissez selon votre situation, nous vous montrons le prix exact.')}</p>
+        <div class="fade-up mt-6 flex items-center gap-4 md:mt-7" style="--d:400ms">
+          <a href="#situation" class="inline-flex min-h-12 items-center whitespace-nowrap rounded-full bg-green px-5 text-[0.95rem] font-semibold text-navy hover:bg-[#04A859] md:px-7 md:text-lg">{tt('Quelle est votre situation ?')}</a>
+          <a href={signupUrl(lang)} class="whitespace-nowrap text-sm font-medium underline underline-offset-4 md:inline-flex md:min-h-12 md:items-center md:rounded-full md:border md:border-navy/25 md:px-6 md:text-lg md:font-normal md:no-underline md:hover:border-navy">{p.hero.cta}</a>
+        </div>
+        <p class="fade-up mt-3 text-sm text-muted" style="--d:450ms">{tt('Prix hors taxes (HT), TVA en sus.')}</p>
+      </div>
+
+      <div class="relative isolate aspect-[4/3.3] overflow-hidden rounded-[1.75rem] bg-mint lg:aspect-[5/4.4] lg:rounded-[2.25rem]">
+        <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 1024px) 50vw, 100vw" alt={tt('Le comptoir d’un café à Rabat')} width="1200" height="900" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
+        <div class="absolute inset-0 -z-10 bg-linear-to-b from-navy/10 via-transparent to-navy/45" aria-hidden="true"></div>
+        {[
+          { i: 0, cls: 'start-[5%] top-[6%] w-[42%] -rotate-3 md:top-[12%] md:w-[40%] md:start-[6%]', d: 400 },
+          { i: 2, cls: 'end-[5%] top-[12%] w-[42%] rotate-2 md:top-[22%] md:w-[40%] md:end-[6%]', d: 650 },
+          { i: 3, cls: 'start-[22%] bottom-[5%] w-[54%] rotate-[-1.5deg] md:bottom-[9%] md:start-[24%] md:w-[52%]', d: 900 },
+        ].map(({ i, cls, d }) => {
+          const pl = p.pricing.plans[i];
+          const dark = i === 3;
+          return (
+            <div class={`absolute ${cls}`}>
+              <div class="drop" style={`--d:${d}ms`}>
+                <div class="tf-float" style={`--d:${d}ms`}>
+                  <div class={`relative rounded-2xl p-3 shadow-[0_24px_50px_-20px_rgba(0,30,62,0.6)] md:p-5 ${dark ? 'bg-navy text-white' : 'bg-white'}`}>
+                    <p class={`text-xs font-semibold md:text-sm ${dark ? 'text-green' : 'text-green-deep'}`}>{pl.tag}</p>
+                    <p class="display text-xl leading-none md:text-3xl">{i === 3 ? tt('Contrôle') : i === 0 ? tt('Essentiel') : pl.name}</p>
+                    <p class="mt-2 flex items-baseline gap-1.5"><span class={`display text-3xl tabular-nums md:text-6xl ${dark ? 'text-green' : ''}`} dir="ltr">{pl.price}</span><span class={`hidden text-[0.65rem] md:inline md:text-xs ${dark ? 'text-white/60' : 'text-muted'}`}>{tt('DH HT')}</span></p>
+                    {dark && <span class="glow absolute inset-0 rounded-2xl ring-[3px] ring-green" style="--d:1700ms" aria-hidden="true"></span>}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- figures -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['199', 'DH HT / mois, tout compris'], ['14', 'jours gratuits, sans carte bancaire'], [String(PACK_SETUP), 'DH le pack complet : Site + Commandes + Fidélité']].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{tt(l)}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- pick your situation: the click scrolls to the plan and lights it up -->
+  <section id="situation" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 sm:px-6 md:py-24" aria-labelledby="sit-h" data-tf>
+    <h2 id="sit-h" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Quelle est votre situation ?')}</h2>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {situations.map((s, i) => (
+        <a href={s.to < 0 ? '#services' : '#formules'} data-pick={s.to < 0 ? undefined : s.to} class={`tf group flex flex-col rounded-[1.75rem] p-6 ${i === 2 ? 'bg-navy text-white' : 'bg-paper ring-1 ring-line'}`} style={`--d:${i * 110}ms`}>
+          <span class={`tf-icon grid size-11 place-items-center rounded-xl ${i === 2 ? 'bg-green text-navy' : 'bg-mint text-green-deep ring-1 ring-green/30'}`}><Icon name={s.icon} class="size-5" /></span>
+          <h3 class="display mt-4 text-3xl">{s.h}</h3>
+          <p class={`mt-2 flex-1 ${i === 2 ? 'text-white/70' : 'text-muted'}`}>{s.t}</p>
+          <p class={`mt-4 font-semibold ${i === 2 ? 'text-green' : 'text-green-deep'}`}>{s.plan} <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1">→</span></p>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- the four plans -->
+  <section id="formules" class="mx-auto max-w-6xl scroll-mt-24 px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="plans">
+    <h2 id="plans" class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Les formules')}</h2>
+    <p class="mt-4 max-w-2xl text-muted">{p.pricing.note}</p>
+    <div class="mt-8"><BillingToggle /></div>
+    <div class="mt-8"><Pricing plans={[0, 1, 3, 2].map(i => p.pricing.plans[i])} per={p.pricing.per} choose={p.pricing.choose} popular={p.pricing.popular} lang={lang} /></div>
+    <p class="mt-5 flex items-center gap-2 font-semibold text-green-deep"><Icon name="check" class="size-5" />{tt('Restaurant plus 150 DH, et vous avez tout Profit (249 DH seul).')} <span class="font-normal text-muted">{tt('Site inclus dans toutes les formules.')}</span></p>
+  </section>
+
+  <!-- services à la carte: 1 = 100, 2 = 150, 3+ = 200 -->
+  <section id="services" class="mx-auto max-w-6xl scroll-mt-24 px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="separe" data-tf>
+    <h2 id="separe" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Les services à la carte')}</h2>
+    <p class="tf mt-4 max-w-2xl text-muted" style="--d:80ms">{tt('Prenez seulement ce dont vous avez besoin. Dans Restaurant et Contrôle, Site, Commandes et Fidélité sont inclus.')}</p>
+    <!-- build your pack: pick services, see the one-off and monthly price live -->
+    <h3 class="tf mt-8 text-2xl font-semibold" style="--d:120ms">{tt('Composez votre pack')}</h3>
+    <p class="tf mt-1 text-muted" style="--d:140ms">{tt('Touchez les services dont vous avez besoin.')}</p>
+    <div class="mt-5" data-builder data-wa={waLink('')} data-tiers="100,150,200" data-pack-price={PACK_SETUP}
+      data-i18n={JSON.stringify({ per: p.pricing.per, once: tt('DH HT'), none: tt('Choisissez au moins un service.'), msg: tt('Bonjour, je voudrais ces services Amplify : {s}. Mise en place {a} DH, puis {b} DH par mois.'), h1: tt('Prenez les trois : {a} DH au lieu de {b} DH.'), h2: tt('Ajoutez la troisième : le pack complet vaut {a} DH au lieu de {b} DH.'), h3: tt('Pack complet appliqué : vous économisez {n} DH.') })}>
+      <div class="grid gap-4 md:grid-cols-3">
+        {[
+          { id: 'site', k: 'Amplify Site', text: 'Le site de votre restaurant, avec votre carte, vos photos et les commandes sur WhatsApp.', setup: OFFER.siteSetup, img: '/img/nav-site.webp', pos: '60% 45%', link: ROUTES.site[lang], cta: 'Voir Amplify Site' },
+          { id: 'orders', k: 'Amplify Commandes', text: 'Vos clients commandent depuis la table ou votre site, et les commandes arrivent sur un écran. Pas de caisse nécessaire.', setup: 500, img: '/img/svc-commandes.webp', pos: '70% 50%', link: ROUTES.pos[lang], cta: 'Voir Amplify POS' },
+          { id: 'loyalty', k: 'Amplify Fidélité', text: 'Une carte de fidélité sur le téléphone de vos clients, un écran au comptoir pour créditer les points, et des messages WhatsApp pour les faire revenir. Pas de caisse nécessaire.', setup: OFFER.loyaltySetup, img: '/img/svc-fidelite.webp', pos: '50% 40%', link: signupUrl(lang, 'loyalty'), cta: 'Essayer Amplify Fidélité' },
+        ].map((c, i) => (
+          <div class="tf flex flex-col" style={`--d:${i * 120}ms`}>
+            <label class="group relative isolate flex min-h-[22rem] flex-1 cursor-pointer flex-col justify-end overflow-hidden rounded-[1.75rem] bg-navy p-6 text-white ring-1 ring-line transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 has-[:checked]:ring-4 has-[:checked]:ring-green has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-blue">
+              <input type="checkbox" class="sr-only" data-svc={c.id} data-setup={c.setup} data-name={tt(c.k)} />
+              <img src={c.img} alt="" width="900" height="670" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 group-hover:scale-105" style={`object-position:${c.pos}`} />
+              <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy via-navy/80 to-navy/10" aria-hidden="true"></span>
+              <span class="absolute end-4 top-4 grid size-9 place-items-center rounded-full bg-white/25 text-transparent ring-1 ring-white/50 backdrop-blur-md transition-colors group-has-[:checked]:bg-green group-has-[:checked]:text-navy group-has-[:checked]:ring-green" aria-hidden="true"><Icon name="check" class="size-5" /></span>
+              <span class="text-sm font-semibold text-green">{tt(c.k)}</span>
+              <span class="mt-2 text-[1.05rem] leading-snug text-white/90">{tt(c.text)}</span>
+              <span class="mt-4 inline-flex w-fit rounded-full bg-white/15 px-3 py-1 text-sm font-semibold ring-1 ring-white/25 backdrop-blur-md">{tt('Mise en place : {n} DH').replace('{n}', String(c.setup))}</span>
+            </label>
+            <a href={c.link} class="mt-3 inline-flex font-semibold text-green-deep underline underline-offset-4">{tt(c.cta)} →</a>
+          </div>
+        ))}
+      </div>
+      <label class="mt-4 hidden cursor-pointer items-center gap-3 rounded-2xl bg-paper px-5 py-3 ring-1 ring-line has-[:checked]:ring-2 has-[:checked]:ring-green" data-premium-row>
+        <input type="checkbox" class="size-5 accent-[#05B962]" data-premium data-extra={OFFER.sitePremium} />
+        <span class="font-semibold">{tt('Style Premium : Maison ou Signature')}</span>
+        <span class="text-muted">{tt('Premium : {n} DH au lieu de {m} DH').replace('{n}', String(OFFER.sitePremium)).replace('{m}', String(OFFER.siteSetup))}</span>
+      </label>
+      <!-- the full pack: the one offer on this page that should stand out -->
+      <div class="tf relative isolate mt-4 overflow-hidden rounded-[2rem] bg-green p-6 text-navy shadow-[0_30px_60px_-30px_rgba(5,185,98,0.7)] sm:p-8 md:p-10" data-pack-card>
+        <span class="pointer-events-none absolute -end-24 -top-24 -z-10 size-72 rounded-full bg-white/20 blur-2xl" aria-hidden="true"></span>
+        <div class="grid items-center gap-6 md:grid-cols-[1.2fr_auto_auto]">
+          <div>
+            <p class="inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1 text-xs font-bold text-green"><span class="size-2 rounded-full bg-green"></span>{tt('Pack complet')}</p>
+            <h4 class="display mt-3 text-[2.4rem] leading-[0.95] sm:text-5xl">{tt('Les trois ensemble, c’est moins cher.')}</h4>
+            <div class="mt-4 flex items-center gap-3">
+              <span class="flex -space-x-3 rtl:space-x-reverse" aria-hidden="true">
+                {['/img/nav-site.webp', '/img/svc-commandes.webp', '/img/svc-fidelite.webp'].map(src => <img src={src} alt="" width="48" height="48" loading="lazy" class="size-12 rounded-full object-cover ring-2 ring-green" />)}
+              </span>
+              <span class="font-semibold">Site + Commandes + Fidélité</span>
+            </div>
+          </div>
+          <p class="md:text-end">
+            <span class="block text-sm font-semibold text-navy/70"><span class="relative" dir="ltr">{PACK_REGULAR}<span class="absolute inset-x-0 top-1/2 h-[2px] rounded-full bg-navy" aria-hidden="true"></span></span> {tt('DH HT')}</span>
+            <span class="flex items-baseline gap-2 md:justify-end"><span class="display text-[5.5rem] leading-none tabular-nums sm:text-[6.5rem]" dir="ltr">{PACK_SETUP}</span><span class="text-sm font-semibold">{tt('DH HT')}<br />{tt('Une seule fois')}</span></span>
+            <span class="mt-1 block text-sm text-navy/70">{tt('Puis {n} DH HT par mois').replace('{n}', '200')}</span>
+          </p>
+          <div class="md:self-center">
+            <button type="button" data-pick-pack class="inline-flex min-h-14 w-full items-center justify-center whitespace-nowrap rounded-full bg-navy px-8 text-lg font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-blue">{tt('Choisir le pack complet')}</button>
+            <p class="mt-2 text-center text-sm font-bold text-navy/80"><span dir="ltr">−{PACK_REGULAR - PACK_SETUP} DH</span></p>
+          </div>
+        </div>
+      </div>
+      <!-- the live total -->
+      <div class="mt-5 grid items-center gap-5 rounded-[1.75rem] bg-navy p-6 text-white sm:p-8 md:grid-cols-[1fr_1fr_auto]" aria-live="polite">
+        <p><span class="text-sm font-semibold text-green">{tt('Une seule fois')}</span><span class="mt-1 flex items-baseline gap-2"><span class="hidden display text-3xl text-white/45 line-through" dir="ltr" data-was></span><span class="display text-6xl tabular-nums" dir="ltr" data-once>0</span><span class="text-sm text-white/60">{tt('DH HT')}</span><span class="hidden rounded-full bg-green px-3 py-1 text-sm font-bold text-navy" data-save></span></span></p>
+        <p><span class="text-sm font-semibold text-green">{tt('Chaque mois')}</span><span class="mt-1 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr" data-month>0</span><span class="text-sm text-white/60">{p.pricing.per}</span></span></p>
+        <a href={waLink('')} target="_blank" rel="noopener" data-wa="pricing-builder" data-cta class="pointer-events-none inline-flex min-h-14 items-center justify-center whitespace-nowrap rounded-full bg-green px-8 text-lg font-semibold text-navy opacity-40 transition-opacity">{tt('Démarrer avec ces services')}</a>
+        <p class="text-sm text-white/80 md:col-span-3" data-hint>{tt('Choisissez au moins un service.')}</p>
+      </div>
+      <p class="mt-3 text-sm text-muted">{tt('1 service = 100 DH, 2 = 150 DH, 3 ou plus = 200 DH par mois.')} {tt('Dans Restaurant et Contrôle, Site, Commandes et Fidélité sont inclus.')}</p>
+    </div>
+    <p class="tf mt-6 text-sm font-semibold text-muted" style="--d:200ms">{p.pricing.soon}</p>
+    <ul class="mt-2 flex flex-wrap gap-2">
+      {['Réservations et file d’attente', 'Écran d’accueil','Péremption et traçabilité', 'Traiteur et devis'].map((x, i) => (
+        <li class="tf rounded-full bg-paper px-4 py-2 text-[0.95rem] ring-1 ring-line" style={`--d:${200 + i * 70}ms`}>{tt(x)}</li>
+      ))}
+    </ul>
+    <p class="tf mt-6 flex items-center gap-2 font-semibold text-green-deep"><Icon name="check" class="size-5" />{tt('Dès 3 services, regardez Restaurant : toute la caisse pour {n} DH de plus ({p} DH HT par mois).').replace('{n}', String(Number(price(1)) - 200)).replace('{p}', price(1))}</p>
+  </section>
+
+  <PhotoBand name="pf-soir" alt={tt('Le service du soir dans un restaurant')} kicker={tt('Tarifs')} title={tt('Pas de surprise sur la facture.')} w={1600} h={686} pos="50% 55%" />
+
+  <!-- everything included + calculator -->
+  <section class="mx-auto max-w-6xl px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="inclus" data-tf>
+    <h2 id="inclus" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{p.pricing.included.title}</h2>
+    <p class="tf mt-4 max-w-2xl text-muted" style="--d:80ms">{p.pricing.included.text}</p>
+    <ul class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {p.pricing.included.items.map((it, i) => (
+        <li class="tf flex items-center gap-3 rounded-2xl bg-paper px-4 py-3.5 ring-1 ring-line" style={`--d:${i * 60}ms`}><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span><span class="font-medium">{it}</span></li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- closing invitation: free setup in Rabat -->
+  {OFFER.installFreeNow && (
+    <section class="px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="offre" data-tf>
+      <div class="tf tf-shine relative isolate mx-auto grid max-w-6xl overflow-hidden rounded-[2.5rem] bg-green text-navy md:grid-cols-[1.05fr_1fr]">
+        <!-- photo: on a phone above the text, fading into the green; from md on the right half, fading to the left -->
+        <div class="relative order-first h-56 md:order-last md:h-auto" aria-hidden="true">
+          <img src="/img/install-rabat.webp" alt="" width="1300" height="726" loading="lazy" decoding="async" class="absolute inset-0 size-full object-cover object-[60%_40%] [mask-image:linear-gradient(to_bottom,black_55%,transparent)] md:object-[55%_50%] md:[mask-image:linear-gradient(to_right,transparent,black_38%)] md:rtl:[mask-image:linear-gradient(to_left,transparent,black_38%)]" />
+        </div>
+        <div class="relative z-10 p-7 pt-2 sm:p-10 sm:pt-2 md:p-14 md:pe-6">
+          <p class="tf-ping inline-flex items-center gap-2 rounded-full bg-navy px-3 py-1 text-xs font-bold text-green"><span class="size-2 rounded-full bg-green"></span>{tt('Offre en cours')}</p>
+          <h2 id="offre" class="display mt-4 text-[2.9rem] leading-[0.95] sm:text-6xl lg:text-7xl">{tt('Installation sur place à Rabat offerte')}</h2>
+          <p class="mt-4 max-w-xl text-lg text-navy/80">{tt('Au lieu de {n} DH HT. Nous venons installer la caisse et former votre équipe, sans frais, pour le moment.').split('{n}')[0]}<span class="relative font-bold text-navy" dir="ltr">{OFFER.installRabat}<span class="tf-strike absolute inset-x-0 top-1/2 h-[2px] rounded-full bg-navy" aria-hidden="true"></span></span>{tt('Au lieu de {n} DH HT. Nous venons installer la caisse et former votre équipe, sans frais, pour le moment.').split('{n}')[1]}</p>
+        <a href={waLink(tt('Bonjour, je voudrais réserver l’installation offerte à Rabat.'))} target="_blank" rel="noopener" data-wa="pricing-offer" class="mt-7 inline-flex min-h-14 items-center justify-center whitespace-nowrap rounded-full bg-navy px-8 text-lg font-semibold text-white transition-transform hover:scale-[1.03] hover:bg-blue">{tt('Réserver mon installation')}</a>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- what a mistake costs, running across the page -->
+  <LeakTicker />
+
+  <Faq lang={lang} items={faqItems} wa={wa} />
+
+  <ProductFinal title={tt('Essayez 14 jours, sans carte.')} text={tt('Créez votre restaurant en quelques minutes. Une question sur le prix ? Écrivez-nous sur WhatsApp.')} cta={p.pricing.choose} href={signupUrl(lang)} wa={wa} waLabel={ui.whatsapp} where="pricing-final"
+    steps={[tt('Compte créé'), tt('Menu importé depuis une photo'), tt('Tables et équipe ajoutées'), tt('Caisse prête')]} done={tt('Tout est prêt')} />
+  <CountUp />
+</Base>
+
+<script>
+  // sections reveal as they scroll in; a situation card scrolls to its plan and lights it up
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];
+  if (still || !('IntersectionObserver' in window)) roots.forEach(r => r.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
+    roots.forEach(r => io.observe(r));
+  }
+  // pack builder: tick services, the totals follow
+  document.querySelectorAll<HTMLElement>('[data-builder]').forEach((root) => {
+    const L = JSON.parse(root.dataset.i18n!);
+    const tiers = root.dataset.tiers!.split(',').map(Number);
+    const boxes = [...root.querySelectorAll<HTMLInputElement>('input[data-svc]')];
+    const prem = root.querySelector<HTMLInputElement>('input[data-premium]')!;
+    const row = root.querySelector<HTMLElement>('[data-premium-row]')!;
+    const onceEl = root.querySelector<HTMLElement>('[data-once]')!, monthEl = root.querySelector<HTMLElement>('[data-month]')!;
+    const cta = root.querySelector<HTMLAnchorElement>('[data-cta]')!, hint = root.querySelector<HTMLElement>('[data-hint]')!;
+    const packEl = root.querySelector<HTMLElement>('[data-pick-pack]')!, wasEl = root.querySelector<HTMLElement>('[data-was]')!, saveEl = root.querySelector<HTMLElement>('[data-save]')!;
+    const PACK = Number(root.dataset.packPrice);
+    const shown = new WeakMap<HTMLElement, number>();
+    const tween = (el: HTMLElement, to: number) => {
+      const from = shown.get(el) ?? 0; shown.set(el, to);
+      if (still || from === to) { el.textContent = String(to); return; }
+      const t0 = performance.now();
+      const step = (t: number) => { const k = Math.min(1, (t - t0) / 450); el.textContent = String(Math.round(from + (to - from) * (1 - (1 - k) ** 3))); if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    };
+    const update = () => {
+      const on = boxes.filter(b => b.checked);
+      const siteOn = on.some(b => b.dataset.svc === 'site');
+      row.classList.toggle('hidden', !siteOn); row.classList.toggle('flex', siteOn);
+      if (!siteOn) prem.checked = false;
+      const premDelta = siteOn && prem.checked ? Number(prem.dataset.extra) - Number(boxes.find(b => b.dataset.svc === 'site')!.dataset.setup) : 0;
+      const regular = on.reduce((n, b) => n + Number(b.dataset.setup), 0) + premDelta;
+      const full = on.length === boxes.length;
+      const once = full ? PACK + premDelta : regular;
+      const allRegular = boxes.reduce((n, b) => n + Number(b.dataset.setup), 0) + (prem.checked ? Number(prem.dataset.extra) - Number(boxes.find(b => b.dataset.svc === 'site')!.dataset.setup) : 0);
+      const allPack = PACK + (prem.checked ? premDelta : 0);
+      const month = on.length === 0 ? 0 : tiers[Math.min(on.length, tiers.length) - 1];
+      tween(onceEl, once); tween(monthEl, month);
+      const names = on.map(b => b.dataset.name! + (b.dataset.svc === 'site' && prem.checked ? ' Premium' : '')).join(', ');
+      cta.classList.toggle('pointer-events-none', on.length === 0); cta.classList.toggle('opacity-40', on.length === 0);
+      cta.href = root.dataset.wa! + encodeURIComponent(L.msg.replace('{s}', names).replace('{a}', String(once)).replace('{b}', String(month)));
+      wasEl.classList.toggle('hidden', !full); saveEl.classList.toggle('hidden', !full);
+      if (full) { wasEl.textContent = String(regular); saveEl.textContent = '−' + (regular - once) + ' DH'; }
+      hint.textContent = on.length === 0 ? L.none : full ? L.h3.replace('{n}', String(regular - once)) : (on.length === 2 ? L.h2 : L.h1).replace('{a}', String(allPack)).replace('{b}', String(allRegular));
+      hint.classList.toggle('font-semibold', full); hint.classList.toggle('text-green', full);
+    };
+    packEl.addEventListener('click', () => { boxes.forEach(b => { b.checked = true; }); update(); root.querySelector('[data-once]')!.closest('div')!.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'center' }); });
+    boxes.forEach(b => b.addEventListener('change', update)); prem.addEventListener('change', update); update();
+  });
+  document.querySelectorAll<HTMLAnchorElement>('[data-pick]').forEach((a) => a.addEventListener('click', (ev) => {
+    const card = document.querySelectorAll<HTMLElement>('#formules .pr-card')[Number(a.dataset.pick)];
+    if (!card) return;
+    ev.preventDefault();
+    card.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'center' });
+    card.classList.remove('tf-pick'); void card.offsetWidth; card.classList.add('tf-pick');
+    setTimeout(() => card.classList.remove('tf-pick'), 1800);
+  }));
+</script>
