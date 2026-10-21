@@ -1,7 +1,7 @@
 ---
 // Blog overview (French only). Add a post here when a new article goes live.
 import Base from '../../layouts/Base.astro';
-import PageHero from '../../components/PageHero.astro';
+import Bars from '../../components/Bars.astro';
 import FinalCta from '../../components/FinalCta.astro';
 import { ROUTES, abs } from '../../i18n/routes';
 
@@ -42,17 +42,25 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'Blog', name: 'Blog
   blogPost: posts.map(p => ({ '@type': 'BlogPosting', headline: p.title, url: abs(p.href), datePublished: p.date })) }];
 ---
 <Base lang={lang} page="blog" title={title} description={description} wa={wa} schema={schema} langsOnly={['fr']}>
-  <PageHero lang={lang} page="blog" wa={wa} h1="Le blog" lead="Des chiffres, pas des opinions. Des articles courts pour les restaurateurs qui veulent savoir ce qu’il leur reste.">
-    <dl class="mt-10 flex flex-wrap gap-x-10 gap-y-4">
-      <div><dt class="sr-only">Articles</dt><dd class="flex items-baseline gap-2"><span class="display text-5xl text-green" dir="ltr">{posts.length}</span><span class="text-white/75">articles</span></dd></div>
-      <div><dt class="sr-only">Temps de lecture</dt><dd class="flex items-baseline gap-2"><span class="display text-5xl text-green" dir="ltr">{minutes}</span><span class="text-white/75">minutes pour tout lire</span></dd></div>
-      <div><dt class="sr-only">Exemples chiffrés</dt><dd class="flex items-baseline gap-2"><span class="display text-5xl text-green" dir="ltr">0</span><span class="text-white/75">opinion, des calculs</span></dd></div>
-    </dl>
-  </PageHero>
+  <section class="relative isolate overflow-hidden bg-blue text-white">
+    <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32 md:h-44" animate />
+    <span class="absolute -end-24 -top-24 -z-10 size-80 rounded-full bg-green/20 blur-3xl" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6 md:pb-28 md:pt-20">
+      <p class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-semibold text-mint"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>Pour les restaurateurs</p>
+      <h1 class="mt-5 text-[3.4rem] leading-[0.9] sm:text-7xl lg:text-[6rem]">Le blog <span class="text-green">des chiffres</span></h1>
+      <p class="measure mt-6 text-lg text-white/85 md:text-xl">Pas d’opinions : des calculs. Des articles courts pour savoir, au dirham près, ce qu’il vous reste vraiment à la fin du mois.</p>
+      <dl class="mt-9 grid max-w-xl grid-cols-3 gap-3">
+        <div class="rounded-2xl border border-white/15 bg-white/10 px-3 py-4 text-center backdrop-blur-sm"><dd class="display text-4xl leading-none text-green sm:text-5xl" dir="ltr">{posts.length}</dd><dt class="mt-1.5 text-[0.8rem] leading-tight text-white/80 sm:text-sm">articles</dt></div>
+        <div class="rounded-2xl border border-white/15 bg-white/10 px-3 py-4 text-center backdrop-blur-sm"><dd class="display text-4xl leading-none text-green sm:text-5xl" dir="ltr">{minutes}</dd><dt class="mt-1.5 text-[0.8rem] leading-tight text-white/80 sm:text-sm">minutes pour tout lire</dt></div>
+        <div class="rounded-2xl border border-white/15 bg-white/10 px-3 py-4 text-center backdrop-blur-sm"><dd class="display text-4xl leading-none text-green sm:text-5xl" dir="ltr">0</dd><dt class="mt-1.5 text-[0.8rem] leading-tight text-white/80 sm:text-sm">opinion, que des calculs</dt></div>
+      </dl>
+      <a href="#debut" class="mt-8 inline-flex min-h-12 items-center gap-2 rounded-full bg-green px-7 text-lg font-semibold text-navy transition-transform hover:translate-x-0.5">Commencer par l’essentiel <span aria-hidden="true">↓</span></a>
+    </div>
+  </section>
 
   <section class="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
     <!-- featured: start here -->
-    <a href={first.href} class="group relative isolate flex min-h-[28rem] flex-col justify-end overflow-hidden rounded-[2rem] bg-navy p-6 text-white shadow-[0_30px_60px_-35px_rgba(0,30,62,0.6)] sm:p-10 md:min-h-[32rem] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-green">
+    <a id="debut" href={first.href} class="group relative isolate flex scroll-mt-4 min-h-[28rem] flex-col justify-end overflow-hidden rounded-[2rem] bg-navy p-6 text-white shadow-[0_30px_60px_-35px_rgba(0,30,62,0.6)] sm:p-10 md:min-h-[32rem] focus-visible:outline-3 focus-visible:outline-offset-4 focus-visible:outline-green">
       <img src={`${first.img}-${first.imgBig}.webp`} srcset={`${first.img}-800.webp 800w, ${first.img}-${first.imgBig}.webp ${first.w}w`} sizes="(min-width: 1152px) 1100px, 100vw" alt="" width="1376" height="768" loading="eager" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
       <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/55 to-navy/40 md:bg-linear-to-r md:from-navy/95 md:via-navy/65 md:to-navy/10" aria-hidden="true"></span>
       <div class="max-w-2xl">
