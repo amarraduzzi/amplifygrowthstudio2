@@ -9,13 +9,15 @@ import WaButton from '../components/WaButton.astro';
 
 interface Props {
   lang: Lang; page: PageKey; title: string; description: string; wa: string;
+  /** keep the page out of search engines (pages shown by hand, not yet public) */
+  noindex?: boolean;
   schema?: Record<string, unknown>[];
   /** pages that exist in some languages only (e.g. a French article): no hreflang or language menu for the others */
   langsOnly?: Lang[];
   /** in-page index shown at the top of the phone menu */
   toc?: { id: string; label: string }[];
 }
-const { lang, page, title, description, wa, schema = [], langsOnly, toc } = Astro.props;
+const { lang, page, title, description, wa, schema = [], langsOnly, toc, noindex } = Astro.props;
 const t = copy(lang);
 const canonical = abs(ROUTES[page][lang]);
 const langs = langsOnly ?? liveLanguages();
@@ -49,7 +51,7 @@ const ld = [business, ...crumbs, ...schema];
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>{title}</title>
   <meta name="description" content={description} />
-  {!SITE.live && <meta name="robots" content="noindex, nofollow" />}
+  {(!SITE.live || noindex) && <meta name="robots" content="noindex, nofollow" />}
   <link rel="canonical" href={canonical} />
   {langs.map(l => <link rel="alternate" hreflang={LOCALE[l]} href={abs(ROUTES[page][l])} />)}
   <link rel="alternate" hreflang="x-default" href={abs(ROUTES[page].fr)} />

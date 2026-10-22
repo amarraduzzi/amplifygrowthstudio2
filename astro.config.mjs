@@ -34,6 +34,8 @@ export default defineConfig({
   site: SITE.url,
   trailingSlash: 'always',
   integrations: [readableText, sitemap({
+    // the salons page is shown by hand to the salons we visit, not public yet
+    filter: (page) => !/\/salons\/$/.test(page),
     i18n: { defaultLocale: 'fr', locales: { fr: 'fr-MA', ar: 'ar-MA', en: 'en' } },
   })],
   vite: { plugins: [tailwindcss()] },
