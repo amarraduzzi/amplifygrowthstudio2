@@ -1,5 +1,6 @@
 ---
 import Icon from './Icon.astro';
+import PhotoBand from './PhotoBand.astro';
 // "La caméra pour vos chiffres": a camera shows that something went missing, the till keeps the trace of
 // who sold what and when. A looping illustration: the day's log fills up, two lines get flagged and the
 // evening report lands on the owner's WhatsApp. Invented names, no real venue. We promise visibility, not
@@ -19,6 +20,9 @@ const horeca: Row[] = [
   ['17:30', 'Remise de 100 %', 'Table 2', 'Hamza', true],
   ['23:40', 'Écart de caisse', '− 40 DH', '', true],
 ];
+const photo = sector === 'salon'
+  ? { name: 'securite-salon', alt: 'La propriétaire d’un salon lit son rapport du soir sur son téléphone, à la caisse, après la fermeture', pos: '50% 38%' }
+  : { name: 'securite-horeca', alt: 'Le patron d’un café lit son rapport du soir sur son téléphone, après la fermeture', pos: '50% 36%' };
 const rows = sector === 'salon' ? salon : horeca;
 const venue = sector === 'salon' ? 'Salon Démo · Rapport du soir' : 'Café Démo · Rapport du soir';
 const ca = sector === 'salon' ? 'Chiffre d’affaires : 2 340 DH' : 'Chiffre d’affaires : 8 450 DH';
@@ -30,7 +34,8 @@ const points = [
   ['shield', 'Protège aussi l’employé honnête', 'Un journal clair met fin au « ce n’est pas moi » : on sait qui a fait quoi.'],
 ] as const;
 ---
-<section class={`sc relative mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24 ${cls}`} data-sc>
+<PhotoBand name={photo.name} alt={photo.alt} pos={photo.pos} w={1200} h={896} big="1200" kicker="Après la fermeture" title="Ce soir, vous savez ce qui s’est passé." class="pt-14 md:pt-24" />
+<section class={`sc relative mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20 ${cls}`} data-sc>
   <div class="grid gap-12 lg:grid-cols-[1fr_1.05fr] lg:items-center">
     <div>
       <p class="inline-flex items-center gap-2 rounded-full bg-green/15 px-3 py-1 text-sm font-semibold text-green-deep"><Icon name="shield" class="size-4" />Sécurité des chiffres</p>

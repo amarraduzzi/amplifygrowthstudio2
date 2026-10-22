@@ -1395,4 +1395,8 @@ export const dictAr: Record<string, string> = {
   "À vérifier : 1 plat retiré, 1 remise de 100 %": "للتحقق: طبق واحد محذوف، وتخفيض واحد بنسبة 100 %",
   "Écart de caisse : − 40 DH": "فارق الصندوق: − 40 درهم",
   "Nous ne filmons rien et nous n’empêchons pas le vol : nous le rendons visible, le jour même. Une caméra et une caisse qui garde la trace se complètent.": "نحن لا نصوّر شيئًا ولا نمنع السرقة: نجعلها ظاهرة في اليوم نفسه. الكاميرا والصندوق الذي يحتفظ بالأثر يكمّل أحدهما الآخر.",
+  "Après la fermeture": "بعد الإغلاق",
+  "Ce soir, vous savez ce qui s’est passé.": "هذا المساء، تعرفون ما حدث.",
+  "La propriétaire d’un salon lit son rapport du soir sur son téléphone, à la caisse, après la fermeture": "صاحبة صالون تقرأ تقرير المساء على هاتفها عند الصندوق بعد الإغلاق",
+  "Le patron d’un café lit son rapport du soir sur son téléphone, après la fermeture": "صاحب مقهى يقرأ تقرير المساء على هاتفه بعد الإغلاق",
 };

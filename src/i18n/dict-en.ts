@@ -1395,4 +1395,8 @@ export const dictEn: Record<string, string> = {
   "À vérifier : 1 plat retiré, 1 remise de 100 %": "To check: 1 dish removed, 1 discount of 100 %",
   "Écart de caisse : − 40 DH": "Cash difference: − 40 DH",
   "Nous ne filmons rien et nous n’empêchons pas le vol : nous le rendons visible, le jour même. Une caméra et une caisse qui garde la trace se complètent.": "We film nothing and we don’t stop theft: we make it visible, the same day. A camera and a till that keeps the trace complement each other.",
+  "Après la fermeture": "After closing",
+  "Ce soir, vous savez ce qui s’est passé.": "Tonight, you know what happened.",
+  "La propriétaire d’un salon lit son rapport du soir sur son téléphone, à la caisse, après la fermeture": "A salon owner reads her evening report on her phone at the till after closing",
+  "Le patron d’un café lit son rapport du soir sur son téléphone, après la fermeture": "A café owner reads his evening report on his phone after closing",
 };
