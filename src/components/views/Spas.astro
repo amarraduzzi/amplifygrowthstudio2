@@ -125,8 +125,11 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Les cabines.</span><span class="block text-green">Dans l’agenda.</span></h2>
           <p class="mt-5 max-w-md text-lg text-white/70">Un spa ne manque pas seulement de bras : il manque de cabines. Amplify regarde les deux avant de proposer un horaire, en ligne comme à l’accueil.</p>
         </div>
-        <div class="tf" style="--d:150ms">
-          <Device src="/img/spa-cabines.webp" alt={tt('La vue Cabines : une colonne par cabine, le hammam avec ses clientes côte à côte')} w={1200} h={878} />
+        <div class="tf relative pb-[14%] pe-[8%]" style="--d:150ms">
+          <div class="overflow-hidden rounded-[2rem] ring-1 ring-white/10">
+            <img src="/img/photos/spa-hammam-1376.webp" srcset="/img/photos/spa-hammam-800.webp 800w, /img/photos/spa-hammam-1376.webp 1376w" sizes="(min-width: 1024px) 560px, 100vw" alt="" width="1376" height="768" loading="lazy" class="aspect-[4/3] w-full object-cover" />
+          </div>
+          <div class="absolute bottom-0 end-0 w-[56%]"><div class="tf-float"><Device src="/img/spa-cabines.webp" alt={tt('La vue Cabines : une colonne par cabine, le hammam avec ses clientes côte à côte')} w={1200} h={878} /></div></div>
         </div>
       </div>
       <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -154,7 +157,12 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">L’acompte.</span><span class="block text-green-deep">Le soin de 90 minutes est tenu.</span></h2>
         <p class="mt-5 max-w-md text-lg text-muted">La cliente voit le montant, le délai et comment payer, dès qu’elle a réservé. Pas payé à temps : le créneau revient en ligne, pour une autre cliente.</p>
       </div>
-      <div class="tf mx-auto w-[62%] max-w-[18rem] lg:w-[58%]" style="--d:150ms"><div class="tf-float"><Device kind="phone" src="/img/spa-acompte-phone.webp" alt={tt('La page de la cliente : l’acompte à payer, le délai, le RIB à copier et le bouton J’ai payé')} w={600} h={1298} class="-rotate-[2deg]" /></div></div>
+      <div class="tf relative pb-[10%] pe-[6%]" style="--d:150ms">
+        <div class="overflow-hidden rounded-[2rem] ring-1 ring-line">
+          <img src="/img/photos/spa-cabine-1376.webp" srcset="/img/photos/spa-cabine-800.webp 800w, /img/photos/spa-cabine-1376.webp 1376w" sizes="(min-width: 1024px) 520px, 100vw" alt="" width="1376" height="768" loading="lazy" class="aspect-[4/3] w-full object-cover object-right" />
+        </div>
+        <div class="absolute bottom-0 end-0 w-[34%]"><div class="tf-float"><Device kind="phone" src="/img/spa-acompte-phone.webp" alt={tt('La page de la cliente : l’acompte à payer, le délai, le RIB à copier et le bouton J’ai payé')} w={600} h={1298} class="-rotate-[2deg]" /></div></div>
+      </div>
     </div>
     <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
       {deposit.map(([i, h, x], k) => (
