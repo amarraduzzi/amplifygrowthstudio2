@@ -8,6 +8,8 @@ import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import CountUp from '../CountUp.astro';
+import SpaCabins from '../SpaCabins.astro';
+import PhotoBand from '../PhotoBand.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -57,6 +59,17 @@ const faq = [
   ['Et si j’arrête ?', 'Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.'],
 ];
 const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
+const plans = [
+  { name: 'Agenda', price: '199', for: 'Les rendez-vous, les cabines et la réservation en ligne.', items: ['Agenda par praticienne et par cabine', 'Hammam et salles à plusieurs places', 'Réservation en ligne avec votre QR', 'Rappels de la veille et confirmation de la cliente', 'Fiche cliente, allergies et historique'] },
+  { name: 'Spa complet', price: '399', for: 'L’agenda, la caisse et l’acompte, ensemble.', featured: true, was: '447', items: ['Tout Agenda', 'Caisse et clôture du jour', 'Forfaits, cartes cadeaux et fidélité', 'Commissions par praticienne', 'Acompte et règles d’absence'] },
+  { name: 'Agenda et caisse', price: '348', for: 'Pour les instituts qui n’ont pas besoin d’acompte.', items: ['Tout Agenda', 'Caisse et clôture du jour', 'Produits et stock', 'Forfaits, cartes cadeaux et fidélité', 'Commissions et avis clientes'] },
+];
+const modules = [
+  ['Caisse et fidélité', '+149 DH HT / mois', 'Tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.', 'live'],
+  ['Acompte', '+99 DH HT / mois', 'Un acompte pour les longs soins. Pas payé à temps, le créneau se libère.', 'live'],
+  ['Site du spa', '+149 DH HT / mois', 'Vos soins, vos prix, vos photos et le bouton de réservation, à votre nom.', 'live'],
+  ['WhatsApp automatique', '+99 DH HT / mois', 'Les rappels partent tout seuls. Les messages WhatsApp sont facturés à prix coûtant.', ''],
+];
 ---
 <Base lang={lang} page="spas" title={tt('Amplify pour les spas, hammams et instituts | Amplify Growth Studio')} description={tt('L’agenda qui connaît vos cabines, votre hammam et vos machines. Réservation en ligne, acomptes, forfaits et cartes cadeaux. Pour les spas et instituts à Rabat et Salé.')} wa={wa}>
   <!-- hero: the cabins land, the client's phone drops, the day fills -->
@@ -140,6 +153,7 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
           </li>
         ))}
       </ul>
+      <SpaCabins />
       <div class="mt-14 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
         <Device src="/img/spa-prestations.webp" alt={tt('Les soins du spa : chacun avec sa cabine ou sa machine, et son acompte')} w={1200} h={878} />
         <div>
@@ -176,20 +190,14 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
   </section>
 
   <!-- the till of the spa -->
-  <section id="caisse" class="scroll-mt-20 bg-paper" data-tf>
-    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24">
-      <div class="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-        <div class="tf-x">
-          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La caisse du spa.</span><span class="block text-green-deep">Tout ce qui se vend à l’accueil.</span></h2>
-          <p class="mt-4 max-w-md text-lg text-muted">La caisse reconnaît la cliente à son numéro : ses forfaits, son solde, ses tampons. Le même système que l’agenda, sans double saisie.</p>
-        </div>
-        <div class="tf overflow-hidden rounded-[2rem] ring-1 ring-line" style="--d:150ms">
-          <img src="/img/photos/spa-accueil-1376.webp" srcset="/img/photos/spa-accueil-800.webp 800w, /img/photos/spa-accueil-1376.webp 1376w" sizes="(min-width: 1024px) 560px, 100vw" alt="" width="1376" height="768" loading="lazy" class="aspect-[4/3] w-full object-cover object-right" />
-        </div>
-      </div>
+  <PhotoBand name="spa-accueil" alt="" pos="70% 50%" w={1376} h={768} big="1376" kicker="À l’accueil" title="Tout ce qui se vend, au même endroit." class="pb-4 md:pb-8" />
+  <section id="caisse" class="scroll-mt-20" data-tf>
+    <div class="mx-auto max-w-6xl px-4 py-10 sm:px-6 md:py-16">
+      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La caisse du spa.</span><span class="block text-green-deep">Sans double saisie.</span></h2>
+      <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">La caisse reconnaît la cliente à son numéro : ses forfaits, son solde, ses tampons. Le même système que l’agenda.</p>
       <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {till.map(([i, h, x], k) => (
-          <li class="tf rounded-[1.75rem] bg-chalk p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
+          <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
             <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
             <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
           </li>
@@ -198,29 +206,51 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
     </div>
   </section>
 
-  <!-- prices: the published salon plans -->
-  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
-    <div class="grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-      <div class="tf-x">
-        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le prix.</span><span class="block text-green-deep">Cabines comprises.</span></h2>
-        <p class="mt-4 max-w-md text-lg text-muted">Prix HT par mois. Praticiennes et cabines illimitées. 14 jours gratuits, sans engagement. Nous installons tout pour vous.</p>
-      </div>
-      <div class="tf relative flex flex-col rounded-[2rem] bg-navy p-7 text-white shadow-[0_30px_60px_-30px_rgba(0,30,62,.6)]" style="--d:120ms">
-        <p class="display text-4xl">Agenda</p>
-        <p class="mt-1 text-white/70">Pour les spas et instituts qui travaillent sur rendez-vous.</p>
-        <p class="mt-6"><span class="display text-6xl text-green" dir="ltr">199</span> <span class="text-white/60">DH HT / mois</span></p>
-        <ul class="mt-6 space-y-2.5">
-          {['Agenda par praticienne et par cabine', 'Réservation en ligne avec votre QR', 'Rappels de la veille et confirmation de la cliente', 'Fiche cliente, allergies et historique'].map(x => <li class="flex gap-2.5"><span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span>{x}</li>)}
-        </ul>
-        <div class="mt-6 grid gap-2 rounded-2xl bg-white/[0.07] p-4 text-sm">
-          <p class="flex justify-between gap-3"><span>Caisse et fidélité</span><span class="text-white/70">+149 DH HT / mois</span></p>
-          <p class="flex justify-between gap-3"><span>Acompte</span><span class="text-white/70">+99 DH HT / mois</span></p>
-          <p class="flex justify-between gap-3"><span>Site du spa</span><span class="text-white/70">+149 DH HT / mois</span></p>
-          <p class="flex justify-between gap-3"><span>WhatsApp automatique</span><span class="text-white/70">Bientôt</span></p>
+  <!-- the cost of missed treatments, with the spa's own numbers -->
+  <section id="calcul" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-noshow data-tf>
+    <div class="tf-x mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+      <div>
+        <h2 class="text-[2.2rem] leading-[0.95] sm:text-[2.8rem]"><span class="block">Combien vous coûtent</span><span class="block text-green-deep">les soins manqués ?</span></h2>
+        <p class="mt-4 text-muted">Faites le calcul avec vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
+        <div class="mt-8 space-y-6">
+          <label class="block"><span class="flex justify-between font-semibold"><span>Rendez-vous par semaine</span><span class="ns-v tabular-nums" data-for="rdv">30</span></span>
+            <input type="range" min="5" max="200" step="5" value="30" data-k="rdv" class="ns-r mt-2 w-full accent-[#05B962]" /></label>
+          <label class="block"><span class="flex justify-between font-semibold"><span>Prix moyen d’un soin (DH)</span><span class="ns-v tabular-nums" data-for="prix">450</span></span>
+            <input type="range" min="100" max="2000" step="50" value="450" data-k="prix" class="ns-r mt-2 w-full accent-[#05B962]" /></label>
+          <label class="block"><span class="flex justify-between font-semibold"><span>Rendez-vous manqués sur 100</span><span class="ns-v tabular-nums" data-for="taux">5</span></span>
+            <input type="range" min="0" max="30" step="1" value="5" data-k="taux" class="ns-r mt-2 w-full accent-[#05B962]" /></label>
         </div>
-        <p class="mt-4 rounded-2xl bg-green/15 p-4 text-sm"><span class="font-semibold text-green">Spa complet : 399 DH HT / mois</span><br /><span class="text-white/70">Agenda, caisse et fidélité, et acompte ensemble, au lieu de 447 DH.</span></p>
-        <p class="mt-3 text-sm text-white/60">Caisse et fidélité : tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.</p>
-        <WaButton text={`${tt('Bonjour, la formule qui m’intéresse :')} Agenda (spa).`} label={tt('Demander une démo')} where="spas-plan" tone="green" class="mt-7 w-full justify-center" />
+      </div>
+      <div class="rounded-[2rem] bg-navy p-8 text-white">
+        <p class="text-white/60">Chaque mois, les cabines restées vides représentent</p>
+        <p class="mt-2"><span class="ns-out display text-6xl text-green tabular-nums" dir="ltr">2 903</span> <span class="text-2xl font-semibold">DH</span></p>
+        <p class="mt-6 rounded-2xl bg-white/[0.07] p-4 text-white/80">La formule Spa complet, avec l’acompte, coûte 399 DH HT par mois.</p>
+        <p class="mt-4 text-sm text-white/50">Calcul : rendez-vous par semaine × 4,3 semaines × rendez-vous manqués × prix moyen. Combien de ces absences un acompte évite dépend de vos clientes : nous ne promettons pas de chiffre.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- prices -->
+  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trois formules.</span><span class="block text-green-deep">Cabines comprises.</span></h2>
+    <p class="mt-4 max-w-2xl text-lg text-muted">Prix HT par mois. Praticiennes et cabines illimitées. 14 jours gratuits, sans engagement. Nous installons tout pour vous.</p>
+    <div class="mt-10 grid gap-4 lg:grid-cols-3">
+      {[plans[0], plans[1], plans[2]].map((p, k) => (
+        <div style={`--d:${k * 110}ms`} class={`tf relative flex flex-col rounded-[2rem] p-7 ${p.featured ? 'bg-navy text-white shadow-[0_30px_60px_-30px_rgba(0,30,62,.6)] lg:-my-3' : 'bg-paper ring-1 ring-line'}`}>
+          {p.featured && <span class="tf-ping absolute -top-3 start-7 rounded-full bg-green px-3 py-1 text-sm font-bold text-navy">{tt('Le plus complet')}</span>}
+          <p class="display text-4xl">{p.name}</p>
+          <p class={`mt-1 ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.for}</p>
+          <p class="mt-6"><span class={`display text-6xl ${p.featured ? 'text-green' : ''}`} dir="ltr">{p.price}</span> <span class={p.featured ? 'text-white/60' : 'text-muted'}>DH HT / mois</span></p>
+          {p.was && <p class="mt-1 text-sm text-white/60"><span class="line-through" dir="ltr">{p.was} DH</span> <span>si pris séparément</span></p>}
+          <ul class="mt-6 flex-1 space-y-2.5">{p.items.map(x => <li class="flex gap-2.5"><span class={`mt-0.5 grid size-5 shrink-0 place-items-center rounded-full ${p.featured ? 'bg-green text-navy' : 'bg-green/15 text-green-deep'}`}><Icon name="check" class="size-3.5" /></span>{x}</li>)}</ul>
+          <WaButton text={`${tt('Bonjour, la formule qui m’intéresse :')} ${p.name} (spa).`} label={tt('Demander une démo')} where={`spas-plan-${k}`} tone={p.featured ? 'green' : 'light'} class={`mt-7 w-full justify-center ${p.featured ? '' : 'ring-1 ring-line'}`} />
+        </div>
+      ))}
+    </div>
+    <div class="tf mt-10 rounded-[2rem] border-2 border-dashed border-line p-6 md:p-8" style="--d:120ms">
+      <p class="font-semibold">Les modules en option</p>
+      <div class="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+        {modules.map(([n, pr, x, live]) => <div><p class="mb-2">{live ? <span class="rounded-full bg-green px-2.5 py-1 text-sm font-bold text-navy">Disponible</span> : <span class="rounded-full bg-[#F5B301] px-2.5 py-1 text-sm font-bold text-navy">Bientôt</span>}</p><p class="font-semibold">{n} <span class="text-sm font-normal text-muted">{pr}</span></p><p class="mt-1 text-sm text-muted">{x}</p></div>)}
       </div>
     </div>
   </section>
@@ -245,6 +275,18 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
 </Base>
 
 <script>
+  // the calculator: the spa's own numbers, nothing is sent
+  document.querySelectorAll<HTMLElement>('[data-noshow]').forEach((root) => {
+    const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);
+    const out = root.querySelector<HTMLElement>('.ns-out')!;
+    const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/\u202f|\u00a0/g, ' ');
+    const run = () => {
+      root.querySelectorAll<HTMLElement>('.ns-v').forEach(v => { v.textContent = String(val(v.dataset.for!)); });
+      out.textContent = fmt(val('rdv') * 4.3 * (val('taux') / 100) * val('prix'));
+    };
+    root.querySelectorAll('.ns-r').forEach(r => r.addEventListener('input', run));
+    run();
+  });
   // sections reveal as they scroll in
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];

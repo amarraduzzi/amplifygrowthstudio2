@@ -220,11 +220,21 @@ const faq = [
   <SecurityTrace sector="salon" />
 
   <!-- spas and instituts have their own page -->
-  <section class="px-4 pb-14 sm:px-6 md:pb-20" data-tf>
-    <a href={ROUTES.spas[lang]} class="tf group mx-auto flex max-w-6xl flex-wrap items-center gap-4 rounded-[2rem] bg-paper p-6 ring-1 ring-line transition hover:ring-green/60 md:p-8">
-      <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-navy text-green"><Icon name="leaf" class="size-6" /></span>
-      <span class="min-w-0 flex-1"><span class="display block text-2xl leading-tight sm:text-3xl">Un spa, un hammam ou un institut ?</span><span class="mt-1 block text-muted">Les cabines, le hammam et les machines dans l’agenda : une page rien que pour vous.</span></span>
-      <span class="font-semibold text-green-deep">Voir la page spas <span class="inline-block transition-transform group-hover:translate-x-1 rtl:-scale-x-100">→</span></span>
+  <section class="px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <a href={ROUTES.spas[lang]} class="tf group relative isolate mx-auto block max-w-6xl overflow-hidden rounded-[2rem] text-white md:rounded-[2.5rem]">
+      <img src="/img/photos/spa-hammam-1376.webp" srcset="/img/photos/spa-hammam-800.webp 800w, /img/photos/spa-hammam-1376.webp 1376w" sizes="(min-width: 1152px) 1152px, 100vw" alt="" width="1376" height="768" loading="lazy" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+      <span class="absolute inset-0 -z-10 bg-linear-to-r from-navy/95 via-navy/70 to-navy/10 rtl:bg-linear-to-l" aria-hidden="true"></span>
+      <div class="grid gap-8 p-7 sm:p-10 md:min-h-[26rem] md:grid-cols-[1.1fr_1fr] md:items-end md:p-14">
+        <div>
+          <p class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold backdrop-blur"><Icon name="leaf" class="size-4 text-green" />Spas, hammams et instituts</p>
+          <p class="display mt-4 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Vous avez un spa ?</span><span class="block text-green">Vos cabines aussi.</span></p>
+          <p class="mt-4 max-w-md text-lg text-white/80">L’agenda qui connaît vos cabines, votre hammam et vos machines. Avec l’acompte, les forfaits et les cartes cadeaux.</p>
+          <span class="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-green px-6 text-lg font-semibold text-navy transition group-hover:gap-3">Voir la page spas<span class="rtl:-scale-x-100" aria-hidden="true">→</span></span>
+        </div>
+        <ul class="flex flex-wrap gap-2 md:justify-end">
+          {['Cabines et hammam', 'Acompte', 'Forfaits de séances', 'Cartes cadeaux'].map(x => <li class="rounded-full bg-white/15 px-3.5 py-1.5 text-sm font-semibold backdrop-blur">{x}</li>)}
+        </ul>
+      </div>
     </a>
   </section>
 
