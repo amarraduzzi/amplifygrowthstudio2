@@ -14,7 +14,7 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   features: { fr: '/amplify-pos/fonctionnalites/', ar: '/ar/amplify-pos/fonctionnalites/', en: '/en/amplify-pos/features/' },
   marketing: { fr: '/marketing/', ar: '/ar/marketing/', en: '/en/marketing/' },
   restaurants: { fr: '/restaurants/', ar: '/ar/restaurants/', en: '/en/restaurants/' },
-  // salons: not in the menu and not in the sitemap yet (shown to salons we visit)
+  // salons: hair salons, barbers and beauty salons (Amplify Agenda)
   salons: { fr: '/salons/', ar: '/ar/salons/', en: '/en/salons/' },
   bakery: { fr: '/patisseries/', ar: '/ar/patisseries/', en: '/en/bakeries/' },
   contact: { fr: '/contact/', ar: '/ar/contact/', en: '/en/contact/' },

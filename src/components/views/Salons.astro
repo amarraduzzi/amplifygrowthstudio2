@@ -1,6 +1,6 @@
 ---
-// Salons page (coiffeurs, barbiers, instituts): shown by hand to the salons we visit, not in the menu
-// and not in the sitemap yet. Same look as the restaurant pages. Real screenshots of the demo salon
+// Salons page (coiffeurs, barbiers, instituts): linked from the trades on the home page, the products
+// menu and the footer. Same look as the restaurant pages. Real screenshots of the demo salon
 // ("Salon Démo", invented names). No clients, reviews or results are claimed: the no-show calculator
 // only works with the salon's own numbers.
 import Base from '../../layouts/Base.astro';
@@ -58,7 +58,7 @@ const faq = [
   ['Et si j’arrête ?', 'Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.'],
 ];
 ---
-<Base lang={lang} page="salons" noindex title={tt('Amplify pour les salons de coiffure | Amplify Growth Studio')} description={tt('L’attente en direct, la réservation en ligne, les rappels WhatsApp et la fiche cliente avec les formules couleur. Pour les coiffeurs, barbiers et instituts à Rabat et Salé.')} wa={wa}>
+<Base lang={lang} page="salons" title={tt('Amplify pour les salons de coiffure | Amplify Growth Studio')} description={tt('L’attente en direct, la réservation en ligne, les rappels WhatsApp et la fiche cliente avec les formules couleur. Pour les coiffeurs, barbiers et instituts à Rabat et Salé.')} wa={wa}>
   <!-- hero -->
   <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.1fr] lg:gap-12">
     <div>

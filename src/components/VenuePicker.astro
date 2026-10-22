@@ -25,6 +25,8 @@ const V = [
     pts: [tt('Prix au kilo : la caisse demande le poids.'), tt('Le ticket affiche le poids vendu.'), tt('Le plan de production du jour dit quoi préparer.'), tt('10 g de pâte d’amande en trop sur chaque corne de gazelle : 43 200 DH perdus par an (exemple).')] },
   { key: 'trai', icon: 'briefcase', tab: tt('Traiteurs'), h: tt('Le traiteur, du devis à la facture.'), href: `${ROUTES.bakery[lang]}#traiteur`,
     pts: [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')] },
+  { key: 'salon', icon: 'scissors', tab: tt('Coiffeurs et barbiers'), h: tt('Moins d’attente, moins d’oublis.'), href: ROUTES.salons[lang],
+    pts: [tt('Le client voit l’attente de chez lui et prend sa place.'), tt('Un bouton « Suivant » par coiffeur.'), tt('Le rappel de la veille, sur WhatsApp, en un geste.')] },
 ] as const;
 const TABLES: [number, 'free' | 'busy' | 'cook'][] = [[1, 'busy'], [2, 'free'], [3, 'cook'], [4, 'busy'], [5, 'free'], [6, 'cook']];
 const STATE = { free: tt('Libre'), busy: tt('Occupée'), cook: tt('En cours') };
@@ -35,7 +37,7 @@ const SEE = tt('Voir la page');
     <h2 id="vp-h" class="text-center text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9] lg:text-7xl"><span class="block">{tt('Chaque métier a sa journée.')}</span><span class="block text-green-deep">{tt('Voyez la vôtre.')}</span></h2>
 
     <!-- the trades -->
-    <div role="tablist" aria-label={tt('Votre métier')} class="vp-tabs -mx-4 mt-10 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:mt-12 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
+    <div role="tablist" aria-label={tt('Votre métier')} class="vp-tabs -mx-4 mt-10 flex snap-x gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] md:mx-0 md:mt-12 md:grid md:grid-cols-5 md:overflow-visible md:px-0">
       {V.map((v, i) => (
         <button role="tab" type="button" id={`vp-t${i}`} aria-controls={`vp-p${i}`} aria-selected={i === 0 ? 'true' : 'false'} data-i={i}
           class={`vt group relative flex shrink-0 snap-start items-center gap-3 overflow-hidden rounded-2xl bg-chalk p-2 pe-5 text-start ring-1 ring-line transition hover:ring-green/60 md:shrink ${i === 0 ? 'on' : ''}`}>
@@ -139,6 +141,17 @@ const SEE = tt('Voir la page');
               </div>
               <p class="vs-pop flex justify-between py-3 text-sm" style="--d:1500ms"><span class="text-muted">{tt('Reste à payer')}</span><b class="tabular-nums text-[#B42318]" dir="ltr">{n(4500)} {DH}</b></p>
               <p class="vs-pop flex items-center gap-2 rounded-xl bg-mint px-3 py-2 text-sm font-semibold text-green-deep" style="--d:2200ms"><Icon name="check" class="size-4 shrink-0" />{tt('Une fois payé : facture numérotée, avec ICE')}</p>
+            </div>
+          </div>
+
+          <!-- salon: the live wait, the next client, the reminder -->
+          <div class="vs w-full max-w-72" data-i="4" aria-hidden="true" hidden>
+            <div class="rounded-2xl bg-white p-4 text-navy shadow-2xl">
+              <p class="vs-pop flex items-center gap-2 text-sm font-semibold text-muted" style="--d:150ms"><span class="size-2 rounded-full bg-[#F59E0B]"></span>{tt('En ce moment')}</p>
+              <p class="vs-pop display mt-1 text-4xl" style="--d:300ms" dir="ltr">20–30 min</p>
+              <p class="vs-pop mt-1 text-sm text-muted" style="--d:450ms">{tt('3 en attente')} · {tt('2 coiffeurs')}</p>
+              <div class="vs-pop mt-4 flex items-center justify-between rounded-xl bg-chalk px-3 py-2.5 text-sm" style="--d:1100ms"><b>Amine</b><span class="rounded-full bg-green px-2.5 py-0.5 text-xs font-bold text-navy">{tt('Suivant')}</span></div>
+              <p class="vs-pop mt-3 flex items-center gap-2 rounded-xl bg-mint px-3 py-2 text-sm font-semibold text-green-deep" style="--d:1900ms"><Icon name="check" class="size-4 shrink-0" />{tt('Rappel envoyé, rendez-vous confirmé')}</p>
             </div>
           </div>
         </div>
