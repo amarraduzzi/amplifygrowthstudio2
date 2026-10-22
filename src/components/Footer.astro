@@ -15,7 +15,7 @@ const f = t.ui.footer;
 const H = [22, 40, 64, 92, 70, 48, 30, 56, 82, 60, 38, 26, 50, 86, 66, 44, 32, 58, 90, 74, 52, 34, 24, 46, 72, 94, 62, 40, 28, 54, 80, 58];
 const cols = [
   { h: f.cols.products, links: [[t.nav.pos, ROUTES.pos[lang]], [t.nav.profit, ROUTES.profit[lang]], [t.nav.site, ROUTES.site[lang]], [t.nav.features, ROUTES.features[lang]], [f.pricing, ROUTES.pricing[lang]]] },
-  { h: f.cols.services, links: [[t.nav.systems, ROUTES.systems[lang]], [t.nav.marketing, ROUTES.marketing[lang]], [t.nav.restaurants, ROUTES.restaurants[lang]], [tt('Pâtisseries'), ROUTES.bakery[lang]], [tt('Coiffeurs et barbiers'), ROUTES.salons[lang]]] },
+  { h: f.cols.services, links: [[t.nav.systems, ROUTES.systems[lang]], [t.nav.marketing, ROUTES.marketing[lang]], [t.nav.restaurants, ROUTES.restaurants[lang]], [tt('Pâtisseries'), ROUTES.bakery[lang]], [tt('Coiffeurs et barbiers'), ROUTES.salons[lang]], [tt('Spas et instituts'), ROUTES.spas[lang]]] },
   { h: f.cols.company, links: [...(lang === 'fr' ? [['Blog', ROUTES.blog.fr]] : []), [t.nav.contact, ROUTES.contact[lang]], [t.nav.login, loginUrl(lang)], [t.nav.trial, signupUrl(lang)]] },
 ];
 const wa = 'Bonjour, je souhaite en savoir plus sur Amplify.';

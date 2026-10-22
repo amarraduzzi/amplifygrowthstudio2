@@ -1,5 +1,5 @@
 ---
-interface Props { name: 'till' | 'chef' | 'qr' | 'chart' | 'megaphone' | 'store' | 'cup' | 'bag' | 'cake' | 'check' | 'briefcase' | 'phone' | 'box' | 'users' | 'coins' | 'shield' | 'search' | 'book' | 'bell' | 'heart' | 'scissors' | 'clock' | 'calendar' | 'tv' | 'flask'; class?: string }
+interface Props { name: 'till' | 'chef' | 'qr' | 'chart' | 'megaphone' | 'store' | 'cup' | 'bag' | 'cake' | 'check' | 'briefcase' | 'phone' | 'box' | 'users' | 'coins' | 'shield' | 'search' | 'book' | 'bell' | 'heart' | 'scissors' | 'clock' | 'calendar' | 'tv' | 'flask' | 'leaf' | 'door' | 'gift' | 'star' | 'wallet'; class?: string }
 const { name, class: cls = 'size-6' } = Astro.props;
 const P: Record<string, string> = {
   till: 'M4 10h16v10H4zM7 10V5h10v5M8 14h2M14 14h2M8 17h8',
@@ -27,6 +27,11 @@ const P: Record<string, string> = {
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4M8 14h2M12 14h2M8 17h2',
   tv: 'M3 5h18v12H3zM8 21h8M12 17v4',
   flask: 'M9 3h6M10 3v6L4.5 18.5A1.7 1.7 0 0 0 6 21h12a1.7 1.7 0 0 0 1.5-2.5L14 9V3M7 15h10',
+  leaf: 'M5 19c0-8 5-14 15-15-1 10-7 15-15 15zM5 19l7-7',
+  door: 'M6 3h12v18H6zM14 12h1M3 21h18',
+  gift: 'M4 9h16v4H4zM5 13h14v8H5zM12 9v12M12 9c-1.5-3.5-5.5-4-5.5-1.5S10 9 12 9c2 0 5.5.5 5.5-1.5S13.5 5.5 12 9',
+  star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.1-.9z',
+  wallet: 'M3 7h16a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H3zM3 7V5a2 2 0 0 1 2-2h11v4M16 13h2',
 };
 ---
 <svg viewBox="0 0 24 24" class={cls} fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d={P[name]} /></svg>

@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -16,6 +16,8 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   restaurants: { fr: '/restaurants/', ar: '/ar/restaurants/', en: '/en/restaurants/' },
   // salons: hair salons, barbers and beauty salons (Amplify Agenda)
   salons: { fr: '/salons/', ar: '/ar/salons/', en: '/en/salons/' },
+  // spas, hammams and instituts: cabins and equipment in the agenda (Amplify Agenda)
+  spas: { fr: '/spas/', ar: '/ar/spas/', en: '/en/spas/' },
   bakery: { fr: '/patisseries/', ar: '/ar/patisseries/', en: '/en/bakeries/' },
   contact: { fr: '/contact/', ar: '/ar/contact/', en: '/en/contact/' },
   // French-only article: the page passes langsOnly=['fr'] to Base, so ar/en are never linked or listed in hreflang

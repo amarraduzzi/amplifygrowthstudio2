@@ -13,6 +13,7 @@ import SalonNouba from '../SalonNouba.astro';
 import SalonReminder from '../SalonReminder.astro';
 import SecurityTrace from '../SecurityTrace.astro';
 import { tr } from '../../i18n/t';
+import { ROUTES } from '../../i18n/routes';
 import type { Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -42,15 +43,21 @@ const agenda = [
   ['users', 'L’agenda de l’équipe', 'Une colonne par personne, ses horaires, ses congés. Glissez un rendez-vous pour le déplacer. Sur ordinateur, tablette ou téléphone.'],
   ['flask', 'La fiche cliente', 'Ses visites, ses absences, ses allergies en rouge, et ses formules couleur : la prochaine couleur sera la même, avec n’importe quelle coiffeuse.'],
 ] as const;
+const site = [
+  ['scissors', 'Vos prestations et vos prix', 'Toujours à jour : vous changez un prix dans Amplify, le site suit. Avec le bouton de réservation sur chaque prestation.'],
+  ['clock', 'L’attente en direct', 'Le visiteur voit combien de temps il faut attendre maintenant, et prend sa place depuis le site.'],
+  ['heart', 'Avant, après', 'Il fait glisser pour comparer. Une photo n’apparaît que si la cliente a donné son accord.'],
+  ['search', 'Fait pour Google', 'Un site rapide sur téléphone, en français, en arabe et en anglais, avec votre adresse, vos horaires et vos avis Google.'],
+] as const;
 const plans = [
   { name: 'Nouba', price: '149', for: 'Pour les barbiers et les salons sans rendez-vous.', items: ['L’attente en direct sur votre lien', 'Place en ligne ou avec le QR à l’entrée', 'Bouton « Suivant » par coiffeur', 'L’écran du salon', 'Prévenir le client sur WhatsApp', 'Fichier clients'] },
   { name: 'Salon', price: '299', for: 'Rendez-vous et clients sans rendez-vous, ensemble.', featured: true, items: ['Tout Nouba', 'Tout Agenda', 'L’attente tient compte des rendez-vous', 'Une seule équipe, un seul écran'] },
   { name: 'Agenda', price: '199', for: 'Pour les salons qui travaillent sur rendez-vous.', items: ['Agenda par personne, jour et semaine', 'Réservation en ligne avec votre QR', 'Rappels de la veille et confirmation du client', 'Fiche cliente, formules couleur et allergies', 'Historique des absences', 'Fichier clients'] },
 ];
 const soon = [
-  ['Site du salon', '+149 DH HT / mois', 'Vos prestations, vos prix, vos photos avant/après (avec l’accord de vos clientes), vos avis Google et le bouton de réservation.'],
+  ['Site du salon', '+149 DH HT / mois', 'Vos prestations, vos prix, vos photos avant/après (avec l’accord de vos clientes), vos avis Google et le bouton de réservation.', 'live'],
   ['WhatsApp automatique', '+99 DH HT / mois', 'Les rappels et « bientôt votre tour » partent tout seuls. Les messages WhatsApp sont facturés à prix coûtant.'],
-  ['Acompte', '+99 DH HT / mois', 'Un acompte pour les longues prestations : balayage, mariée, soins.'],
+  ['Acompte', '+99 DH HT / mois', 'Un acompte pour les longues prestations : balayage, mariée, soins. Pas payé à temps, le créneau se libère.', 'live'],
 ];
 const faq = [
   ['Mes clients doivent-ils installer une application ?', 'Non. Ils ouvrent un lien ou scannent un QR. Rien à installer, rien à créer.'],
@@ -134,8 +141,10 @@ const faq = [
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La Nouba.</span><span class="block text-green">L’attente en direct.</span></h2>
           <p class="mt-5 max-w-md text-lg text-white/70">« Nouba », c’est votre tour. Pour les barbiers et tous les salons où l’on vient sans rendez-vous : plus personne n’attend une heure sur une chaise.</p>
         </div>
-        <div class="tf relative pb-[12%] pe-[10%]" style="--d:150ms">
-          <Device src="/img/salon-nouba-ecran.webp" alt={tt('L’écran du salon : qui est au fauteuil, qui passe ensuite')} w={1200} h={878} />
+        <div class="tf relative pb-[8%] pe-[10%]" style="--d:150ms">
+          <div class="overflow-hidden rounded-[2rem] ring-1 ring-white/10">
+            <img src="/img/photos/salon-barbier-1376.webp" srcset="/img/photos/salon-barbier-800.webp 800w, /img/photos/salon-barbier-1376.webp 1376w" sizes="(min-width: 1024px) 560px, 100vw" alt="" width="1376" height="768" loading="lazy" class="aspect-[4/3] w-full object-cover" />
+          </div>
           <div class="absolute bottom-0 end-0 w-[30%]"><div class="tf-float"><Device kind="phone" src="/img/salon-nouba-phone.webp" alt="" w={600} h={1298} class="rotate-[3deg]" /></div></div>
         </div>
       </div>
@@ -149,7 +158,7 @@ const faq = [
       </ul>
       <SalonNouba />
       <div class="mt-14 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-        <Device src="/img/salon-nouba-suivant.webp" alt={tt('Pour le salon : chaque coiffeur et son bouton Suivant, la file avec l’attente estimée')} w={1200} h={878} />
+        <Device src="/img/salon-nouba-ecran.webp" alt={tt('L’écran du salon : qui est au fauteuil, qui passe ensuite')} w={1200} h={878} />
         <div>
           <p class="display text-3xl leading-[0.95] sm:text-[2.6rem]">Une estimation honnête, toujours en fourchette.</p>
           <p class="mt-4 text-white/70">L’attente est calculée sur les coiffeurs qui travaillent maintenant, la durée des prestations et les rendez-vous de l’agenda. C’est une estimation : nous l’affichons toujours comme une fourchette, jamais comme une promesse.</p>
@@ -181,7 +190,42 @@ const faq = [
     <SalonReminder />
   </section>
 
+  <!-- the salon's website -->
+  <section id="site" class="scroll-mt-20 bg-paper" data-tf>
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Votre site.</span><span class="block text-green-deep">À votre nom.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-muted">Un vrai site pour votre salon, sans rien construire : il se remplit tout seul avec vos prestations, votre équipe, vos horaires et l’attente en direct.</p>
+          <a href="https://site.amplifygrowthstudio.com/salon-demo" target="_blank" rel="noopener" class="mt-6 inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold ring-1 ring-line hover:bg-bg">Voir un exemple</a>
+        </div>
+        <div class="tf relative pb-[10%] pe-[10%]" style="--d:150ms">
+          <Device src="/img/salon-site.webp" alt={tt('Le site du salon : la photo du salon, la réservation et l’attente en direct')} w={1200} h={878} />
+          <div class="absolute bottom-0 end-0 w-[30%]"><div class="tf-float" style="--d:900ms"><Device kind="phone" src="/img/salon-site-phone.webp" alt={tt('Le site du salon sur téléphone')} w={600} h={1298} class="rotate-[3deg]" /></div></div>
+        </div>
+      </div>
+      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        {site.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 90}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="tf mt-10 text-muted">Module en option : <b class="text-navy">+149 DH HT / mois</b>, avec n’importe quelle formule.</p>
+    </div>
+  </section>
+
   <SecurityTrace sector="salon" />
+
+  <!-- spas and instituts have their own page -->
+  <section class="px-4 pb-14 sm:px-6 md:pb-20" data-tf>
+    <a href={ROUTES.spas[lang]} class="tf group mx-auto flex max-w-6xl flex-wrap items-center gap-4 rounded-[2rem] bg-paper p-6 ring-1 ring-line transition hover:ring-green/60 md:p-8">
+      <span class="grid size-12 shrink-0 place-items-center rounded-2xl bg-navy text-green"><Icon name="leaf" class="size-6" /></span>
+      <span class="min-w-0 flex-1"><span class="display block text-2xl leading-tight sm:text-3xl">Un spa, un hammam ou un institut ?</span><span class="mt-1 block text-muted">Les cabines, le hammam et les machines dans l’agenda : une page rien que pour vous.</span></span>
+      <span class="font-semibold text-green-deep">Voir la page spas <span class="inline-block transition-transform group-hover:translate-x-1 rtl:-scale-x-100">→</span></span>
+    </a>
+  </section>
 
   <!-- the cost of no-shows, with the salon's own numbers -->
   <section id="calcul" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-noshow data-tf>
@@ -224,9 +268,9 @@ const faq = [
       ))}
     </div>
     <div class="tf mt-10 rounded-[2rem] border-2 border-dashed border-line p-6 md:p-8" style="--d:120ms">
-      <p class="font-semibold"><span class="me-2 rounded-full bg-[#F5B301] px-2.5 py-1 text-sm font-bold text-navy">Bientôt</span>Les modules en option</p>
+      <p class="font-semibold">Les modules en option</p>
       <div class="mt-5 grid gap-5 md:grid-cols-3">
-        {soon.map(([n, pr, x]) => <div><p class="font-semibold">{n} <span class="text-sm font-normal text-muted">{pr}</span></p><p class="mt-1 text-sm text-muted">{x}</p></div>)}
+        {soon.map(([n, pr, x, live]) => <div><p class="mb-2">{live ? <span class="rounded-full bg-green px-2.5 py-1 text-sm font-bold text-navy">Disponible</span> : <span class="rounded-full bg-[#F5B301] px-2.5 py-1 text-sm font-bold text-navy">Bientôt</span>}</p><p class="font-semibold">{n} <span class="text-sm font-normal text-muted">{pr}</span></p><p class="mt-1 text-sm text-muted">{x}</p></div>)}
       </div>
     </div>
   </section>

@@ -50,7 +50,7 @@ const LABEL: Record<Lang, string> = { fr: 'FR', ar: 'عربي', en: 'EN' };
 const SHORT: Record<Lang, string> = { fr: 'FR', ar: 'ع', en: 'EN' };
 const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 'English' };
 // salons cannot sign up alone yet: the button goes to the demo request
-const trial = page === 'salons' ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
+const trial = page === 'salons' || page === 'spas' ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
 ---
 <header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/95 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 md:gap-4 sm:px-6 2xl:max-w-7xl">
@@ -74,7 +74,7 @@ const trial = page === 'salons' ? '#demo' : signupUrl(lang, page === 'profit' ? 
           </div>
           <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 border-t border-line px-6 py-3 text-sm 2xl:max-w-7xl">
             <span class="text-muted">{tt('Deux systèmes qui se parlent, et un marketing qui remplit la salle.')}</span>
-            <span class="flex items-center gap-5"><a href={ROUTES.salons[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Coiffeurs et barbiers')} →</a><a href={ROUTES.restaurants[lang]} class="font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} →</a></span>
+            <span class="flex items-center gap-5"><a href={ROUTES.salons[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Coiffeurs et barbiers')} →</a><a href={ROUTES.spas[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Spas et instituts')} →</a><a href={ROUTES.restaurants[lang]} class="font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} →</a></span>
           </div>
         </div>
       </div>
@@ -155,7 +155,8 @@ const trial = page === 'salons' ? '#demo' : signupUrl(lang, page === 'profit' ? 
             ))}
           </div>
           <a href={ROUTES.restaurants[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:mt-1 md:px-6">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <a href={ROUTES.salons[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Coiffeurs et barbiers')}<span class="text-green-deep" aria-hidden="true">→</span></a>
+          <a href={ROUTES.salons[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Coiffeurs et barbiers')}<span class="text-green-deep" aria-hidden="true">→</span></a>
+          <a href={ROUTES.spas[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Spas et instituts')}<span class="text-green-deep" aria-hidden="true">→</span></a>
         </details>
         <details class="group/m border-b border-line">
           <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl md:py-5 md:text-[1.9rem] [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
