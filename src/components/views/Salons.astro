@@ -8,6 +8,9 @@ import Device from '../Device.astro';
 import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
+import CountUp from '../CountUp.astro';
+import SalonNouba from '../SalonNouba.astro';
+import SalonReminder from '../SalonReminder.astro';
 import { tr } from '../../i18n/t';
 import type { Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -59,61 +62,91 @@ const faq = [
 ];
 ---
 <Base lang={lang} page="salons" title={tt('Amplify pour les salons de coiffure | Amplify Growth Studio')} description={tt('L’attente en direct, la réservation en ligne, les rappels WhatsApp et la fiche cliente avec les formules couleur. Pour les coiffeurs, barbiers et instituts à Rabat et Salé.')} wa={wa}>
-  <!-- hero -->
-  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.1fr] lg:gap-12">
-    <div>
-      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Coiffeurs, barbiers et instituts</p>
-      <h1 class="mt-5 text-[clamp(2.8rem,5.8vw,5rem)]">
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Moins d’attente.</span></span>
-        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">Moins d’oublis.</span></span>
-      </h1>
-      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">Vos clients voient l’attente de chez eux, prennent leur place ou réservent en ligne, et reçoivent un rappel la veille. Vous gardez la main sur tout, depuis le téléphone du salon.</p>
-      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
-        <WaButton text={wa} label={tt('Demander une démo')} where="salons-hero" class="px-7 text-lg" />
-        <a href="#tarifs" class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold ring-1 ring-line hover:bg-paper">Voir les tarifs</a>
+  <!-- hero: the agenda lands, the client's phone drops, and the salon's day starts to move -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:pb-14">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Coiffeurs, barbiers et instituts</p>
+        <h1 class="mt-5 text-[clamp(2.8rem,5.8vw,5rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Moins d’attente.</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">Moins d’oublis.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">Vos clients voient l’attente de chez eux, prennent leur place ou réservent en ligne, et reçoivent un rappel la veille. Vous gardez la main sur tout, depuis le téléphone du salon.</p>
+        <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Demander une démo')} where="salons-hero" class="px-7 text-lg" />
+          <a href="#tarifs" class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold ring-1 ring-line hover:bg-paper">Voir les tarifs</a>
+        </div>
+      </div>
+
+      <div class="relative isolate aspect-[4/3.7] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.7] lg:rounded-[2.25rem]">
+        <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+        <!-- the agenda lands -->
+        <span class="shadow-in absolute start-[8%] top-[72%] h-6 w-[66%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+        <div class="land absolute start-[4%] top-[18%] w-[74%]" style="--d:300ms">
+          <Device src="/img/salon-agenda.webp" alt={tt('L’agenda du salon : une colonne par coiffeuse, les rendez-vous de la journée')} w={1200} h={878} eager>
+            <span class="glow absolute left-[80%] top-[9.5%] h-[5.5%] w-[17.5%] rounded-md ring-[3px] ring-green" style="--d:1500ms" aria-hidden="true"></span>
+          </Device>
+        </div>
+        <!-- the client's phone drops -->
+        <span class="shadow-in absolute bottom-[3%] end-[6%] h-4 w-[22%] rounded-[50%] bg-black/55 blur-lg" style="--d:900ms" aria-hidden="true"></span>
+        <div class="drop absolute bottom-[4%] end-[5%] w-[25%]" style="--d:650ms"><Device kind="phone" src="/img/salon-nouba-phone.webp" alt={tt('Sur le téléphone du client : l’attente en direct et le bouton pour prendre sa place')} w={600} h={1298} eager class="rotate-[3deg]" /></div>
+        <!-- the day moves: reminder, wait, a client takes a place -->
+        <div class="absolute start-[5%] top-[4%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-green text-navy sm:size-7"><Icon name="bell" class="size-3.5 sm:size-4" /></span>Rappel envoyé à Leila</p></div></div>
+        <div class="absolute end-[4%] top-[14%] z-10 sm:top-[6%]"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:3300ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>Attente estimée : 20 à 30 min</p></div></div>
+        <div class="absolute bottom-[6%] start-[5%] z-10"><div class="tf-float" style="--d:2400ms"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-green text-navy sm:size-7"><Icon name="check" class="size-3.5 sm:size-4" /></span>Maryam a pris sa place</p></div></div>
       </div>
     </div>
-    <div class="relative pb-[10%] pe-[12%]">
-      <Device src="/img/salon-agenda.webp" alt={tt('L’agenda du salon : une colonne par coiffeuse, les rendez-vous de la journée')} w={1200} h={878} eager />
-      <div class="absolute bottom-0 end-0 w-[30%]"><Device kind="phone" src="/img/salon-nouba-phone.webp" alt={tt('Sur le téléphone du client : l’attente en direct et le bouton pour prendre sa place')} w={600} h={1298} class="rotate-[3deg]" /></div>
+
+    <!-- three facts -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['149', 'DH HT par mois, dès la formule Nouba'], ['14', 'jours gratuits, sans engagement'], ['0', 'application à installer pour vos clients']].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
+        ))}
+      </ul>
     </div>
   </section>
 
   <!-- today / with Amplify -->
-  <section class="mx-auto max-w-6xl px-4 pb-14 sm:px-6 md:pb-24">
+  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24" data-tf>
     <div class="grid gap-4 md:grid-cols-2">
-      <div class="rounded-[2rem] bg-paper p-7 ring-1 ring-line">
+      <div class="tf rounded-[2rem] bg-paper p-7 ring-1 ring-line">
         <p class="text-sm font-semibold text-muted">Aujourd’hui</p>
-        <ul class="mt-4 space-y-3">{today.map(x => <li class="flex gap-3 text-lg"><span class="mt-2 size-2 shrink-0 rounded-full bg-muted/50"></span>{x}</li>)}</ul>
+        <ul class="mt-4 space-y-3">{today.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${200 + i * 90}ms`}><span class="mt-2 size-2 shrink-0 rounded-full bg-muted/50"></span>{x}</li>)}</ul>
       </div>
-      <div class="rounded-[2rem] bg-navy p-7 text-white">
+      <div class="tf rounded-[2rem] bg-navy p-7 text-white" style="--d:120ms">
         <p class="text-sm font-semibold text-green">Avec Amplify</p>
-        <ul class="mt-4 space-y-3">{withUs.map(x => <li class="flex gap-3 text-lg"><span class="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}</ul>
+        <ul class="mt-4 space-y-3">{withUs.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${320 + i * 90}ms`}><span class="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}</ul>
       </div>
     </div>
   </section>
 
   <!-- la Nouba -->
-  <section id="nouba" class="scroll-mt-20 bg-navy text-white">
+  <section id="nouba" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
       <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-        <div>
+        <div class="tf-x">
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La Nouba.</span><span class="block text-green">L’attente en direct.</span></h2>
           <p class="mt-5 max-w-md text-lg text-white/70">« Nouba », c’est votre tour. Pour les barbiers et tous les salons où l’on vient sans rendez-vous : plus personne n’attend une heure sur une chaise.</p>
         </div>
-        <div class="relative pb-[12%] pe-[10%]">
+        <div class="tf relative pb-[12%] pe-[10%]" style="--d:150ms">
           <Device src="/img/salon-nouba-ecran.webp" alt={tt('L’écran du salon : qui est au fauteuil, qui passe ensuite')} w={1200} h={878} />
-          <div class="absolute bottom-0 end-0 w-[30%]"><Device kind="phone" src="/img/salon-nouba-phone.webp" alt="" w={600} h={1298} class="rotate-[3deg]" /></div>
+          <div class="absolute bottom-0 end-0 w-[30%]"><div class="tf-float"><Device kind="phone" src="/img/salon-nouba-phone.webp" alt="" w={600} h={1298} class="rotate-[3deg]" /></div></div>
         </div>
       </div>
       <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {nouba.map(([i, h, x]) => (
-          <li>
+        {nouba.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 90}ms`}>
             <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
             <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
           </li>
         ))}
       </ul>
+      <SalonNouba />
       <div class="mt-14 grid gap-8 lg:grid-cols-[1.1fr_1fr] lg:items-center">
         <Device src="/img/salon-nouba-suivant.webp" alt={tt('Pour le salon : chaque coiffeur et son bouton Suivant, la file avec l’attente estimée')} w={1200} h={878} />
         <div>
@@ -125,30 +158,31 @@ const faq = [
   </section>
 
   <!-- l'agenda -->
-  <section id="agenda" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24">
+  <section id="agenda" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
     <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-      <div>
+      <div class="tf-x">
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Les rendez-vous.</span><span class="block text-green-deep">Sans cahier, sans oubli.</span></h2>
         <p class="mt-5 max-w-md text-lg text-muted">Vos clientes réservent seules, à toute heure, uniquement sur les horaires vraiment libres. Vous voyez tout dans l’agenda de l’équipe.</p>
       </div>
-      <div class="relative pb-[10%] ps-[12%]">
+      <div class="tf relative pb-[10%] ps-[12%]" style="--d:150ms">
         <Device src="/img/salon-fiche.webp" alt={tt('La fiche cliente : visites, allergie, formule couleur et historique')} w={1200} h={878} />
-        <div class="absolute bottom-0 start-0 w-[30%]"><Device kind="phone" src="/img/salon-rdv-phone.webp" alt={tt('La réservation en ligne : le jour et l’heure, uniquement les horaires libres')} w={600} h={1298} class="-rotate-[3deg]" /></div>
+        <div class="absolute bottom-0 start-0 w-[30%]"><div class="tf-float" style="--d:900ms"><Device kind="phone" src="/img/salon-rdv-phone.webp" alt={tt('La réservation en ligne : le jour et l’heure, uniquement les horaires libres')} w={600} h={1298} class="-rotate-[3deg]" /></div></div>
       </div>
     </div>
     <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-      {agenda.map(([i, h, x]) => (
-        <li>
+      {agenda.map(([i, h, x], k) => (
+        <li class="tf" style={`--d:${k * 90}ms`}>
           <span class="grid size-11 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i} class="size-5" /></span>
           <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
         </li>
       ))}
     </ul>
+    <SalonReminder />
   </section>
 
   <!-- the cost of no-shows, with the salon's own numbers -->
-  <section id="calcul" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-noshow>
-    <div class="mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+  <section id="calcul" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-noshow data-tf>
+    <div class="tf-x mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1fr_1fr] lg:items-center">
       <div>
         <h2 class="text-[2.2rem] leading-[0.95] sm:text-[2.8rem]"><span class="block">Combien vous coûtent</span><span class="block text-green-deep">les rendez-vous manqués ?</span></h2>
         <p class="mt-4 text-muted">Faites le calcul avec vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
@@ -171,13 +205,13 @@ const faq = [
   </section>
 
   <!-- prices -->
-  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24">
-    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trois formules.</span><span class="block text-green-deep">Selon votre façon de travailler.</span></h2>
+  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trois formules.</span><span class="block text-green-deep">Selon votre façon de travailler.</span></h2>
     <p class="mt-4 max-w-2xl text-lg text-muted">Prix HT par mois. Coiffeurs illimités. 14 jours gratuits, sans engagement. Nous installons tout pour vous.</p>
     <div class="mt-10 grid gap-4 lg:grid-cols-3">
-      {plans.map(p => (
-        <div class={`relative flex flex-col rounded-[2rem] p-7 ${p.featured ? 'bg-navy text-white shadow-[0_30px_60px_-30px_rgba(0,30,62,.6)] lg:-my-3' : 'bg-paper ring-1 ring-line'}`}>
-          {p.featured && <span class="absolute -top-3 start-7 rounded-full bg-green px-3 py-1 text-sm font-bold text-navy">{tt('Le plus complet')}</span>}
+      {plans.map((p, k) => (
+        <div style={`--d:${k * 110}ms`} class={`tf relative flex flex-col rounded-[2rem] p-7 ${p.featured ? 'bg-navy text-white shadow-[0_30px_60px_-30px_rgba(0,30,62,.6)] lg:-my-3' : 'bg-paper ring-1 ring-line'}`}>
+          {p.featured && <span class="tf-ping absolute -top-3 start-7 rounded-full bg-green px-3 py-1 text-sm font-bold text-navy">{tt('Le plus complet')}</span>}
           <p class="display text-4xl">{p.name}</p>
           <p class={`mt-1 ${p.featured ? 'text-white/70' : 'text-muted'}`}>{p.for}</p>
           <p class="mt-6"><span class={`display text-6xl ${p.featured ? 'text-green' : ''}`} dir="ltr">{p.price}</span> <span class={p.featured ? 'text-white/60' : 'text-muted'}>DH HT / mois</span></p>
@@ -186,7 +220,7 @@ const faq = [
         </div>
       ))}
     </div>
-    <div class="mt-10 rounded-[2rem] border-2 border-dashed border-line p-6 md:p-8">
+    <div class="tf mt-10 rounded-[2rem] border-2 border-dashed border-line p-6 md:p-8" style="--d:120ms">
       <p class="font-semibold"><span class="me-2 rounded-full bg-[#F5B301] px-2.5 py-1 text-sm font-bold text-navy">Bientôt</span>Les modules en option</p>
       <div class="mt-5 grid gap-5 md:grid-cols-3">
         {soon.map(([n, pr, x]) => <div><p class="font-semibold">{n} <span class="text-sm font-normal text-muted">{pr}</span></p><p class="mt-1 text-sm text-muted">{x}</p></div>)}
@@ -197,25 +231,47 @@ const faq = [
   <Faq lang={lang} items={faq} wa={wa} />
 
   <!-- final -->
-  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24">
-    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
       <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
       <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Voyez-le avec votre salon.</span><span class="block text-green">En 15 minutes.</span></h2>
       <p class="mt-5 max-w-xl text-lg text-white/75">Écrivez-nous sur WhatsApp. Nous passons au salon, nous mettons vos prestations et votre équipe, et vous essayez 14 jours gratuitement.</p>
       <div class="mt-8"><WaButton text={wa} label={tt('Demander une démo')} where="salons-final" class="px-8 text-lg" /></div>
     </div>
   </section>
+  <CountUp />
 </Base>
 
 <script>
   // the no-show calculator: the salon's own numbers, nothing is sent
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // sections reveal as they scroll in
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];
+  if (still || !('IntersectionObserver' in window)) roots.forEach((r) => r.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
+    roots.forEach((r) => io.observe(r));
+  }
   document.querySelectorAll<HTMLElement>('[data-noshow]').forEach((root) => {
     const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);
     const out = root.querySelector<HTMLElement>('.ns-out')!;
     const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ');
+    let shown = -1, raf = 0;
+    const show = (n: number) => {
+      if (still || shown < 0) { shown = n; out.textContent = fmt(n); return; }
+      cancelAnimationFrame(raf);
+      const from = shown, t0 = performance.now();
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / 450); shown = from + (n - from) * (1 - Math.pow(1 - k, 3));
+        out.textContent = fmt(shown); if (k < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
     const run = () => {
       root.querySelectorAll<HTMLElement>('.ns-v').forEach(v => { v.textContent = String(val(v.dataset.for!)); });
-      out.textContent = fmt(val('rdv') * 4.3 * (val('taux') / 100) * val('prix'));
+      show(val('rdv') * 4.3 * (val('taux') / 100) * val('prix'));
     };
     root.querySelectorAll('.ns-r').forEach(r => r.addEventListener('input', run));
     run();

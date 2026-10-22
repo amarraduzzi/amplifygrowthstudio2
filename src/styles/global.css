@@ -699,3 +699,43 @@ x-notr { display: contents; }
   .tf-icon { transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
   a:hover > .tf-icon { transform: rotate(-8deg) scale(1.12); }
 }
+
+/* Salons page: the hero scene, the live queue (la Nouba) and the reminder of the day before */
+.sl-scene { background: radial-gradient(60% 55% at 78% 6%, rgb(5 185 98 / .38), transparent 70%), radial-gradient(55% 55% at 6% 100%, rgb(10 63 122 / .9), transparent 70%), linear-gradient(160deg, #00356A, #001E3E 62%); }
+.sl-scene::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(rgb(255 255 255 / .1) 1px, transparent 1.5px); background-size: 22px 22px; -webkit-mask-image: linear-gradient(to bottom, #000, transparent 85%); mask-image: linear-gradient(to bottom, #000, transparent 85%); }
+.sl-blob { position: absolute; z-index: -10; border-radius: 999px; filter: blur(48px); opacity: .45; pointer-events: none; }
+.sl-blob-a { width: 46%; aspect-ratio: 1; top: -14%; inset-inline-end: -10%; background: #05B962; }
+.sl-blob-b { width: 40%; aspect-ratio: 1; bottom: -12%; inset-inline-start: -8%; background: #0A3F7A; }
+.sl-q { transform: translateY(calc(var(--i, 0) * 3.25rem)); }
+.sl-st { background-color: #FFF1CC; color: #7A5600; }
+.sl-r[data-state="ok"] .sl-st { background-color: rgb(5 185 98 / .16); color: var(--color-green-deep); }
+.sl-r[data-state="free"] { background-image: repeating-linear-gradient(135deg, var(--color-chalk) 0 8px, #E4E9E5 8px 16px); }
+.sl-r[data-state="free"] .sl-rn { text-decoration: line-through; color: var(--color-muted); }
+.sl-r[data-state="free"] .sl-st { background-color: var(--color-paper); color: var(--color-muted); box-shadow: inset 0 0 0 1px var(--color-line); }
+.sl-next.pressed { background-color: var(--color-green); color: var(--color-navy); transform: scale(.94); }
+.sl-send.pressed { transform: scale(.94); box-shadow: 0 0 0 6px rgb(5 185 98 / .28); }
+.sl-bump { transform-origin: left center; }
+[dir="rtl"] .sl-bump { transform-origin: right center; }
+@media (prefers-reduced-motion: no-preference) {
+  .sl-blob-a { animation: sl-drift 14s ease-in-out infinite alternate; }
+  .sl-blob-b { animation: sl-drift 18s ease-in-out infinite alternate-reverse; }
+  @keyframes sl-drift { to { transform: translate(-10%, 12%) scale(1.18); } }
+  .sl-live { animation: sl-pulse 1.8s ease-out infinite; }
+  @keyframes sl-pulse { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 70%, 100% { box-shadow: 0 0 0 9px rgb(5 185 98 / 0); } }
+  .sl-q { transition: transform .6s cubic-bezier(.2,.8,.2,1), opacity .5s; }
+  .sl-q.sl-enter { opacity: 0; transform: translateY(calc(var(--i, 0) * 3.25rem + 1.2rem)); }
+  .sl-q.sl-leave { opacity: 0; transform: translateY(calc(var(--i, 0) * 3.25rem)) translateX(-1.6rem); }
+  [dir="rtl"] .sl-q.sl-leave { transform: translateY(calc(var(--i, 0) * 3.25rem)) translateX(1.6rem); }
+  .sl-fill { transition: transform .3s linear; }
+  .sl-next, .sl-send { transition: transform .2s, background-color .2s, box-shadow .2s, color .2s; }
+  .sl-swap { animation: sl-swap .45s ease-out; }
+  @keyframes sl-swap { from { opacity: 0; transform: translateY(8px); } }
+  .sl-bump { animation: sl-bump .5s ease-out; }
+  @keyframes sl-bump { 40% { transform: scale(1.06); } }
+  .sl-r { transition: background-color .4s, box-shadow .3s; }
+  .sl-st { transition: background-color .3s, color .3s; }
+  .sl-pop { animation: sl-pop .5s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes sl-pop { from { transform: scale(.7); opacity: .4; } }
+  .sl-bin { animation: sl-bin .4s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes sl-bin { from { opacity: 0; transform: translateY(10px) scale(.96); } }
+}
