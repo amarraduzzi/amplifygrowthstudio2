@@ -1509,4 +1509,9 @@ export const dictAr: Record<string, string> = {
   "Un acompte pour les longues prestations : balayage, mariée, soins. Pas payé à temps, le créneau se libère.": "عربون للخدمات الطويلة: البالاياج، العروس، العلاجات. إذا لم يُدفع في الوقت، يتحرر الموعد.",
   "Le site du salon : la photo du salon, la réservation et l’attente en direct": "موقع الصالون: صورة الصالون، الحجز والانتظار المباشر",
   "Le site du salon sur téléphone": "موقع الصالون على الهاتف",
+  "Caisse et fidélité": "الصندوق والوفاء",
+  "Spa complet : 399 DH HT / mois": "السبا الكامل: 399 درهم دون ضريبة / شهريا",
+  "Agenda, caisse et fidélité, et acompte ensemble, au lieu de 447 DH.": "الأجندة والصندوق والوفاء والعربون معا، بدل 447 درهم.",
+  "Caisse et fidélité : tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.": "الصندوق والوفاء: التذاكر، إغلاق اليوم، المنتجات والمخزون، العمولات، الباقات، بطاقات الهدايا، الطوابع وآراء الزبونات.",
+  "Tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.": "التذاكر، إغلاق اليوم، المنتجات والمخزون، العمولات، الباقات، بطاقات الهدايا، الطوابع وآراء الزبونات.",
 };

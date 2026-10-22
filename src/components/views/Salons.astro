@@ -57,6 +57,7 @@ const plans = [
 const soon = [
   ['Site du salon', '+149 DH HT / mois', 'Vos prestations, vos prix, vos photos avant/après (avec l’accord de vos clientes), vos avis Google et le bouton de réservation.', 'live'],
   ['WhatsApp automatique', '+99 DH HT / mois', 'Les rappels et « bientôt votre tour » partent tout seuls. Les messages WhatsApp sont facturés à prix coûtant.'],
+  ['Caisse et fidélité', '+149 DH HT / mois', 'Tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.', 'live'],
   ['Acompte', '+99 DH HT / mois', 'Un acompte pour les longues prestations : balayage, mariée, soins. Pas payé à temps, le créneau se libère.', 'live'],
 ];
 const faq = [
@@ -269,7 +270,7 @@ const faq = [
     </div>
     <div class="tf mt-10 rounded-[2rem] border-2 border-dashed border-line p-6 md:p-8" style="--d:120ms">
       <p class="font-semibold">Les modules en option</p>
-      <div class="mt-5 grid gap-5 md:grid-cols-3">
+      <div class="mt-5 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
         {soon.map(([n, pr, x, live]) => <div><p class="mb-2">{live ? <span class="rounded-full bg-green px-2.5 py-1 text-sm font-bold text-navy">Disponible</span> : <span class="rounded-full bg-[#F5B301] px-2.5 py-1 text-sm font-bold text-navy">Bientôt</span>}</p><p class="font-semibold">{n} <span class="text-sm font-normal text-muted">{pr}</span></p><p class="mt-1 text-sm text-muted">{x}</p></div>)}
       </div>
     </div>

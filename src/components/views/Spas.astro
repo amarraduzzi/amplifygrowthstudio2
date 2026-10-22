@@ -198,11 +198,13 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
           {['Agenda par praticienne et par cabine', 'Réservation en ligne avec votre QR', 'Rappels de la veille et confirmation de la cliente', 'Fiche cliente, allergies et historique'].map(x => <li class="flex gap-2.5"><span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span>{x}</li>)}
         </ul>
         <div class="mt-6 grid gap-2 rounded-2xl bg-white/[0.07] p-4 text-sm">
+          <p class="flex justify-between gap-3"><span>Caisse et fidélité</span><span class="text-white/70">+149 DH HT / mois</span></p>
           <p class="flex justify-between gap-3"><span>Acompte</span><span class="text-white/70">+99 DH HT / mois</span></p>
           <p class="flex justify-between gap-3"><span>Site du spa</span><span class="text-white/70">+149 DH HT / mois</span></p>
           <p class="flex justify-between gap-3"><span>WhatsApp automatique</span><span class="text-white/70">Bientôt</span></p>
         </div>
-        <p class="mt-4 text-sm text-white/60">La caisse, les forfaits, les cartes cadeaux et les commissions : nous vous les montrons pendant la démo.</p>
+        <p class="mt-4 rounded-2xl bg-green/15 p-4 text-sm"><span class="font-semibold text-green">Spa complet : 399 DH HT / mois</span><br /><span class="text-white/70">Agenda, caisse et fidélité, et acompte ensemble, au lieu de 447 DH.</span></p>
+        <p class="mt-3 text-sm text-white/60">Caisse et fidélité : tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.</p>
         <WaButton text={`${tt('Bonjour, la formule qui m’intéresse :')} Agenda (spa).`} label={tt('Demander une démo')} where="spas-plan" tone="green" class="mt-7 w-full justify-center" />
       </div>
     </div>

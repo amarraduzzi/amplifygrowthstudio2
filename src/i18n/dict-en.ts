@@ -1509,4 +1509,9 @@ export const dictEn: Record<string, string> = {
   "Un acompte pour les longues prestations : balayage, mariée, soins. Pas payé à temps, le créneau se libère.": "A deposit for long services: balayage, bride, treatments. Not paid in time, the time is released.",
   "Le site du salon : la photo du salon, la réservation et l’attente en direct": "The salon’s website: the salon’s photo, booking and the live wait",
   "Le site du salon sur téléphone": "The salon’s website on a phone",
+  "Caisse et fidélité": "Till and loyalty",
+  "Spa complet : 399 DH HT / mois": "Complete spa: 399 DH excl. VAT / month",
+  "Agenda, caisse et fidélité, et acompte ensemble, au lieu de 447 DH.": "Agenda, till and loyalty, and deposit together, instead of 447 DH.",
+  "Caisse et fidélité : tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.": "Till and loyalty: receipts, end-of-day closing, products and stock, commissions, packages, gift cards, stamps and client reviews.",
+  "Tickets, clôture du jour, produits et stock, commissions, forfaits, cartes cadeaux, tampons et avis clientes.": "Receipts, end-of-day closing, products and stock, commissions, packages, gift cards, stamps and client reviews.",
 };
