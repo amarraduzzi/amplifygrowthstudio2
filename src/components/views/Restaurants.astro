@@ -6,6 +6,7 @@ import Base from '../../layouts/Base.astro';
 import RsDiag from '../RsDiag.astro';
 import Proof from '../Proof.astro';
 import Faq from '../Faq.astro';
+import SecurityTrace from '../SecurityTrace.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import { copy } from '../../i18n';
@@ -103,6 +104,8 @@ const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'meti
       ))}
     </div>
   </section>
+
+  <SecurityTrace sector="horeca" />
 
   <Proof h2={old.proof.h2} ph={old.proof.ph} />
 
