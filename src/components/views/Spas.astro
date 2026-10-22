@@ -178,8 +178,15 @@ const demo = 'https://menu.amplifygrowthstudio.com/spa-demo?rdv';
   <!-- the till of the spa -->
   <section id="caisse" class="scroll-mt-20 bg-paper" data-tf>
     <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24">
-      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La caisse du spa.</span><span class="block text-green-deep">Tout ce qui se vend à l’accueil.</span></h2>
-      <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">La caisse reconnaît la cliente à son numéro : ses forfaits, son solde, ses tampons. Le même système que l’agenda, sans double saisie.</p>
+      <div class="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La caisse du spa.</span><span class="block text-green-deep">Tout ce qui se vend à l’accueil.</span></h2>
+          <p class="mt-4 max-w-md text-lg text-muted">La caisse reconnaît la cliente à son numéro : ses forfaits, son solde, ses tampons. Le même système que l’agenda, sans double saisie.</p>
+        </div>
+        <div class="tf overflow-hidden rounded-[2rem] ring-1 ring-line" style="--d:150ms">
+          <img src="/img/photos/spa-accueil-1376.webp" srcset="/img/photos/spa-accueil-800.webp 800w, /img/photos/spa-accueil-1376.webp 1376w" sizes="(min-width: 1024px) 560px, 100vw" alt="" width="1376" height="768" loading="lazy" class="aspect-[4/3] w-full object-cover object-right" />
+        </div>
+      </div>
       <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {till.map(([i, h, x], k) => (
           <li class="tf rounded-[1.75rem] bg-chalk p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
