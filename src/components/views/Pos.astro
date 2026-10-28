@@ -17,6 +17,7 @@ import InstallInfo from '../InstallInfo.astro';
 import Faq from '../Faq.astro';
 import ProductFinal from '../ProductFinal.astro';
 import QrOrders from '../QrOrders.astro';
+import Cagnotte from '../Cagnotte.astro';
 import OwnChannels from '../OwnChannels.astro';
 import OwnerLive from '../OwnerLive.astro';
 import OwnSite from '../OwnSite.astro';
@@ -115,6 +116,19 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 
   <!-- QR ordering: the guest scans, the till receives (and the till-less option) -->
   <QrOrders lang={lang} variant="pos" />
+
+  <!-- loyalty: the cagnotte in dirhams, and the ardoise -->
+  <section id="fidelite" class="scroll-mt-24 border-t border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="max-w-2xl">
+        <p class="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-sm font-bold text-green-deep"><Icon name="gift" class="size-4" />{tt('Fidélité')}</p>
+        <h2 class="mt-4 text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]"><span class="block">{tt('Une cagnotte en dirhams.')}</span><span class="block text-green-deep">{tt('Votre menu, c’est la liste des cadeaux.')}</span></h2>
+        <p class="mt-5 text-lg text-muted">{tt('Pas de points à expliquer. Chaque addition met 3, 5 ou 10 % dans la cagnotte du client, et il voit sur son téléphone ce qu’elle lui offre déjà. Il la dépense à sa prochaine visite, en un tap à la caisse.')}</p>
+        <p class="mt-4 text-sm text-muted">{tt('Essayez : bougez l’addition, choisissez le pourcentage, puis « Encaisser ».')}</p>
+      </div>
+      <div class="mt-10"><Cagnotte /></div>
+    </div>
+  </section>
 
   <PhotoBand name="pos-service" alt="Le passe d’un restaurant au moment du rush, un serveur emporte les assiettes" kicker="12:30" title="Le rush. La caisse suit." w={1600} h={686} class="pt-24" pos="60% 50%" />
 
