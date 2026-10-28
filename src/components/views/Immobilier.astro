@@ -66,6 +66,27 @@ const blocks = [
       ['Convention de collaboration', 'La convention entre agences est prête en PDF.'],
     ] },
 ];
+// block "droit marocain": only what the product does, stated as such (no promise of legal compliance)
+const laws = [
+  ['Loi 18-00', 'Copropriété', 'Lots, tantièmes, appels de fonds répartis au centime, votes de l’assemblée par tantièmes et procès-verbal en PDF.'],
+  ['Loi 67-12', 'Révision du loyer', 'Pas de révision avant trois ans après le début du bail ou la dernière hausse. L’application plafonne la hausse à 8 % pour l’habitation et 10 % pour les autres usages, et propose le montant.'],
+  ['Loi 107-12', 'Vente sur plan (VEFA)', '5 % au contrat préliminaire, des paiements par étape du chantier, 20 % à la remise des clés. L’application refuse plus de 5 % au départ et moins de 20 % aux clés.'],
+  ['Loi 09-08', 'Données personnelles', 'Un client n’est recommandé à une autre agence qu’avec son accord. Sur vos pages publiques, jamais d’adresse exacte, de propriétaire ni de notes internes.'],
+  ['Article 145 du CGI', 'Factures', 'Numéro continu et sans trou, ICE, IF, RC, taxe professionnelle, HT, TVA et TTC, montant en lettres. Une facture émise ne se modifie plus.'],
+];
+// block "WhatsApp partout": one click opens WhatsApp with the message written, nothing is sent automatically
+const uses = [
+  ['Loyers en retard', 'Une relance polie au locataire, avec le mois et le montant.'],
+  ['Visites', 'Un rappel envoyé au client avant le rendez-vous.'],
+  ['Biens pour vos clients', 'Les biens qui correspondent à sa recherche, avec les liens, dans sa langue.'],
+  ['Propriétaires', 'Le relevé du mois ou le point sur leur bien, avec un lien privé pour suivre le reste.'],
+  ['Copropriétaires', 'Relance des impayés, convocation à l’assemblée, annonces de la résidence.'],
+  ['Acheteurs', 'Un appel de fonds ou un rappel d’échéance, ou tous les acheteurs prévenus d’un coup à chaque étape du chantier.'],
+];
+const bubbles = [
+  'Bonjour Mme Alami, le loyer d’octobre (4 500 DH) n’est pas encore arrivé. Merci de le régler dès que possible.',
+  'Bonjour, l’assemblée générale de la résidence Les Orangers aura lieu le 15 novembre à 18 h. Votre présence compte.',
+];
 ---
 <Base lang={lang} page="immobilier" title={tt('Amplify Immobilier : le logiciel de l’immobilier au Maroc | Amplify Growth Studio')} description={tt('Un seul système pour les agences, la gestion locative, les syndics et les promoteurs. En français et en arabe, sur téléphone et ordinateur, avec WhatsApp.')} wa={wa}>
   <!-- hero -->
@@ -139,6 +160,61 @@ const blocks = [
       </div>
     </section>
   ))}
+
+  <!-- Moroccan law: what the product does, not a legal promise -->
+  <section id="droit" class="scroll-mt-20 px-4 py-4 sm:px-6 md:py-5">
+    <div class="mx-auto max-w-6xl rounded-[2.5rem] bg-navy p-6 text-white md:p-12">
+      <div class="grid gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
+        <div>
+          <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold text-white ring-1 ring-white/15"><span class="size-2 rounded-full bg-green"></span>{tt('Droit marocain')}</p>
+          <h3 class="display mt-5 text-[2.4rem] leading-[0.95] sm:text-5xl"><span class="block">{tt('Les règles marocaines,')}</span><span class="block text-green">{tt('déjà dans l’outil.')}</span></h3>
+        </div>
+        <p class="max-w-xl text-lg text-white/75 lg:pt-12">{tt('Les lois de votre métier sont prises en compte dans l’application. Elle vous aide à les suivre, elle ne remplace pas votre notaire ni votre juriste.')}</p>
+      </div>
+      <ul class="mt-10 border-t border-white/15">
+        {laws.map(([law, t, x]) => (
+          <li class="grid gap-2 border-b border-white/15 py-5 md:grid-cols-[13rem_1fr] md:gap-8">
+            <p class="font-semibold text-green">{tt(law)}</p>
+            <div><p class="font-semibold">{tt(t)}</p><p class="mt-1 max-w-2xl text-[0.95rem] leading-relaxed text-white/65">{tt(x)}</p></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- WhatsApp everywhere: one click, message ready, nothing sent automatically -->
+  <section id="whatsapp" class="scroll-mt-20 px-4 py-4 sm:px-6 md:py-5">
+    <div class="mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+      <div>
+        <p class="inline-flex items-center gap-2 rounded-full bg-chalk px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt('WhatsApp partout')}</p>
+        <h3 class="display mt-5 text-[2.4rem] leading-[0.95] sm:text-5xl"><span class="block">{tt('Un clic.')}</span><span class="block text-green-deep">{tt('Le message est prêt.')}</span></h3>
+        <p class="mt-5 max-w-xl text-lg text-muted">{tt('Relances, convocations, rapports et annonces : WhatsApp s’ouvre avec le message déjà écrit, en français, en arabe ou en anglais. Vous relisez, vous envoyez. Rien ne part sans vous.')}</p>
+        <ul class="mt-8 divide-y divide-line border-y border-line">
+          {uses.map(([t, x]) => (
+            <li class="grid gap-1 py-4 sm:grid-cols-[11rem_1fr] sm:gap-6">
+              <p class="font-semibold">{tt(t)}</p>
+              <p class="text-[0.95rem] leading-relaxed text-muted">{tt(x)}</p>
+            </li>
+          ))}
+        </ul>
+        <p class="mt-5 text-[0.95rem] font-semibold text-green-deep">{tt('Et vos visiteurs aussi : chaque page de bien a son bouton WhatsApp.')}</p>
+      </div>
+      <!-- two example messages drawn in CSS -->
+      <div class="self-start lg:mt-12" aria-hidden="true">
+        <div class="rounded-[1.75rem] bg-chalk p-5 ring-1 ring-line sm:p-6">
+          <div class="flex items-center justify-between gap-3">
+            <p class="text-sm font-semibold">{tt('Message prêt à envoyer')}</p>
+            <span class="rounded-full bg-paper px-3 py-1 text-xs font-semibold text-muted ring-1 ring-line">{tt('Exemple')}</span>
+          </div>
+          <div class="mt-5 space-y-3">
+            {bubbles.map((m) => (
+              <p class="max-w-[92%] rounded-2xl bg-green/15 px-4 py-3 text-[0.95rem] leading-relaxed ring-1 ring-green/20">{tt(m)}</p>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- final -->
   <section id="demo" class="scroll-mt-20 px-4 pb-14 pt-10 sm:px-6 md:pb-24 md:pt-16">
