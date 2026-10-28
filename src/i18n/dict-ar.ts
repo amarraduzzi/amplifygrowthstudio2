@@ -1825,4 +1825,5 @@ export const dictAr: Record<string, string> = {
   "Des sacs de farine livrés devant une boulangerie, la patronne vérifie le bon de livraison": "أكياس دقيق تُسلّم أمام مخبزة، وصاحبتها تراجع وصل التسليم",
   "Livraison": "التسليم",
   "La farine arrive. Le stock suit.": "يصل الدقيق. والمخزون يتبعه.",
+  "Le meilleur service, c’est celui qu’on ne voit pas. Pas de main levée, pas d’allergie répétée, pas de table oubliée.": "أفضل خدمة هي التي لا تراها. لا يد مرفوعة، لا حساسية تُعاد مرتين، ولا طاولة منسية.",
 };

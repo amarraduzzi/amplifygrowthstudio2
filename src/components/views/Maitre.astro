@@ -47,8 +47,8 @@ const formules = [
 ---
 <Base lang={lang} page="maitre" title={title} description={description} wa={wa} schema={schema}>
   <!-- HERO: the room at night; one table asks for the bill -->
-  <section class="relative isolate overflow-hidden bg-navy text-white">
-    <img src="/img/photos/mk-salle-pleine-1600.webp" srcset="/img/photos/mk-salle-pleine-800.webp 800w, /img/photos/mk-salle-pleine-1600.webp 1536w" sizes="100vw" alt="" width="1536" height="1024" class="absolute inset-0 -z-20 size-full object-cover opacity-30" />
+  <section class="relative isolate overflow-hidden bg-navy text-white" data-scrub>
+    <img src="/img/photos/mk-salle-pleine-1600.webp" srcset="/img/photos/mk-salle-pleine-800.webp 800w, /img/photos/mk-salle-pleine-1600.webp 1536w" sizes="100vw" alt="" width="1536" height="1024" class="mt-kb absolute inset-0 -z-20 size-full object-cover opacity-30" />
     <span class="absolute inset-0 -z-10 bg-[radial-gradient(70%_80%_at_80%_20%,rgba(124,92,255,.22),transparent_60%),linear-gradient(180deg,rgba(0,30,62,.55),#001E3E_85%)]" aria-hidden="true"></span>
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-20 pt-12 sm:px-6 md:pt-20 lg:grid-cols-[1fr_1.05fr]">
       <div>
@@ -64,18 +64,23 @@ const formules = [
         </div>
       </div>
       <div class="fade-up relative pb-[14%] pe-[12%]" style="--d:250ms">
-        <Device src="/img/maitre-salle.webp" alt={tt('La salle sur la caisse : chaque table avec son plat en cours, une table qui demande l’addition')} w={1200} h={878} eager />
-        <div class="absolute bottom-0 end-0 w-[32%]"><Device kind="phone" src="/img/maitre-service-phone.webp" alt={tt('Sur le téléphone du client : un serveur, de l’eau, l’addition')} w={600} h={1298} class="rotate-[3deg]" /></div>
+        <div class="mt-float"><Device src="/img/maitre-salle.webp" alt={tt('La salle sur la caisse : chaque table avec son plat en cours, une table qui demande l’addition')} w={1200} h={878} eager /></div>
+        <div class="mt-float2 absolute bottom-0 end-0 w-[32%]"><Device kind="phone" src="/img/maitre-service-phone.webp" alt={tt('Sur le téléphone du client : un serveur, de l’eau, l’addition')} w={600} h={1298} class="rotate-[3deg]" /></div>
         <span class="mt-ring pointer-events-none absolute start-[38%] top-[30%] grid size-14 place-items-center rounded-full" aria-hidden="true"></span>
       </div>
     </div>
-    <dl class="relative border-t border-white/10 bg-white/[0.03]">
+    <dl class="relative border-t border-white/10 bg-white/[0.03]" data-rv>
       <div class="mx-auto grid max-w-6xl gap-4 px-4 py-6 sm:grid-cols-3 sm:px-6">
         {[['6', tt('outils pour le service')], ['1', tt('option, sans engagement')], ['0', tt('application à installer pour vos clients')]].map(([n, l]) => (
-          <div class="flex items-center gap-4"><dt class="display text-5xl text-[#C9B8FF]">{n}</dt><dd class="text-sm leading-snug text-white/70">{l}</dd></div>
+          <div class="mt-fact flex items-center gap-4"><dt class="display text-5xl tabular-nums text-[#C9B8FF]" data-cnt={n}>{n}</dt><dd class="text-sm leading-snug text-white/70">{l}</dd></div>
         ))}
       </div>
     </dl>
+  </section>
+
+  <!-- INTERLUDE: the promise, word by word as you scroll -->
+  <section class="bg-[#0B1530] px-4 pt-16 text-white sm:px-6 md:pt-28">
+    <p class="mx-auto max-w-5xl text-[clamp(2rem,4.6vw,3.8rem)] font-semibold leading-[1.08] tracking-tight" data-scrub="words">{tt('Le meilleur service, c’est celui qu’on ne voit pas. Pas de main levée, pas d’allergie répétée, pas de table oubliée.').split(' ').map(w => <span class="word">{w} </span>)}</p>
   </section>
 
   <!-- THE DISCREET CALL: tap on the guest's phone, the table lights up -->
@@ -138,11 +143,11 @@ const formules = [
       <div>
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le rythme')}</span><span class="block text-[#C9B8FF]">{tt('de la soirée.')}</span></h2>
         <p class="mt-5 max-w-md text-lg text-white/70">{tt('Chaque table montre où elle en est et depuis quand : en cuisine, prête à servir, en attente du plat suivant, en train de manger. Celle qui attend trop change de couleur. Au-dessus de la salle, le résumé de la soirée.')}</p>
-        <ul class="mt-6 flex flex-wrap gap-2 text-sm font-semibold">
-          <li class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-[#F5B301]"></span>{tt('En cuisine')}</li>
-          <li class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-green"></span>{tt('Prêt à servir')}</li>
-          <li class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-[#7FB3FF]"></span>{tt('Attend la suite')}</li>
-          <li class="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-white/50"></span>{tt('Mange')}</li>
+        <ul class="mt-6 flex flex-wrap gap-2 text-sm font-semibold" data-rv>
+          <li class="rv flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-[#F5B301]"></span>{tt('En cuisine')}</li>
+          <li class="rv flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-green"></span>{tt('Prêt à servir')}</li>
+          <li class="rv flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-[#7FB3FF]"></span>{tt('Attend la suite')}</li>
+          <li class="rv flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5"><span class="size-2.5 rounded-full bg-white/50"></span>{tt('Mange')}</li>
         </ul>
       </div>
       <div class="rounded-[2rem] bg-white/[0.04] p-5 ring-1 ring-white/10 sm:p-6" data-rhythm>
@@ -197,12 +202,12 @@ const formules = [
   <!-- BEFORE SERVICE: the real screen -->
   <section class="bg-paper py-16 md:py-24">
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr]">
-      <Device src="/img/maitre-avant-service.webp" alt={tt('L’avant-service : couverts par demi-heure, ftour du soir, allergies et VIP')} w={1200} h={878} />
+      <div class="mt-slide" data-rv><Device src="/img/maitre-avant-service.webp" alt={tt('L’avant-service : couverts par demi-heure, ftour du soir, allergies et VIP')} w={1200} h={878} /></div>
       <div>
         <h2 class="text-[2.4rem] leading-[0.95] sm:text-[2.8rem] sm:leading-[0.92]"><span class="block">{tt('L’avant-service.')}</span><span class="block text-green-deep">{tt('Dix minutes qui changent la soirée.')}</span></h2>
         <p class="mt-5 text-lg text-muted">{tt('Avant d’ouvrir, l’équipe voit qui vient ce soir. Sur l’écran, ou imprimé sur l’imprimante à tickets.')}</p>
-        <ul class="mt-6 space-y-4">
-          {brief.map(([i, h, x]) => <li class="flex gap-3"><span class="grid size-10 shrink-0 place-items-center rounded-xl bg-mint text-green-deep"><Icon name={i} class="size-5" /></span><span><span class="block font-semibold">{h}</span><span class="block text-sm text-muted">{x}</span></span></li>)}
+        <ul class="mt-6 space-y-4" data-rv>
+          {brief.map(([i, h, x], k) => <li class="rv flex gap-3" style={`--d:${k * 120}ms`}><span class="grid size-10 shrink-0 place-items-center rounded-xl bg-mint text-green-deep"><Icon name={i} class="size-5" /></span><span><span class="block font-semibold">{h}</span><span class="block text-sm text-muted">{x}</span></span></li>)}
         </ul>
       </div>
     </div>
@@ -215,17 +220,17 @@ const formules = [
         <p class="flex items-center gap-2 font-bold text-green"><Icon name="shield" class="size-5" />{tt('L’acompte des grandes tables')}</p>
         <p class="display mt-4 text-4xl leading-[0.95] sm:text-[2.6rem]">{tt('Dès 8 personnes : 100 DH par personne.')}</p>
         <p class="mt-2 text-sm text-white/60">{tt('Exemple de règle : vous choisissez le nombre et le montant.')}</p>
-        <ol class="mt-6 space-y-3">
+        <ol class="mt-dep relative mt-6 space-y-3" data-scrub="steps"><span class="flow-y absolute start-[13px] top-2 bottom-2 w-0.5 rounded bg-green/60" aria-hidden="true"></span>
           {[tt('Reçu à la caisse : la réservation est confirmée'), tt('Le soir même : déduit de l’addition, ligne « Acompte »'), tt('Personne ne vient : remboursé ou gardé, avec le code d’un responsable'), tt('Compté dans la caisse et dans le Z du jour')].map((x, i) => (
-            <li class="flex items-start gap-3"><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-sm font-bold text-navy">{i + 1}</span><span class="pt-0.5">{x}</span></li>
+            <li class="step relative flex items-start gap-3"><span class="node grid size-7 shrink-0 place-items-center rounded-full bg-green text-sm font-bold text-navy transition-all duration-300">{i + 1}</span><span class="pt-0.5">{x}</span></li>
           ))}
         </ol>
       </div>
       <div class="rounded-[2rem] bg-white p-6 ring-1 ring-line sm:p-8">
         <p class="flex items-center gap-2 font-bold text-green-deep"><Icon name="book" class="size-5" />{tt('Les formules')}</p>
         <p class="display mt-4 text-4xl leading-[0.95] sm:text-[2.6rem]">{tt('Un menu fixe, réservé en ligne.')}</p>
-        <ul class="mt-6 space-y-4">
-          {formules.map(([i, h, x]) => <li class="flex gap-3"><span class="grid size-10 shrink-0 place-items-center rounded-xl bg-chalk text-navy"><Icon name={i} class="size-5" /></span><span><span class="block font-semibold">{h}</span><span class="block text-sm text-muted">{x}</span></span></li>)}
+        <ul class="mt-6 space-y-4" data-rv>
+          {formules.map(([i, h, x], k) => <li class="rv flex gap-3" style={`--d:${k * 140}ms`}><span class="grid size-10 shrink-0 place-items-center rounded-xl bg-chalk text-navy"><Icon name={i} class="size-5" /></span><span><span class="block font-semibold">{h}</span><span class="block text-sm text-muted">{x}</span></span></li>)}
         </ul>
         <p class="mt-5 text-sm text-muted">{tt('Chaque soir, la cuisine reçoit sa liste. À l’ouverture de la table, l’addition commence avec la formule, un choix par ligne.')}</p>
       </div>
@@ -233,7 +238,7 @@ const formules = [
   </section>
 
   <!-- NO-SHOW CALCULATOR -->
-  <section class="px-4 sm:px-6" data-noshow-maitre data-loc={loc}>
+  <section class="px-4 sm:px-6" data-noshow-maitre data-loc={loc} data-rv>
     <div class="relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-[#0B1530] px-6 py-12 text-white md:grid-cols-[1fr_1fr] md:px-12 md:py-16">
       <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_90%_40%,rgba(124,92,255,.3),transparent_70%)]" aria-hidden="true"></span>
       <div>
@@ -259,12 +264,12 @@ const formules = [
   <section id="prix" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-16 sm:px-6 md:py-24">
     <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une option.')}</span><span class="block text-green-deep">{tt('Pas un autre système.')}</span></h2>
     <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Maître s’ajoute à votre caisse Amplify POS, sur la formule Restaurant ou Contrôle. Vous l’activez quand la saison le demande, vous l’arrêtez d’un mois à l’autre.')}</p>
-    <div class="mt-10 grid gap-5 md:grid-cols-2">
+    <div class="mt-10 grid gap-5 md:grid-cols-2" data-rv data-price>
       {[[tt('Restaurant + Maître'), '349', '598', tt('La caisse complète du service à table, et Maître.')], [tt('Contrôle + Maître'), '499', '748', tt('La caisse, les marges réelles, le stock, et Maître.')]].map(([n, base, tot, x], i) => (
-        <div class={`rounded-[2rem] p-6 ring-1 sm:p-8 ${i ? 'bg-navy text-white ring-navy' : 'bg-white ring-line'}`}>
+        <div class={`rv rounded-[2rem] p-6 ring-1 sm:p-8 ${i ? 'bg-navy text-white ring-navy' : 'bg-white ring-line'}`} style={`--d:${i * 180}ms`}>
           <p class="font-bold">{n}</p>
-          <p class="mt-3 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr">{tot}</span><span class={`text-sm ${i ? 'text-white/60' : 'text-muted'}`}>{tt('DH HT / mois')}</span></p>
-          <p class={`mt-1 text-sm ${i ? 'text-white/60' : 'text-muted'}`} dir="auto">{base} + 249</p>
+          <p class="mt-3 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr" data-from={base} data-to={tot}>{tot}</span><span class={`text-sm ${i ? 'text-white/60' : 'text-muted'}`}>{tt('DH HT / mois')}</span></p>
+          <p class={`mt-1 text-sm ${i ? 'text-white/60' : 'text-muted'}`} dir="auto">{base} <span class="mt-plus inline-block rounded-full bg-[#7C5CFF] px-2 py-0.5 font-bold text-white">+ 249</span></p>
           <p class={`mt-4 ${i ? 'text-white/75' : 'text-muted'}`}>{x}</p>
         </div>
       ))}
@@ -279,6 +284,22 @@ const formules = [
 </Base>
 
 <style is:global>
+  .mt-kb { transform: translateY(calc(var(--p) * 50px)); scale: 1.1; animation: mt-kb 24s ease-in-out infinite alternate; }
+  @keyframes mt-kb { from { scale: 1.1; } to { scale: 1.2; } }
+  .mt-float { animation: mt-float 7s ease-in-out infinite; }
+  .mt-float2 { animation: mt-float 6s ease-in-out infinite reverse; }
+  @keyframes mt-float { 50% { transform: translateY(-10px); } }
+  .rv { transition: opacity .6s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1); transition-delay: var(--d, 0ms); }
+  .js [data-rv]:not(.in) .rv { opacity: 0; transform: translateY(18px); }
+  .mt-slide { transition: opacity .8s, transform 1s cubic-bezier(.2,.8,.2,1); }
+  .js .mt-slide[data-rv]:not(.in) { opacity: 0; transform: translateX(-40px) rotate(-1.5deg); }
+  [dir="rtl"] .js .mt-slide[data-rv]:not(.in), .js [dir="rtl"] .mt-slide[data-rv]:not(.in) { transform: translateX(40px) rotate(1.5deg); }
+  [data-price].in .mt-plus { animation: mt-plus .7s cubic-bezier(.3,1.6,.5,1) .5s both; }
+  @keyframes mt-plus { from { transform: scale(.2) translateY(-14px); opacity: 0; } }
+  .js .mt-dep .step:not(.on) .node { background: #1A3355; color: rgb(255 255 255 / .55); box-shadow: none; }
+  .js .mt-dep .step:not(.on) > span:last-child { opacity: .5; }
+  .mt-dep .step > span:last-child { transition: opacity .4s; }
+  @media (prefers-reduced-motion: reduce) { .mt-kb, .mt-float, .mt-float2, [data-price].in .mt-plus { animation: none; } .js [data-rv] .rv, .js .mt-slide[data-rv] { opacity: 1 !important; transform: none !important; } }
   .mt-ring { box-shadow: 0 0 0 0 rgb(124 92 255 / .7); animation: mt-ring 2.4s ease-out infinite 1.2s; }
   @keyframes mt-ring { 0% { box-shadow: 0 0 0 0 rgb(124 92 255 / .7); } 80%, 100% { box-shadow: 0 0 0 26px rgb(124 92 255 / 0); } }
   .mt-call.is-on { background: #7C5CFF; color: #fff; box-shadow: none; }
@@ -366,6 +387,25 @@ const formules = [
     io.observe(root);
   });
 
+  // 0. reveals: a block gets "in" once it is on screen; numbers count, prices add the 249
+  const countUp = (el: HTMLElement, from: number, to: number, ms = 900) => {
+    if (still) { el.textContent = String(to); return; }
+    const t0 = performance.now();
+    const tick = (t: number) => { const k = Math.min(1, (t - t0) / ms), e = 1 - Math.pow(1 - k, 3); el.textContent = String(Math.round(from + (to - from) * e)); if (k < 1) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  };
+  document.querySelectorAll<HTMLElement>('[data-rv]').forEach((root) => {
+    const go = () => {
+      root.classList.add('in');
+      root.querySelectorAll<HTMLElement>('[data-cnt]').forEach(el => countUp(el, 0, Number(el.dataset.cnt), 1100));
+      root.querySelectorAll<HTMLElement>('[data-to]').forEach(el => setTimeout(() => countUp(el, Number(el.dataset.from), Number(el.dataset.to), 1000), 650));
+      if (root.hasAttribute('data-noshow-maitre') && !still) root.dispatchEvent(new CustomEvent('mt-play'));
+    };
+    if (!('IntersectionObserver' in window)) { go(); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); go(); } }, { threshold: 0.3 });
+    io.observe(root);
+  });
+
   // 4. no-show calculator
   document.querySelectorAll<HTMLElement>('[data-noshow-maitre]').forEach((root) => {
     const loc = root.dataset.loc || 'fr-FR';
@@ -378,6 +418,12 @@ const formules = [
       o('loss').textContent = loss.toLocaleString(loc).replace(/[  ,]/g, ' ');
       o('x').textContent = tx.replace('{n}', (loss / 249).toLocaleString(loc, { maximumFractionDigits: 1 }));
     };
-    i('c').addEventListener('input', run); i('t').addEventListener('input', run); run();
+    let touched = false;
+    i('c').addEventListener('input', () => { touched = true; run(); }); i('t').addEventListener('input', () => { touched = true; run(); }); run();
+    // on view: the table grows from 2 to 8 guests, the loss climbs with it
+    root.addEventListener('mt-play', () => {
+      let c = 2; i('c').value = '2'; run();
+      const id = setInterval(() => { if (touched || c >= 8) { clearInterval(id); return; } c++; i('c').value = String(c); run(); }, 160);
+    });
   });
 </script>

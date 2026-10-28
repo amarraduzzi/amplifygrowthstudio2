@@ -1825,4 +1825,5 @@ export const dictEn: Record<string, string> = {
   "Des sacs de farine livrés devant une boulangerie, la patronne vérifie le bon de livraison": "Flour sacks delivered outside a bakery, the owner checks the delivery note",
   "Livraison": "Delivery",
   "La farine arrive. Le stock suit.": "The flour arrives. The stock follows.",
+  "Le meilleur service, c’est celui qu’on ne voit pas. Pas de main levée, pas d’allergie répétée, pas de table oubliée.": "The best service is the one you do not see. No raised hand, no allergy said twice, no forgotten table.",
 };
