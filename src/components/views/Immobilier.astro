@@ -3,6 +3,7 @@
 // Step 1: hero with a stock grid drawn in CSS (no photos of people) and the demo request.
 import Base from '../../layouts/Base.astro';
 import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
 import { tr } from '../../i18n/t';
 import type { Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -12,6 +13,29 @@ const wa = tt('Bonjour, je voudrais une démo d’Amplify Immobilier.');
 // stock grid of the example building: floors from top to bottom, 6 lots per floor (f = libre, r = réservé, s = vendu)
 const floors: [number, string][] = [[4, 'fsfrff'], [3, 'sssfrs'], [2, 'ssrssf'], [1, 'ssssrs']];
 const look: Record<string, string> = { f: 'bg-green text-navy', r: 'bg-[#F5B301] text-navy', s: 'bg-white/10 text-white/60' };
+// who it is for: one block per profession, 6 plain-language benefits each (not the whole module list)
+const blocks = [
+  { id: 'agences', dark: false, kicker: 'Agences immobilières', h: ['Chaque lead suivi.', 'Chaque bien en ligne.'], lead: 'Vente et location : biens, mandats, clients, visites et ventes dans un seul outil, sur téléphone comme au bureau.',
+    wa: 'Bonjour, je suis une agence immobilière et je voudrais une démo d’Amplify Immobilier.',
+    items: [
+      ['Biens et mandats', 'Vos biens avec leurs photos, et leurs mandats. Vous voyez ceux qui arrivent à échéance avant qu’ils expirent.'],
+      ['Les bons biens aux bons clients', 'Un bien arrive : les clients qui le cherchent apparaissent, et vous leur écrivez sur WhatsApp en un clic.'],
+      ['Annonces prêtes à copier', 'Un titre, un texte et des photos pour Mubawab, Avito et les autres portails. Vous copiez, vous publiez.'],
+      ['Visites et rapport propriétaire', 'Vos visites dans l’agenda de la semaine, et pour chaque bien un rapport à remettre au propriétaire : visites, offres, état du mandat.'],
+      ['Ventes et commissions', 'Chaque vente suivie jusqu’à la commission, avec le partage quand un confrère ou un apporteur est dans l’affaire.'],
+      ['Votre propre site', 'Votre agence en ligne, à votre adresse, avec un formulaire qui crée le contact et la tâche de rappel tout seul.'],
+    ] },
+  { id: 'location', dark: true, kicker: 'Gestion locative', h: ['Les loyers rentrent.', 'Le propriétaire est informé.'], lead: 'Baux, loyers, quittances et relevés, avec WhatsApp pour relancer les locataires et informer les propriétaires.',
+    wa: 'Bonjour, je fais de la gestion locative et je voudrais une démo d’Amplify Immobilier.',
+    items: [
+      ['Loyers suivis', 'Chaque mois, une ligne par locataire : payé, à payer ou en retard. La relance part sur WhatsApp en un clic.'],
+      ['Quittances', 'Une quittance en français ou en arabe pour chaque mois payé, à imprimer ou à envoyer au locataire.'],
+      ['Révision du loyer', 'L’application montre quand une révision est possible et de combien, selon la loi 67-12, et prépare le message au locataire.'],
+      ['État des lieux', 'Entrée et sortie sur téléphone ou tablette, avec photos par pièce et signatures à l’écran, puis en PDF.'],
+      ['Le propriétaire informé', 'Un relevé chaque mois : loyers reçus, honoraires, réparations. Et un lien privé pour suivre ses biens, en français, arabe, anglais ou néerlandais.'],
+      ['Courte durée', 'Un calendrier par bien avec vos réservations Airbnb et Booking, et un lien iCal pour bloquer vos dates sur les deux.'],
+    ] },
+];
 ---
 <Base lang={lang} page="immobilier" title={tt('Amplify Immobilier : le logiciel de l’immobilier au Maroc | Amplify Growth Studio')} description={tt('Un seul système pour les agences, la gestion locative, les syndics et les promoteurs. En français et en arabe, sur téléphone et ordinateur, avec WhatsApp.')} wa={wa}>
   <!-- hero -->
@@ -60,8 +84,34 @@ const look: Record<string, string> = { f: 'bg-green text-navy', r: 'bg-[#F5B301]
     </div>
   </section>
 
+  <!-- who it is for -->
+  <section id="pour-qui" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-6 sm:px-6 md:pb-10">
+    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Chaque métier,</span><span class="block text-green-deep">ses propres outils.</span></h2>
+    <p class="mt-4 max-w-2xl text-lg text-muted">Un seul système, avec ce qu’il faut pour chaque activité.</p>
+  </section>
+  {blocks.map((b) => (
+    <section id={b.id} class="scroll-mt-20 px-4 py-4 sm:px-6 md:py-5">
+      <div class={`mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] p-6 md:p-12 lg:grid-cols-[0.85fr_1.15fr] ${b.dark ? 'bg-navy text-white' : 'bg-paper ring-1 ring-line'}`}>
+        <div>
+          <p class={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold ${b.dark ? 'bg-white/10 text-white ring-1 ring-white/15' : 'bg-chalk ring-1 ring-line'}`}><span class="size-2 rounded-full bg-green"></span>{b.kicker}</p>
+          <h3 class="display mt-5 text-[2.4rem] leading-[0.95] sm:text-5xl"><span class="block">{b.h[0]}</span><span class={`block ${b.dark ? 'text-green' : 'text-green-deep'}`}>{b.h[1]}</span></h3>
+          <p class={`mt-5 max-w-md text-lg ${b.dark ? 'text-white/75' : 'text-muted'}`}>{b.lead}</p>
+          <WaButton text={b.wa} label={tt('Demander une démo')} where={`immobilier-${b.id}`} class="mt-7 px-7 text-lg" />
+        </div>
+        <ul class="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+          {b.items.map(([t, x]) => (
+            <li class="flex gap-3">
+              <span class={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full ${b.dark ? 'bg-green text-navy' : 'bg-green/15 text-green-deep'}`}><Icon name="check" class="size-4" /></span>
+              <div><p class="font-semibold">{t}</p><p class={`mt-1 text-[0.95rem] leading-relaxed ${b.dark ? 'text-white/65' : 'text-muted'}`}>{x}</p></div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
+
   <!-- final -->
-  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24">
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 pt-10 sm:px-6 md:pb-24 md:pt-16">
     <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
       <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Voyez Amplify Immobilier</span><span class="block text-green">avec votre activité.</span></h2>
       <p class="mt-5 max-w-xl text-lg text-white/75">Écrivez-nous sur WhatsApp et dites-nous si vous êtes une agence, un syndic ou un promoteur. Nous vous faisons la démonstration.</p>
