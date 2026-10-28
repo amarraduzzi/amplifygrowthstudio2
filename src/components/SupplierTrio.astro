@@ -1,0 +1,108 @@
+---
+// Suppliers in order, in three cards that light up one after the other: the supplier sheet (ICE, RIB, his
+// products with the agreed price and the star of the usual supplier), the purchase order made from what the
+// plan is missing, and the "situation fournisseurs" of the month with a period you can switch.
+// Demo supplier and figures.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const periods = { week: [4200, 1950, 0, 6150], month: [2250, 11400, 9000, 4650], last: [0, 9800, 7550, 2250] } as const;
+---
+<div class="st grid gap-5 md:grid-cols-3" data-trio data-periods={JSON.stringify(periods)}>
+  <!-- the sheet -->
+  <article class="st-card rounded-[1.75rem] bg-white p-5 shadow-[0_30px_60px_-35px_rgba(0,30,62,0.45)] ring-1 ring-line" style="--i:0">
+    <p class="flex items-center gap-2 text-sm font-bold text-green-deep"><Icon name="briefcase" class="size-4" />{tt('La fiche fournisseur')}</p>
+    <p class="display mt-3 text-3xl">{tt('Moulin Atlas')}</p>
+    <dl class="mt-3 space-y-1.5 text-sm">
+      <div class="flex justify-between gap-3"><dt class="text-muted">ICE</dt><dd class="font-semibold tabular-nums" dir="ltr">001234567000089</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-muted">RIB</dt><dd class="font-semibold tabular-nums" dir="ltr">011 780 …1234 21</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-muted">{tt('Paiement')}</dt><dd class="font-semibold">{tt('30 jours, virement')}</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-muted">{tt('Livre')}</dt><dd class="font-semibold">{tt('lun., jeu.')}</dd></div>
+    </dl>
+    <ul class="mt-4 space-y-1.5 border-t border-line pt-3 text-sm">
+      <li class="flex items-center gap-2"><span class="st-star text-[#F5B301]" aria-label={tt('Fournisseur habituel')}>★</span><span class="flex-1 font-semibold">{tt('Farine T55')}</span><span class="tabular-nums" dir="ltr">210 DH</span><span class="text-xs text-muted">/ {tt('sac 25 kg')}</span></li>
+      <li class="flex items-center gap-2"><span class="st-star text-[#F5B301]">★</span><span class="flex-1 font-semibold">{tt('Semoule fine')}</span><span class="tabular-nums" dir="ltr">185 DH</span><span class="text-xs text-muted">/ {tt('sac 25 kg')}</span></li>
+      <li class="flex items-center gap-2"><span class="text-line">★</span><span class="flex-1 font-semibold">{tt('Sucre')}</span><span class="tabular-nums" dir="ltr">7 DH</span><span class="text-xs text-muted">/ kg</span></li>
+    </ul>
+    <p class="mt-3 text-xs text-muted">{tt('L’étoile : le fournisseur habituel. Les bons de commande partent chez lui, au prix convenu.')}</p>
+  </article>
+
+  <!-- the purchase order -->
+  <article class="st-card rounded-[1.75rem] bg-white p-5 shadow-[0_30px_60px_-35px_rgba(0,30,62,0.45)] ring-1 ring-line" style="--i:1">
+    <p class="flex items-center gap-2 text-sm font-bold text-green-deep"><Icon name="box" class="size-4" />{tt('Le bon de commande')}</p>
+    <div class="mt-3 flex items-baseline justify-between gap-3"><p class="display text-3xl" dir="ltr">BC-0042</p><span class="rounded-full bg-[#F5B301]/20 px-2.5 py-0.5 text-xs font-bold text-[#8A5A00]">{tt('Brouillon')}</span></div>
+    <p class="mt-1 text-sm text-muted">{tt('Fait depuis le planning de demain')}</p>
+    <ul class="mt-3 space-y-1.5 font-mono text-[0.8rem]">
+      <li class="st-line flex justify-between gap-3" style="--j:0"><span>{tt('Farine T55')} <span class="text-muted">(FAR-25)</span></span><span dir="ltr">2 × 210</span></li>
+      <li class="st-line flex justify-between gap-3" style="--j:1"><span>{tt('Semoule fine')}</span><span dir="ltr">1 × 185</span></li>
+      <li class="st-line flex justify-between gap-3 border-t border-dashed border-navy/30 pt-1.5 font-bold" style="--j:2"><span>{tt('Total')}</span><span dir="ltr">605 DH</span></li>
+    </ul>
+    <div class="mt-4 flex flex-wrap gap-2">
+      <span class="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-chalk px-3 text-sm font-semibold ring-1 ring-line">{tt('Imprimer / PDF')}</span>
+      <span class="inline-flex min-h-9 items-center gap-1.5 rounded-full bg-green px-3 text-sm font-bold text-navy"><Icon name="phone" class="size-3.5" />WhatsApp</span>
+    </div>
+    <p class="mt-3 text-xs text-muted">{tt('À la réception, vous cochez ce qui est arrivé : le stock monte, les prix suivent.')}</p>
+  </article>
+
+  <!-- the situation -->
+  <article class="st-card rounded-[1.75rem] bg-navy p-5 text-white shadow-[0_40px_70px_-35px_rgba(0,30,62,0.7)]" style="--i:2">
+    <p class="flex items-center gap-2 text-sm font-bold text-green"><Icon name="chart" class="size-4" />{tt('Situation fournisseurs')}</p>
+    <div class="mt-3 flex rounded-full bg-white/10 p-1 text-xs font-bold" role="group" aria-label={tt('Période')}>
+      <button type="button" class="st-p flex-1 rounded-full px-2 py-1.5" data-p="week">{tt('Semaine')}</button>
+      <button type="button" class="st-p is-on flex-1 rounded-full px-2 py-1.5" data-p="month">{tt('Ce mois')}</button>
+      <button type="button" class="st-p flex-1 rounded-full px-2 py-1.5" data-p="last">{tt('Mois dernier')}</button>
+    </div>
+    <dl class="mt-4 space-y-2 text-sm">
+      <div class="flex justify-between gap-3"><dt class="text-white/60">{tt('Solde début')}</dt><dd class="font-semibold tabular-nums" dir="ltr"><span data-v="0">2 250</span> DH</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-white/60">{tt('Achats')}</dt><dd class="font-semibold tabular-nums" dir="ltr">+ <span data-v="1">11 400</span> DH</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-white/60">{tt('Payé et avoirs')}</dt><dd class="font-semibold tabular-nums text-green" dir="ltr">− <span data-v="2">9 000</span> DH</dd></div>
+    </dl>
+    <div class="mt-3 rounded-2xl bg-white px-4 py-3 text-navy">
+      <span class="block text-xs font-semibold text-muted">{tt('Reste dû en fin de période')}</span>
+      <span class="display text-4xl tabular-nums" dir="ltr"><span data-v="3">4 650</span> DH</span>
+    </div>
+    <p class="mt-3 text-xs text-white/60">{tt('Par produit, par livraison, commandé contre reçu. À imprimer ou en Excel pour le comptable.')}</p>
+  </article>
+</div>
+
+<style is:global>
+  .st-p { color: rgb(255 255 255 / .7); transition: background-color .25s, color .25s; }
+  .st-p.is-on { background: var(--color-green); color: var(--color-navy); }
+  .st-card { transition: opacity .6s, transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * .25s); }
+  .js .st:not(.in) .st-card { opacity: 0; transform: translateY(24px); }
+  .st-line { transition: opacity .4s, transform .5s; transition-delay: calc(var(--j) * .25s + .9s); }
+  .js .st:not(.in) .st-line { opacity: 0; transform: translateX(-8px); }
+  .st-star { display: inline-block; }
+  .st.in .st-star { animation: st-star .6s cubic-bezier(.3,1.6,.5,1) .6s both; }
+  @keyframes st-star { from { transform: scale(.3) rotate(-40deg); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .js .st .st-card, .js .st .st-line { opacity: 1 !important; transform: none !important; transition: none !important; } .st.in .st-star { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-trio]').forEach((root) => {
+    const P = JSON.parse(root.dataset.periods!) as Record<string, number[]>;
+    const loc = document.documentElement.lang === 'en' ? 'en-US' : 'fr-FR';
+    const fmt = (n: number) => Math.round(n).toLocaleString(loc).replace(/[  ,]/g, ' ');
+    const cells = [...root.querySelectorAll<HTMLElement>('[data-v]')];
+    let cur = P.month;
+    const go = (to: number[]) => {
+      const from = cur; cur = to;
+      if (still) { cells.forEach((c, i) => (c.textContent = fmt(to[i]))); return; }
+      const t0 = performance.now();
+      const tick = (t: number) => {
+        const k = Math.min(1, (t - t0) / 600), e = 1 - Math.pow(1 - k, 3);
+        cells.forEach((c, i) => (c.textContent = fmt(from[i] + (to[i] - from[i]) * e)));
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    root.querySelectorAll<HTMLButtonElement>('.st-p').forEach(b => b.addEventListener('click', () => {
+      root.querySelectorAll('.st-p').forEach(x => x.classList.toggle('is-on', x === b)); go(P[b.dataset.p!]);
+    }));
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); root.classList.add('in'); } }, { threshold: 0.25 });
+      io.observe(root);
+    } else root.classList.add('in');
+  });
+</script>

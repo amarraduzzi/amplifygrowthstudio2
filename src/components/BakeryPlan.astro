@@ -1,0 +1,133 @@
+---
+// The evening plan, ticked off in the morning: pick a day (a weekday makes icing and cinnamon rolls, Saturday
+// pancakes and waffles), then "Fait" takes the ingredients out of the stock and "Pas fait" keeps the reason.
+// Nothing leaves the stock before "Fait". Plays itself once when it comes into view; every button works.
+// Illustration with demo figures: the real screen does the same with your recipes.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const days = {
+  tue: [
+    [tt('Pâte à cinnamon rolls'), '4 kg', 1.6],
+    [tt('Icing au cream cheese'), '2 kg', 0],
+    [tt('Croissants'), '60', 2.0],
+  ],
+  sat: [
+    [tt('Mix pancakes'), '6 kg', 3.2],
+    [tt('Pâte à gaufres'), '4 kg', 2.1],
+    [tt('Croissants'), '120', 4.0],
+  ],
+} as const;
+---
+<div class="bp relative isolate overflow-hidden rounded-[2rem] bg-navy p-5 text-white shadow-[0_50px_90px_-50px_rgba(0,30,62,0.8)] sm:p-7" data-plan>
+  <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_100%_0%,rgba(5,185,98,.22),transparent_70%)]" aria-hidden="true"></span>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p class="font-semibold"><span class="text-white/60">{tt('Planning du')}</span> <span data-dayname>{tt('mardi')}</span></p>
+    <div class="flex rounded-full bg-white/10 p-1 text-sm font-bold" role="group" aria-label={tt('Jour')}>
+      <button type="button" class="bp-day is-on rounded-full px-4 py-1.5" data-day="tue" data-label={tt('mardi')}>{tt('Mardi')}</button>
+      <button type="button" class="bp-day rounded-full px-4 py-1.5" data-day="sat" data-label={tt('samedi')}>{tt('Samedi')}</button>
+    </div>
+  </div>
+  <div class="mt-4 h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true"><span class="block h-full w-0 rounded-full bg-green transition-[width] duration-500" data-bar></span></div>
+  <p class="mt-2 text-sm text-white/60"><span data-done dir="ltr">0 / 3</span> {tt('faits')}</p>
+
+  {Object.entries(days).map(([k, rows]) => (
+    <ul class={`mt-4 space-y-2.5 ${k === 'tue' ? '' : 'hidden'}`} data-list={k}>
+      {rows.map(([name, qty, flour]) => (
+        <li class="bp-row rounded-2xl bg-white/[0.07] p-3 ring-1 ring-white/10 transition-colors duration-300" data-flour={flour}>
+          <div class="flex flex-wrap items-center gap-3">
+            <span class="bp-tick grid size-8 shrink-0 place-items-center rounded-full border-2 border-white/25 transition-all duration-300"><Icon name="check" class="size-4 opacity-0 transition-opacity" /></span>
+            <span class="min-w-0 flex-1"><span class="block font-semibold">{name}</span><span class="bp-sub block text-xs text-white/55">{tt('prévu')} <span dir="ltr">{qty}</span></span></span>
+            <button type="button" class="bp-ok min-h-10 rounded-full bg-green px-4 text-sm font-bold text-navy transition-transform active:scale-95">{tt('Fait')}</button>
+            <button type="button" class="bp-no min-h-10 rounded-full px-3 text-sm font-semibold text-white/70 ring-1 ring-white/20 hover:text-white">{tt('Pas fait')}</button>
+          </div>
+        </li>
+      ))}
+    </ul>
+  ))}
+
+  <div class="mt-5 grid grid-cols-2 gap-3">
+    <div class="rounded-2xl bg-white px-4 py-3 text-navy">
+      <span class="block text-xs font-semibold text-muted">{tt('Farine en stock')}</span>
+      <span class="display whitespace-nowrap text-2xl tabular-nums sm:text-3xl" dir="ltr"><span data-flour-out>25,0</span> kg</span>
+    </div>
+    <div class="flex items-center rounded-2xl bg-white/[0.07] px-4 py-3 text-sm leading-snug text-white/75 ring-1 ring-white/10" data-note>{tt('Rien ne sort du stock avant « Fait ».')}</div>
+  </div>
+  <p class="mt-4 text-xs text-white/45">{tt('Exemple avec des chiffres de démonstration.')}</p>
+  <span hidden data-t-skip>{tt('Pas fait : pas eu le temps')}</span>
+  <span hidden data-t-out>{tt('Les ingrédients sortent du stock maintenant.')}</span>
+  <span hidden data-t-end>{tt('Planning terminé. Rien d’autre n’a bougé.')}</span>
+</div>
+
+<style is:global>
+  .bp-day { color: rgb(255 255 255 / .7); transition: background-color .25s, color .25s; }
+  .bp-day.is-on { background: var(--color-green); color: var(--color-navy); }
+  .bp-row.is-done { background: rgb(5 185 98 / .16); }
+  .bp-row.is-done .bp-tick { background: var(--color-green); border-color: var(--color-green); color: var(--color-navy); transform: scale(1.08); }
+  .bp-row.is-done .bp-tick svg { opacity: 1; }
+  .bp-row.is-skip { opacity: .55; }
+  .bp-row.is-skip .bp-tick { border-style: dashed; }
+  .bp-row.is-done .bp-ok, .bp-row.is-done .bp-no, .bp-row.is-skip .bp-ok, .bp-row.is-skip .bp-no { display: none; }
+  .bp-pulse { animation: bp-pulse .6s ease-out; }
+  @keyframes bp-pulse { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 14px rgb(5 185 98 / 0); } }
+  .bp-flash { animation: bp-flash .7s ease-out; }
+  @keyframes bp-flash { 0% { color: #E5484D; transform: translateY(-2px); } }
+  @media (prefers-reduced-motion: reduce) { .bp-pulse, .bp-flash { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const comma = document.documentElement.lang !== 'en';
+  document.querySelectorAll<HTMLElement>('[data-plan]').forEach((root) => {
+    const txt = (s: string) => root.querySelector<HTMLElement>(s)!.textContent ?? '';
+    const bar = root.querySelector<HTMLElement>('[data-bar]')!;
+    const done = root.querySelector<HTMLElement>('[data-done]')!;
+    const flourOut = root.querySelector<HTMLElement>('[data-flour-out]')!;
+    const note = root.querySelector<HTMLElement>('[data-note]')!;
+    const name = root.querySelector<HTMLElement>('[data-dayname]')!;
+    const first = note.textContent;
+    let flour = 25, day = 'tue', touched = false;
+    const show = (x: number) => x.toFixed(1).replace('.', comma ? ',' : '.');
+    const rows = () => [...root.querySelectorAll<HTMLElement>(`[data-list="${day}"] .bp-row`)];
+    const count = () => {
+      const r = rows(), d = r.filter(x => x.classList.contains('is-done') || x.classList.contains('is-skip')).length;
+      done.textContent = `${r.filter(x => x.classList.contains('is-done')).length} / ${r.length}`;
+      bar.style.width = `${(d / r.length) * 100}%`;
+      if (d === r.length) note.textContent = txt('[data-t-end]');
+    };
+    const make = (row: HTMLElement) => {
+      row.classList.add('is-done'); row.querySelector('.bp-tick')!.classList.add('bp-pulse');
+      const f = Number(row.dataset.flour);
+      if (f > 0) { flour = Math.max(0, flour - f); flourOut.textContent = show(flour); flourOut.classList.remove('bp-flash'); void flourOut.offsetWidth; flourOut.classList.add('bp-flash'); }
+      note.textContent = txt('[data-t-out]');
+      count();
+    };
+    const skip = (row: HTMLElement) => {
+      row.classList.add('is-skip');
+      row.querySelector('.bp-sub')!.textContent = txt('[data-t-skip]');
+      note.textContent = first; count();
+    };
+    root.querySelectorAll<HTMLElement>('.bp-row').forEach((row) => {
+      row.querySelector('.bp-ok')!.addEventListener('click', () => { touched = true; make(row); });
+      row.querySelector('.bp-no')!.addEventListener('click', () => { touched = true; skip(row); });
+    });
+    root.querySelectorAll<HTMLButtonElement>('.bp-day').forEach((b) => b.addEventListener('click', () => {
+      touched = true; day = b.dataset.day!;
+      root.querySelectorAll('.bp-day').forEach(x => x.classList.toggle('is-on', x === b));
+      root.querySelectorAll<HTMLElement>('[data-list]').forEach(l => l.classList.toggle('hidden', l.dataset.list !== day));
+      name.textContent = b.dataset.label ?? '';
+      flour = 25; flourOut.textContent = show(flour); note.textContent = first; count();
+    }));
+    count();
+    // plays once: the first line is made, the second is not
+    if (!still && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return; io.disconnect();
+        const r = rows();
+        setTimeout(() => { if (!touched) make(r[0]); }, 1200);
+        setTimeout(() => { if (!touched) skip(r[1]); }, 2600);
+      }, { threshold: 0.5 });
+      io.observe(root);
+    }
+  });
+</script>

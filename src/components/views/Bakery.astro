@@ -11,6 +11,9 @@ import Device from '../Device.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import OfflineDemo from '../OfflineDemo.astro';
+import BakeryPlan from '../BakeryPlan.astro';
+import AllergenLabel from '../AllergenLabel.astro';
+import SupplierTrio from '../SupplierTrio.astro';
 import { CONTACT, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { tr, langOf } from '../../i18n/t';
@@ -22,7 +25,7 @@ const tt = tr(langOf(Astro.url));
 const all = copy(lang);
 const loc = lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-MA' : 'fr-FR';
 const title = tt('Logiciel de caisse et de production pour pâtisserie au Maroc | Amplify');
-const description = tt('Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, plan de production du jour, commandes traiteur avec acompte et facture, vente au poids. Pour pâtisseries, boulangeries et traiteurs au Maroc.');
+const description = tt('Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, planning de production coché le matin, allergènes et étiquettes de lot, fournisseurs et bons de commande, traiteur, vente au poids et scanner. Pour pâtisseries, boulangeries et traiteurs au Maroc.');
 // TPE (bank card terminal) link: set to true on the day the integration works and is tested.
 // While false, neither the TPE section nor its FAQ answer is rendered.
 const tpeLive = false;
@@ -32,7 +35,9 @@ const faq = [
   [tt('Je vends à la pièce et au kilo. Ça marche ?'), tt('Oui. Un produit vendu au poids a un prix au kilo : la caisse demande le poids lu sur la balance, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.')],
   [tt('Les commandes traiteur passent-elles dans la comptabilité ?'), tt('Oui. Quand la commande est payée, la facture est émise par le système de la caisse : numérotée, avec l’ICE de votre client si c’est une société, et comptée dans le Z du jour.')],
   [tt('J’ai un laboratoire et plusieurs boutiques.'), tt('Aujourd’hui, le laboratoire et la boutique partagent un même stock. Le transfert de marchandise entre un dépôt et plusieurs boutiques n’est pas encore disponible : parlons de votre organisation avant de commencer.')],
-  [tt('La caisse est-elle reliée à la balance ?'), tt('Pas automatiquement : la vendeuse tape le poids affiché sur la balance, en grammes ou en kilos. Le prix est calculé par la caisse.')],
+  [tt('La caisse est-elle reliée à la balance ?'), tt('Oui, si votre balance imprime des étiquettes à code-barres : la caisse scanne l’étiquette et lit le poids (ou le prix). Sans scanner, la vendeuse tape le poids affiché. L’option scanner s’active dans les réglages.')],
+  [tt('Comment sont gérés les allergènes ?'), tt('Vous les indiquez une fois par ingrédient. Ils sont calculés pour chaque préparation et chaque produit, même une recette dans une recette, et suivent chaque changement. Ils apparaissent sur le menu QR, sur la fiche à afficher en boutique et sur les étiquettes de production. Un produit pas encore vérifié n’est jamais affiché comme « sans allergène ».')],
+  [tt('Puis-je imprimer des étiquettes pour mes produits ?'), tt('Oui. Chaque fournée a son numéro de lot, sa date de fabrication et sa date limite. L’étiquette sort sur votre imprimante, en 4 formats, avec les allergènes en français et en arabe.')],
   [tt('Et si internet coupe en plein service ?'), tt('Vous continuez à prendre les commandes, imprimer les bons et encaisser. Tout est envoyé automatiquement au retour de la connexion.')],
   [tt('Quand la prévision de production est-elle fiable ?'), tt('Après une semaine de ventes en caisse. Avec un historique de ventes importé, elle est disponible tout de suite. Avant cela, vous saisissez vous-même la quantité.')],
   ...(tpeLive ? [[tt('Puis-je encaisser avec mon TPE ?'), tt('Oui : la caisse envoie le montant au terminal de votre banque, sans ressaisie.')]] : []),
@@ -60,9 +65,10 @@ const steps: [string, string][] = [
   [tt('Production'), tt('dans le plan de son jour')],
   [tt('Facture'), tt('avec l’ICE de la société')],
 ];
-const prodPts = [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les invendus du soir se voient en dirhams'), tt('Les pièces faites à l’avance et les préparations faites à la minute'), tt('Un bouton « 1 fournée » remplit la quantité d’une fournée entière'), tt('La prévision apparaît après une semaine de ventes en caisse, ou tout de suite avec votre historique de ventes importé')];
+const prodPts = [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les pièces faites à l’avance et les préparations faites à la minute'), tt('Un bouton « 1 fournée » remplit la quantité d’une fournée entière'), tt('La prévision apparaît après une semaine de ventes en caisse, ou tout de suite avec votre historique de ventes importé')];
 const catPts = [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')];
-const kgPts = [tt('Prix au kilo dans le menu'), tt('250 g, 500 g, 1 kg en un geste'), tt('Le ticket affiche « 0,450 kg »')];
+const kgPts = [tt('Prix au kilo dans le menu'), tt('250 g, 500 g, 1 kg en un geste'), tt('Le ticket affiche « 0,450 kg »'), tt('Option : le scanner lit l’étiquette de la balance et les codes-barres')];
+const planPts = [tt('Chaque préparation a ses jours : icing en semaine, pancakes le week-end'), tt('« Pas fait » garde la raison, le stock ne bouge pas'), tt('Ce qui manque devient un bon de commande, un par fournisseur'), tt('Le soir, ce qui reste : gardé pour demain ou jeté, en dirhams')];
 const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.split(' ');
 ---
 <Base lang={lang} page="bakery" title={title} description={description} wa={wa} schema={schema}>
@@ -175,7 +181,7 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une recette')}</span><span class="block text-green-deep">{tt('dans la recette.')}</span></h2>
         <p class="mt-5 max-w-md text-lg text-muted">{tt('La pâte feuilletée, la crème pâtissière ou la pâte sucrée sont des préparations : vous les décrivez une fois, puis vous les utilisez dans vos croissants, mille-feuilles et tartes. Quand le prix d’un ingrédient change, tout suit.')}</p>
         <ul class="mt-7 space-y-3">
-          {[tt('Coût par fournée et par pièce'), tt('Prix conseillé selon votre objectif de marge'), tt('Jusqu’à six niveaux : pâte, viennoiserie, plateau')].map(x => <li class="flex items-center gap-3 font-semibold"><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}
+          {[tt('Coût par fournée et par pièce'), tt('Prix conseillé selon votre objectif de marge'), tt('Jusqu’à six niveaux : pâte, viennoiserie, plateau'), tt('Trois listes : ingrédients, préparations, produits finis')].map(x => <li class="flex items-center gap-3 font-semibold"><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}
         </ul>
       </div>
       <div class="relative" data-bk>
@@ -225,6 +231,20 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     </div>
   </section>
 
+  <!-- THE EVENING PLAN: written the day before, ticked off in the morning; stock moves only on "Fait" -->
+  <section id="planning" class="scroll-mt-24 border-t border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <div>
+        <p class="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-sm font-bold text-green-deep"><Icon name="calendar" class="size-4" />{tt('Nouveau')}</p>
+        <h2 class="mt-4 text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]"><span class="block">{tt('Le plan du soir.')}</span><span class="block text-green-deep">{tt('Coché le matin.')}</span></h2>
+        <p class="mt-5 max-w-md text-lg text-muted">{tt('Le soir, vous écrivez ce qu’il faut faire demain, dans l’ordre. Le matin, l’équipe coche sur la tablette. Les ingrédients sortent du stock seulement quand c’est vraiment fait, avec la quantité réelle.')}</p>
+        <ul class="mt-6 space-y-3">{planPts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}</ul>
+        <p class="mt-6 text-sm text-muted">{tt('Essayez : choisissez le jour, touchez « Fait » ou « Pas fait ».')}</p>
+      </div>
+      <BakeryPlan />
+    </div>
+  </section>
+
   <!-- CATERING: from the quote to the invoice -->
   <section id="traiteur" class="border-y border-line bg-paper py-14 md:py-24">
     <div class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
@@ -248,6 +268,16 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     </div>
   </section>
 
+  <!-- ALLERGENS AND LABELS: computed from the ingredients, on the QR menu and on the batch label -->
+  <section id="allergenes" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 sm:px-6 md:py-24">
+    <div class="max-w-3xl">
+      <p class="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-sm font-bold text-green-deep"><Icon name="shield" class="size-4" />{tt('Nouveau')}</p>
+      <h2 class="mt-4 text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]"><span class="block">{tt('Allergènes calculés,')}</span><span class="block text-green-deep">{tt('jamais recopiés.')}</span></h2>
+      <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Vous les indiquez une fois sur l’ingrédient. Amplify les retrouve dans chaque préparation et chaque produit, même une recette dans une recette. Le client filtre le menu QR, la boutique affiche la fiche, chaque fournée sort avec son étiquette.')}</p>
+    </div>
+    <div class="mt-10"><AllergenLabel /></div>
+  </section>
+
   <!-- WEIGHT: try the till -->
   <section id="poids" class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-2">
     <div class="lg:order-2">
@@ -262,6 +292,9 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
         <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label={tt('Poids')}>
           {[250, 450, 500, 1000].map(g => <button type="button" class={`bk-chip min-h-10 rounded-full px-4 text-sm font-bold ring-1 ring-line transition-colors hover:ring-green ${g === 450 ? 'is-on' : ''}`} data-g={g}>{g === 1000 ? '1 kg' : `${g} g`}</button>)}
         </div>
+        <button type="button" class="mt-3 inline-flex min-h-10 items-center gap-2 rounded-full bg-navy px-4 text-sm font-bold text-white transition-transform active:scale-95" data-scan>
+          <svg viewBox="0 0 24 24" class="size-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8v8M11 8v8M14 8v8M17 8v8"/></svg>{tt('Scanner l’étiquette de la balance')}</button>
+        <p class="bk-code mt-2 hidden font-mono text-xs text-muted" dir="ltr" data-code>2 123456 00620 9</p>
         <div class="bk-ticket mt-4 rounded-xl bg-[#FAF8F3] p-4 font-mono text-[0.85rem] text-navy ring-1 ring-line" aria-live="polite">
           <p class="bk-tl font-bold" style="--i:0">{tt('Gâteaux secs')}</p>
           <p class="bk-tl mt-1 flex justify-between gap-3" style="--i:1" dir="ltr"><span data-w="kg">0,450 kg</span><span>× 120,00 DH/kg</span></p>
@@ -274,6 +307,19 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
 
   <!-- internet cut: the till keeps working (same live demo as the POS page) -->
   <OfflineDemo />
+
+  <!-- SUPPLIERS: the sheet, the order, the situation of the month -->
+  <section id="fournisseurs" class="scroll-mt-24 border-y border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <p class="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-sm font-bold text-green-deep"><Icon name="store" class="size-4" />{tt('Nouveau')}</p>
+        <h2 class="mt-4 text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]"><span class="block">{tt('Vos fournisseurs,')}</span><span class="block text-green-deep">{tt('enfin en ordre.')}</span></h2>
+        <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Une fiche par fournisseur avec ICE et RIB, les prix convenus par produit, les bons de commande qui partent sur WhatsApp, et chaque mois ce que vous avez acheté, payé et ce qu’il reste à payer.')}</p>
+      </div>
+      <div class="mt-10"><SupplierTrio /></div>
+      <p class="mt-4 text-xs text-muted">{tt('Exemple avec des chiffres de démonstration.')}</p>
+    </div>
+  </section>
 
   {tpeLive && (
     <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
@@ -370,6 +416,9 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
 
   /* weighing ticket */
   .bk-chip.is-on { background: var(--color-navy); color: #fff; box-shadow: none; }
+  .bk-code { position: relative; width: fit-content; padding: 2px 6px; background: #fff; border-radius: 4px; }
+  .bk-code.bk-scan::after { content: ''; position: absolute; inset-inline: -4px; top: 0; height: 2px; background: #E5484D; box-shadow: 0 0 8px #E5484D; animation: bk-scanline .6s ease-in-out; }
+  @keyframes bk-scanline { 0% { top: 0; } 50% { top: calc(100% - 2px); } 100% { top: 0; opacity: 0; } }
   .bk-chip:not(.is-on) { background: var(--color-chalk); }
   .bk-ticket.print .bk-tl { animation: print .35s steps(4, end) both; animation-delay: calc(var(--i) * .12s); }
   .bk-pop { animation: bk-pop .45s cubic-bezier(.3,1.6,.5,1); }
@@ -517,6 +566,20 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
       total.textContent = `${dec((grams / 1000) * 120)} DH`;
       if (!still) restart(ticket, 'print');
     }));
+    // the scale label: EAN-13 "2 + article + weight in grams", read by the scanner
+    const scan = root.querySelector<HTMLButtonElement>('[data-scan]');
+    const code = root.querySelector<HTMLElement>('[data-code]');
+    scan?.addEventListener('click', () => {
+      const grams = 620;
+      chips.forEach(x => x.classList.remove('is-on'));
+      code?.classList.remove('hidden');
+      if (code && !still) restart(code, 'bk-scan');
+      setTimeout(() => {
+        kg.textContent = `${dec(grams / 1000, 3)} kg`;
+        total.textContent = `${dec((grams / 1000) * 120)} DH`;
+        if (!still) restart(ticket, 'print');
+      }, still ? 0 : 650);
+    });
   });
 
   // 6. closing card: the light follows the mouse, the setup ticks itself off
