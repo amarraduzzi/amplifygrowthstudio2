@@ -99,6 +99,7 @@ const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'meti
             <ul class="mt-6 space-y-3">
               {it.pts.map((p, k) => <li class="ty-pt flex items-center gap-3 text-lg font-semibold" style={`--d:${150 + k * 140}ms`}><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{p}</li>)}
             </ul>
+            {it.k === 'snack' && <a href={`${ROUTES.pos[lang]}#snack`} class="mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-5 font-bold text-white transition-transform hover:-translate-y-0.5">{tt('Voir le mode snack')}</a>}
           </div>
         </div>
       ))}

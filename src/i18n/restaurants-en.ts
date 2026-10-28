@@ -60,7 +60,7 @@ export const rsEn = {
     items: [
       { k: 'resto', t: 'Restaurant', pts: ['Table ordering on the waiter’s phone', 'Automatic kitchen and bar tickets', 'Margin per dish and suggested price'] },
       { k: 'cafe', t: 'Café', pts: ['Fast checkout at the counter', 'Customer list and loyalty points', 'WhatsApp offers during quiet hours'] },
-      { k: 'snack', t: 'Snack bar and fast food', pts: ['Dine-in, takeaway, delivery and Glovo', 'Kitchen display with waiting time', 'Sold vs used stock difference'] },
+      { k: 'snack', t: 'Snack bar and fast food', pts: ['Dine-in, takeaway, delivery and Glovo', 'Orders on a first name, paid before the kitchen', 'Pickup screen on the TV', 'Kitchen display with waiting time', 'Sold vs used stock difference'] },
       { k: 'the', t: 'Tea room and pastry shop', pts: ['QR menu with photos, in three languages', 'Set menus and extras calculated automatically', 'At the top of Google Maps'] },
     ],
   },

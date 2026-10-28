@@ -1811,4 +1811,7 @@ export const dictEn: Record<string, string> = {
   "Commande QR pas payée : elle expire toute seule": "Unpaid QR order: it expires on its own",
   "L’écran de retrait sur n’importe quelle télé, en français et en arabe": "The pickup screen on any TV, in French and Arabic",
   "Le mode snack s’active à l’installation, par notre équipe. Les restaurants avec service à table gardent leur caisse comme avant.": "Snack mode is switched on by our team at installation. Restaurants with table service keep their till as before.",
+  "Voir le mode snack": "See snack mode",
+  "Avec ça ?": "With that?",
+  "Avant de commander, le panier propose ce qui manque : une boisson, un dessert ou un accompagnement.": "Before ordering, the cart suggests what is missing: a drink, a dessert or a side.",
 };

@@ -1811,4 +1811,7 @@ export const dictAr: Record<string, string> = {
   "Commande QR pas payée : elle expire toute seule": "طلب QR غير مدفوع: يلغى وحده",
   "L’écran de retrait sur n’importe quelle télé, en français et en arabe": "شاشة الاستلام على أي تلفاز، بالفرنسية والعربية",
   "Le mode snack s’active à l’installation, par notre équipe. Les restaurants avec service à table gardent leur caisse comme avant.": "يُفعّل فريقنا وضع السناك عند التركيب. والمطاعم ذات الخدمة على الطاولة تحتفظ بكاشيرها كما كان.",
+  "Voir le mode snack": "شاهد وضع السناك",
+  "Avec ça ?": "مع هذا؟",
+  "Avant de commander, le panier propose ce qui manque : une boisson, un dessert ou un accompagnement.": "قبل الطلب، تقترح السلة ما ينقص: مشروب أو تحلية أو طبق جانبي.",
 };

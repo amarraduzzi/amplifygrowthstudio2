@@ -60,7 +60,7 @@ export const rsFr = {
     items: [
       { k: 'resto', t: 'Restaurant', pts: ['Commande à table sur le téléphone du serveur', 'Bons cuisine et bar automatiques', 'Marge par plat et prix conseillé'] },
       { k: 'cafe', t: 'Café', pts: ['Encaissement rapide au comptoir', 'Fichier clients et points de fidélité', 'Offres WhatsApp aux heures creuses'] },
-      { k: 'snack', t: 'Snack et fast-food', pts: ['Sur place, à emporter, livraison et Glovo', 'Écran cuisine avec le temps d’attente', 'Écart de stock vendu / utilisé'] },
+      { k: 'snack', t: 'Snack et fast-food', pts: ['Sur place, à emporter, livraison et Glovo', 'Commande sur le prénom, payée avant la cuisine', 'Écran de retrait sur la télé', 'Écran cuisine avec le temps d’attente', 'Écart de stock vendu / utilisé'] },
       { k: 'the', t: 'Salon de thé et pâtisserie', pts: ['Menu QR avec photos, en trois langues', 'Formules et suppléments calculés tout seuls', 'Être en tête sur Google Maps'] },
     ],
   },
