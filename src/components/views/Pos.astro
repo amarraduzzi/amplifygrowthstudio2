@@ -18,6 +18,7 @@ import Faq from '../Faq.astro';
 import ProductFinal from '../ProductFinal.astro';
 import QrOrders from '../QrOrders.astro';
 import Cagnotte from '../Cagnotte.astro';
+import SnackFlow from '../SnackFlow.astro';
 import OwnChannels from '../OwnChannels.astro';
 import OwnerLive from '../OwnerLive.astro';
 import OwnSite from '../OwnSite.astro';
@@ -116,6 +117,25 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 
   <!-- QR ordering: the guest scans, the till receives (and the till-less option) -->
   <QrOrders lang={lang} variant="pos" />
+
+  <!-- snack mode: counter on a first name, paid before the kitchen, pickup board on the TV -->
+  <section id="snack" class="relative isolate scroll-mt-24 overflow-hidden bg-navy py-14 text-white md:py-24">
+    <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_100%_0%,rgba(5,185,98,.18),transparent_70%)]" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-end">
+        <div>
+          <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-green"><Icon name="bag" class="size-4" />{tt('Mode snack')}</p>
+          <h2 class="mt-4 text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]"><span class="block">{tt('Commandé sur un prénom.')}</span><span class="block text-green">{tt('Payé avant la cuisine.')}</span></h2>
+          <p class="mt-5 max-w-xl text-lg text-white/70">{tt('Pour un snack ou un comptoir sans service à table. Le client commande à la caisse ou par QR, sans numéro de table. Il paie d’abord, le bon part ensuite en cuisine, et son prénom s’affiche sur la télé quand c’est prêt.')}</p>
+        </div>
+        <ul class="space-y-3">
+          {[tt('Rien ne part en cuisine avant d’être payé'), tt('QR sans table : le client donne son prénom, c’est tout'), tt('« Légumes : tout » au lieu de cinq lignes sur le bon'), tt('Commande QR pas payée : elle expire toute seule'), tt('L’écran de retrait sur n’importe quelle télé, en français et en arabe')].map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}
+        </ul>
+      </div>
+      <div class="mt-10"><SnackFlow /></div>
+      <p class="mt-6 text-sm text-white/55">{tt('Le mode snack s’active à l’installation, par notre équipe. Les restaurants avec service à table gardent leur caisse comme avant.')}</p>
+    </div>
+  </section>
 
   <!-- loyalty: the cagnotte in dirhams, and the ardoise -->
   <section id="fidelite" class="scroll-mt-24 border-t border-line bg-paper py-14 md:py-24">
