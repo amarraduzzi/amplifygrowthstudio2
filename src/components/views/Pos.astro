@@ -132,10 +132,16 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
           {[tt('Rien ne part en cuisine avant d’être payé'), tt('QR sans table : le client donne son prénom, c’est tout'), tt('« Légumes : tout » au lieu de cinq lignes sur le bon'), tt('Commande QR pas payée : elle expire toute seule'), tt('L’écran de retrait sur n’importe quelle télé, en français et en arabe')].map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}
         </ul>
       </div>
-      <div class="mt-10"><SnackFlow /></div>
+      <div class="mt-10 grid grid-cols-2 gap-3 sm:gap-5">
+        <img src="/img/photos/snack-rush-full.webp" srcset="/img/photos/snack-rush-800.webp 800w, /img/photos/snack-rush-full.webp 1200w" sizes="(min-width: 1152px) 560px, 50vw" alt={tt('Un snack à l’heure du rush : le caissier prend la commande, derrière lui on prépare les bocadillos')} width="1200" height="896" loading="lazy" decoding="async" class="aspect-[4/3] w-full rounded-[1.5rem] object-cover object-bottom" />
+        <img src="/img/photos/snack-retrait-full.webp" srcset="/img/photos/snack-retrait-800.webp 800w, /img/photos/snack-retrait-full.webp 1200w" sizes="(min-width: 1152px) 560px, 50vw" alt={tt('Un client récupère son sac au comptoir, l’écran de retrait brille au mur')} width="1200" height="896" loading="lazy" decoding="async" class="aspect-[4/3] w-full rounded-[1.5rem] object-cover" />
+      </div>
+      <div class="mt-5"><SnackFlow /></div>
       <p class="mt-6 text-sm text-white/55">{tt('Le mode snack s’active à l’installation, par notre équipe. Les restaurants avec service à table gardent leur caisse comme avant.')}</p>
     </div>
   </section>
+
+  <PhotoBand name="pos-habitue" big="full" w={1376} h={768} pos="40% 50%" class="pt-14 md:pt-24" alt={tt('Une cliente habituée montre son téléphone au comptoir d’un café, le barista lui tend un thé à la menthe')} kicker={tt('Une habituée')} title={tt('Elle revient. Sa cagnotte l’attend.')} />
 
   <!-- loyalty: the cagnotte in dirhams, and the ardoise -->
   <section id="fidelite" class="scroll-mt-24 border-t border-line bg-paper py-14 md:py-24">

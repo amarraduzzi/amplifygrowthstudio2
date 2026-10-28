@@ -14,6 +14,7 @@ import OfflineDemo from '../OfflineDemo.astro';
 import BakeryPlan from '../BakeryPlan.astro';
 import AllergenLabel from '../AllergenLabel.astro';
 import SupplierTrio from '../SupplierTrio.astro';
+import PhotoBand from '../PhotoBand.astro';
 import { CONTACT, signupUrl } from '../../config';
 import { copy } from '../../i18n';
 import { tr, langOf } from '../../i18n/t';
@@ -231,6 +232,8 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     </div>
   </section>
 
+  <PhotoBand name="pat-matin" big="full" w={1376} h={768} pos="72% 50%" class="pt-14 md:pt-24" alt={tt('Six heures du matin dans une boulangerie : un boulanger coche le plan sur une tablette pendant que les croissants entrent au four')} kicker="06:00" title={tt('Le plan est prêt avant le four.')} />
+
   <!-- THE EVENING PLAN: written the day before, ticked off in the morning; stock moves only on "Fait" -->
   <section id="planning" class="scroll-mt-24 border-t border-line bg-paper py-14 md:py-24">
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
@@ -270,10 +273,13 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
 
   <!-- ALLERGENS AND LABELS: computed from the ingredients, on the QR menu and on the batch label -->
   <section id="allergenes" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 sm:px-6 md:py-24">
-    <div class="max-w-3xl">
+    <div class="grid items-end gap-8 lg:grid-cols-[1.25fr_0.75fr]">
+      <div>
       <p class="inline-flex items-center gap-2 rounded-full bg-mint px-3 py-1.5 text-sm font-bold text-green-deep"><Icon name="shield" class="size-4" />{tt('Nouveau')}</p>
       <h2 class="mt-4 text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]"><span class="block">{tt('Allergènes calculés,')}</span><span class="block text-green-deep">{tt('jamais recopiés.')}</span></h2>
       <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Vous les indiquez une fois sur l’ingrédient. Amplify les retrouve dans chaque préparation et chaque produit, même une recette dans une recette. Le client filtre le menu QR, la boutique affiche la fiche, chaque fournée sort avec son étiquette.')}</p>
+      </div>
+      <img src="/img/photos/pat-etiquette-full.webp" srcset="/img/photos/pat-etiquette-800.webp 800w, /img/photos/pat-etiquette-full.webp 1200w" sizes="(min-width: 1024px) 400px, 100vw" alt={tt('Un pâtissier colle une étiquette sur une boîte de cornes de gazelle, à côté d’une petite imprimante')} width="1200" height="896" loading="lazy" decoding="async" class="aspect-[4/3] w-full rounded-[1.75rem] object-cover shadow-[0_30px_60px_-35px_rgba(0,30,62,0.5)]" />
     </div>
     <div class="mt-10"><AllergenLabel /></div>
   </section>
@@ -307,6 +313,8 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
 
   <!-- internet cut: the till keeps working (same live demo as the POS page) -->
   <OfflineDemo />
+
+  <PhotoBand name="pat-livraison" big="full" w={1376} h={768} pos="50% 60%" class="pb-14 md:pb-24" alt={tt('Des sacs de farine livrés devant une boulangerie, la patronne vérifie le bon de livraison')} kicker={tt('Livraison')} title={tt('La farine arrive. Le stock suit.')} />
 
   <!-- SUPPLIERS: the sheet, the order, the situation of the month -->
   <section id="fournisseurs" class="scroll-mt-24 border-y border-line bg-paper py-14 md:py-24">
