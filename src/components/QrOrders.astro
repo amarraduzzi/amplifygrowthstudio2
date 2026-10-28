@@ -216,7 +216,7 @@ const WITH_TILL = [
     let timers: number[] = [], running = false;
     const at = (ms: number, fn: () => void) => { timers.push(window.setTimeout(fn, ms)); };
     const setDay = (n: number) => { day.textContent = String(n); };
-    const step = (k: number) => pts.forEach((p, i) => p.classList.toggle('on', i === k));
+    const step = (k: number) => pts.forEach((p, i) => p.classList.toggle('on', i === k || (k === 0 && i === 3)));
     const tap = (el: HTMLElement) => { el.classList.add('tap'); setTimeout(() => el.classList.remove('tap'), 180); };
     const reset = () => {
       items.forEach((it, i) => it.classList.toggle('sel', false));
