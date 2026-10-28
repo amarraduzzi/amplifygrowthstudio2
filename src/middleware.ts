@@ -4,6 +4,9 @@
 import { defineMiddleware } from 'astro:middleware';
 import { dictEn } from './i18n/dict-en';
 import { dictAr } from './i18n/dict-ar';
+import { immoEn, immoAr } from './i18n/dict-immobilier';
+const mergedEn = { ...dictEn, ...immoEn };
+const mergedAr = { ...dictAr, ...immoAr };
 
 const decode = (s: string) => s.replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
 const encText = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -36,7 +39,7 @@ const swap = (html: string, d: Record<string, string>, ar = false) => {
 export const onRequest = defineMiddleware(async (ctx, next) => {
   const res = await next();
   const p = ctx.url.pathname;
-  const d = p.startsWith('/en/') ? dictEn : p.startsWith('/ar/') ? dictAr : null;
+  const d = p.startsWith('/en/') ? mergedEn : p.startsWith('/ar/') ? mergedAr : null;
   if (!d || !Object.keys(d).length || !(res.headers.get('content-type') ?? '').includes('text/html')) return res;
   const html = await res.text();
   return new Response(swap(html, d, p.startsWith('/ar/')), { status: res.status, headers: res.headers });

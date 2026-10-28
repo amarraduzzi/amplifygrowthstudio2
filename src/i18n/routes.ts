@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'immobilier' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -18,6 +18,8 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   salons: { fr: '/salons/', ar: '/ar/salons/', en: '/en/salons/' },
   // spas, hammams and instituts: cabins and equipment in the agenda (Amplify Agenda)
   spas: { fr: '/spas/', ar: '/ar/spas/', en: '/en/spas/' },
+  // real estate: Amplify Immobilier (agencies, rentals, syndics, developers)
+  immobilier: { fr: '/immobilier/', ar: '/ar/immobilier/', en: '/en/real-estate/' },
   // fine dining: the Amplify Maître option of the till
   maitre: { fr: '/amplify-maitre/', ar: '/ar/amplify-maitre/', en: '/en/amplify-maitre/' },
   bakery: { fr: '/patisseries/', ar: '/ar/patisseries/', en: '/en/bakeries/' },
