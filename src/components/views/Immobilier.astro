@@ -35,6 +35,26 @@ const blocks = [
       ['Le propriétaire informé', 'Un relevé chaque mois : loyers reçus, honoraires, réparations. Et un lien privé pour suivre ses biens, en français, arabe, anglais ou néerlandais.'],
       ['Courte durée', 'Un calendrier par bien avec vos réservations Airbnb et Booking, et un lien iCal pour bloquer vos dates sur les deux.'],
     ] },
+  { id: 'syndics', dark: false, kicker: 'Syndics de copropriété', h: ['Chaque appel de fonds juste.', 'Chaque copropriétaire informé.'], lead: 'Pour les syndics de copropriété (loi 18-00) : résidences, appels de fonds, impayés, incidents et assemblées générales au même endroit.',
+    wa: 'Bonjour, je suis syndic de copropriété et je voudrais une démo d’Amplify Immobilier.',
+    items: [
+      ['Résidences et lots', 'Chaque lot avec son étage, ses tantièmes et son copropriétaire. La part de chacun en pourcentage est calculée pour vous.'],
+      ['Appels de fonds au centime', 'Vous répartissez un appel de fonds selon les tantièmes ou à parts égales. Chaque lot reçoit son montant exact.'],
+      ['Impayés et relances', 'Qui a payé, qui a payé en partie, qui est en retard : un écran par résidence, et la relance part sur WhatsApp en français ou en arabe.'],
+      ['Incidents des parties communes', 'Une panne signalée avec son lieu, son urgence, son coût et son état. Vous choisissez si les résidents la voient.'],
+      ['Assemblée générale', 'Convocation par WhatsApp, présences et procurations, votes par tantièmes, puis le procès-verbal en PDF.'],
+      ['Annonces et espace copropriétaire', 'Vos annonces partent sur WhatsApp. Chaque lot a son lien privé : ses charges, le RIB, les travaux et le résultat de l’assemblée.'],
+    ] },
+  { id: 'promoteurs', dark: true, kicker: 'Promoteurs', h: ['Chaque lot suivi.', 'Du plan aux clés.'], lead: 'Projets, stock, réservations, paiements par étape et rapport de direction, pour suivre chaque lot jusqu’à la remise des clés.',
+    wa: 'Bonjour, je suis promoteur et je voudrais une démo d’Amplify Immobilier.',
+    items: [
+      ['Projets et tranches', 'Chaque projet avec son statut et sa livraison prévue, découpé en tranches. Les lots s’ajoutent par immeuble, plusieurs centaines d’un coup.'],
+      ['Grille de stock', 'Chaque immeuble et chaque étage en couleurs : disponible, option, réservé, vendu. Un prix ou un statut changé sur plusieurs lots à la fois.'],
+      ['Réservation et VEFA', 'Une réservation avec son échéancier. La VEFA suit la loi 107-12 : l’application refuse plus de 5 % au départ et moins de 20 % à la remise des clés.'],
+      ['Avancement du chantier', 'Une étape atteinte (fondations, gros œuvre, finitions, clés) : les échéances deviennent exigibles, et l’appel de fonds en PDF part avec le RIB.'],
+      ['Page publique du projet', 'Une page par projet avec photos, prix de départ, lots libres et formulaire de rappel. Chaque demande devient un prospect et une tâche pour un vendeur.'],
+      ['Rapport de direction', 'Ventes, encaissements, retards, stock restant et encaissements à venir, par projet et par vendeur, en PDF ou en Excel.'],
+    ] },
 ];
 ---
 <Base lang={lang} page="immobilier" title={tt('Amplify Immobilier : le logiciel de l’immobilier au Maroc | Amplify Growth Studio')} description={tt('Un seul système pour les agences, la gestion locative, les syndics et les promoteurs. En français et en arabe, sur téléphone et ordinateur, avec WhatsApp.')} wa={wa}>
