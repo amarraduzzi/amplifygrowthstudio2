@@ -105,6 +105,25 @@ const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'meti
     </div>
   </section>
 
+  <!-- fine dining has its own page (the Amplify Maître option) -->
+  <section class="px-4 pb-14 sm:px-6 md:pb-24">
+    <a href={ROUTES.maitre[lang]} class="group relative isolate mx-auto block max-w-6xl overflow-hidden rounded-[2rem] text-white md:rounded-[2.5rem]">
+      <img src="/img/photos/mk-salle-pleine-1600.webp" srcset="/img/photos/mk-salle-pleine-800.webp 800w, /img/photos/mk-salle-pleine-1600.webp 1536w" sizes="(min-width: 1152px) 1152px, 100vw" alt="" width="1536" height="1024" loading="lazy" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" />
+      <span class="absolute inset-0 -z-10 bg-linear-to-r from-navy/95 via-navy/75 to-[#2A1E66]/30 rtl:bg-linear-to-l" aria-hidden="true"></span>
+      <div class="grid gap-8 p-7 sm:p-10 md:min-h-[26rem] md:grid-cols-[1.1fr_1fr] md:items-end md:p-14">
+        <div>
+          <p class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-sm font-semibold backdrop-blur"><Icon name="star" class="size-4 text-[#C9B8FF]" />{tt('Fine dining')}</p>
+          <p class="display mt-4 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une grande table ?')}</span><span class="block text-[#C9B8FF]">{tt('Un service sans oubli.')}</span></p>
+          <p class="mt-4 max-w-md text-lg text-white/80">{tt('Amplify Maître : le client appelle discrètement depuis sa table, la salle suit le rythme de chaque table, les allergies sortent sur le bon cuisine.')}</p>
+          <span class="mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-[#7C5CFF] px-6 text-lg font-semibold text-white transition group-hover:gap-3">{tt('Découvrir Amplify Maître')}<span class="rtl:-scale-x-100" aria-hidden="true">→</span></span>
+        </div>
+        <ul class="flex flex-wrap gap-2 md:justify-end">
+          {[tt('Le service discret'), tt('Le rythme de la soirée'), tt('L’avant-service'), tt('L’acompte'), tt('Les formules')].map(x => <li class="rounded-full bg-white/15 px-3.5 py-1.5 text-sm font-semibold backdrop-blur">{x}</li>)}
+        </ul>
+      </div>
+    </a>
+  </section>
+
   <SecurityTrace sector="horeca" />
 
   <Proof h2={old.proof.h2} ph={old.proof.ph} />

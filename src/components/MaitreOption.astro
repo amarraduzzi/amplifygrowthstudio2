@@ -5,7 +5,9 @@ import Device from './Device.astro';
 import Icon from './Icon.astro';
 import WaButton from './WaButton.astro';
 import { tr, langOf } from '../i18n/t';
-const tt = tr(langOf(Astro.url));
+import { ROUTES } from '../i18n/routes';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
 const points = [
   ['bell', 'Le service discret', 'Depuis le QR de sa table, le client demande un serveur, de l’eau ou l’addition. La table s’allume sur la caisse et sur les téléphones des serveurs.'],
   ['chart', 'Le rythme de la soirée', 'Chaque table montre où elle en est : en cuisine, prête à servir, en attente du dessert. Celles qui attendent trop changent de couleur.'],
@@ -26,6 +28,7 @@ const points = [
         <p class="mt-5 max-w-md text-lg text-white/70">Pour les restaurants où chaque client compte. Votre équipe sait qui arrive, ce qu’il aime, et quelle table l’attend. Ajoutez-la à votre caisse quand vous en avez besoin.</p>
         <div class="mt-7 flex flex-wrap items-center gap-4">
           <WaButton text="Bonjour, je voudrais voir Amplify Maître en démo." label="Demander une démo" where="maitre" class="px-7 text-lg" />
+          <a href={ROUTES.maitre[LG]} class="inline-flex min-h-12 items-center rounded-full border border-white/30 px-6 font-semibold hover:border-white">{tt('Tout sur Amplify Maître')} →</a>
           <a href="#tarifs" class="text-sm font-medium text-white/80 underline underline-offset-4 hover:text-white">Voir les tarifs</a>
         </div>
       </div>
