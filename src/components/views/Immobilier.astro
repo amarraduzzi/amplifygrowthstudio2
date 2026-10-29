@@ -4,6 +4,7 @@
 import Base from '../../layouts/Base.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
+import ImmoMetiers from '../ImmoMetiers.astro';
 import { tr } from '../../i18n/t';
 import type { Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -12,60 +13,6 @@ const tt = tr(lang);
 const wa = tt('Bonjour, je voudrais une démo d’Amplify Immobilier.');
 // stock grid of the example building: floors from top to bottom, 6 lots per floor (f = libre, r = réservé, s = vendu)
 const floors: [number, string][] = [[4, 'fsfrff'], [3, 'sssfrs'], [2, 'ssrssf'], [1, 'ssssrs']];
-const look: Record<string, string> = { f: 'bg-green text-navy', r: 'bg-[#F5B301] text-navy', s: 'bg-white/10 text-white/60' };
-// who it is for: one block per profession, 6 plain-language benefits each (not the whole module list)
-const blocks = [
-  { id: 'agences', dark: false, kicker: 'Agences immobilières', h: ['Chaque lead suivi.', 'Chaque bien en ligne.'], lead: 'Vente et location : biens, mandats, clients, visites et ventes dans un seul outil, sur téléphone comme au bureau.',
-    wa: 'Bonjour, je suis une agence immobilière et je voudrais une démo d’Amplify Immobilier.',
-    items: [
-      ['Biens et mandats', 'Vos biens avec leurs photos, et leurs mandats. Vous voyez ceux qui arrivent à échéance avant qu’ils expirent.'],
-      ['Les bons biens aux bons clients', 'Un bien arrive : les clients qui le cherchent apparaissent, et vous leur écrivez sur WhatsApp en un clic.'],
-      ['Annonces prêtes à copier', 'Un titre, un texte et des photos pour Mubawab, Avito et les autres portails. Vous copiez, vous publiez.'],
-      ['Visites et rapport propriétaire', 'Vos visites dans l’agenda de la semaine, et pour chaque bien un rapport à remettre au propriétaire : visites, offres, état du mandat.'],
-      ['Ventes et commissions', 'Chaque vente suivie jusqu’à la commission, avec le partage quand un confrère ou un apporteur est dans l’affaire.'],
-      ['Votre propre site', 'Votre agence en ligne, à votre adresse, avec un formulaire qui crée le contact et la tâche de rappel tout seul.'],
-    ] },
-  { id: 'location', dark: true, kicker: 'Gestion locative', h: ['Les loyers rentrent.', 'Le propriétaire est informé.'], lead: 'Baux, loyers, quittances et relevés, avec WhatsApp pour relancer les locataires et informer les propriétaires.',
-    wa: 'Bonjour, je fais de la gestion locative et je voudrais une démo d’Amplify Immobilier.',
-    items: [
-      ['Loyers suivis', 'Chaque mois, une ligne par locataire : payé, à payer ou en retard. La relance part sur WhatsApp en un clic.'],
-      ['Quittances', 'Une quittance en français ou en arabe pour chaque mois payé, à imprimer ou à envoyer au locataire.'],
-      ['Révision du loyer', 'L’application montre quand une révision est possible et de combien, selon la loi 67-12, et prépare le message au locataire.'],
-      ['État des lieux', 'Entrée et sortie sur téléphone ou tablette, avec photos par pièce et signatures à l’écran, puis en PDF.'],
-      ['Le propriétaire informé', 'Un relevé chaque mois : loyers reçus, honoraires, réparations. Et un lien privé pour suivre ses biens, en français, arabe, anglais ou néerlandais.'],
-      ['Courte durée', 'Un calendrier par bien avec vos réservations Airbnb et Booking, et un lien iCal pour bloquer vos dates sur les deux.'],
-    ] },
-  { id: 'syndics', dark: false, kicker: 'Syndics de copropriété', h: ['Chaque appel de fonds juste.', 'Chaque copropriétaire informé.'], lead: 'Pour les syndics de copropriété (loi 18-00) : résidences, appels de fonds, impayés, incidents et assemblées générales au même endroit.',
-    wa: 'Bonjour, je suis syndic de copropriété et je voudrais une démo d’Amplify Immobilier.',
-    items: [
-      ['Résidences et lots', 'Chaque lot avec son étage, ses tantièmes et son copropriétaire. La part de chacun en pourcentage est calculée pour vous.'],
-      ['Appels de fonds au centime', 'Vous répartissez un appel de fonds selon les tantièmes ou à parts égales. Chaque lot reçoit son montant exact.'],
-      ['Impayés et relances', 'Qui a payé, qui a payé en partie, qui est en retard : un écran par résidence, et la relance part sur WhatsApp en français ou en arabe.'],
-      ['Incidents des parties communes', 'Une panne signalée avec son lieu, son urgence, son coût et son état. Vous choisissez si les résidents la voient.'],
-      ['Assemblée générale', 'Convocation par WhatsApp, présences et procurations, votes par tantièmes, puis le procès-verbal en PDF.'],
-      ['Annonces et espace copropriétaire', 'Vos annonces partent sur WhatsApp. Chaque lot a son lien privé : ses charges, le RIB, les travaux et le résultat de l’assemblée.'],
-    ] },
-  { id: 'promoteurs', dark: true, kicker: 'Promoteurs', h: ['Chaque lot suivi.', 'Du plan aux clés.'], lead: 'Projets, stock, réservations, paiements par étape et rapport de direction, pour suivre chaque lot jusqu’à la remise des clés.',
-    wa: 'Bonjour, je suis promoteur et je voudrais une démo d’Amplify Immobilier.',
-    items: [
-      ['Projets et tranches', 'Chaque projet avec son statut et sa livraison prévue, découpé en tranches. Les lots s’ajoutent par immeuble, plusieurs centaines d’un coup.'],
-      ['Grille de stock', 'Chaque immeuble et chaque étage en couleurs : disponible, option, réservé, vendu. Un prix ou un statut changé sur plusieurs lots à la fois.'],
-      ['Réservation et VEFA', 'Une réservation avec son échéancier. La VEFA suit la loi 107-12 : l’application refuse plus de 5 % au départ et moins de 20 % à la remise des clés.'],
-      ['Avancement du chantier', 'Une étape atteinte (fondations, gros œuvre, finitions, clés) : les échéances deviennent exigibles, et l’appel de fonds en PDF part avec le RIB.'],
-      ['Page publique du projet', 'Une page par projet avec photos, prix de départ, lots libres et formulaire de rappel. Chaque demande devient un prospect et une tâche pour un vendeur.'],
-      ['Rapport de direction', 'Ventes, encaissements, retards, stock restant et encaissements à venir, par projet et par vendeur, en PDF ou en Excel.'],
-    ] },
-  { id: 'network', dark: false, kicker: 'Amplify Network', h: ['Collaborez entre agences.', 'Chacun garde ses données.'], lead: 'Partagez des biens, recommandez des clients et partagez la commission avec d’autres agences qui utilisent Amplify Immobilier.',
-    wa: 'Bonjour, je suis une agence immobilière et je voudrais voir Amplify Network dans une démo d’Amplify Immobilier.',
-    items: [
-      ['Vos agences partenaires', 'Vous invitez une autre agence avec votre code de bureau. Elle accepte, et vous pouvez collaborer.'],
-      ['Biens partagés', 'Vous partagez un bien disponible avec un partenaire et vous lui proposez une part de votre commission. Il ne voit ni l’adresse, ni le propriétaire.'],
-      ['J’ai un client', 'Sur un bien partagé, l’agence partenaire propose son client. Les deux agences suivent les mêmes étapes : visite, offre, signature, commission versée.'],
-      ['Recommandation de clients', 'Vous recommandez un client à une agence partenaire, avec son accord (loi 09-08) et des frais en pourcentage de la commission de l’agence.'],
-      ['Un partage clair', 'Les deux agences voient la même répartition de la commission, en pourcentage et en dirhams.'],
-      ['Convention de collaboration', 'La convention entre agences est prête en PDF.'],
-    ] },
-];
 // block "droit marocain": only what the product does, stated as such (no promise of legal compliance)
 const laws = [
   ['Loi 18-00', 'Copropriété', 'Lots, tantièmes, appels de fonds répartis au centime, votes de l’assemblée par tantièmes et procès-verbal en PDF.'],
@@ -105,7 +52,7 @@ const bubbles = [
       </div>
 
       <!-- the stock grid of a building, drawn in CSS: an example, not a real project -->
-      <div class="fade-up relative" style="--d:350ms" aria-hidden="true">
+      <div class="fade-up relative" style="--d:350ms" data-grid>
         <div class="rounded-[1.75rem] bg-navy p-5 text-white shadow-[0_40px_80px_-40px_rgba(0,30,62,.7)] sm:p-7 lg:rounded-[2.25rem]">
           <div class="flex items-start justify-between gap-3">
             <div>
@@ -113,53 +60,41 @@ const bubbles = [
               <p class="display mt-1 text-2xl leading-tight sm:text-3xl">Résidence Les Orangers</p>
               <p class="mt-0.5 text-sm text-white/60">Immeuble A</p>
             </div>
-            <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/70 ring-1 ring-white/15">Exemple</span>
+            <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/70 ring-1 ring-white/15">{tt('Touchez un lot')}</span>
           </div>
           <div class="mt-6 space-y-2" dir="ltr">
             {floors.map(([n, row]) => (
               <div class="flex items-center gap-2">
                 <span class="w-6 shrink-0 text-end text-xs font-semibold text-white/50 tabular-nums">{n}</span>
                 <div class="grid flex-1 grid-cols-6 gap-1.5 sm:gap-2">
-                  {[...row].map((c, i) => <span class={`grid h-10 place-items-center rounded-lg text-[0.7rem] font-semibold tabular-nums sm:h-12 sm:text-xs ${look[c]}`}>{`A${n}0${i + 1}`}</span>)}
+                  {[...row].map((c, i) => <button type="button" class="gr-lot grid h-10 place-items-center rounded-lg text-[0.7rem] font-semibold tabular-nums transition-[background-color,color,transform] duration-300 hover:scale-105 active:scale-95 sm:h-12 sm:text-xs" data-s={c} aria-label={`A${n}0${i + 1}`}>{`A${n}0${i + 1}`}</button>)}
                 </div>
               </div>
             ))}
           </div>
-          <ul class="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/75">
-            <li class="flex items-center gap-2"><span class="size-3 rounded bg-green"></span><span>Libre</span></li>
-            <li class="flex items-center gap-2"><span class="size-3 rounded bg-[#F5B301]"></span><span>Réservé</span></li>
-            <li class="flex items-center gap-2"><span class="size-3 rounded bg-white/25"></span><span>Vendu</span></li>
-          </ul>
+          <div class="mt-6 grid grid-cols-3 gap-2 text-sm">
+            <p class="rounded-2xl bg-white/[0.06] px-3 py-2.5"><span class="flex items-center gap-2 text-white/70"><span class="size-3 rounded bg-green"></span>{tt('Libre')}</span><span class="display mt-1 block text-3xl tabular-nums" data-n="f">0</span></p>
+            <p class="rounded-2xl bg-white/[0.06] px-3 py-2.5"><span class="flex items-center gap-2 text-white/70"><span class="size-3 rounded bg-[#F5B301]"></span>{tt('Réservé')}</span><span class="display mt-1 block text-3xl tabular-nums" data-n="r">0</span></p>
+            <p class="rounded-2xl bg-white/[0.06] px-3 py-2.5"><span class="flex items-center gap-2 text-white/70"><span class="size-3 rounded bg-white/25"></span>{tt('Vendu')}</span><span class="display mt-1 block text-3xl tabular-nums" data-n="s">0</span></p>
+          </div>
+          <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/10"><span class="block h-full rounded-full bg-green transition-[width] duration-700" data-sold-bar style="width:0"></span></div>
+          <p class="mt-2 text-xs text-white/55"><span data-pct dir="ltr">0 %</span> {tt('vendu ou réservé')}</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- who it is for -->
-  <section id="pour-qui" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-6 sm:px-6 md:pb-10">
-    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Chaque métier,</span><span class="block text-green-deep">ses propres outils.</span></h2>
-    <p class="mt-4 max-w-2xl text-lg text-muted">Un seul système, avec ce qu’il faut pour chaque activité.</p>
+  <!-- the promise, word by word as you scroll -->
+  <section class="px-4 pb-14 pt-4 sm:px-6 md:pb-20">
+    <p class="mx-auto max-w-5xl text-[clamp(2rem,4.6vw,3.8rem)] font-semibold leading-[1.08] tracking-tight" data-scrub="words">{tt('Un bien, un client, un loyer, une copropriété, un chantier : tout est suivi, et chaque message part sur WhatsApp en un clic.').split(' ').map(w => <span class="word">{w} </span>)}</p>
   </section>
-  {blocks.map((b) => (
-    <section id={b.id} class="scroll-mt-20 px-4 py-4 sm:px-6 md:py-5">
-      <div class={`mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] p-6 md:p-12 lg:grid-cols-[0.85fr_1.15fr] ${b.dark ? 'bg-navy text-white' : 'bg-paper ring-1 ring-line'}`}>
-        <div>
-          <p class={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm font-semibold ${b.dark ? 'bg-white/10 text-white ring-1 ring-white/15' : 'bg-chalk ring-1 ring-line'}`}><span class="size-2 rounded-full bg-green"></span>{b.kicker}</p>
-          <h3 class="display mt-5 text-[2.4rem] leading-[0.95] sm:text-5xl"><span class="block">{b.h[0]}</span><span class={`block ${b.dark ? 'text-green' : 'text-green-deep'}`}>{b.h[1]}</span></h3>
-          <p class={`mt-5 max-w-md text-lg ${b.dark ? 'text-white/75' : 'text-muted'}`}>{b.lead}</p>
-          <WaButton text={b.wa} label={tt('Demander une démo')} where={`immobilier-${b.id}`} class="mt-7 px-7 text-lg" />
-        </div>
-        <ul class="grid gap-x-8 gap-y-6 sm:grid-cols-2">
-          {b.items.map(([t, x]) => (
-            <li class="flex gap-3">
-              <span class={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full ${b.dark ? 'bg-green text-navy' : 'bg-green/15 text-green-deep'}`}><Icon name="check" class="size-4" /></span>
-              <div><p class="font-semibold">{t}</p><p class={`mt-1 text-[0.95rem] leading-relaxed ${b.dark ? 'text-white/65' : 'text-muted'}`}>{x}</p></div>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </section>
-  ))}
+
+  <!-- who it is for: one tab per profession, with a live demo -->
+  <section id="pour-qui" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-6 sm:px-6 md:pb-10">
+    <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Chaque métier,')}</span><span class="block text-green-deep">{tt('ses propres outils.')}</span></h2>
+    <p class="mt-4 max-w-2xl text-lg text-muted">{tt('Choisissez votre métier et essayez : tout ce qui bouge ici se touche.')}</p>
+    <div class="mt-8"><ImmoMetiers /></div>
+  </section>
 
   <!-- Moroccan law: what the product does, not a legal promise -->
   <section id="droit" class="scroll-mt-20 px-4 py-4 sm:px-6 md:py-5">
@@ -227,3 +162,42 @@ const bubbles = [
     </div>
   </section>
 </Base>
+
+<style is:global>
+  .gr-lot[data-s="f"] { background: var(--color-green); color: var(--color-navy); }
+  .gr-lot[data-s="r"] { background: #F5B301; color: var(--color-navy); }
+  .gr-lot[data-s="s"] { background: rgb(255 255 255 / .1); color: rgb(255 255 255 / .6); }
+  .gr-lot.flip { animation: gr-flip .5s ease-out; }
+  @keyframes gr-flip { 40% { transform: scale(1.18); box-shadow: 0 0 0 6px rgb(5 185 98 / .35); } }
+  @media (prefers-reduced-motion: reduce) { .gr-lot.flip { animation: none; } }
+</style>
+
+<script>
+  // the stock grid: tap a lot to move it on (libre, réservé, vendu); on its own, a lot gets reserved then sold now and then
+  document.querySelectorAll<HTMLElement>('[data-grid]').forEach((root) => {
+    const lots = [...root.querySelectorAll<HTMLButtonElement>('.gr-lot')];
+    const next: Record<string, string> = { f: 'r', r: 's', s: 'f' };
+    const paint = () => {
+      const n: Record<string, number> = { f: 0, r: 0, s: 0 };
+      lots.forEach(l => n[l.dataset.s!]++);
+      (['f', 'r', 's'] as const).forEach(k => (root.querySelector<HTMLElement>(`[data-n="${k}"]`)!.textContent = String(n[k])));
+      const pct = Math.round(((n.r + n.s) / lots.length) * 100);
+      root.querySelector<HTMLElement>('[data-sold-bar]')!.style.width = `${pct}%`;
+      root.querySelector<HTMLElement>('[data-pct]')!.textContent = `${pct} %`;
+    };
+    const flip = (l: HTMLElement, to: string) => { l.dataset.s = to; l.classList.remove('flip'); void l.offsetWidth; l.classList.add('flip'); paint(); };
+    let touched = false, moves = 0;
+    lots.forEach(l => l.addEventListener('click', () => { touched = true; flip(l, next[l.dataset.s!]); }));
+    paint();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let vis = false;
+    new IntersectionObserver(([e]) => { vis = e.isIntersecting; }).observe(root);
+    setInterval(() => {
+      if (touched || !vis || document.hidden || moves >= 6) return;
+      moves++;
+      const r = lots.filter(l => l.dataset.s === 'r'), f = lots.filter(l => l.dataset.s === 'f');
+      if (r.length && (Math.random() < 0.5 || !f.length)) flip(r[Math.floor(Math.random() * r.length)], 's');
+      else if (f.length) flip(f[Math.floor(Math.random() * f.length)], 'r');
+    }, 2200);
+  });
+</script>

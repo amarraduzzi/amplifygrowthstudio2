@@ -1,0 +1,102 @@
+---
+// Amplify Agent: the bon de visite. The visitor signs on the agent's phone (with a finger or the mouse),
+// "Valider" locks the bon and the copy goes to the visitor on WhatsApp. If nobody signs, a signature draws
+// itself once when the block comes into view. Demo visitor and property.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+---
+<div class="iv mx-auto w-full max-w-[21rem]" data-visit>
+  <div class="rounded-[2.6rem] bg-linear-to-b from-[#3A3F47] to-[#1C1F24] p-2 shadow-[0_40px_70px_-30px_rgba(0,0,0,.8)]">
+    <div class="rounded-[2.2rem] bg-[#FAF8F3] px-4 pb-5 pt-6 text-navy">
+      <div class="flex items-center justify-between gap-2">
+        <p class="display text-xl">{tt('Bon de visite')}</p>
+        <span class="text-xs font-semibold text-muted" dir="ltr">N° BV-0127</span>
+      </div>
+      <dl class="mt-3 space-y-1.5 rounded-2xl bg-white p-3 text-sm ring-1 ring-line">
+        <div class="flex justify-between gap-3"><dt class="text-muted">{tt('Le bien')}</dt><dd class="text-end font-semibold">{tt('Villa, Harhoura')}</dd></div>
+        <div class="flex justify-between gap-3"><dt class="text-muted">{tt('Visiteur')}</dt><dd class="font-semibold"><bdi>Mehdi A.</bdi></dd></div>
+        <div class="flex justify-between gap-3"><dt class="text-muted">{tt('Date')}</dt><dd class="font-semibold" dir="ltr">29/10/2026 · 17:30</dd></div>
+        <div class="flex justify-between gap-3"><dt class="text-muted">{tt('Agent')}</dt><dd class="font-semibold"><bdi>Nadia K.</bdi></dd></div>
+      </dl>
+      <p class="mt-3 text-xs font-semibold text-muted">{tt('Signature du visiteur')}</p>
+      <div class="relative mt-1 overflow-hidden rounded-2xl bg-white ring-1 ring-line">
+        <canvas class="block h-28 w-full touch-none" data-pad aria-label={tt('Signez ici')}></canvas>
+        <span class="iv-hint pointer-events-none absolute inset-0 grid place-items-center text-sm text-muted" data-hint>{tt('Signez ici avec le doigt')}</span>
+        <span class="iv-lock absolute end-2 top-2 hidden items-center gap-1 rounded-full bg-navy px-2 py-0.5 text-[0.65rem] font-bold text-white" data-lock><Icon name="shield" class="size-3" />{tt('Ne se modifie plus')}</span>
+      </div>
+      <div class="mt-3 flex gap-2">
+        <button type="button" class="min-h-11 rounded-full px-4 text-sm font-semibold text-muted ring-1 ring-line" data-clear>{tt('Effacer')}</button>
+        <button type="button" class="inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-green px-4 font-bold text-navy transition-transform active:scale-[.98] disabled:opacity-40" data-ok disabled><Icon name="check" class="size-4" />{tt('Valider')}</button>
+      </div>
+      <p class="iv-sent mt-3 hidden items-center gap-2 rounded-xl bg-[#DCF8C6] px-3 py-2 text-xs font-semibold" data-sent><Icon name="phone" class="size-4 text-green-deep" />{tt('Copie envoyée à Mehdi sur WhatsApp.')}</p>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  [data-visit].is-signed [data-hint] { opacity: 0; }
+  .iv-hint { transition: opacity .3s; }
+  [data-visit].is-done [data-lock], [data-visit].is-done [data-sent] { display: inline-flex; animation: iv-in .45s ease-out; }
+  [data-visit].is-done [data-sent] { display: flex; }
+  [data-visit].is-done [data-clear], [data-visit].is-done [data-ok] { display: none; }
+  @keyframes iv-in { from { opacity: 0; transform: translateY(6px); } }
+  @media (prefers-reduced-motion: reduce) { [data-visit].is-done [data-lock], [data-visit].is-done [data-sent] { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-visit]').forEach((root) => {
+    const c = root.querySelector<HTMLCanvasElement>('[data-pad]')!;
+    const ok = root.querySelector<HTMLButtonElement>('[data-ok]')!;
+    const ctx = c.getContext('2d')!;
+    let drawing = false, inked = false, locked = false, touched = false;
+    const fit = () => {
+      const r = c.getBoundingClientRect(), d = devicePixelRatio || 1;
+      if (!r.width) return;
+      c.width = r.width * d; c.height = r.height * d; ctx.scale(d, d);
+      ctx.lineWidth = 2.4; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#001E3E';
+    };
+    const pos = (e: PointerEvent) => { const r = c.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+    const inkIt = () => { if (!inked) { inked = true; root.classList.add('is-signed'); ok.disabled = false; } };
+    c.addEventListener('pointerdown', (e) => {
+      if (locked) return; touched = true; drawing = true; c.setPointerCapture(e.pointerId);
+      if (!c.width) fit();
+      const [x, y] = pos(e); ctx.beginPath(); ctx.moveTo(x, y);
+    });
+    c.addEventListener('pointermove', (e) => { if (!drawing) return; const [x, y] = pos(e); ctx.lineTo(x, y); ctx.stroke(); inkIt(); });
+    addEventListener('pointerup', () => { drawing = false; });
+    root.querySelector('[data-clear]')!.addEventListener('click', () => {
+      touched = true; ctx.clearRect(0, 0, c.width, c.height); inked = false; ok.disabled = true; root.classList.remove('is-signed');
+    });
+    ok.addEventListener('click', () => { touched = true; locked = true; root.classList.add('is-done'); });
+    // a signature that writes itself: a few loops and a flourish
+    const auto = () => {
+      fit();
+      const r = c.getBoundingClientRect(), w = r.width, h = r.height;
+      const pts: [number, number][] = [];
+      for (let t = 0; t <= 1; t += 0.006) {
+        const x = w * (0.18 + 0.6 * t);
+        const y = h * (0.55 + 0.18 * Math.sin(t * 22) * (1 - t * 0.6) - 0.12 * Math.sin(t * 3.1));
+        pts.push([x, y]);
+      }
+      pts.push([w * 0.8, h * 0.62], [w * 0.86, h * 0.48]);
+      let i = 1; ctx.beginPath(); ctx.moveTo(...pts[0]);
+      const step = () => {
+        if (touched) return;
+        for (let k = 0; k < 4 && i < pts.length; k++, i++) ctx.lineTo(...pts[i]);
+        ctx.stroke(); inkIt();
+        if (i < pts.length) requestAnimationFrame(step);
+        else setTimeout(() => { if (!touched) { locked = true; root.classList.add('is-done'); } }, 700);
+      };
+      requestAnimationFrame(step);
+    };
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return; io.disconnect(); fit();
+        if (!still) setTimeout(() => { if (!touched) auto(); }, 1100);
+      }, { threshold: 0.5 });
+      io.observe(root);
+    } else fit();
+  });
+</script>

@@ -1,0 +1,105 @@
+---
+// Short stays: the booking link of an apartment. Only the free dates can be chosen, the price is worked out
+// at once (nights, Friday and Saturday at the weekend price, cleaning, deposit and security deposit), and the
+// request then follows its steps: sent, accepted with a 24 h option, "J'ai payé", confirmed.
+// Plays once when it comes into view; every date and button works. Demo apartment and prices.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const booked = [2, 3, 4, 12, 13, 14, 24, 25, 26];
+const head = lang === 'en' ? ['M', 'T', 'W', 'T', 'F', 'S', 'S'] : lang === 'ar' ? ['ن', 'ث', 'ر', 'خ', 'ج', 'س', 'ح'] : ['L', 'M', 'M', 'J', 'V', 'S', 'D'];
+const steps = [tt('Envoyée'), tt('Acceptée, option 24 h'), tt('J’ai payé'), tt('Confirmée')];
+---
+<div class="is grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-[1.1fr_0.9fr]" data-stay data-booked={JSON.stringify(booked)}>
+  <div class="rounded-[1.6rem] bg-white p-4 text-navy shadow-[0_40px_70px_-40px_rgba(0,30,62,.6)] ring-1 ring-line">
+    <div class="flex items-center gap-3">
+      <img src="/img/immo/hayriad-studio.webp" alt="" width="900" height="672" loading="lazy" class="size-12 rounded-xl object-cover" />
+      <div class="min-w-0"><p class="truncate font-bold">{tt('Studio meublé, Hay Riad')}</p><p class="text-xs text-muted">{tt('Novembre 2026, dates libres seulement')}</p></div>
+    </div>
+    <div class="mt-3 grid grid-cols-7 gap-1 text-center text-[0.68rem] font-bold text-muted">{head.map(d => <span>{d}</span>)}</div>
+    <div class="mt-1 grid grid-cols-7 gap-1" dir="ltr">
+      {Array.from({ length: 6 }).map(() => <span></span>)}
+      {Array.from({ length: 30 }, (_, i) => i + 1).map(d => (
+        <button type="button" class={`is-d grid aspect-square place-items-center rounded-lg text-sm font-semibold tabular-nums transition-colors ${booked.includes(d) ? 'is-off' : ''}`} data-d={d} disabled={booked.includes(d)}>{d}</button>
+      ))}
+    </div>
+    <span hidden data-t-one>{tt('{a} au {b} novembre, {n} nuit')}</span><span hidden data-t-many>{tt('{a} au {b} novembre, {n} nuits')}</span><span hidden data-t-start>{tt('Arrivée le {a} novembre')}</span>
+    <p class="mt-3 text-xs text-muted" data-hint>{tt('Touchez l’arrivée, puis le départ.')}</p>
+  </div>
+  <div class="flex flex-col rounded-[1.6rem] bg-white/[0.06] p-4 ring-1 ring-white/10">
+    <p class="text-sm font-semibold"><span data-range>—</span></p>
+    <dl class="mt-3 space-y-1.5 text-sm">
+      <div class="flex justify-between gap-3"><dt class="text-white/65"><span data-nw>0</span> × 450 DH</dt><dd class="tabular-nums" dir="ltr"><span data-a>0</span> DH</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-white/65"><span data-ne>0</span> × 550 DH <span class="text-white/45">({tt('ven., sam.')})</span></dt><dd class="tabular-nums" dir="ltr"><span data-b>0</span> DH</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-white/65">{tt('Ménage')}</dt><dd class="tabular-nums" dir="ltr">150 DH</dd></div>
+      <div class="flex justify-between gap-3 border-t border-white/15 pt-2 font-bold"><dt>{tt('Total')}</dt><dd class="display text-3xl tabular-nums text-green" dir="ltr"><span data-t>0</span> DH</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-white/65">{tt('Acompte (30 %)')}</dt><dd class="tabular-nums" dir="ltr"><span data-dep>0</span> DH</dd></div>
+      <div class="flex justify-between gap-3"><dt class="text-white/65">{tt('Caution, rendue au départ')}</dt><dd class="whitespace-nowrap tabular-nums" dir="ltr">1 000 DH</dd></div>
+    </dl>
+    <button type="button" class="mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-green px-4 font-bold text-navy transition-transform active:scale-[.98] disabled:opacity-40" data-send disabled><Icon name="phone" class="size-4" />{tt('Envoyer la demande')}</button>
+    <ol class="mt-4 space-y-2 text-sm" data-steps>
+      {steps.map((s, i) => <li class="is-s flex items-center gap-2.5 text-white/40 transition-colors" style={`--i:${i}`}><span class="is-dot grid size-6 shrink-0 place-items-center rounded-full border-2 border-white/25 transition-all"><Icon name="check" class="size-3.5 opacity-0" /></span>{s}</li>)}
+    </ol>
+  </div>
+</div>
+
+<style is:global>
+  .is-d { background: rgb(0 30 62 / .05); color: var(--color-navy); }
+  .is-d:hover:not(:disabled) { background: rgb(5 185 98 / .2); }
+  .is-d.is-off { background: transparent; color: rgb(0 30 62 / .25); text-decoration: line-through; cursor: not-allowed; }
+  .is-d.is-in { background: rgb(5 185 98 / .25); }
+  .is-d.is-end { background: var(--color-green); color: var(--color-navy); }
+  .is-s.on { color: #fff; }
+  .is-s.on .is-dot { background: var(--color-green); border-color: var(--color-green); color: var(--color-navy); }
+  .is-s.on .is-dot svg { opacity: 1; }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-stay]').forEach((root) => {
+    const booked: number[] = JSON.parse(root.dataset.booked!);
+    const days = [...root.querySelectorAll<HTMLButtonElement>('.is-d')];
+    const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const send = root.querySelector<HTMLButtonElement>('[data-send]')!;
+    const steps = [...root.querySelectorAll<HTMLElement>('.is-s')];
+    const fmt = (n: number) => n.toLocaleString('fr-FR').replace(/[  ]/g, ' ');
+    let a = 0, b = 0, touched = false, timers: number[] = [];
+    // 1 November 2026 is a Sunday: day d falls on weekday (d + 6) % 7, Monday = 0
+    const weekend = (d: number) => { const w = (d + 5) % 7; return w === 4 || w === 5; };
+    const paint = () => {
+      days.forEach((el) => { const d = Number(el.dataset.d); el.classList.toggle('is-end', d === a || d === b); el.classList.toggle('is-in', !!b && d > a && d < b); });
+      let nw = 0, ne = 0;
+      if (a && b) for (let d = a; d < b; d++) weekend(d) ? ne++ : nw++;
+      const total = nw * 450 + ne * 550 + (a && b ? 150 : 0);
+      $('[data-nw]').textContent = String(nw); $('[data-ne]').textContent = String(ne);
+      $('[data-a]').textContent = fmt(nw * 450); $('[data-b]').textContent = fmt(ne * 550);
+      $('[data-t]').textContent = fmt(total); $('[data-dep]').textContent = fmt(Math.round(total * 0.3));
+      const n = nw + ne, T = (k: string) => $(`[data-t-${k}]`).textContent ?? '';
+      $('[data-range]').textContent = a && b ? T(n > 1 ? 'many' : 'one').replace('{a}', String(a)).replace('{b}', String(b)).replace('{n}', String(n)) : a ? T('start').replace('{a}', String(a)) : '—';
+      send.disabled = !(a && b);
+    };
+    const reset = () => { timers.forEach(clearTimeout); timers = []; steps.forEach(s => s.classList.remove('on')); };
+    const pick = (d: number) => {
+      reset();
+      if (!a || b || d <= a) { a = d; b = 0; }
+      else if (booked.some(x => x >= a && x < d)) { a = d; b = 0; } // a booked night in between: start again from here
+      else b = d;
+      paint();
+    };
+    days.forEach(el => el.addEventListener('click', () => { touched = true; pick(Number(el.dataset.d)); }));
+    const go = () => { reset(); steps.forEach((s, i) => timers.push(window.setTimeout(() => s.classList.add('on'), still ? 0 : i * 900))); };
+    send.addEventListener('click', () => { touched = true; go(); });
+    paint();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return; io.disconnect();
+        if (still) return;
+        setTimeout(() => { if (!touched) pick(18); }, 900);
+        setTimeout(() => { if (!touched) pick(22); }, 1700);
+        setTimeout(() => { if (!touched) go(); }, 2700);
+      }, { threshold: 0.4 });
+      io.observe(root);
+    }
+  });
+</script>

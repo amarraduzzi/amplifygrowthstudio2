@@ -1,0 +1,164 @@
+---
+// One tab per profession, each with its own live demo when there is one. The tabs work with the hash
+// (#agences, #agent, #courte-duree...) so links from elsewhere open the right one.
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+import ImmoMatch from './ImmoMatch.astro';
+import ImmoVisit from './ImmoVisit.astro';
+import ImmoStay from './ImmoStay.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+type Block = { id: string; icon: string; tab: string; kicker: string; h: [string, string]; lead: string; wa: string; demo?: 'match' | 'visit' | 'stay'; items: [string, string][]; note?: string };
+const blocks: Block[] = [
+  { id: 'agences', icon: 'store', tab: tt('Agences'), kicker: tt('Agences immobilières'), h: [tt('Chaque lead suivi.'), tt('Chaque bien en ligne.')], lead: tt('Vente et location : biens, mandats, clients, visites et ventes dans un seul outil, sur téléphone comme au bureau.'),
+    wa: tt('Bonjour, je suis une agence immobilière et je voudrais une démo d’Amplify Immobilier.'), demo: 'match',
+    items: [
+      [tt('Biens et mandats'), tt('Vos biens avec leurs photos, et leurs mandats. Vous voyez ceux qui arrivent à échéance avant qu’ils expirent.')],
+      [tt('Les bons biens aux bons clients'), tt('Un bien arrive : les clients qui le cherchent apparaissent, et vous leur écrivez sur WhatsApp en un clic.')],
+      [tt('Annonces prêtes à copier'), tt('Un titre, un texte et des photos pour Mubawab, Avito et les autres portails. Vous copiez, vous publiez.')],
+      [tt('Visites et rapport propriétaire'), tt('Vos visites dans l’agenda de la semaine, et pour chaque bien un rapport à remettre au propriétaire : visites, offres, état du mandat.')],
+      [tt('Ventes et commissions'), tt('Chaque vente suivie jusqu’à la commission, avec le partage quand un confrère ou un apporteur est dans l’affaire.')],
+      [tt('Votre propre site'), tt('Votre agence en ligne, à votre adresse, avec un formulaire qui crée le contact et la tâche de rappel tout seul.')],
+    ] },
+  { id: 'agent', icon: 'briefcase', tab: tt('Agent seul'), kicker: tt('Amplify Agent'), h: [tt('Vous travaillez seul ?'), tt('L’outil travaille avec vous.')], lead: tt('Pour l’agent sans agence : vos biens, vos clients et vos bons de visite sur le téléphone. Gratuit jusqu’à 3 biens, puis 99 DH par mois.'),
+    wa: tt('Bonjour, je suis agent immobilier indépendant et je voudrais voir Amplify Agent.'), demo: 'visit',
+    items: [
+      [tt('Bon de visite signé'), tt('Le visiteur signe sur votre téléphone et reçoit sa copie sur WhatsApp. Le bon ne se modifie plus : vous gardez la preuve de la visite.')],
+      [tt('Mes biens'), tt('En ligne en deux minutes, avec vos photos et une page à partager sur WhatsApp.')],
+      [tt('Mes clients'), tt('Ce que chacun cherche, et les biens qui lui correspondent.')],
+      [tt('Confrères'), tt('Un bien ou un client partagé avec un confrère, et la commission avec.')],
+      [tt('Ma vitrine'), tt('Votre page avec votre photo, vos langues et vos liens Avito, Mubawab, Facebook, Instagram et TikTok.')],
+      [tt('Annonces au bon format'), tt('Photos recadrées pour Marketplace, Instagram et les stories, une image avec le prix, et une note qui dit ce qui manque à l’annonce.')],
+    ] },
+  { id: 'courte-duree', icon: 'calendar', tab: tt('Courte durée'), kicker: tt('Location courte durée'), h: [tt('Vous louez à la nuit ?'), tt('Réservé sans aller-retour.')], lead: tt('Pour ceux qui louent sur Facebook, Airbnb ou Booking : un lien avec vos dates libres, le prix calculé tout seul et une demande complète. Fini les dix messages pour une réservation.'),
+    wa: tt('Bonjour, je loue des appartements à la nuit et je voudrais voir Amplify pour la courte durée.'), demo: 'stay',
+    items: [
+      [tt('Le lien de réservation'), tt('Le client voit seulement les dates libres et le prix exact : nuits, week-end, ménage, acompte et caution.')],
+      [tt('Une demande complète'), tt('Nom, WhatsApp, personnes, heure d’arrivée et règlement accepté. Vous acceptez, refusez ou proposez autre chose.')],
+      [tt('Le client suit tout'), tt('Envoyée, acceptée avec une option de 24 h, « J’ai payé », confirmée. Chaque message est prêt dans sa langue.')],
+      [tt('La page de l’invité'), tt('Après confirmation, le client reçoit sa page : accès, règles de la maison et contacts utiles.')],
+      [tt('Accueil et ménage'), tt('Chaque réservation crée la tâche d’accueil et la tâche de ménage, au bon jour.')],
+      [tt('Airbnb et Booking'), tt('Un calendrier par logement, et un lien iCal pour bloquer les mêmes dates partout.')],
+    ] },
+  { id: 'location', icon: 'book', tab: tt('Gestion locative'), kicker: tt('Gestion locative'), h: [tt('Les loyers rentrent.'), tt('Le propriétaire est informé.')], lead: tt('Baux, loyers, quittances et relevés, avec WhatsApp pour relancer les locataires et informer les propriétaires.'),
+    wa: tt('Bonjour, je fais de la gestion locative et je voudrais une démo d’Amplify Immobilier.'),
+    items: [
+      [tt('Loyers suivis'), tt('Chaque mois, une ligne par locataire : payé, à payer ou en retard. La relance part sur WhatsApp en un clic.')],
+      [tt('Quittances'), tt('Une quittance en français ou en arabe pour chaque mois payé, à imprimer ou à envoyer au locataire.')],
+      [tt('Révision du loyer'), tt('L’application montre quand une révision est possible et de combien, selon la loi 67-12, et prépare le message au locataire.')],
+      [tt('État des lieux'), tt('Entrée et sortie sur téléphone ou tablette, avec photos par pièce et signatures à l’écran, puis en PDF.')],
+      [tt('Le propriétaire informé'), tt('Un relevé chaque mois : loyers reçus, honoraires, réparations. Et un lien privé pour suivre ses biens, en français, arabe, anglais ou néerlandais.')],
+      [tt('Réparations'), tt('Une panne signalée, son coût et son état. La réparation passe toute seule dans le relevé du propriétaire.')],
+    ] },
+  { id: 'syndics', icon: 'users', tab: tt('Syndics'), kicker: tt('Syndics de copropriété'), h: [tt('Chaque appel de fonds juste.'), tt('Chaque copropriétaire informé.')], lead: tt('Pour les syndics de copropriété (loi 18-00) : résidences, appels de fonds, impayés, incidents et assemblées générales au même endroit.'),
+    wa: tt('Bonjour, je suis syndic de copropriété et je voudrais une démo d’Amplify Immobilier.'),
+    items: [
+      [tt('Résidences et lots'), tt('Chaque lot avec son étage, ses tantièmes et son copropriétaire. La part de chacun en pourcentage est calculée pour vous.')],
+      [tt('Appels de fonds au centime'), tt('Vous répartissez un appel de fonds selon les tantièmes ou à parts égales. Chaque lot reçoit son montant exact.')],
+      [tt('Impayés et relances'), tt('Qui a payé, qui a payé en partie, qui est en retard : un écran par résidence, et la relance part sur WhatsApp en français ou en arabe.')],
+      [tt('Incidents des parties communes'), tt('Une panne signalée avec son lieu, son urgence, son coût et son état. Vous choisissez si les résidents la voient.')],
+      [tt('Assemblée générale'), tt('Convocation par WhatsApp, présences et procurations, votes par tantièmes, puis le procès-verbal en PDF.')],
+      [tt('Annonces et espace copropriétaire'), tt('Vos annonces partent sur WhatsApp. Chaque lot a son lien privé : ses charges, le RIB, les travaux et le résultat de l’assemblée.')],
+    ] },
+  { id: 'promoteurs', icon: 'chart', tab: tt('Promoteurs'), kicker: tt('Promoteurs'), h: [tt('Chaque lot suivi.'), tt('Du plan aux clés.')], lead: tt('Projets, stock, réservations, paiements par étape et rapport de direction, pour suivre chaque lot jusqu’à la remise des clés.'),
+    wa: tt('Bonjour, je suis promoteur et je voudrais une démo d’Amplify Immobilier.'),
+    items: [
+      [tt('Projets et tranches'), tt('Chaque projet avec son statut et sa livraison prévue, découpé en tranches. Les lots s’ajoutent par immeuble, plusieurs centaines d’un coup.')],
+      [tt('Grille de stock'), tt('Chaque immeuble et chaque étage en couleurs : disponible, option, réservé, vendu. Un prix ou un statut changé sur plusieurs lots à la fois.')],
+      [tt('Réservation et VEFA'), tt('Une réservation avec son échéancier. La VEFA suit la loi 107-12 : l’application refuse plus de 5 % au départ et moins de 20 % à la remise des clés.')],
+      [tt('Avancement du chantier'), tt('Une étape atteinte (fondations, gros œuvre, finitions, clés) : les échéances deviennent exigibles, et l’appel de fonds en PDF part avec le RIB.')],
+      [tt('Page publique du projet'), tt('Une page par projet avec photos, prix de départ, lots libres et formulaire de rappel. Chaque demande devient un prospect et une tâche pour un vendeur.')],
+      [tt('Rapport de direction'), tt('Ventes, encaissements, retards, stock restant et encaissements à venir, par projet et par vendeur, en PDF ou en Excel.')],
+    ] },
+  { id: 'network', icon: 'heart', tab: tt('Network'), kicker: tt('Amplify Network'), h: [tt('Collaborez entre agences.'), tt('Chacun garde ses données.')], lead: tt('Partagez des biens, recommandez des clients et partagez la commission avec d’autres agences qui utilisent Amplify Immobilier.'),
+    wa: tt('Bonjour, je suis une agence immobilière et je voudrais voir Amplify Network dans une démo d’Amplify Immobilier.'),
+    items: [
+      [tt('Vos agences partenaires'), tt('Vous invitez une autre agence avec votre code de bureau. Elle accepte, et vous pouvez collaborer.')],
+      [tt('Biens partagés'), tt('Vous partagez un bien disponible avec un partenaire et vous lui proposez une part de votre commission. Il ne voit ni l’adresse, ni le propriétaire.')],
+      [tt('J’ai un client'), tt('Sur un bien partagé, l’agence partenaire propose son client. Les deux agences suivent les mêmes étapes : visite, offre, signature, commission versée.')],
+      [tt('Recommandation de clients'), tt('Vous recommandez un client à une agence partenaire, avec son accord (loi 09-08) et des frais en pourcentage de la commission de l’agence.')],
+      [tt('Un partage clair'), tt('Les deux agences voient la même répartition de la commission, en pourcentage et en dirhams.')],
+      [tt('Convention de collaboration'), tt('La convention entre agences est prête en PDF.')],
+    ] },
+];
+---
+<div data-metiers>
+  <div class="-mx-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:px-0" role="tablist" aria-label={tt('Votre métier')}>
+    <div class="flex w-max gap-2">
+      {blocks.map((b, i) => (
+        <button type="button" role="tab" class="mx-tab inline-flex min-h-12 items-center gap-2 rounded-full bg-paper px-5 font-semibold ring-1 ring-line transition-colors" data-k={b.id} aria-selected={i ? 'false' : 'true'} aria-controls={b.id}>
+          <Icon name={b.icon} class="size-4" />{b.tab}
+        </button>
+      ))}
+    </div>
+  </div>
+  <div class="mt-5">
+    {blocks.map((b, i) => (
+      <section id={b.id} class={`mx-panel scroll-mt-24 ${i ? 'hidden' : ''}`} data-k={b.id} role="tabpanel">
+        <div class="relative isolate overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-10 lg:p-12">
+          <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(55%_60%_at_100%_0%,rgba(5,185,98,.16),transparent_70%)]" aria-hidden="true"></span>
+          <div class={`grid grid-cols-1 gap-10 ${b.demo ? 'lg:grid-cols-[0.85fr_1.15fr] lg:items-center' : 'lg:grid-cols-[0.8fr_1.2fr]'}`}>
+            <div class="mx-in min-w-0">
+              <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/15"><span class="size-2 rounded-full bg-green"></span>{b.kicker}</p>
+              <h3 class="display mt-5 text-[2.4rem] leading-[0.95] sm:text-5xl"><span class="block">{b.h[0]}</span><span class="block text-green">{b.h[1]}</span></h3>
+              <p class="mt-5 max-w-md text-lg text-white/75">{b.lead}</p>
+              <WaButton text={b.wa} label={tt('Demander une démo')} where={`immobilier-${b.id}`} class="mt-7 px-7 text-lg" />
+            </div>
+            {b.demo ? (
+              <div class="mx-in min-w-0" style="--d:150ms">
+                {b.demo === 'match' && <ImmoMatch />}
+                {b.demo === 'visit' && <ImmoVisit />}
+                {b.demo === 'stay' && <ImmoStay />}
+                <p class="mt-3 text-xs text-white/45">{tt('Exemple interactif, avec des données de démonstration.')}</p>
+              </div>
+            ) : (
+              <ul class="grid gap-x-8 gap-y-6 sm:grid-cols-2">
+                {b.items.map(([t, x], k) => (
+                  <li class="mx-in flex gap-3" style={`--d:${k * 70}ms`}>
+                    <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
+                    <div><p class="font-semibold">{t}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p></div>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          {b.demo && (
+            <ul class="mt-10 grid gap-x-8 gap-y-6 border-t border-white/15 pt-8 sm:grid-cols-2 lg:grid-cols-3">
+              {b.items.map(([t, x], k) => (
+                <li class="mx-in flex gap-3" style={`--d:${200 + k * 70}ms`}>
+                  <span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>
+                  <div><p class="font-semibold">{t}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p></div>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </section>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  .mx-tab[aria-selected="true"] { background: var(--color-navy); color: #fff; box-shadow: none; }
+  .mx-panel.is-on .mx-in { animation: fade-up .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: var(--d, 0ms); }
+  @media (prefers-reduced-motion: reduce) { .mx-panel.is-on .mx-in { animation: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-metiers]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.mx-tab')];
+    const panels = [...root.querySelectorAll<HTMLElement>('.mx-panel')];
+    const show = (k: string, scroll = false) => {
+      if (!panels.some(p => p.dataset.k === k)) return;
+      tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.k === k)));
+      panels.forEach(p => { const on = p.dataset.k === k; p.classList.toggle('hidden', !on); p.classList.toggle('is-on', on); });
+      const tab = tabs.find(t => t.dataset.k === k)!;
+      tab.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+      if (scroll) root.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    };
+    tabs.forEach(t => t.addEventListener('click', () => { show(t.dataset.k!); history.replaceState(null, '', `#${t.dataset.k}`); }));
+    const fromHash = () => { const k = location.hash.slice(1); if (k) show(k, true); };
+    addEventListener('hashchange', fromHash);
+    if (location.hash) fromHash();
+  });
+</script>
