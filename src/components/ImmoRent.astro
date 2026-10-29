@@ -1,0 +1,102 @@
+---
+// Rental management: the rents of the month. "Relancer" opens the WhatsApp reminder for a late tenant,
+// "Payé" marks the rent as paid and the quittance appears; the total collected climbs with it.
+// Plays once when it comes into view; every button works. Demo tenants and amounts.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const rows: [string, string, number, 'paid' | 'due' | 'late', number][] = [
+  ['Mme Alami', tt('Appartement, Agdal'), 4500, 'late', 9],
+  ['M. Bennis', tt('Studio, Hay Riad'), 2800, 'paid', 0],
+  ['Famille Chraibi', tt('Villa, Souissi'), 12000, 'due', 0],
+  ['M. Idrissi', tt('Bureau, Hassan'), 6500, 'paid', 0],
+  ['Mme Ouazzani', tt('Appartement, Océan'), 3900, 'late', 4],
+];
+const total = rows.reduce((s, r) => s + r[2], 0);
+---
+<div class="ir rounded-[1.6rem] bg-white p-4 text-navy shadow-[0_40px_70px_-40px_rgba(0,30,62,.6)] ring-1 ring-line sm:p-5" data-rent data-total={total}>
+  <div class="flex flex-wrap items-end justify-between gap-3">
+    <div><p class="text-sm font-semibold text-muted">{tt('Loyers d’octobre')}</p><p class="display mt-1 text-3xl tabular-nums" dir="ltr"><span data-in>0</span> / {total.toLocaleString('fr-FR').replace(/[  ]/g, ' ')} DH</p></div>
+    <span class="rounded-full bg-chalk px-3 py-1 text-xs font-bold ring-1 ring-line"><span data-late>2</span> {tt('en retard')}</span>
+  </div>
+  <div class="mt-3 h-2.5 overflow-hidden rounded-full bg-chalk"><span class="block h-full rounded-full bg-green transition-[width] duration-700" style="width:0" data-bar></span></div>
+  <ul class="mt-4 space-y-2">
+    {rows.map(([n, w, amt, st, d]) => (
+      <li class="ir-r rounded-xl bg-chalk px-3 py-2.5 transition-colors duration-500" data-st={st} data-amt={amt}>
+        <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
+          <span class="min-w-0 flex-1"><span class="block text-sm font-bold"><bdi>{n}</bdi></span><span class="block text-xs text-muted">{w}, <span dir="ltr">{amt.toLocaleString('fr-FR').replace(/[  ]/g, ' ')} DH</span></span></span>
+          <span class="ir-badge rounded-full px-2.5 py-1 text-xs font-bold">
+            <span class="ir-l-paid">{tt('Payé')}</span><span class="ir-l-due">{tt('À payer')}</span><span class="ir-l-late">{tt('{d} j de retard').replace('{d}', String(d))}</span>
+          </span>
+          <span class="flex gap-1.5">
+            <button type="button" class="ir-remind hidden min-h-9 items-center gap-1 rounded-full bg-[#DCF8C6] px-3 text-xs font-bold" data-name={n}><Icon name="phone" class="size-3.5" />{tt('Relancer')}</button>
+            <button type="button" class="ir-pay min-h-9 rounded-full bg-navy px-3 text-xs font-bold text-white">{tt('Payé')}</button>
+            <span class="ir-q hidden min-h-9 items-center gap-1 rounded-full px-3 text-xs font-bold text-green-deep ring-1 ring-green/40"><Icon name="book" class="size-3.5" />{tt('Quittance')}</span>
+          </span>
+        </div>
+        <p class="ir-msg mt-2 hidden rounded-xl rounded-ss-sm bg-[#DCF8C6] px-3 py-2 text-xs leading-relaxed" data-msg></p>
+      </li>
+    ))}
+  </ul>
+  <span hidden data-t-msg>{tt('Bonjour {name}, le loyer d’octobre ({amt} DH) n’est pas encore arrivé. Merci de le régler dès que possible.')}</span>
+</div>
+
+<style is:global>
+  .ir-badge > span { display: none; }
+  .ir-r[data-st="paid"] .ir-l-paid, .ir-r[data-st="due"] .ir-l-due, .ir-r[data-st="late"] .ir-l-late { display: inline; }
+  .ir-r[data-st="paid"] .ir-badge { background: rgb(5 185 98 / .15); color: var(--color-green-deep); }
+  .ir-r[data-st="due"] .ir-badge { background: #fff; color: var(--color-navy); box-shadow: inset 0 0 0 1px var(--color-line); }
+  .ir-r[data-st="late"] .ir-badge { background: rgb(229 72 77 / .12); color: #C4282D; }
+  .ir-r[data-st="late"] .ir-remind { display: inline-flex; }
+  .ir-r[data-st="paid"] .ir-pay { display: none; }
+  .ir-r[data-st="paid"] .ir-q { display: inline-flex; }
+  .ir-r.just { animation: ir-ok .8s ease-out; }
+  @keyframes ir-ok { 0% { background: rgb(5 185 98 / .35); } }
+  .ir-msg:not(.hidden) { animation: fade-up .4s ease-out both; }
+  @media (prefers-reduced-motion: reduce) { .ir-r.just, .ir-msg:not(.hidden) { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-rent]').forEach((root) => {
+    const rows = [...root.querySelectorAll<HTMLElement>('.ir-r')];
+    const total = Number(root.dataset.total);
+    const fmt = (n: number) => n.toLocaleString('fr-FR').replace(/[  ]/g, ' ');
+    const inEl = root.querySelector<HTMLElement>('[data-in]')!;
+    let shown = 0, touched = false;
+    const paint = () => {
+      const got = rows.filter(r => r.dataset.st === 'paid').reduce((s, r) => s + Number(r.dataset.amt), 0);
+      root.querySelector<HTMLElement>('[data-late]')!.textContent = String(rows.filter(r => r.dataset.st === 'late').length);
+      root.querySelector<HTMLElement>('[data-bar]')!.style.width = `${(got / total) * 100}%`;
+      const from = shown; shown = got;
+      if (still) { inEl.textContent = fmt(got); return; }
+      const t0 = performance.now();
+      const tick = (t: number) => { const k = Math.min(1, (t - t0) / 700); inEl.textContent = fmt(Math.round(from + (got - from) * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    };
+    const tM = root.querySelector('[data-t-msg]')!.textContent ?? '';
+    const remind = (r: HTMLElement) => {
+      const m = r.querySelector<HTMLElement>('[data-msg]')!;
+      m.textContent = tM.replace('{name}', r.querySelector<HTMLElement>('.ir-remind')!.dataset.name ?? '').replace('{amt}', fmt(Number(r.dataset.amt)));
+      m.classList.toggle('hidden');
+    };
+    const pay = (r: HTMLElement) => {
+      r.dataset.st = 'paid'; r.querySelector('[data-msg]')!.classList.add('hidden');
+      r.classList.remove('just'); void r.offsetWidth; r.classList.add('just'); paint();
+    };
+    rows.forEach((r) => {
+      r.querySelector('.ir-remind')!.addEventListener('click', () => { touched = true; remind(r); });
+      r.querySelector('.ir-pay')!.addEventListener('click', () => { touched = true; pay(r); });
+    });
+    paint();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return; io.disconnect();
+        if (still) return;
+        setTimeout(() => { if (!touched) remind(rows[0]); }, 1300);
+        setTimeout(() => { if (!touched) pay(rows[2]); }, 3000);
+      }, { threshold: 0.4 });
+      io.observe(root);
+    }
+  });
+</script>

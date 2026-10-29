@@ -6,9 +6,12 @@ import WaButton from './WaButton.astro';
 import ImmoMatch from './ImmoMatch.astro';
 import ImmoVisit from './ImmoVisit.astro';
 import ImmoStay from './ImmoStay.astro';
+import ImmoRent from './ImmoRent.astro';
+import ImmoSyndic from './ImmoSyndic.astro';
+import ImmoVefa from './ImmoVefa.astro';
 import { tr, langOf } from '../i18n/t';
 const tt = tr(langOf(Astro.url));
-type Block = { id: string; icon: string; tab: string; kicker: string; h: [string, string]; lead: string; wa: string; demo?: 'match' | 'visit' | 'stay'; items: [string, string][]; note?: string };
+type Block = { id: string; icon: string; tab: string; kicker: string; h: [string, string]; lead: string; wa: string; demo?: 'match' | 'visit' | 'stay' | 'rent' | 'syndic' | 'vefa'; items: [string, string][]; note?: string };
 const blocks: Block[] = [
   { id: 'agences', icon: 'store', tab: tt('Agences'), kicker: tt('Agences immobilières'), h: [tt('Chaque lead suivi.'), tt('Chaque bien en ligne.')], lead: tt('Vente et location : biens, mandats, clients, visites et ventes dans un seul outil, sur téléphone comme au bureau.'),
     wa: tt('Bonjour, je suis une agence immobilière et je voudrais une démo d’Amplify Immobilier.'), demo: 'match',
@@ -41,7 +44,7 @@ const blocks: Block[] = [
       [tt('Airbnb et Booking'), tt('Un calendrier par logement, et un lien iCal pour bloquer les mêmes dates partout.')],
     ] },
   { id: 'location', icon: 'book', tab: tt('Gestion locative'), kicker: tt('Gestion locative'), h: [tt('Les loyers rentrent.'), tt('Le propriétaire est informé.')], lead: tt('Baux, loyers, quittances et relevés, avec WhatsApp pour relancer les locataires et informer les propriétaires.'),
-    wa: tt('Bonjour, je fais de la gestion locative et je voudrais une démo d’Amplify Immobilier.'),
+    wa: tt('Bonjour, je fais de la gestion locative et je voudrais une démo d’Amplify Immobilier.'), demo: 'rent',
     items: [
       [tt('Loyers suivis'), tt('Chaque mois, une ligne par locataire : payé, à payer ou en retard. La relance part sur WhatsApp en un clic.')],
       [tt('Quittances'), tt('Une quittance en français ou en arabe pour chaque mois payé, à imprimer ou à envoyer au locataire.')],
@@ -51,7 +54,7 @@ const blocks: Block[] = [
       [tt('Réparations'), tt('Une panne signalée, son coût et son état. La réparation passe toute seule dans le relevé du propriétaire.')],
     ] },
   { id: 'syndics', icon: 'users', tab: tt('Syndics'), kicker: tt('Syndics de copropriété'), h: [tt('Chaque appel de fonds juste.'), tt('Chaque copropriétaire informé.')], lead: tt('Pour les syndics de copropriété (loi 18-00) : résidences, appels de fonds, impayés, incidents et assemblées générales au même endroit.'),
-    wa: tt('Bonjour, je suis syndic de copropriété et je voudrais une démo d’Amplify Immobilier.'),
+    wa: tt('Bonjour, je suis syndic de copropriété et je voudrais une démo d’Amplify Immobilier.'), demo: 'syndic',
     items: [
       [tt('Résidences et lots'), tt('Chaque lot avec son étage, ses tantièmes et son copropriétaire. La part de chacun en pourcentage est calculée pour vous.')],
       [tt('Appels de fonds au centime'), tt('Vous répartissez un appel de fonds selon les tantièmes ou à parts égales. Chaque lot reçoit son montant exact.')],
@@ -61,7 +64,7 @@ const blocks: Block[] = [
       [tt('Annonces et espace copropriétaire'), tt('Vos annonces partent sur WhatsApp. Chaque lot a son lien privé : ses charges, le RIB, les travaux et le résultat de l’assemblée.')],
     ] },
   { id: 'promoteurs', icon: 'chart', tab: tt('Promoteurs'), kicker: tt('Promoteurs'), h: [tt('Chaque lot suivi.'), tt('Du plan aux clés.')], lead: tt('Projets, stock, réservations, paiements par étape et rapport de direction, pour suivre chaque lot jusqu’à la remise des clés.'),
-    wa: tt('Bonjour, je suis promoteur et je voudrais une démo d’Amplify Immobilier.'),
+    wa: tt('Bonjour, je suis promoteur et je voudrais une démo d’Amplify Immobilier.'), demo: 'vefa',
     items: [
       [tt('Projets et tranches'), tt('Chaque projet avec son statut et sa livraison prévue, découpé en tranches. Les lots s’ajoutent par immeuble, plusieurs centaines d’un coup.')],
       [tt('Grille de stock'), tt('Chaque immeuble et chaque étage en couleurs : disponible, option, réservé, vendu. Un prix ou un statut changé sur plusieurs lots à la fois.')],
@@ -100,7 +103,7 @@ const blocks: Block[] = [
           <div class={`grid grid-cols-1 gap-10 ${b.demo ? 'lg:grid-cols-[0.85fr_1.15fr] lg:items-center' : 'lg:grid-cols-[0.8fr_1.2fr]'}`}>
             <div class="mx-in min-w-0">
               <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/15"><span class="size-2 rounded-full bg-green"></span>{b.kicker}</p>
-              <h3 class="display mt-5 text-[2.4rem] leading-[0.95] sm:text-5xl"><span class="block">{b.h[0]}</span><span class="block text-green">{b.h[1]}</span></h3>
+              <h3 class="display mt-5 text-[2.2rem] leading-[0.95] sm:text-[2.6rem]"><span class="block">{b.h[0]}</span><span class="block text-green">{b.h[1]}</span></h3>
               <p class="mt-5 max-w-md text-lg text-white/75">{b.lead}</p>
               <WaButton text={b.wa} label={tt('Demander une démo')} where={`immobilier-${b.id}`} class="mt-7 px-7 text-lg" />
             </div>
@@ -109,6 +112,9 @@ const blocks: Block[] = [
                 {b.demo === 'match' && <ImmoMatch />}
                 {b.demo === 'visit' && <ImmoVisit />}
                 {b.demo === 'stay' && <ImmoStay />}
+                {b.demo === 'rent' && <ImmoRent />}
+                {b.demo === 'syndic' && <ImmoSyndic />}
+                {b.demo === 'vefa' && <ImmoVefa />}
                 <p class="mt-3 text-xs text-white/45">{tt('Exemple interactif, avec des données de démonstration.')}</p>
               </div>
             ) : (

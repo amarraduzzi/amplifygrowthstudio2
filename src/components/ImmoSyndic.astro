@@ -1,0 +1,86 @@
+---
+// Syndic: an appel de fonds split over the lots, by tantièmes or in equal parts, to the centime. The total of
+// the lots is always exactly the amount called (the last centimes go to the largest remainders).
+// Plays once when it comes into view; the slider and the switch work. Demo residence and lots.
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const lots: [string, string, number][] = [
+  ['A1', 'M. Berrada', 182], ['A2', 'Mme Kettani', 143], ['A3', 'M. Lahlou', 143],
+  ['B1', 'Mme Sefrioui', 221], ['B2', 'M. Naciri', 167], ['B3', 'Mme Tahiri', 144],
+];
+---
+<div class="isy rounded-[1.6rem] bg-white p-4 text-navy shadow-[0_40px_70px_-40px_rgba(0,30,62,.6)] ring-1 ring-line sm:p-5" data-syndic data-lots={JSON.stringify(lots)}>
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div><p class="text-sm font-semibold text-muted">{tt('Appel de fonds, Résidence Les Orangers')}</p><p class="mt-0.5 text-xs text-muted">{tt('Travaux de l’ascenseur')}</p></div>
+    <div class="flex rounded-full bg-chalk p-1 text-xs font-bold ring-1 ring-line" role="group" aria-label={tt('Répartition')}>
+      <button type="button" class="isy-m is-on rounded-full px-3 py-1.5" data-m="t">{tt('Tantièmes')}</button>
+      <button type="button" class="isy-m rounded-full px-3 py-1.5" data-m="e">{tt('Parts égales')}</button>
+    </div>
+  </div>
+  <label class="mt-4 block">
+    <span class="flex items-end justify-between gap-3"><span class="text-sm font-semibold">{tt('Montant appelé')}</span><span class="display text-3xl tabular-nums" dir="ltr"><span data-amt>48 500</span> DH</span></span>
+    <input type="range" min="5000" max="150000" step="500" value="48500" class="mt-2 w-full accent-[#05B962]" data-range aria-label={tt('Montant appelé')} />
+  </label>
+  <ul class="mt-4 space-y-1.5">
+    {lots.map(([l, o, t]) => (
+      <li class="relative overflow-hidden rounded-xl bg-chalk px-3 py-2">
+        <span class="isy-bar absolute inset-y-0 start-0 bg-green/20 transition-[width] duration-500" style="width:0"></span>
+        <span class="relative flex items-center gap-3 text-sm">
+          <span class="w-8 font-bold">{l}</span>
+          <span class="min-w-0 flex-1 truncate text-muted"><bdi>{o}</bdi></span>
+          <span class="hidden text-xs text-muted sm:inline" dir="ltr">{t} / 1000</span>
+          <span class="w-24 text-end font-bold tabular-nums" dir="ltr"><span class="isy-v">0,00</span> DH</span>
+        </span>
+      </li>
+    ))}
+  </ul>
+  <p class="mt-3 flex items-center justify-between gap-3 rounded-xl bg-navy px-3 py-2.5 text-sm font-bold text-white">
+    <span>{tt('Total des lots')}</span><span class="tabular-nums" dir="ltr"><span data-sum>0,00</span> DH <span class="text-green">✓</span></span>
+  </p>
+  <p class="mt-2 text-xs text-muted">{tt('Au centime : la somme des lots est toujours exactement le montant appelé.')}</p>
+</div>
+
+<style is:global>
+  .isy-m { color: var(--color-muted); transition: background-color .25s, color .25s; }
+  .isy-m.is-on { background: var(--color-navy); color: #fff; }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-syndic]').forEach((root) => {
+    const lots: [string, string, number][] = JSON.parse(root.dataset.lots!);
+    const range = root.querySelector<HTMLInputElement>('[data-range]')!;
+    const vals = [...root.querySelectorAll<HTMLElement>('.isy-v')];
+    const bars = [...root.querySelectorAll<HTMLElement>('.isy-bar')];
+    const cents = (c: number) => (c / 100).toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/[  ]/g, ' ');
+    let mode = 't', touched = false;
+    const run = () => {
+      const total = Number(range.value) * 100; // in centimes
+      const w = lots.map(l => (mode === 't' ? l[2] : 1));
+      const sw = w.reduce((a, b) => a + b, 0);
+      const raw = w.map(x => (total * x) / sw);
+      const base = raw.map(Math.floor);
+      let left = total - base.reduce((a, b) => a + b, 0);
+      // the remaining centimes go to the largest remainders, so the lots add up exactly
+      raw.map((r, i) => [r - base[i], i] as const).sort((a, b) => b[0] - a[0]).forEach(([, i]) => { if (left > 0) { base[i]++; left--; } });
+      const max = Math.max(...base);
+      base.forEach((c, i) => { vals[i].textContent = cents(c); bars[i].style.width = `${(c / max) * 100}%`; });
+      root.querySelector<HTMLElement>('[data-amt]')!.textContent = Number(range.value).toLocaleString('fr-FR').replace(/[  ]/g, ' ');
+      root.querySelector<HTMLElement>('[data-sum]')!.textContent = cents(base.reduce((a, b) => a + b, 0));
+    };
+    range.addEventListener('input', () => { touched = true; run(); });
+    const setMode = (m: string) => { mode = m; root.querySelectorAll<HTMLElement>('.isy-m').forEach(x => x.classList.toggle('is-on', x.dataset.m === m)); run(); };
+    root.querySelectorAll<HTMLButtonElement>('.isy-m').forEach(b => b.addEventListener('click', () => { touched = true; setMode(b.dataset.m!); }));
+    if ('IntersectionObserver' in window && !still) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return; io.disconnect(); run();
+        // the amount climbs to 48 500 DH, then switches to equal parts and back
+        let v = 5000; range.value = '5000'; run();
+        const id = setInterval(() => { if (touched || v >= 48500) { clearInterval(id); return; } v = Math.min(48500, v + 2500); range.value = String(v); run(); }, 50);
+        setTimeout(() => { if (!touched) setMode('e'); }, 2600);
+        setTimeout(() => { if (!touched) setMode('t'); }, 4400);
+      }, { threshold: 0.4 });
+      io.observe(root);
+    } else run();
+  });
+</script>

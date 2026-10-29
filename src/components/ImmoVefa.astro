@@ -1,0 +1,94 @@
+---
+// Developers: a VEFA reservation and its payment schedule (loi 107-12). The deposit at the preliminary
+// contract can be moved: above 5 % the tool refuses. "Étape atteinte" moves the site on: the instalment of
+// that stage becomes due and its appel de fonds is ready. Plays once when it comes into view.
+// Demo lot and price.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const stages = [tt('Contrat préliminaire'), tt('Fondations'), tt('Gros œuvre'), tt('Finitions'), tt('Remise des clés')];
+---
+<div class="iv5 rounded-[1.6rem] bg-white p-4 text-navy shadow-[0_40px_70px_-40px_rgba(0,30,62,.6)] ring-1 ring-line sm:p-5" data-vefa data-price="1200000">
+  <div class="flex flex-wrap items-start justify-between gap-3">
+    <div><p class="text-sm font-semibold text-muted">{tt('Lot B204, Résidence Les Orangers')}</p><p class="display mt-1 text-3xl tabular-nums" dir="ltr">1 200 000 DH</p></div>
+    <span class="rounded-full bg-mint px-3 py-1 text-xs font-bold text-green-deep">{tt('Réservé')}</span>
+  </div>
+  <label class="mt-4 block">
+    <span class="flex items-end justify-between gap-3 text-sm font-semibold"><span>{tt('Au contrat préliminaire')}</span><span class="tabular-nums" dir="ltr"><span data-dep>5</span> %</span></span>
+    <input type="range" min="1" max="10" step="1" value="5" class="mt-2 w-full accent-[#05B962]" data-range aria-label={tt('Au contrat préliminaire')} />
+  </label>
+  <p class="v5-refuse mt-2 hidden items-center gap-2 rounded-xl bg-[#E5484D]/10 px-3 py-2 text-sm font-bold text-[#C4282D]" data-refuse><Icon name="shield" class="size-4 shrink-0" />{tt('Refusé : pas plus de 5 % au contrat préliminaire (loi 107-12).')}</p>
+  <ol class="mt-4 space-y-1.5">
+    {stages.map((s, i) => (
+      <li class="v5-s flex items-center gap-3 rounded-xl bg-chalk px-3 py-2 text-sm transition-colors duration-500" data-i={i}>
+        <span class="v5-dot grid size-6 shrink-0 place-items-center rounded-full border-2 border-line text-[0.65rem] font-bold transition-all">{i + 1}</span>
+        <span class="min-w-0 flex-1 font-semibold">{s}</span>
+        <span class="v5-due hidden rounded-full bg-green px-2 py-0.5 text-[0.65rem] font-bold text-navy">{tt('Exigible')}</span>
+        <span class="text-xs text-muted tabular-nums" dir="ltr"><span class="v5-p">0</span> %</span>
+        <span class="w-24 text-end font-bold tabular-nums" dir="ltr"><span class="v5-a">0</span> DH</span>
+      </li>
+    ))}
+  </ol>
+  <div class="mt-4 flex flex-wrap items-center gap-2">
+    <button type="button" class="inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-5 font-bold text-white transition-transform active:scale-95 disabled:opacity-40" data-next><Icon name="check" class="size-4" />{tt('Étape atteinte')}</button>
+    <span class="v5-pdf hidden min-h-11 items-center gap-2 rounded-full px-4 text-sm font-bold text-green-deep ring-1 ring-green/40" data-pdf><Icon name="book" class="size-4" />{tt('Appel de fonds prêt, avec le RIB')}</span>
+  </div>
+</div>
+
+<style is:global>
+  .v5-s.is-due { background: rgb(5 185 98 / .14); }
+  .v5-s.is-due .v5-dot { background: var(--color-green); border-color: var(--color-green); color: var(--color-navy); }
+  .v5-s.is-due .v5-due { display: inline; }
+  [data-vefa].is-bad .v5-s[data-i="0"] { background: rgb(229 72 77 / .12); }
+  [data-vefa].is-bad [data-refuse] { display: flex; animation: v5-shake .4s; }
+  [data-vefa].show-pdf [data-pdf] { display: inline-flex; animation: v5-pop .6s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes v5-shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+  @keyframes v5-pop { from { transform: scale(.5); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { [data-vefa].is-bad [data-refuse], [data-vefa].show-pdf [data-pdf] { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-vefa]').forEach((root) => {
+    const price = Number(root.dataset.price);
+    const range = root.querySelector<HTMLInputElement>('[data-range]')!;
+    const rows = [...root.querySelectorAll<HTMLElement>('.v5-s')];
+    const next = root.querySelector<HTMLButtonElement>('[data-next]')!;
+    const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[  ]/g, ' ');
+    const pct = (n: number) => (Math.round(n * 10) / 10).toString().replace('.', document.documentElement.lang === 'en' ? '.' : ',');
+    let reached = 0, touched = false;
+    const run = () => {
+      const d = Number(range.value), bad = d > 5;
+      root.querySelector<HTMLElement>('[data-dep]')!.textContent = String(d);
+      root.classList.toggle('is-bad', bad);
+      // the tool keeps the legal schedule: never more than 5 % at the start, 20 % at the keys
+      const dd = Math.min(d, 5), mid = (80 - dd) / 3;
+      const p = [dd, mid, mid, mid, 20];
+      rows.forEach((r, i) => {
+        r.querySelector<HTMLElement>('.v5-p')!.textContent = pct(p[i]);
+        r.querySelector<HTMLElement>('.v5-a')!.textContent = fmt((price * p[i]) / 100);
+        r.classList.toggle('is-due', i < reached);
+      });
+      next.disabled = bad || reached >= rows.length;
+    };
+    const step = () => {
+      if (reached >= rows.length || root.classList.contains('is-bad')) return;
+      reached++; run();
+      root.classList.remove('show-pdf'); void root.offsetWidth; root.classList.add('show-pdf');
+    };
+    range.addEventListener('input', () => { touched = true; run(); });
+    next.addEventListener('click', () => { touched = true; step(); });
+    run();
+    if ('IntersectionObserver' in window && !still) {
+      const io = new IntersectionObserver(([e]) => {
+        if (!e.isIntersecting) return; io.disconnect();
+        const at = (ms: number, f: () => void) => setTimeout(() => { if (!touched) f(); }, ms);
+        at(1000, step);
+        at(2200, () => { range.value = '8'; run(); });
+        at(3800, () => { range.value = '5'; run(); });
+        at(4800, step);
+      }, { threshold: 0.4 });
+      io.observe(root);
+    }
+  });
+</script>
