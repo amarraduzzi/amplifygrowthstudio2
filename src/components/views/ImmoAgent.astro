@@ -10,6 +10,7 @@ import ImmoVisit from '../ImmoVisit.astro';
 import ImmoPain from '../ImmoPain.astro';
 import ImmoVitrine from '../ImmoVitrine.astro';
 import ImmoMatch from '../ImmoMatch.astro';
+import PhotoBand from '../PhotoBand.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -69,6 +70,8 @@ const schema = [serviceSchema('Amplify Agent', description, abs(ROUTES.immoAgent
       <div class="mt-10"><ImmoPain items={pains} /></div>
     </div>
   </section>
+
+  <PhotoBand name="immo-agent-rue" big="full" w={1376} h={768} pos="70% 40%" class="py-14 md:py-24" alt={tt('Un agent immobilier au téléphone devant une résidence avec des palmiers, en fin de journée')} kicker="18:40" title={tt('Un client rappelle. Tout est dans votre poche.')} />
 
   <!-- THE SHOWCASE: the agent's public page -->
   <section class="relative isolate overflow-hidden bg-navy py-14 text-white md:py-24">

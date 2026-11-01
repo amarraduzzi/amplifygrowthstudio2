@@ -14,10 +14,10 @@ const { lang } = Astro.props;
 const tt = tr(lang);
 const wa = tt('Bonjour, je voudrais une démo d’Amplify Immobilier.');
 const who = [
-  ['agent', 'agdal-salon', tt('Agent indépendant'), tt('Vos biens, vos clients, vos visites signées.')],
-  ['agences', 'harhoura-villa', tt('Agence immobilière'), tt('Chaque lead suivi, chaque vente jusqu’à la commission.')],
-  ['courte-duree', 'hayriad-studio', tt('Location courte durée'), tt('Réservé sans les dix messages.')],
-  ['location', 'residence', tt('Gestion, syndic, promoteur'), tt('Loyers, charges, lots et chantiers.')],
+  ['agent', 'p-agent', tt('Agent indépendant'), tt('Vos biens, vos clients, vos visites signées.')],
+  ['agences', 'p-agence', tt('Agence immobilière'), tt('Chaque lead suivi, chaque vente jusqu’à la commission.')],
+  ['courte-duree', 'p-cles', tt('Location courte durée'), tt('Réservé sans les dix messages.')],
+  ['location', 'p-syndic', tt('Gestion, syndic, promoteur'), tt('Loyers, charges, lots et chantiers.')],
 ] as const;
 // block "droit marocain": only what the product does, stated as such (no promise of legal compliance)
 const laws = [
@@ -59,7 +59,7 @@ const uses = [
         <div class="mt-3 grid grid-cols-2 gap-3 sm:gap-4">
           {who.map(([k, img, h, x], i) => (
             <a href={k === 'agent' ? ROUTES.immoAgent[lang] : k === 'courte-duree' ? ROUTES.immoStay[lang] : `#${k}`} class="ih-card group relative isolate block aspect-[4/5] overflow-hidden rounded-[1.6rem] text-white shadow-[0_30px_60px_-35px_rgba(0,30,62,0.7)] sm:aspect-[4/4.4]" style={`--i:${i}`}>
-              <img src={`/img/immo/${img}.webp`} alt="" width="900" height="672" loading={i < 2 ? 'eager' : 'lazy'} class="absolute inset-0 -z-10 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <img src={`/img/immo/${img}-700.webp`} srcset={`/img/immo/${img}-700.webp 700w, /img/immo/${img}.webp 1200w`} sizes="(min-width: 1024px) 300px, 50vw" alt="" width="1200" height="896" loading={i < 2 ? 'eager' : 'lazy'} class="absolute inset-0 -z-10 size-full object-cover transition-transform duration-700 group-hover:scale-105" style={`object-position:${img === 'p-agent' ? '38% 50%' : '50% 50%'}`} />
               <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy via-navy/45 to-transparent"></span>
               <span class="absolute inset-x-0 bottom-0 p-3.5 sm:p-5">
                 <span class="display block text-[1.35rem] leading-[0.95] sm:text-[1.7rem]">{h}</span>

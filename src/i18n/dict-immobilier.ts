@@ -461,6 +461,10 @@ export const immoEn: Record<string, string> = {
   "Tout sur Amplify Agent": "All about Amplify Agent",
   "Tout sur la courte durée": "All about short stays",
   "Agent immobilier": "Estate agent",
+  "Un agent immobilier au téléphone devant une résidence avec des palmiers, en fin de journée": "An estate agent on the phone outside a residence with palm trees, late in the day",
+  "Un client rappelle. Tout est dans votre poche.": "A client calls back. Everything is in your pocket.",
+  "Une femme prépare le lit d’un appartement de location, avec des serviettes et un plateau de thé": "A woman makes the bed of a rental apartment, with towels and a tea tray",
+  "L’invité est parti. Le ménage était prévu.": "The guest has left. The cleaning was already planned.",
 };
 export const immoAr: Record<string, string> = {
   "Collaborez entre agences.": "تعاونوا بين الوكالات.",
@@ -924,4 +928,8 @@ export const immoAr: Record<string, string> = {
   "Tout sur Amplify Agent": "كل شيء عن Amplify Agent",
   "Tout sur la courte durée": "كل شيء عن الكراء قصير المدة",
   "Agent immobilier": "الوسيط العقاري",
+  "Un agent immobilier au téléphone devant une résidence avec des palmiers, en fin de journée": "وسيط عقاري يتحدث في الهاتف أمام إقامة بأشجار النخيل، في آخر النهار",
+  "Un client rappelle. Tout est dans votre poche.": "زبون يعاود الاتصال. وكل شيء في جيبك.",
+  "Une femme prépare le lit d’un appartement de location, avec des serviettes et un plateau de thé": "امرأة ترتب سرير شقة للكراء، مع مناشف وصينية أتاي",
+  "L’invité est parti. Le ménage était prévu.": "غادر الضيف. والتنظيف كان مبرمجًا.",
 };

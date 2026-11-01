@@ -11,6 +11,7 @@ import ImmoChaos from '../ImmoChaos.astro';
 import ImmoPain from '../ImmoPain.astro';
 import ImmoStay from '../ImmoStay.astro';
 import ImmoGuest from '../ImmoGuest.astro';
+import PhotoBand from '../PhotoBand.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -89,6 +90,8 @@ const channels: [string, string, [number, number][]][] = [
       </div>
     </div>
   </section>
+
+  <PhotoBand name="immo-menage" big="full" w={1376} h={768} pos="65% 50%" class="pb-14 md:pb-24" alt={tt('Une femme prépare le lit d’un appartement de location, avec des serviettes et un plateau de thé')} kicker="11:30" title={tt('L’invité est parti. Le ménage était prévu.')} />
 
   <!-- AFTER THE BOOKING: the guest and the cleaner -->
   <section class="relative isolate overflow-hidden bg-navy py-14 text-white md:py-24">
