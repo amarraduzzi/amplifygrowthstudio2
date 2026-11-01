@@ -10,7 +10,11 @@ import ImmoRent from './ImmoRent.astro';
 import ImmoSyndic from './ImmoSyndic.astro';
 import ImmoVefa from './ImmoVefa.astro';
 import { tr, langOf } from '../i18n/t';
-const tt = tr(langOf(Astro.url));
+import { ROUTES } from '../i18n/routes';
+const LG = langOf(Astro.url);
+const tt = tr(LG);
+// the professions with their own page get a link to it
+const MORE: Record<string, [string, string]> = { agent: [ROUTES.immoAgent[LG], tt('Tout sur Amplify Agent')], 'courte-duree': [ROUTES.immoStay[LG], tt('Tout sur la courte durée')] };
 type Block = { id: string; icon: string; tab: string; kicker: string; h: [string, string]; lead: string; wa: string; demo?: 'match' | 'visit' | 'stay' | 'rent' | 'syndic' | 'vefa'; items: [string, string][]; note?: string };
 const blocks: Block[] = [
   { id: 'agences', icon: 'store', tab: tt('Agences'), kicker: tt('Agences immobilières'), h: [tt('Chaque lead suivi.'), tt('Chaque bien en ligne.')], lead: tt('Vente et location : biens, mandats, clients, visites et ventes dans un seul outil, sur téléphone comme au bureau.'),
@@ -105,7 +109,10 @@ const blocks: Block[] = [
               <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-semibold ring-1 ring-white/15"><span class="size-2 rounded-full bg-green"></span>{b.kicker}</p>
               <h3 class="display mt-5 text-[2.2rem] leading-[0.95] sm:text-[2.6rem]"><span class="block">{b.h[0]}</span><span class="block text-green">{b.h[1]}</span></h3>
               <p class="mt-5 max-w-md text-lg text-white/75">{b.lead}</p>
-              <WaButton text={b.wa} label={tt('Demander une démo')} where={`immobilier-${b.id}`} class="mt-7 px-7 text-lg" />
+              <div class="mt-7 flex flex-wrap items-center gap-3">
+                <WaButton text={b.wa} label={tt('Demander une démo')} where={`immobilier-${b.id}`} class="px-7 text-lg" />
+                {MORE[b.id] && <a href={MORE[b.id][0]} class="inline-flex min-h-12 items-center gap-2 rounded-full px-5 font-semibold ring-1 ring-white/30 hover:ring-white">{MORE[b.id][1]}<span class="rtl:-scale-x-100" aria-hidden="true">→</span></a>}
+              </div>
             </div>
             {b.demo ? (
               <div class="mx-in min-w-0" style="--d:150ms">

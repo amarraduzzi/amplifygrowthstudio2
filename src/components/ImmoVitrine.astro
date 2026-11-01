@@ -1,0 +1,82 @@
+---
+// "Ma vitrine": the agent's public page on a phone, as a client sees it from a WhatsApp link. The agent comes
+// first (photo, languages, links to the platforms), then the listings with a filter. Tap "Achat" or "Location"
+// to filter. Demo agent and listings (illustration photos).
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const list: [string, string, string, 'buy' | 'rent'][] = [
+  ['agdal-salon', tt('Appartement 3 ch., Agdal'), '1 450 000 DH', 'buy'],
+  ['hayriad-studio', tt('Studio meublé, Hay Riad'), '4 500 DH / mois', 'rent'],
+  ['harhoura-villa', tt('Villa avec piscine, Harhoura'), '4 900 000 DH', 'buy'],
+];
+---
+<div class="iv2 mx-auto w-full max-w-[20rem]" data-vitrine>
+  <div class="rounded-[2.6rem] bg-linear-to-b from-[#3A3F47] to-[#1C1F24] p-2 shadow-[0_50px_90px_-40px_rgba(0,30,62,.7)]">
+    <div class="overflow-hidden rounded-[2.2rem] bg-[#FAF8F3] text-navy">
+      <div class="bg-navy px-4 pb-5 pt-7 text-white">
+        <div class="flex items-center gap-3">
+          <span class="vt-x grid size-14 shrink-0 place-items-center rounded-full bg-green text-xl font-bold text-navy ring-4 ring-white/15">NK</span>
+          <span class="vt-x min-w-0" style="--j:1"><span class="block font-bold">Nadia K.</span><span class="block text-xs text-white/70">{tt('Agent immobilier, Rabat')}</span></span>
+        </div>
+        <div class="vt-x mt-3 flex flex-wrap gap-1.5 text-[0.7rem] font-bold" style="--j:2">
+          {['Français', 'العربية', 'English'].map(l => <span class="rounded-full bg-white/10 px-2 py-0.5 ring-1 ring-white/15">{l}</span>)}
+        </div>
+        <div class="vt-x mt-3 flex gap-2" style="--j:3">
+          <span class="inline-flex min-h-9 flex-1 items-center justify-center gap-1.5 rounded-full bg-green text-xs font-bold text-navy"><Icon name="phone" class="size-3.5" />WhatsApp</span>
+          <span class="inline-flex min-h-9 flex-1 items-center justify-center rounded-full bg-white/10 text-xs font-bold ring-1 ring-white/20">{tt('Appeler')}</span>
+        </div>
+      </div>
+      <div class="px-3 pb-4 pt-3">
+        <div class="flex rounded-full bg-white p-1 text-xs font-bold ring-1 ring-line" role="group" aria-label={tt('Filtrer')}>
+          <button type="button" class="vt-f is-on flex-1 rounded-full py-1.5" data-f="all">{tt('Tout')}</button>
+          <button type="button" class="vt-f flex-1 rounded-full py-1.5" data-f="buy">{tt('Achat')}</button>
+          <button type="button" class="vt-f flex-1 rounded-full py-1.5" data-f="rent">{tt('Location')}</button>
+        </div>
+        <ul class="mt-3 space-y-2">
+          {list.map(([img, n, p, k], i) => (
+            <li class="vt-l vt-x flex items-center gap-3 rounded-xl bg-white p-2 ring-1 ring-line" data-k={k} style={`--j:${i + 4}`}>
+              <img src={`/img/immo/${img}.webp`} alt="" width="900" height="672" loading="lazy" class="size-14 shrink-0 rounded-lg object-cover" />
+              <span class="min-w-0"><span class="block truncate text-sm font-bold">{n}</span><span class="block text-xs font-semibold text-green-deep" dir="ltr">{p}</span></span>
+            </li>
+          ))}
+        </ul>
+        <p class="vt-x mt-4 text-center text-[0.7rem] font-semibold text-muted" style="--j:8">{tt('Retrouvez-moi aussi sur')}</p>
+        <div class="vt-x mt-2 flex flex-wrap justify-center gap-1.5 text-[0.68rem] font-bold" style="--j:9">
+          {['Avito', 'Mubawab', 'Facebook', 'Instagram', 'TikTok'].map(p => <span class="rounded-full bg-white px-2 py-1 ring-1 ring-line">{p}</span>)}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .vt-f { color: var(--color-muted); transition: background-color .25s, color .25s; }
+  .vt-f.is-on { background: var(--color-navy); color: #fff; }
+  .vt-l { transition: opacity .35s, transform .35s; }
+  .vt-l.is-out { opacity: .2; transform: scale(.97); }
+  .vt-x { transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--j, 0) * .1s); }
+  .js [data-vitrine]:not(.in) .vt-x { opacity: 0; transform: translateY(10px); }
+  @media (prefers-reduced-motion: reduce) { .js [data-vitrine] .vt-x { opacity: 1 !important; transform: none !important; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-vitrine]').forEach((root) => {
+    const btns = [...root.querySelectorAll<HTMLButtonElement>('.vt-f')];
+    const rows = [...root.querySelectorAll<HTMLElement>('.vt-l')];
+    let touched = false;
+    const pick = (f: string) => {
+      btns.forEach(b => b.classList.toggle('is-on', b.dataset.f === f));
+      rows.forEach(r => r.classList.toggle('is-out', f !== 'all' && r.dataset.k !== f));
+    };
+    btns.forEach(b => b.addEventListener('click', () => { touched = true; pick(b.dataset.f!); }));
+    if (!('IntersectionObserver' in window)) { root.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect(); root.classList.add('in');
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      setTimeout(() => { if (!touched) pick('rent'); }, 2600);
+      setTimeout(() => { if (!touched) pick('all'); }, 4200);
+    }, { threshold: 0.35 });
+    io.observe(root);
+  });
+</script>

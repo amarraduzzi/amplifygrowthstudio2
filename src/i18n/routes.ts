@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'immobilier' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -20,6 +20,9 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   spas: { fr: '/spas/', ar: '/ar/spas/', en: '/en/spas/' },
   // real estate: Amplify Immobilier (agencies, rentals, syndics, developers)
   immobilier: { fr: '/immobilier/', ar: '/ar/immobilier/', en: '/en/real-estate/' },
+  // the solo estate agent (Amplify Agent) and short stays by the night: their own pages under real estate
+  immoAgent: { fr: '/immobilier/agent/', ar: '/ar/immobilier/agent/', en: '/en/real-estate/agent/' },
+  immoStay: { fr: '/immobilier/location-courte-duree/', ar: '/ar/immobilier/location-courte-duree/', en: '/en/real-estate/short-stays/' },
   // fine dining: the Amplify Maître option of the till
   maitre: { fr: '/amplify-maitre/', ar: '/ar/amplify-maitre/', en: '/en/amplify-maitre/' },
   bakery: { fr: '/patisseries/', ar: '/ar/patisseries/', en: '/en/bakeries/' },

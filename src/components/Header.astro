@@ -51,8 +51,9 @@ const SHORT: Record<Lang, string> = { fr: 'FR', ar: 'ع', en: 'EN' };
 const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 'English' };
 // salons cannot sign up alone yet: the button goes to the demo request
 // real estate: no trial is promised, the button asks for a demo
-const trialLabel = page === 'immobilier' ? tt('Demander une démo') : t.nav.trial;
-const trial = page === 'salons' || page === 'spas' || page === 'immobilier' ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
+const immo = page === 'immobilier' || page === 'immoAgent' || page === 'immoStay';
+const trialLabel = immo ? tt('Demander une démo') : t.nav.trial;
+const trial = page === 'salons' || page === 'spas' || immo ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
 ---
 <header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/95 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 md:gap-4 sm:px-6 2xl:max-w-7xl">

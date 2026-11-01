@@ -1,0 +1,87 @@
+---
+// Short stays, before and after: the WhatsApp conversation of one booking (the same questions again and again),
+// then "Envoyer le lien" folds it all into one link card with the free dates and the price. Plays once when it
+// comes into view; the button works both ways. Demo messages.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const msgs: [string, boolean][] = [
+  [tt('Salam, c’est libre du 12 au 15 ?'), false],
+  [tt('Oui, c’est libre.'), true],
+  [tt('C’est combien la nuit ?'), false],
+  [tt('450 DH, 550 le week-end.'), true],
+  [tt('Il y a le wifi ? Et le parking ?'), false],
+  [tt('Oui les deux.'), true],
+  [tt('On est 5, ça passe ?'), false],
+  [tt('Vous pouvez envoyer des photos de la chambre ?'), false],
+  [tt('Je dois payer combien d’avance ?'), false],
+  [tt('Finalement c’est libre du 13 au 16 ?'), false],
+];
+---
+<div class="ic mx-auto w-full max-w-[22rem]" data-chaos>
+  <div class="rounded-[2.6rem] bg-linear-to-b from-[#3A3F47] to-[#1C1F24] p-2 shadow-[0_50px_90px_-40px_rgba(0,0,0,.8)]">
+    <div class="overflow-hidden rounded-[2.2rem] bg-[#ECE5DD]">
+      <div class="flex items-center gap-3 bg-[#075E54] px-4 pb-3 pt-6 text-white">
+        <span class="grid size-9 place-items-center rounded-full bg-white/20 text-sm font-bold">S</span>
+        <span class="min-w-0"><span class="block font-semibold">Samir</span><span class="block text-xs text-white/70" data-state>{tt('en train d’écrire…')}</span></span>
+        <span class="ms-auto rounded-full bg-[#E5484D] px-2 py-0.5 text-xs font-bold" data-count>10</span>
+      </div>
+      <div class="relative h-[24rem] overflow-hidden px-3 py-3">
+        <!-- the chaos -->
+        <div class="ic-chat flex h-full flex-col justify-end gap-1.5">
+          {msgs.map(([m, me], i) => (
+            <p class={`ic-b max-w-[82%] rounded-2xl px-3 py-1.5 text-[0.8rem] leading-snug text-navy shadow-sm ${me ? 'ms-auto rounded-se-sm bg-[#DCF8C6]' : 'rounded-ss-sm bg-white'}`} style={`--i:${i}`}>{m}</p>
+          ))}
+        </div>
+        <!-- the link -->
+        <div class="ic-link absolute inset-x-3 bottom-3 rounded-2xl bg-white p-3 text-navy shadow-xl">
+          <img src="/img/immo/hayriad-studio.webp" alt="" width="900" height="672" loading="lazy" class="h-28 w-full rounded-xl object-cover" />
+          <p class="mt-2 font-bold">{tt('Studio meublé, Hay Riad')}</p>
+          <p class="text-xs text-muted">{tt('Dates libres, prix calculé, demande en 1 minute')}</p>
+          <div class="mt-2 grid grid-cols-7 gap-1" dir="ltr" aria-hidden="true">
+            {Array.from({ length: 14 }, (_, d) => <span class={`h-5 rounded ${[2, 3, 9, 10].includes(d) ? 'bg-line' : 'bg-green/30'}`}></span>)}
+          </div>
+          <p class="mt-2 flex items-center justify-between rounded-xl bg-green px-3 py-2 text-sm font-bold"><span>{tt('Réserver')}</span><span dir="ltr">{tt('dès 450 DH')}</span></p>
+        </div>
+      </div>
+      <div class="bg-[#F0F0F0] px-3 py-2.5">
+        <button type="button" class="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-[#00A884] px-4 text-sm font-bold text-white transition-transform active:scale-[.98]" data-toggle>
+          <Icon name="phone" class="size-4" /><span data-label>{tt('Envoyer le lien')}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <span hidden data-t-send>{tt('Envoyer le lien')}</span><span hidden data-t-back>{tt('Revoir avant')}</span>
+  <span hidden data-t-typing>{tt('en train d’écrire…')}</span><span hidden data-t-done>{tt('a reçu le lien')}</span>
+</div>
+
+<style is:global>
+  .ic-b { transition: opacity .35s, transform .35s; }
+  .js [data-chaos]:not(.in) .ic-b { opacity: 0; transform: translateY(8px); }
+  [data-chaos].in .ic-b { transition-delay: calc(var(--i) * .22s); }
+  .ic-link { opacity: 0; transform: translateY(30px) scale(.95); pointer-events: none; transition: opacity .5s, transform .6s cubic-bezier(.3,1.4,.5,1); }
+  [data-chaos].is-link .ic-link { opacity: 1; transform: none; pointer-events: auto; }
+  [data-chaos].is-link .ic-b { opacity: 0; transform: translateY(-20px) scale(.9); transition-delay: calc(var(--i) * .03s); }
+  @media (prefers-reduced-motion: reduce) { .ic-b, .ic-link { transition: none !important; } .js [data-chaos]:not(.in) .ic-b { opacity: 1; transform: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-chaos]').forEach((root) => {
+    const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const T = (k: string) => $(`[data-t-${k}]`).textContent ?? '';
+    let touched = false;
+    const set = (link: boolean) => {
+      root.classList.toggle('is-link', link);
+      $('[data-label]').textContent = T(link ? 'back' : 'send');
+      $('[data-state]').textContent = T(link ? 'done' : 'typing');
+      $('[data-count]').style.opacity = link ? '0' : '1';
+    };
+    $('[data-toggle]').addEventListener('click', () => { touched = true; set(!root.classList.contains('is-link')); });
+    if (!('IntersectionObserver' in window)) { root.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect(); root.classList.add('in');
+      if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setTimeout(() => { if (!touched) set(true); }, 3600);
+    }, { threshold: 0.4 });
+    io.observe(root);
+  });
+</script>

@@ -1,0 +1,166 @@
+---
+// Short stays: the page for those who rent apartments by the night (Facebook, Marketplace, Airbnb, Booking).
+// The WhatsApp chaos that folds into one link (hero), the four situations (cards that turn), the booking link
+// itself (calendar, price, steps), the guest's and the cleaner's pages, the calendars of every channel in one,
+// the FAQ. Demo data everywhere, labelled as an example. No price is promised on this page.
+import Base from '../../layouts/Base.astro';
+import Faq from '../Faq.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import ImmoChaos from '../ImmoChaos.astro';
+import ImmoPain from '../ImmoPain.astro';
+import ImmoStay from '../ImmoStay.astro';
+import ImmoGuest from '../ImmoGuest.astro';
+import { tr } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const title = tt('Location courte durée au Maroc : réservations, invités et ménage sur WhatsApp | Amplify');
+const description = tt('Pour ceux qui louent à la nuit sur Facebook, Airbnb ou Booking : un lien avec les dates libres et le prix calculé, l’acompte, la page de l’invité, le ménage et un seul calendrier pour tous les sites.');
+const wa = tt('Bonjour, je loue des appartements à la nuit et je voudrais voir Amplify pour la courte durée.');
+const pains: [string, string, string][] = [
+  [tt('C’est libre le 12 ? C’est combien ? Il y a le wifi ?'), tt('Un lien suffit : les dates libres, le prix exact avec le week-end, le ménage et la caution, et une demande complète.'), 'calendar'],
+  [tt('Il a dit oui, puis il n’est jamais venu.'), tt('La date est bloquée 24 heures, le temps de l’acompte. Il clique « J’ai payé », vous confirmez. Sinon, la date se libère.'), 'coins'],
+  [tt('Réservé sur Airbnb et sur Facebook le même soir.'), tt('Les calendriers d’Airbnb, de Booking et vos réservations directes au même endroit. Une date prise ne peut plus être demandée.'), 'shield'],
+  [tt('La femme de ménage ne savait pas qu’il y avait un départ.'), tt('Chaque réservation crée la tâche de ménage au bon jour. Elle a sa page, sans compte, et coche « Terminé » avec une photo.'), 'check'],
+];
+const faq = [
+  [tt('Je dois quitter Airbnb ou Booking ?'), tt('Non. Vous gardez vos annonces. Amplify lit leurs calendriers et leur envoie vos dates prises, pour éviter les doubles réservations. Les réservations directes, sans commission, passent par votre lien.')],
+  [tt('Le client paie en ligne ?'), tt('Non. Il voit vos coordonnées de paiement, fait le virement ou paie comme vous le voulez, puis clique « J’ai payé ». Vous confirmez quand l’acompte est arrivé.')],
+  [tt('Ça marche avec Facebook Marketplace ?'), tt('Oui. Pour chaque logement, vous avez un texte prêt pour votre annonce et la réponse automatique de Messenger ou de WhatsApp Business, avec votre lien.')],
+  [tt('Mon invité parle anglais ou néerlandais ?'), tt('Sa page et les messages sont prêts en français, arabe, anglais ou néerlandais.')],
+  [tt('Je gère aussi des appartements pour des propriétaires.'), tt('Le revenu net des réservations passe dans le relevé mensuel du propriétaire, avec la gestion locative d’Amplify Immobilier.')],
+];
+const schema = [serviceSchema('Amplify Immobilier, location courte durée', description, abs(ROUTES.immoStay[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
+// the channels and their nights over two weeks (start day, length): demo bookings
+const channels: [string, string, [number, number][]][] = [
+  ['Airbnb', 'bg-[#FF5A5F]', [[1, 3], [9, 2]]],
+  ['Booking', 'bg-[#2B6DE5]', [[5, 2]]],
+  [tt('Direct (Facebook, WhatsApp)'), 'bg-green', [[11, 3]]],
+];
+---
+<Base lang={lang} page="immoStay" title={title} description={description} wa={wa} schema={schema}>
+  <!-- HERO: ten messages fold into one link -->
+  <section class="relative isolate overflow-hidden">
+    <span class="pointer-events-none absolute -start-40 -top-40 -z-10 size-[36rem] rounded-full bg-[radial-gradient(circle,rgba(5,185,98,.14),transparent_65%)]" aria-hidden="true"></span>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1.1fr_0.9fr]">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt('Location courte durée')}</p>
+        <h1 class="mt-5 text-[clamp(3rem,6.2vw,5.4rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Vous louez à la nuit ?')}</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{tt('Arrêtez de tout répéter.')}</span></span>
+        </h1>
+        <p class="fade-up mt-6 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Dix messages pour une réservation, un acompte qui n’arrive pas, deux clients le même soir. Avec Amplify, vous envoyez un lien : le client voit les dates libres et le prix, et vous recevez une demande complète.')}</p>
+        <div class="fade-up mt-8 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Demander une démo')} where="stay-hero" class="px-7 text-lg" />
+          <a href="#lien" class="inline-flex min-h-12 items-center gap-2 rounded-full px-6 text-lg font-semibold ring-1 ring-line hover:ring-navy">{tt('Essayer le lien')}<span aria-hidden="true">↓</span></a>
+        </div>
+        <ul class="fade-up mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-muted" style="--d:500ms">
+          {[tt('Facebook, Airbnb, Booking'), tt('Français, arabe, anglais'), tt('Sur le téléphone')].map(x => <li class="flex items-center gap-2"><Icon name="check" class="size-4 text-green-deep" />{x}</li>)}
+        </ul>
+      </div>
+      <div class="fade-up" style="--d:350ms">
+        <ImmoChaos />
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SITUATIONS -->
+  <section class="border-y border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Ça vous est')}</span><span class="block text-green-deep">{tt('déjà arrivé ?')}</span></h2>
+      <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Quatre soirées que chaque loueur connaît. Touchez une carte pour voir ce qui change.')}</p>
+      <div class="mt-10"><ImmoPain items={pains} /></div>
+    </div>
+  </section>
+
+  <!-- THE LINK: calendar, price, steps -->
+  <section id="lien" class="scroll-mt-24 py-14 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le client choisit ses dates.')}</span><span class="block text-green-deep">{tt('Le prix se calcule tout seul.')}</span></h2>
+        <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Voici ce que voit votre client quand il ouvre le lien. Touchez une arrivée, puis un départ.')}</p>
+      </div>
+      <div class="mt-10 rounded-[2.5rem] bg-navy p-5 text-white sm:p-8">
+        <ImmoStay />
+        <p class="mt-3 text-xs text-white/45">{tt('Exemple interactif, avec des données de démonstration.')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- AFTER THE BOOKING: the guest and the cleaner -->
+  <section class="relative isolate overflow-hidden bg-navy py-14 text-white md:py-24">
+    <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_100%_0%,rgba(5,185,98,.18),transparent_70%)]" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+        <div>
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('L’invité sait tout.')}</span><span class="block text-green">{tt('Le ménage aussi.')}</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">{tt('Une fois confirmé, l’invité reçoit sa page : l’arrivée, le wifi, les règles. La personne du ménage voit ses ménages du jour sur un lien, et coche quand c’est fait.')}</p>
+          <ul class="mt-6 space-y-3">
+            {[tt('Accueil et ménage créés à chaque réservation'), tt('Plus besoin de répéter le code wifi'), tt('Une photo comme preuve du ménage')].map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}
+          </ul>
+        </div>
+        <ImmoGuest />
+      </div>
+    </div>
+  </section>
+
+  <!-- ONE CALENDAR FOR EVERY CHANNEL -->
+  <section class="py-14 md:py-24">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr]">
+      <div>
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Tous vos sites.')}</span><span class="block text-green-deep">{tt('Un seul calendrier.')}</span></h2>
+        <p class="mt-5 max-w-md text-lg text-muted">{tt('Amplify lit les calendriers d’Airbnb et de Booking, et leur renvoie vos dates prises. Une date réservée quelque part ne peut plus être demandée ailleurs.')}</p>
+      </div>
+      <div class="rounded-[2rem] bg-white p-5 ring-1 ring-line shadow-[0_40px_80px_-50px_rgba(0,30,62,0.5)] sm:p-6" data-sync>
+        <div class="grid grid-cols-[7rem_1fr] items-center gap-x-3 gap-y-3 text-sm sm:grid-cols-[9rem_1fr]">
+          {channels.map(([n, color, bars], i) => (
+            <>
+              <span class="font-semibold">{n}</span>
+              <span class="relative h-8 rounded-lg bg-chalk" dir="ltr">
+                {bars.map(([s, l], k) => <span class={`sy-bar absolute inset-y-1 rounded-md ${color}`} style={`left:${(s / 14) * 100}%;width:${(l / 14) * 100}%;--d:${i * 0.25 + k * 0.1}s`}></span>)}
+              </span>
+            </>
+          ))}
+          <span class="font-bold text-green-deep">Amplify</span>
+          <span class="relative h-10 rounded-lg bg-navy" dir="ltr">
+            {channels.flatMap(([, color, bars]) => bars.map(([s, l]) => <span class={`sy-all absolute inset-y-1.5 rounded-md ${color}`} style={`left:${(s / 14) * 100}%;width:${(l / 14) * 100}%`}></span>))}
+          </span>
+        </div>
+        <p class="mt-4 flex items-center gap-2 rounded-xl bg-mint px-3 py-2 text-sm font-semibold text-green-deep"><Icon name="shield" class="size-4" />{tt('Deux semaines, quatre réservations, aucune en double.')}</p>
+      </div>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} wa={wa} />
+
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24">
+    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_100%_0%,rgba(5,185,98,.22),transparent_70%)]" aria-hidden="true"></span>
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Envoyez-nous votre annonce.')}</span><span class="block text-green">{tt('On prépare votre lien.')}</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Écrivez-nous sur WhatsApp avec le lien de votre annonce Facebook ou Airbnb. On vous montre votre logement avec son lien de réservation.')}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <WaButton text={wa} label={tt('Écrire sur WhatsApp')} where="stay-final" class="px-8 text-lg" />
+        <a href={ROUTES.immobilier[lang]} class="font-semibold text-white underline underline-offset-4 hover:text-green">{tt('Voir tout Amplify Immobilier')} →</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style is:global>
+  .sy-bar { transform-origin: left; transition: transform .7s cubic-bezier(.2,.8,.2,1), opacity .5s; transition-delay: var(--d); }
+  .js [data-sync]:not(.in) .sy-bar { transform: scaleX(0); opacity: 0; }
+  .sy-all { transition: opacity .6s 1.3s; }
+  .js [data-sync]:not(.in) .sy-all { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) { .sy-bar, .sy-all { transition: none !important; } .js [data-sync] .sy-bar, .js [data-sync] .sy-all { opacity: 1 !important; transform: none !important; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-sync]').forEach((root) => {
+    if (!('IntersectionObserver' in window)) { root.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); root.classList.add('in'); } }, { threshold: 0.4 });
+    io.observe(root);
+  });
+</script>

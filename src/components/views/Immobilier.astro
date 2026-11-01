@@ -1,18 +1,24 @@
 ---
 // Real estate page (Amplify Immobilier): agencies, rental management, syndics, developers.
-// Step 1: hero with a stock grid drawn in CSS (no photos of people) and the demo request.
+// Hero: the question "vous êtes…" with four photo cards that open the right tab; then one apartment followed
+// from the mandate to the commission (ImmoParcours); then the tabs per profession, the law, WhatsApp.
 import Base from '../../layouts/Base.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import ImmoMetiers from '../ImmoMetiers.astro';
+import ImmoParcours from '../ImmoParcours.astro';
 import { tr } from '../../i18n/t';
-import type { Lang } from '../../i18n/routes';
+import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
 const wa = tt('Bonjour, je voudrais une démo d’Amplify Immobilier.');
-// stock grid of the example building: floors from top to bottom, 6 lots per floor (f = libre, r = réservé, s = vendu)
-const floors: [number, string][] = [[4, 'fsfrff'], [3, 'sssfrs'], [2, 'ssrssf'], [1, 'ssssrs']];
+const who = [
+  ['agent', 'agdal-salon', tt('Agent indépendant'), tt('Vos biens, vos clients, vos visites signées.')],
+  ['agences', 'harhoura-villa', tt('Agence immobilière'), tt('Chaque lead suivi, chaque vente jusqu’à la commission.')],
+  ['courte-duree', 'hayriad-studio', tt('Location courte durée'), tt('Réservé sans les dix messages.')],
+  ['location', 'residence', tt('Gestion, syndic, promoteur'), tt('Loyers, charges, lots et chantiers.')],
+] as const;
 // block "droit marocain": only what the product does, stated as such (no promise of legal compliance)
 const laws = [
   ['Loi 18-00', 'Copropriété', 'Lots, tantièmes, appels de fonds répartis au centime, votes de l’assemblée par tantièmes et procès-verbal en PDF.'],
@@ -32,56 +38,54 @@ const uses = [
 ];
 ---
 <Base lang={lang} page="immobilier" title={tt('Amplify Immobilier : le logiciel de l’immobilier au Maroc | Amplify Growth Studio')} description={tt('Un seul système pour les agences, la gestion locative, les syndics et les promoteurs. En français et en arabe, sur téléphone et ordinateur, avec WhatsApp.')} wa={wa}>
-  <!-- hero -->
+  <!-- hero: the promise left, "vous êtes…" right, four photo cards that open the right tab -->
   <section class="relative">
     <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-14 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:pb-20">
       <div>
         <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Amplify Immobilier</p>
         <h1 class="mt-5 text-[clamp(2.8rem,5.8vw,5rem)]">
-          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Tout l’immobilier.</span></span>
-          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">Un seul système.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Vendez, louez, gérez.')}</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">{tt('Sans rien laisser filer.')}<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
         </h1>
-        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">Agences, gestion locative, syndics et promoteurs : un seul outil, en français et en arabe, sur téléphone et ordinateur. Vous écrivez à vos clients, locataires et copropriétaires par WhatsApp en un clic.</p>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Le client qui achète sans vous, le loyer oublié, les dix messages pour une nuit : c’est fini. Vos biens, vos clients, vos visites signées, vos loyers et vos réservations, sur le téléphone, avec WhatsApp.')}</p>
         <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
-          <WaButton text={wa} label={tt('Demander une démo')} where="immobilier-hero" class="px-7 text-lg" />
+          <a href="#parcours" class="inline-flex min-h-12 items-center gap-2 rounded-full bg-navy px-7 text-lg font-semibold text-white transition-transform hover:-translate-y-0.5">{tt('Voir comment ça marche')}<span aria-hidden="true">↓</span></a>
+          <WaButton text={wa} label={tt('Demander une démo')} where="immobilier-hero" tone="light" class="px-6 ring-1 ring-line" />
         </div>
       </div>
 
-      <!-- the stock grid of a building, drawn in CSS: an example, not a real project -->
-      <div class="fade-up relative" style="--d:350ms" data-grid>
-        <div class="rounded-[1.75rem] bg-navy p-5 text-white shadow-[0_40px_80px_-40px_rgba(0,30,62,.7)] sm:p-7 lg:rounded-[2.25rem]">
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <p class="text-sm font-semibold text-green">Grille de stock</p>
-              <p class="display mt-1 text-2xl leading-tight sm:text-3xl">Résidence Les Orangers</p>
-              <p class="mt-0.5 text-sm text-white/60">Immeuble A</p>
-            </div>
-            <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/70 ring-1 ring-white/15">{tt('Touchez un lot')}</span>
-          </div>
-          <div class="mt-6 space-y-2" dir="ltr">
-            {floors.map(([n, row]) => (
-              <div class="flex items-center gap-2">
-                <span class="w-6 shrink-0 text-end text-xs font-semibold text-white/50 tabular-nums">{n}</span>
-                <div class="grid flex-1 grid-cols-6 gap-1.5 sm:gap-2">
-                  {[...row].map((c, i) => <button type="button" class="gr-lot grid h-10 place-items-center rounded-lg text-[0.7rem] font-semibold tabular-nums transition-[background-color,color,transform] duration-300 hover:scale-105 active:scale-95 sm:h-12 sm:text-xs" data-s={c} aria-label={`A${n}0${i + 1}`}>{`A${n}0${i + 1}`}</button>)}
-                </div>
-              </div>
-            ))}
-          </div>
-          <div class="mt-6 grid grid-cols-3 gap-2 text-sm">
-            <p class="rounded-2xl bg-white/[0.06] px-3 py-2.5"><span class="flex items-center gap-2 text-white/70"><span class="size-3 rounded bg-green"></span>{tt('Libre')}</span><span class="display mt-1 block text-3xl tabular-nums" data-n="f">0</span></p>
-            <p class="rounded-2xl bg-white/[0.06] px-3 py-2.5"><span class="flex items-center gap-2 text-white/70"><span class="size-3 rounded bg-[#F5B301]"></span>{tt('Réservé')}</span><span class="display mt-1 block text-3xl tabular-nums" data-n="r">0</span></p>
-            <p class="rounded-2xl bg-white/[0.06] px-3 py-2.5"><span class="flex items-center gap-2 text-white/70"><span class="size-3 rounded bg-white/25"></span>{tt('Vendu')}</span><span class="display mt-1 block text-3xl tabular-nums" data-n="s">0</span></p>
-          </div>
-          <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/10"><span class="block h-full rounded-full bg-green transition-[width] duration-700" data-sold-bar style="width:0"></span></div>
-          <p class="mt-2 text-xs text-white/55"><span data-pct dir="ltr">0 %</span> {tt('vendu ou réservé')}</p>
+      <div>
+        <p class="fade-up text-sm font-bold text-muted" style="--d:350ms">{tt('Vous êtes…')}</p>
+        <div class="mt-3 grid grid-cols-2 gap-3 sm:gap-4">
+          {who.map(([k, img, h, x], i) => (
+            <a href={k === 'agent' ? ROUTES.immoAgent[lang] : k === 'courte-duree' ? ROUTES.immoStay[lang] : `#${k}`} class="ih-card group relative isolate block aspect-[4/5] overflow-hidden rounded-[1.6rem] text-white shadow-[0_30px_60px_-35px_rgba(0,30,62,0.7)] sm:aspect-[4/4.4]" style={`--i:${i}`}>
+              <img src={`/img/immo/${img}.webp`} alt="" width="900" height="672" loading={i < 2 ? 'eager' : 'lazy'} class="absolute inset-0 -z-10 size-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy via-navy/45 to-transparent"></span>
+              <span class="absolute inset-x-0 bottom-0 p-3.5 sm:p-5">
+                <span class="display block text-[1.35rem] leading-[0.95] sm:text-[1.7rem]">{h}</span>
+                <span class="mt-1.5 hidden text-sm leading-snug text-white/80 sm:block">{x}</span>
+                <span class="mt-2 inline-flex size-8 items-center justify-center rounded-full bg-green text-navy transition-transform group-hover:translate-x-1 rtl:group-hover:-translate-x-1" aria-hidden="true"><span class="rtl:-scale-x-100">→</span></span>
+              </span>
+            </a>
+          ))}
         </div>
       </div>
     </div>
   </section>
 
+  <!-- one apartment, from the mandate to the commission: the screen follows as you scroll -->
+  <section id="parcours" class="scroll-mt-20 border-y border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <div class="max-w-3xl">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Un appartement à Agdal.')}</span><span class="block text-green-deep">{tt('Du mandat à la commission.')}</span></h2>
+        <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Suivez-le pas à pas : à chaque étape, voici ce que vous voyez sur votre téléphone.')}</p>
+      </div>
+      <div class="mt-10 md:mt-14"><ImmoParcours /></div>
+    </div>
+  </section>
+
   <!-- the promise, word by word as you scroll -->
-  <section class="px-4 pb-14 pt-4 sm:px-6 md:pb-20">
+  <section class="px-4 py-14 sm:px-6 md:py-24">
     <p class="mx-auto max-w-5xl text-[clamp(2rem,4.6vw,3.8rem)] font-semibold leading-[1.08] tracking-tight" data-scrub="words">{tt('Un bien, un client, un loyer, une copropriété, un chantier : tout est suivi, et chaque message part sur WhatsApp en un clic.').split(' ').map(w => <span class="word">{w} </span>)}</p>
   </section>
 
@@ -172,12 +176,10 @@ const uses = [
 </Base>
 
 <style is:global>
-  .gr-lot[data-s="f"] { background: var(--color-green); color: var(--color-navy); }
-  .gr-lot[data-s="r"] { background: #F5B301; color: var(--color-navy); }
-  .gr-lot[data-s="s"] { background: rgb(255 255 255 / .1); color: rgb(255 255 255 / .6); }
-  .gr-lot.flip { animation: gr-flip .5s ease-out; }
-  @keyframes gr-flip { 40% { transform: scale(1.18); box-shadow: 0 0 0 6px rgb(5 185 98 / .35); } }
-  @media (prefers-reduced-motion: reduce) { .gr-lot.flip { animation: none; } }
+  .ih-card { transition: opacity .7s, transform .9s cubic-bezier(.2,.8,.2,1), box-shadow .3s; transition-delay: calc(var(--i) * .1s + .35s); }
+  .js .ih-card { animation: ih-in .9s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * .1s + .35s); }
+  @keyframes ih-in { from { opacity: 0; transform: translateY(28px) scale(.97); } }
+  @media (prefers-reduced-motion: reduce) { .js .ih-card { animation: none; } }
   .wu-b[aria-pressed="true"] { background: var(--color-navy); color: #fff; box-shadow: none; }
   .wu-b[aria-pressed="true"] span:last-child { color: rgb(255 255 255 / .7); }
   .wu-b:not([aria-pressed="true"]):hover { background: var(--color-chalk); }
@@ -217,33 +219,5 @@ const uses = [
       }, { threshold: 0.4 });
       io.observe(phone);
     }
-  });
-
-  // the stock grid: tap a lot to move it on (libre, réservé, vendu); on its own, a lot gets reserved then sold now and then
-  document.querySelectorAll<HTMLElement>('[data-grid]').forEach((root) => {
-    const lots = [...root.querySelectorAll<HTMLButtonElement>('.gr-lot')];
-    const next: Record<string, string> = { f: 'r', r: 's', s: 'f' };
-    const paint = () => {
-      const n: Record<string, number> = { f: 0, r: 0, s: 0 };
-      lots.forEach(l => n[l.dataset.s!]++);
-      (['f', 'r', 's'] as const).forEach(k => (root.querySelector<HTMLElement>(`[data-n="${k}"]`)!.textContent = String(n[k])));
-      const pct = Math.round(((n.r + n.s) / lots.length) * 100);
-      root.querySelector<HTMLElement>('[data-sold-bar]')!.style.width = `${pct}%`;
-      root.querySelector<HTMLElement>('[data-pct]')!.textContent = `${pct} %`;
-    };
-    const flip = (l: HTMLElement, to: string) => { l.dataset.s = to; l.classList.remove('flip'); void l.offsetWidth; l.classList.add('flip'); paint(); };
-    let touched = false, moves = 0;
-    lots.forEach(l => l.addEventListener('click', () => { touched = true; flip(l, next[l.dataset.s!]); }));
-    paint();
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let vis = false;
-    new IntersectionObserver(([e]) => { vis = e.isIntersecting; }).observe(root);
-    setInterval(() => {
-      if (touched || !vis || document.hidden || moves >= 6) return;
-      moves++;
-      const r = lots.filter(l => l.dataset.s === 'r'), f = lots.filter(l => l.dataset.s === 'f');
-      if (r.length && (Math.random() < 0.5 || !f.length)) flip(r[Math.floor(Math.random() * r.length)], 's');
-      else if (f.length) flip(f[Math.floor(Math.random() * f.length)], 'r');
-    }, 2200);
   });
 </script>

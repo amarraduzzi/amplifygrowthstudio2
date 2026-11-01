@@ -1,0 +1,151 @@
+---
+// One apartment in Agdal, from the mandate to the commission. You scroll through seven steps on one side;
+// the screen on the other side stays in place and shows that step, with a dot per step on top.
+// Without JavaScript or with reduced motion every step and its screen are simply shown one after the other.
+// Demo property, people and amounts.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const steps = [
+  { icon: 'book', h: tt('Le mandat'), x: tt('Le propriétaire signe. Amplify retient la durée et vous prévient avant que le mandat expire.') },
+  { icon: 'phone', h: tt('En ligne en deux minutes'), x: tt('Photos, prix, quartier : la page du bien est prête à partager, avec une note qui dit ce qui manque à l’annonce.') },
+  { icon: 'megaphone', h: tt('Partout à la fois'), x: tt('Un texte prêt pour Mubawab, Avito, Facebook et Instagram. Vous copiez, vous publiez, Amplify retient où le bien est en ligne.') },
+  { icon: 'users', h: tt('Un prospect écrit'), x: tt('Le message devient un prospect, avec sa source et une tâche de rappel. Personne ne reste sans réponse.') },
+  { icon: 'shield', h: tt('La visite signée'), x: tt('Le visiteur signe le bon de visite sur votre téléphone et reçoit sa copie sur WhatsApp. Vous gardez la preuve.') },
+  { icon: 'check', h: tt('L’offre, puis la vente'), x: tt('L’offre, la contre-offre, le compromis : chaque étape suivie, et le propriétaire informé par WhatsApp.') },
+  { icon: 'coins', h: tt('La commission'), x: tt('Calculée et partagée avec le confrère qui a amené l’acheteur, puis la facture conforme en un clic.') },
+];
+---
+<div class="ps grid gap-8 lg:grid-cols-[1fr_1fr] lg:gap-16" data-parcours>
+  <!-- the screen: sticky, it follows the steps -->
+  <div class="ps-stage sticky top-16 z-10 lg:order-2 lg:top-28 lg:self-start">
+    <div class="mx-auto max-w-[26rem] rounded-[2rem] bg-navy p-2.5 shadow-[0_40px_80px_-40px_rgba(0,30,62,0.7)]">
+      <div class="relative overflow-hidden rounded-[1.6rem] bg-white text-navy">
+        <div class="flex items-center gap-1.5 px-4 pt-4" aria-hidden="true">
+          {steps.map((_, i) => <span class="ps-dot h-1.5 flex-1 rounded-full bg-line transition-colors duration-500" data-i={i}></span>)}
+        </div>
+        <div class="relative h-[15.5rem] sm:h-[19rem]">
+          <!-- 1. mandate -->
+          <div class="ps-m" data-i="0">
+            <div class="flex gap-3">
+              <img src="/img/immo/agdal-salon.webp" alt="" width="900" height="672" class="ps-x size-20 shrink-0 rounded-xl object-cover sm:size-24" />
+              <div class="ps-x min-w-0" style="--j:1"><p class="font-bold">{tt('Appartement 3 chambres, Agdal')}</p><p class="text-sm text-muted">{tt('M. Benjelloun, propriétaire')}</p></div>
+            </div>
+            <div class="ps-x mt-4 rounded-xl bg-chalk p-3" style="--j:2">
+              <p class="flex justify-between text-sm"><span class="font-semibold">{tt('Mandat exclusif')}</span><span class="font-bold text-green-deep">{tt('Signé')}</span></p>
+              <div class="mt-2 h-2 overflow-hidden rounded-full bg-white"><span class="ps-grow block h-full w-[18%] rounded-full bg-green"></span></div>
+              <p class="mt-1.5 text-xs text-muted">{tt('3 mois, alerte avant la fin')}</p>
+            </div>
+          </div>
+          <!-- 2. online -->
+          <div class="ps-m" data-i="1">
+            <div class="ps-x overflow-hidden rounded-xl ring-1 ring-line">
+              <img src="/img/immo/agdal-salon.webp" alt="" width="900" height="672" class="h-24 w-full object-cover sm:h-32" />
+              <div class="flex items-center justify-between gap-2 p-3"><span class="display whitespace-nowrap text-xl" dir="ltr">1 450 000 DH</span><span class="inline-flex items-center gap-1 rounded-full bg-green px-2.5 py-1 text-xs font-bold text-navy"><Icon name="phone" class="size-3" />WhatsApp</span></div>
+            </div>
+            <div class="ps-x mt-3 flex items-center gap-3 rounded-xl bg-chalk px-3 py-2" style="--j:2">
+              <span class="display text-2xl text-green-deep" dir="ltr">92</span><span class="text-sm"><b>{tt('Note de l’annonce')}</b><span class="block text-xs text-muted">{tt('Il manque une photo de la cuisine')}</span></span>
+            </div>
+          </div>
+          <!-- 3. everywhere -->
+          <div class="ps-m" data-i="2">
+            <p class="ps-x text-sm font-semibold text-muted">{tt('Où le bien est en ligne')}</p>
+            <ul class="mt-3 space-y-2">
+              {['Mubawab', 'Avito', 'Facebook Marketplace', 'Instagram'].map((p, k) => (
+                <li class="ps-x flex items-center justify-between rounded-xl bg-chalk px-3 py-2.5 text-sm" style={`--j:${k + 1}`}><span class="font-semibold">{p}</span><span class="inline-flex items-center gap-1 font-bold text-green-deep"><Icon name="check" class="size-4" />{tt('En ligne')}</span></li>
+              ))}
+            </ul>
+          </div>
+          <!-- 4. lead -->
+          <div class="ps-m" data-i="3">
+            <p class="ps-x max-w-[85%] rounded-2xl rounded-ss-sm bg-[#DCF8C6] px-3 py-2 text-sm">{tt('Bonjour, l’appartement à Agdal est toujours disponible ?')}</p>
+            <div class="ps-x mt-3 rounded-xl bg-chalk p-3 text-sm" style="--j:2">
+              <p class="flex justify-between"><b>Yasmine B.</b><span class="rounded-full bg-white px-2 py-0.5 text-xs font-bold ring-1 ring-line">Facebook</span></p>
+              <p class="mt-1 text-muted">{tt('Cherche : 3 ch., Agdal, jusqu’à 1,6 M DH')}</p>
+            </div>
+            <p class="ps-x mt-2 flex items-center gap-2 rounded-xl bg-navy px-3 py-2 text-sm font-semibold text-white" style="--j:3"><Icon name="clock" class="size-4 text-green" />{tt('Tâche : rappeler avant 18 h')}</p>
+          </div>
+          <!-- 5. viewing -->
+          <div class="ps-m" data-i="4">
+            <p class="ps-x display text-xl">{tt('Bon de visite')}</p>
+            <p class="ps-x text-sm text-muted" style="--j:1">Yasmine B., <span dir="ltr">02/11, 17:30</span></p>
+            <div class="ps-x relative mt-3 h-20 rounded-xl bg-chalk ring-1 ring-line" style="--j:2">
+              <svg viewBox="0 0 200 60" class="absolute inset-0 m-auto h-14 w-48 text-navy" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path class="ps-sign" d="M10 40 C25 10, 35 55, 50 30 S70 15, 80 38 S100 50, 110 25 S135 20, 140 40 S165 45, 190 22" /></svg>
+            </div>
+            <p class="ps-x mt-3 flex items-center gap-2 rounded-xl bg-[#DCF8C6] px-3 py-2 text-sm font-semibold" style="--j:3"><Icon name="phone" class="size-4 text-green-deep" />{tt('Copie envoyée sur WhatsApp')}</p>
+          </div>
+          <!-- 6. offer and sale -->
+          <div class="ps-m" data-i="5">
+            <ol class="space-y-2 text-sm">
+              {[[tt('Offre'), '1 380 000 DH'], [tt('Contre-offre'), '1 420 000 DH'], [tt('Compromis signé'), '1 420 000 DH']].map(([l, v], k) => (
+                <li class="ps-x flex items-center gap-3 rounded-xl bg-chalk px-3 py-2.5" style={`--j:${k}`}><span class="grid size-6 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span class="flex-1 font-semibold">{l}</span><span class="font-bold tabular-nums" dir="ltr">{v}</span></li>
+              ))}
+            </ol>
+            <p class="ps-x mt-3 rounded-xl bg-[#DCF8C6] px-3 py-2 text-sm" style="--j:3">{tt('M. Benjelloun, bonne nouvelle : le compromis est signé.')}</p>
+          </div>
+          <!-- 7. commission -->
+          <div class="ps-m" data-i="6">
+            <p class="ps-x text-sm font-semibold text-muted">{tt('Commission, 2,5 %')}</p>
+            <p class="ps-x display text-4xl tabular-nums" style="--j:1" dir="ltr">35 500 DH</p>
+            <div class="ps-x mt-3 grid grid-cols-2 gap-2 text-sm" style="--j:2">
+              <p class="rounded-xl bg-mint px-3 py-2"><span class="block text-xs text-muted">{tt('Votre agence')}</span><b class="tabular-nums" dir="ltr">17 750 DH</b></p>
+              <p class="rounded-xl bg-chalk px-3 py-2"><span class="block text-xs text-muted">{tt('Le confrère')}</span><b class="tabular-nums" dir="ltr">17 750 DH</b></p>
+            </div>
+            <p class="ps-x mt-3 flex items-center gap-2 rounded-xl bg-navy px-3 py-2 text-sm font-semibold text-white" style="--j:3"><Icon name="book" class="size-4 text-green" />{tt('Facture n° 2026-041 prête')}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- the steps you scroll through -->
+  <ol class="relative pb-[18vh] lg:order-1 lg:pb-[30vh]">
+    {steps.map((s, i) => (
+      <li class="ps-step flex gap-4 py-10 lg:min-h-[62vh] lg:items-center lg:py-0" data-i={i}>
+        <span class="ps-n grid size-12 shrink-0 place-items-center rounded-2xl bg-paper text-navy ring-1 ring-line transition-all duration-500"><Icon name={s.icon as any} class="size-5" /></span>
+        <div>
+          <p class="text-sm font-bold text-green-deep" dir="ltr">{String(i + 1).padStart(2, '0')} / 07</p>
+          <h3 class="display mt-1 text-[2rem] leading-[0.95] sm:text-[2.6rem]">{s.h}</h3>
+          <p class="mt-3 max-w-md text-lg text-muted">{s.x}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style is:global>
+  .ps-m { position: absolute; inset: 0; padding: 1rem; opacity: 0; transform: translateY(14px); transition: opacity .45s, transform .55s cubic-bezier(.2,.8,.2,1); pointer-events: none; }
+  .ps-m.on { opacity: 1; transform: none; }
+  .ps-m .ps-x { opacity: 0; transform: translateY(10px); transition: opacity .4s, transform .5s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--j, 0) * .14s + .1s); }
+  .ps-m.on .ps-x { opacity: 1; transform: none; }
+  .ps-grow { transition: width 1.2s cubic-bezier(.2,.8,.2,1) .4s; }
+  .ps-m.on .ps-grow { width: 100%; }
+  .ps-sign { stroke-dasharray: 320; stroke-dashoffset: 320; }
+  .ps-m.on .ps-sign { stroke-dashoffset: 0; transition: stroke-dashoffset 1.4s ease-out .5s; }
+  .ps-dot.on { background: var(--color-green); }
+  .ps-step { transition: opacity .4s; }
+  .js [data-parcours] .ps-step:not(.on) { opacity: .35; }
+  .ps-step.on .ps-n { background: var(--color-navy); color: var(--color-green); box-shadow: none; transform: scale(1.08); }
+  @media (max-width: 1023px) { .ps-step { min-height: 46vh; align-items: flex-start; } }
+  @media (prefers-reduced-motion: reduce) { .ps-m, .ps-m .ps-x, .ps-grow, .ps-sign { transition: none !important; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-parcours]').forEach((root) => {
+    const steps = [...root.querySelectorAll<HTMLElement>('.ps-step')];
+    const panels = [...root.querySelectorAll<HTMLElement>('.ps-m')];
+    const dots = [...root.querySelectorAll<HTMLElement>('.ps-dot')];
+    const show = (i: number) => {
+      steps.forEach((s, k) => s.classList.toggle('on', k === i));
+      panels.forEach((p, k) => p.classList.toggle('on', k === i));
+      dots.forEach((d, k) => d.classList.toggle('on', k <= i));
+    };
+    show(0);
+    if (!('IntersectionObserver' in window)) return;
+    // the step crossing the middle band of the screen is the active one
+    const io = new IntersectionObserver((es) => {
+      es.forEach(e => { if (e.isIntersecting) show(Number((e.target as HTMLElement).dataset.i)); });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(s => io.observe(s));
+  });
+</script>

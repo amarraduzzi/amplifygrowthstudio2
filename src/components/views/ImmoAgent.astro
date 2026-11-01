@@ -1,0 +1,136 @@
+---
+// Amplify Agent: the page for the estate agent who works alone. The signed viewing slip as the hero (it is
+// what protects his commission), then the four situations every agent knows (cards that turn), his public
+// page, the client match, the price and the FAQ. Demo data everywhere, labelled as an example.
+import Base from '../../layouts/Base.astro';
+import Faq from '../Faq.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import ImmoVisit from '../ImmoVisit.astro';
+import ImmoPain from '../ImmoPain.astro';
+import ImmoVitrine from '../ImmoVitrine.astro';
+import ImmoMatch from '../ImmoMatch.astro';
+import { tr } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const title = tt('Amplify Agent : le logiciel de l’agent immobilier indépendant au Maroc | Amplify');
+const description = tt('Pour l’agent immobilier qui travaille seul : vos biens, vos clients, le bon de visite signé sur le téléphone, votre vitrine et le partage avec les confrères. Gratuit jusqu’à 3 biens, puis 99 DH par mois.');
+const wa = tt('Bonjour, je suis agent immobilier indépendant et je voudrais voir Amplify Agent.');
+const pains: [string, string, string][] = [
+  [tt('Le client a visité avec moi, puis il a acheté sans moi.'), tt('Le bon de visite signé sur votre téléphone, daté, avec sa copie sur WhatsApp. La preuve est là, elle ne se modifie plus.'), 'shield'],
+  [tt('Il est toujours dispo ? Quinze fois par jour.'), tt('Chaque bien a sa page avec photos, prix et bouton WhatsApp. Vous envoyez le lien, le client voit tout.'), 'phone'],
+  [tt('J’ai le bien, un confrère a le client.'), tt('Vous partagez le bien avec le confrère, sans l’adresse ni le propriétaire, et la commission est partagée noir sur blanc.'), 'users'],
+  [tt('Mes annonces sont partout, mais à jour nulle part.'), tt('Un texte prêt pour chaque site, et la liste de là où le bien est en ligne. Vendu ? Vous savez où le retirer.'), 'megaphone'],
+];
+const faq = [
+  [tt('C’est vraiment gratuit ?'), tt('Oui, jusqu’à 3 biens, sans date de fin. Au-delà, Amplify Agent coûte 99 DH par mois. Vous pouvez passer de l’un à l’autre quand vous voulez.')],
+  [tt('Le bon de visite a-t-il une valeur ?'), tt('Il prouve qui a visité quel bien, quand et avec qui : le visiteur signe sur l’écran, il reçoit sa copie sur WhatsApp et le bon ne se modifie plus. C’est une preuve, pas un contrat : votre mandat reste votre protection principale.')],
+  [tt('Mes confrères voient-ils mes clients ?'), tt('Non. Vous choisissez ce que vous partagez. Un confrère ne voit jamais l’adresse exacte ni le propriétaire de vos biens, et un client n’est recommandé qu’avec son accord (loi 09-08).')],
+  [tt('Il faut un ordinateur ?'), tt('Non. Tout marche sur le téléphone, en français et en arabe. Sur un ordinateur aussi, si vous en avez un.')],
+  [tt('Et si je rejoins une agence plus tard ?'), tt('Vous passez en formule agence sous Paramètres, avec vos biens et vos clients.')],
+];
+const schema = [serviceSchema('Amplify Agent', description, abs(ROUTES.immoAgent[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="immoAgent" title={title} description={description} wa={wa} schema={schema}>
+  <!-- HERO: the promise, and the slip signed on the phone -->
+  <section class="relative isolate overflow-hidden">
+    <span class="pointer-events-none absolute -end-40 -top-40 -z-10 size-[36rem] rounded-full bg-[radial-gradient(circle,rgba(5,185,98,.16),transparent_65%)]" aria-hidden="true"></span>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-16 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1.1fr_0.9fr]">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt('Amplify Agent, pour l’agent indépendant')}</p>
+        <h1 class="mt-5 text-[clamp(3rem,6.2vw,5.4rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Votre téléphone.')}</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{tt('Votre agence.')}</span></span>
+        </h1>
+        <p class="fade-up mt-6 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Vous travaillez seul, sans bureau ni secrétaire. Amplify Agent garde vos biens, vos clients et vos visites signées dans votre poche, et protège les commissions qui vous échappaient.')}</p>
+        <div class="fade-up mt-8 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Demander une démo')} where="agent-hero" class="px-7 text-lg" />
+          <a href="#prix" class="inline-flex min-h-12 items-center rounded-full px-6 text-lg font-semibold ring-1 ring-line hover:ring-navy">{tt('Gratuit jusqu’à 3 biens')}</a>
+        </div>
+        <ul class="fade-up mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-muted" style="--d:500ms">
+          {[tt('Sur le téléphone'), tt('Français et arabe'), tt('Rien à installer')].map(x => <li class="flex items-center gap-2"><Icon name="check" class="size-4 text-green-deep" />{x}</li>)}
+        </ul>
+      </div>
+      <div class="fade-up relative" style="--d:350ms">
+        <ImmoVisit />
+        <p class="mt-4 text-center text-sm text-muted">{tt('Essayez : signez avec le doigt ou la souris.')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SITUATIONS: cards that turn -->
+  <section class="border-y border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Ça vous est')}</span><span class="block text-green-deep">{tt('déjà arrivé ?')}</span></h2>
+      <p class="mt-5 max-w-2xl text-lg text-muted">{tt('Quatre situations que chaque agent connaît. Touchez une carte pour voir ce qui change.')}</p>
+      <div class="mt-10"><ImmoPain items={pains} /></div>
+    </div>
+  </section>
+
+  <!-- THE SHOWCASE: the agent's public page -->
+  <section class="relative isolate overflow-hidden bg-navy py-14 text-white md:py-24">
+    <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_0%_100%,rgba(5,185,98,.18),transparent_70%)]" aria-hidden="true"></span>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_0.9fr]">
+      <div>
+        <p class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5 text-sm font-bold text-green"><Icon name="store" class="size-4" />{tt('Ma vitrine')}</p>
+        <h2 class="mt-4 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Votre page.')}</span><span class="block text-green">{tt('Votre nom en premier.')}</span></h2>
+        <p class="mt-5 max-w-lg text-lg text-white/70">{tt('Un seul lien pour tous vos biens : votre photo, vos langues, vos biens à vendre et à louer, et vos profils Avito, Mubawab, Facebook, Instagram et TikTok. Le client vous écrit sur WhatsApp en un clic.')}</p>
+        <ul class="mt-6 space-y-3">
+          {[tt('À mettre dans votre bio Instagram et votre statut WhatsApp'), tt('Jamais l’adresse exacte ni le propriétaire'), tt('Chaque bien a aussi sa propre page à partager')].map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}
+        </ul>
+      </div>
+      <ImmoVitrine />
+    </div>
+  </section>
+
+  <!-- THE MATCH: clients and listings -->
+  <section class="py-14 md:py-24">
+    <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr]">
+      <div>
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Un bien arrive.')}</span><span class="block text-green-deep">{tt('Vos clients le savent.')}</span></h2>
+        <p class="mt-5 max-w-md text-lg text-muted">{tt('Vous notez ce que chaque client cherche. Quand un bien arrive, ceux qui le cherchent apparaissent, avec le message WhatsApp déjà écrit.')}</p>
+      </div>
+      <div class="rounded-[2.5rem] bg-navy p-5 text-white sm:p-8">
+        <ImmoMatch />
+        <p class="mt-3 text-xs text-white/45">{tt('Exemple interactif, avec des données de démonstration.')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICE -->
+  <section id="prix" class="scroll-mt-24 border-t border-line bg-paper py-14 md:py-24">
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Commencez gratuitement.')}</span><span class="block text-green-deep">{tt('Payez quand ça tourne.')}</span></h2>
+      <div class="mt-10 grid gap-5 md:grid-cols-2">
+        <div class="rounded-[2rem] bg-white p-6 ring-1 ring-line sm:p-8">
+          <p class="font-bold">{tt('Gratuit')}</p>
+          <p class="mt-3 flex items-baseline gap-2"><span class="display text-6xl">0</span><span class="text-sm text-muted">{tt('DH, sans date de fin')}</span></p>
+          <p class="mt-4 text-muted">{tt('Jusqu’à 3 biens, avec vos clients, vos bons de visite et votre vitrine.')}</p>
+        </div>
+        <div class="rounded-[2rem] bg-navy p-6 text-white sm:p-8">
+          <p class="font-bold">Amplify Agent</p>
+          <p class="mt-3 flex items-baseline gap-2"><span class="display text-6xl tabular-nums" dir="ltr">99</span><span class="text-sm text-white/60">{tt('DH par mois')}</span></p>
+          <p class="mt-4 text-white/75">{tt('Autant de biens que vous voulez, avec tout le reste.')}</p>
+        </div>
+      </div>
+      <div class="mt-8 flex flex-wrap items-center gap-4">
+        <WaButton text={wa} label={tt('Demander une démo')} where="agent-price" class="px-7 text-lg" />
+        <a href={ROUTES.immobilier[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Vous êtes une agence ? Voir Amplify Immobilier')} →</a>
+      </div>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} wa={wa} />
+
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24">
+    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_100%_0%,rgba(5,185,98,.22),transparent_70%)]" aria-hidden="true"></span>
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Montrez-nous un de vos biens.')}</span><span class="block text-green">{tt('On le met en ligne avec vous.')}</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Écrivez-nous sur WhatsApp. Ensemble, on met votre premier bien en ligne et vous essayez le bon de visite.')}</p>
+      <WaButton text={wa} label={tt('Écrire sur WhatsApp')} where="agent-final" class="mt-8 px-8 text-lg" />
+    </div>
+  </section>
+</Base>

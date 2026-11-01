@@ -1,0 +1,56 @@
+---
+// "Ça vous est déjà arrivé ?": cards with the problem on the front and what Amplify does on the back.
+// Tap a card to turn it; the first one turns by itself when the block comes into view.
+// Without JavaScript, or with reduced motion, both sides are shown one under the other.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+interface Props { items: [string, string, string][]; dark?: boolean }
+const { items, dark = false } = Astro.props;
+const tt = tr(langOf(Astro.url));
+---
+<div class={`ip grid gap-4 sm:grid-cols-2 ${items.length > 3 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`} data-pain>
+  {items.map(([pain, fix, icon], i) => (
+    <button type="button" class="ip-card group relative min-h-[15.5rem] text-start [perspective:1200px]" aria-pressed="false" style={`--i:${i}`}>
+      <span class="ip-in relative block h-full min-h-[15.5rem] transition-transform duration-700 [transform-style:preserve-3d]">
+        <span class={`ip-face absolute inset-0 flex flex-col rounded-[1.75rem] p-5 [backface-visibility:hidden] ${dark ? 'bg-white/[0.07] text-white ring-1 ring-white/15' : 'bg-white text-navy ring-1 ring-line shadow-[0_30px_60px_-40px_rgba(0,30,62,0.5)]'}`}>
+          <span class="text-sm font-bold text-[#C4282D]">{tt('Sans Amplify')}</span>
+          <span class="display mt-3 text-[1.6rem] leading-[1]">« {pain} »</span>
+          <span class={`mt-auto inline-flex items-center gap-2 pt-4 text-sm font-semibold ${dark ? 'text-white/60' : 'text-muted'}`}><span class="grid size-7 place-items-center rounded-full bg-green text-navy transition-transform group-hover:rotate-180"><Icon name="check" class="size-3.5" /></span>{tt('Touchez pour la solution')}</span>
+        </span>
+        <span class="ip-face ip-back absolute inset-0 flex flex-col rounded-[1.75rem] bg-green p-5 text-navy [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={icon as any} class="size-5" /></span>
+          <span class="mt-4 text-lg font-semibold leading-snug">{fix}</span>
+          <span class="mt-auto pt-4 text-sm font-bold">{tt('Avec Amplify')}</span>
+        </span>
+      </span>
+    </button>
+  ))}
+</div>
+
+<style is:global>
+  .ip-card[aria-pressed="true"] .ip-in { transform: rotateY(180deg); }
+  [dir="rtl"] .ip-card[aria-pressed="true"] .ip-in { transform: rotateY(-180deg); }
+  .ip-card { animation: fade-up .6s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i) * .1s); }
+  .js [data-pain]:not(.in) .ip-card { animation: none; opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .ip-card, .js [data-pain]:not(.in) .ip-card { animation: none; opacity: 1; }
+    .ip-in { transform: none !important; }
+    .ip-face { position: relative; transform: none !important; }
+    .ip-back { margin-top: .5rem; }
+  }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-pain]').forEach((root) => {
+    const cards = [...root.querySelectorAll<HTMLButtonElement>('.ip-card')];
+    let touched = false;
+    cards.forEach(c => c.addEventListener('click', () => { touched = true; c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); }));
+    if (!('IntersectionObserver' in window)) { root.classList.add('in'); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect(); root.classList.add('in');
+      if (!still) setTimeout(() => { if (!touched) cards[0].setAttribute('aria-pressed', 'true'); }, 1600);
+    }, { threshold: 0.3 });
+    io.observe(root);
+  });
+</script>
