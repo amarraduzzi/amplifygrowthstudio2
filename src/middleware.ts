@@ -5,8 +5,9 @@ import { defineMiddleware } from 'astro:middleware';
 import { dictEn } from './i18n/dict-en';
 import { dictAr } from './i18n/dict-ar';
 import { immoEn, immoAr } from './i18n/dict-immobilier';
-const mergedEn = { ...dictEn, ...immoEn };
-const mergedAr = { ...dictAr, ...immoAr };
+import { pressingEn, pressingAr } from './i18n/dict-pressing';
+const mergedEn = { ...dictEn, ...immoEn, ...pressingEn };
+const mergedAr = { ...dictAr, ...immoAr, ...pressingAr };
 
 const decode = (s: string) => s.replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
 const encText = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

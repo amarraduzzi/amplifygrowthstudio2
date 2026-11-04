@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'pressing' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -18,6 +18,8 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   salons: { fr: '/salons/', ar: '/ar/salons/', en: '/en/salons/' },
   // spas, hammams and instituts: cabins and equipment in the agenda (Amplify Agenda)
   spas: { fr: '/spas/', ar: '/ar/spas/', en: '/en/spas/' },
+  // dry cleaners and laundries (Amplify Pressing)
+  pressing: { fr: '/pressing/', ar: '/ar/pressing/', en: '/en/dry-cleaners/' },
   // real estate: Amplify Immobilier (agencies, rentals, syndics, developers)
   immobilier: { fr: '/immobilier/', ar: '/ar/immobilier/', en: '/en/real-estate/' },
   // the solo estate agent (Amplify Agent) and short stays by the night: their own pages under real estate

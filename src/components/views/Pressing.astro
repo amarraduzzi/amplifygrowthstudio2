@@ -1,0 +1,314 @@
+---
+// Pressing page (dry cleaners, laundries): linked from the products menu and the footer.
+// Same look as the salons and spas pages. Real screenshots of the demo shop ("Pressing Démo", invented
+// names). No clients, reviews, results or prices are claimed: the price is given on request.
+import Base from '../../layouts/Base.astro';
+import Device from '../Device.astro';
+import Faq from '../Faq.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import CountUp from '../CountUp.astro';
+import { tr } from '../../i18n/t';
+import { ROUTES, type Lang } from '../../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const wa = tt('Bonjour, je voudrais voir Amplify pour mon pressing.');
+const today = [
+  'Un carnet à souches, et un ticket que le client a perdu.',
+  'Une chemise sans nom, au fond du rail.',
+  'Le téléphone qui sonne toute la journée : « C’est prêt ? »',
+  'Une tache que le client découvre au retrait, et qui était déjà là.',
+  'Des costumes qui attendent depuis trois mois.',
+];
+const withUs = [
+  'Un numéro et une étiquette pour chaque pièce.',
+  'Un QR sur le ticket : le client suit son dépôt en direct.',
+  'Prêt : un WhatsApp en un geste, avec le reste à payer.',
+  'Les taches photographiées au dépôt : une preuve, pas une dispute.',
+  'Les dépôts non récupérés signalés, avec la liste à relancer.',
+];
+const steps = [
+  ['shirt', 'Dépôt', 'Le client, ses pièces, une remarque par pièce.'],
+  ['tag', 'Étiquette', 'Une par pièce : numéro, article, jour prévu.'],
+  ['check', 'Prêt', 'Sur son rail, le client prévenu sur WhatsApp.'],
+  ['wallet', 'Remis', 'Le reste encaissé, le dépôt fermé.'],
+] as const;
+const drop = [
+  ['shirt', 'Votre liste de prix', 'Chemise, costume, djellaba, caftan, couette : à la pièce, ou au kilo pour le linge.'],
+  ['clock', 'Express et date prévue', 'Un supplément en pourcentage, et la date proposée toute seule.'],
+  ['camera', 'Photos au dépôt', 'Une tache, un bouton manquant : photographiés avec la tablette, gardés avec le dépôt.'],
+  ['coins', 'Acompte ou tout payé', 'Rien, un acompte ou tout : le reste à payer est sur le ticket.'],
+  ['printer', 'Ticket et étiquettes', 'Le ticket avec son QR pour le client, une étiquette par pièce pour l’atelier.'],
+  ['message', 'Ticket sur WhatsApp', 'Le client perd son ticket ? Il l’a aussi sur son téléphone.'],
+] as const;
+const counter = [
+  ['search', 'Retrouvé en une seconde', 'Par numéro, téléphone ou nom, même un dépôt remis il y a un mois.'],
+  ['door', 'Le rail ou l’étagère', 'Prêt sur « Rail 12 » : celui qui remet sait où chercher.'],
+  ['bell', 'En retard', 'Les dépôts qui auraient dû être prêts, en couleur, avant que le client appelle.'],
+  ['box', 'Non récupérés', 'Prêts depuis 30 jours ou plus : la liste à relancer, avec ce qu’il reste à encaisser.'],
+] as const;
+const rounds = [
+  ['pin', 'Ramassage à domicile', 'L’adresse, le jour, l’heure et les frais. Au retour du chauffeur, le ramassage devient un dépôt en un geste.'],
+  ['truck', 'Livraison', 'Un dépôt prêt livré chez le client. Les frais s’ajoutent, le chauffeur encaisse le reste.'],
+  ['message', 'Le client prévenu', 'Un WhatsApp prêt à envoyer : « nous passons entre 18 h et 19 h ».'],
+  ['calendar', 'La tournée du jour', 'Ramassages et livraisons de la journée, avec Google Maps pour chaque adresse.'],
+] as const;
+const evening = [
+  ['wallet', 'La caisse du jour', 'Dépôts, retraits, espèces et carte, encaissement par encaissement.'],
+  ['shield', 'Clôture à l’aveugle', 'Les espèces sont comptées avant d’afficher le montant attendu. L’écart est noté.'],
+  ['printer', 'Rapport Z', 'Imprimé à la clôture : le résumé de la journée, pour le gérant.'],
+  ['chart', 'Espace gérant', 'Depuis votre téléphone : ce qui est au pressing, prêt, non récupéré, et ce qu’il reste à encaisser.'],
+] as const;
+const faq = [
+  ['Mes clients doivent-ils installer une application ?', 'Non. Ils scannent le QR du ticket ou ouvrent le lien reçu sur WhatsApp. Rien à installer, rien à créer.'],
+  ['Il me faut quel matériel ?', 'Une tablette ou un ordinateur, et une imprimante de tickets. Les étiquettes sortent de la même imprimante. Nous vous conseillons si vous n’avez rien.'],
+  ['Et le linge au kilo ?', 'Oui. Un article au kilo : la caisse demande le poids et calcule le prix. Le sac compte comme une pièce.'],
+  ['Les photos sont-elles visibles par le client ?', 'Non. Elles restent au pressing : à la caisse et dans votre espace gérant. Le client voit seulement l’état de son dépôt.'],
+  ['Je travaille avec des hôtels ou des restaurants.', 'Un client professionnel est un client comme un autre : chaque dépôt a son numéro, ses pièces et son ticket.'],
+  ['Mes clients restent-ils à moi ?', 'Oui. Il n’y a pas de place de marché : la page de suivi ne montre que votre pressing, jamais un concurrent.'],
+  ['Qui installe tout ?', 'Nous. Votre liste de prix, votre équipe et votre imprimante, et nous montrons tout à votre équipe. C’est offert.'],
+  ['Et si j’arrête ?', 'Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.'],
+];
+---
+<Base lang={lang} page="pressing" title={tt('Amplify pour les pressings et blanchisseries | Amplify Growth Studio')} description={tt('La caisse des pressings : un numéro et une étiquette par pièce, les taches en photo, le client prévenu sur WhatsApp, le suivi par QR, le ramassage et la livraison. À Rabat et Salé.')} wa={wa}>
+  <!-- hero: the till lands, the client's phone drops, the shop's day plays out in chips -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:pb-14">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Pressings et blanchisseries</p>
+        <h1 class="mt-5 text-[clamp(2.8rem,5.8vw,5rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Chaque pièce retrouvée.</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">Chaque client prévenu.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">Un numéro et une étiquette par pièce, les taches en photo au dépôt, un WhatsApp quand c’est prêt. Le client suit son linge avec le QR de son ticket, et ne vous appelle plus pour demander.</p>
+        <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Demander une démo')} where="pressing-hero" class="px-7 text-lg" />
+          <a href="#suivi" class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold ring-1 ring-line hover:bg-paper">Voir le suivi client</a>
+        </div>
+      </div>
+
+      <div class="relative isolate aspect-[4/3.7] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.7] lg:rounded-[2.25rem]">
+        <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+        <span class="shadow-in absolute start-[8%] top-[72%] h-6 w-[66%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+        <div class="land absolute start-[4%] top-[20%] w-[76%]" style="--d:300ms">
+          <Device src="/img/pressing-depot.webp" alt={tt('La caisse du pressing : la liste de prix à gauche, le dépôt du client à droite')} w={1200} h={750} eager />
+        </div>
+        <span class="shadow-in absolute bottom-[3%] end-[6%] h-4 w-[22%] rounded-[50%] bg-black/55 blur-lg" style="--d:900ms" aria-hidden="true"></span>
+        <div class="drop absolute bottom-[4%] end-[5%] w-[25%]" style="--d:650ms"><Device kind="phone" src="/img/pressing-suivi-phone.webp" alt={tt('La page de suivi du client : son dépôt est prêt')} w={600} h={1298} eager class="rotate-[3deg]" /></div>
+        <div class="absolute start-[5%] top-[4%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-green text-navy sm:size-7"><Icon name="tag" class="size-3.5 sm:size-4" /></span>Dépôt n° 1042 : 4 étiquettes</p></div></div>
+        <div class="absolute end-[4%] top-[14%] z-10 sm:top-[6%]"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:3300ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>Prêt : Rail 12</p></div></div>
+        <div class="absolute bottom-[6%] start-[5%] z-10"><div class="tf-float" style="--d:2400ms"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>WhatsApp envoyé à Nadia</p></div></div>
+      </div>
+    </div>
+
+    <!-- three facts -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['1', 'étiquette par pièce, avec le numéro du dépôt'], ['14', 'jours gratuits, sans engagement'], ['3', 'langues : français, arabe et anglais']].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- today / with Amplify -->
+  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="tf rounded-[2rem] bg-paper p-7 ring-1 ring-line">
+        <p class="text-sm font-semibold text-muted">Aujourd’hui</p>
+        <ul class="mt-4 space-y-3">{today.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${200 + i * 90}ms`}><span class="mt-2 size-2 shrink-0 rounded-full bg-muted/50"></span>{x}</li>)}</ul>
+      </div>
+      <div class="tf rounded-[2rem] bg-navy p-7 text-white" style="--d:120ms">
+        <p class="text-sm font-semibold text-green">Avec Amplify</p>
+        <ul class="mt-4 space-y-3">{withUs.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${320 + i * 90}ms`}><span class="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}</ul>
+      </div>
+    </div>
+
+    <!-- the life of a piece: four steps that light up one after the other -->
+    <ol class="pr-steps mt-14 grid gap-3 sm:grid-cols-4" data-steps>
+      {steps.map(([i, h, x], k) => (
+        <li class="pr-step tf relative rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 120}ms; --k:${k}`}>
+          <span class="flex items-center justify-between"><span class="pr-ic grid size-12 place-items-center rounded-2xl bg-navy text-green transition-colors duration-500"><Icon name={i} class="size-6" /></span><span class="display text-4xl text-line" dir="ltr">{k + 1}</span></span>
+          <p class="mt-5 text-xl font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+          {k < 3 && <span class="pr-link absolute -end-3 top-1/2 z-10 hidden h-0.5 w-6 bg-green sm:block rtl:-scale-x-100" aria-hidden="true"></span>}
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- the drop-off -->
+  <section id="depot" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-center">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le dépôt.</span><span class="block text-green">En trente secondes.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">Le client au comptoir, ses vêtements sur la table. Vous touchez les articles, vous notez la tache, vous prenez la photo. Le ticket sort, les étiquettes aussi.</p>
+        </div>
+        <div class="tf" style="--d:150ms"><Device src="/img/pressing-depot.webp" alt={tt('Un dépôt en cours : deux chemises avec une tache sur le col, un costume, une djellaba, un acompte en espèces')} w={1200} h={750} /></div>
+      </div>
+      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        {drop.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 80}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the counter: in the works, ready, late, not collected -->
+  <section id="comptoir" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="grid gap-12 lg:grid-cols-[1.25fr_1fr] lg:items-center">
+      <div class="tf order-last lg:order-first" style="--d:150ms"><Device src="/img/pressing-encours.webp" alt={tt('Les dépôts en cours : prêts, en traitement, en retard, et un dépôt non récupéré depuis 40 jours')} w={1200} h={750} /></div>
+      <div class="tf-x">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Prêt. Prévenu.</span><span class="block text-green-deep">Remis.</span></h2>
+        <p class="mt-5 max-w-md text-lg text-muted">Le dépôt est propre : vous dites sur quel rail il attend, et le client reçoit un WhatsApp avec le reste à payer. Au retrait, la caisse encaisse et rend la monnaie.</p>
+      </div>
+    </div>
+    <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+      {counter.map(([i, h, x], k) => (
+        <li class="tf" style={`--d:${k * 90}ms`}>
+          <span class="grid size-11 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i} class="size-5" /></span>
+          <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- the client's tracking page -->
+  <section id="suivi" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:grid-cols-[1fr_0.8fr] md:p-14">
+      <div>
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">« C’est prêt ? »</span><span class="block text-green-deep">Le client le voit tout seul.</span></h2>
+        <p class="mt-5 max-w-md text-lg text-muted">Le QR du ticket ouvre une page à votre nom : le numéro du dépôt, où il en est, le jour prévu et ce qu’il reste à payer. Un bouton pour vous appeler, un autre pour WhatsApp.</p>
+        <ul class="mt-8 space-y-3">
+          {['Déposé', 'En nettoyage', 'Prêt', 'Récupéré'].map((x, k) => (
+            <li class="flex items-center gap-3 text-lg"><span class={`grid size-8 shrink-0 place-items-center rounded-full font-bold ${k < 3 ? 'bg-navy text-green' : 'bg-white text-muted ring-1 ring-line'}`} dir="ltr">{k < 2 ? <Icon name="check" class="size-4" /> : k + 1}</span>{x}</li>
+          ))}
+        </ul>
+        <p class="mt-8 text-sm text-muted">Sans application, sans compte. Le numéro du client n’apparaît jamais sur la page.</p>
+      </div>
+      <div class="mx-auto w-[62%] max-w-[17rem] md:w-[78%]"><div class="tf-float"><Device kind="phone" src="/img/pressing-suivi-phone.webp" alt={tt('La page de suivi : le dépôt n° 1043 est prêt, 265 MAD à payer au retrait')} w={600} h={1298} class="-rotate-[2deg]" /></div></div>
+    </div>
+  </section>
+
+  <!-- pick-ups and deliveries -->
+  <section id="tournees" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-center">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Ramassage et livraison.</span><span class="block text-green">Sans carnet.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">Vos clients n’ont plus le temps de passer ? Le chauffeur passe pour eux. Chaque tournée a son adresse, son heure et ses frais, et finit dans la caisse.</p>
+        </div>
+        <div class="tf" style="--d:150ms"><Device src="/img/pressing-tournees.webp" alt={tt('Les tournées du jour : un ramassage à Hay Riad et une livraison à Agdal')} w={1200} h={750} /></div>
+      </div>
+      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        {rounds.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 90}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the evening: the till, the blind count, the owner's space -->
+  <section id="caisse" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le soir, la caisse.</span><span class="block text-green-deep">Au dirham près.</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Ce qui est entré au dépôt, ce qui est sorti au retrait, en espèces et par carte. Le tiroir est compté avant que le montant attendu s’affiche.</p>
+    <div class="mt-12 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+      <div class="tf" style="--d:150ms"><Device src="/img/pressing-caisse.webp" alt={tt('La caisse du jour : dépôts, remis, encaissé en espèces et par carte')} w={1200} h={750} /></div>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {evening.map(([i, h, x], k) => (
+          <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- what sleeps on the rails, with the shop's own numbers -->
+  <section id="calcul" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-rails data-tf>
+    <div class="tf-x mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+      <div>
+        <h2 class="text-[2.2rem] leading-[0.95] sm:text-[2.8rem]"><span class="block">Combien dort</span><span class="block text-green-deep">sur vos rails ?</span></h2>
+        <p class="mt-4 text-muted">Faites le calcul avec vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
+        <div class="mt-8 space-y-6">
+          <label class="block"><span class="flex justify-between font-semibold"><span>Dépôts par semaine</span><span class="rl-v tabular-nums" data-for="dep">60</span></span>
+            <input type="range" min="10" max="400" step="10" value="60" data-k="dep" class="rl-r mt-2 w-full accent-[#05B962]" /></label>
+          <label class="block"><span class="flex justify-between font-semibold"><span>Prix moyen d’un dépôt (DH)</span><span class="rl-v tabular-nums" data-for="prix">120</span></span>
+            <input type="range" min="30" max="600" step="10" value="120" data-k="prix" class="rl-r mt-2 w-full accent-[#05B962]" /></label>
+          <label class="block"><span class="flex justify-between font-semibold"><span>Dépôts récupérés en retard sur 100</span><span class="rl-v tabular-nums" data-for="taux">8</span></span>
+            <input type="range" min="0" max="40" step="1" value="8" data-k="taux" class="rl-r mt-2 w-full accent-[#05B962]" /></label>
+        </div>
+      </div>
+      <div class="rounded-[2rem] bg-navy p-8 text-white">
+        <p class="text-white/60">Chaque mois, l’argent qui attend sur vos rails au lieu d’être dans votre caisse</p>
+        <p class="mt-2"><span class="rl-out display text-6xl text-green tabular-nums" dir="ltr">2 477</span> <span class="text-2xl font-semibold">DH</span></p>
+        <p class="mt-6 rounded-2xl bg-white/[0.07] p-4 text-white/80">Avec Amplify, ces dépôts sont listés dès qu’ils traînent, avec le numéro du client et un WhatsApp prêt à envoyer.</p>
+        <p class="mt-4 text-sm text-white/50">Calcul : dépôts par semaine × 4,3 semaines × dépôts en retard × prix moyen. Combien de ces clients reviennent plus vite après un message dépend d’eux : nous ne promettons pas de chiffre.</p>
+      </div>
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} wa={wa} />
+
+  <!-- final -->
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Voyez-le avec vos articles.</span><span class="block text-green">En 15 minutes.</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">Écrivez-nous sur WhatsApp. Nous passons au pressing, nous mettons votre liste de prix et votre équipe, et vous essayez 14 jours gratuitement.</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <WaButton text={wa} label={tt('Demander une démo')} where="pressing-final" class="px-8 text-lg" />
+        <a href={ROUTES.systems[lang]} class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold text-white ring-1 ring-white/25 hover:bg-white/10">Voir tous nos systèmes</a>
+      </div>
+    </div>
+  </section>
+  <CountUp />
+</Base>
+
+<style>
+  /* the four steps light up one after the other, then stay lit */
+  .js [data-steps].in .pr-ic { animation: pr-lit .6s ease both; animation-delay: calc(var(--k) * 450ms + 500ms); }
+  @keyframes pr-lit { 0% { background: #001E3E; color: #05B962; } 50% { background: #05B962; color: #001E3E; transform: scale(1.08); } 100% { background: #05B962; color: #001E3E; } }
+  .js [data-steps] .pr-link { transform-origin: left; transform: scaleX(0); }
+  .js [data-steps].in .pr-link { transition: transform .4s ease; transition-delay: calc(var(--k) * 450ms + 800ms); transform: scaleX(1); }
+  :global(html[dir="rtl"]) .js [data-steps].in .pr-link { transform: scaleX(-1); }
+  @media (prefers-reduced-motion: reduce) { .js [data-steps].in .pr-ic { animation: none; background: #05B962; color: #001E3E; } .js [data-steps] .pr-link { transform: none; } }
+</style>
+
+<script>
+  // the calculator: the shop's own numbers, nothing is sent
+  document.querySelectorAll<HTMLElement>('[data-rails]').forEach((root) => {
+    const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);
+    const out = root.querySelector<HTMLElement>('.rl-out')!;
+    const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ');
+    const run = () => {
+      root.querySelectorAll<HTMLElement>('.rl-v').forEach(v => { v.textContent = String(val(v.dataset.for!)); });
+      out.textContent = fmt(val('dep') * 4.3 * (val('taux') / 100) * val('prix'));
+    };
+    root.querySelectorAll('.rl-r').forEach(r => r.addEventListener('input', run));
+    run();
+  });
+  // sections reveal as they scroll in
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];
+  if (still || !('IntersectionObserver' in window)) roots.forEach((r) => r.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
+    roots.forEach((r) => io.observe(r));
+  }
+</script>
