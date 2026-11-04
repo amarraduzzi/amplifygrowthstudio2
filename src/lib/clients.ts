@@ -10,6 +10,8 @@ export interface Client {
   /** the brand's bright colour, for the glow behind the screens */
   accent: string;
   shot?: Shot; pos?: Shot;
+  /** only in the logo band of the home page, not in the client blocks of the other pages */
+  homeBandOnly?: boolean;
 }
 /** kind is the French text: it goes through tt() where it is shown */
 export const CLIENTS: Client[] = [
@@ -17,6 +19,7 @@ export const CLIENTS: Client[] = [
   { name: 'Dom’s Café', logo: 'doms', accent: '#c98a4a', bg: '#0a0404', fit: 'contain', kind: 'Café et pizzeria, Agdal', svc: ['pos', 'site'], url: 'https://domscafeagdal.pages.dev', shot: { src: '/img/clients/shots/doms.webp', w: 540, h: 1002 } },
   { name: 'Indian Flavors', logo: 'indian-flavors', accent: '#d6a53a', bg: '#1b1b1b', kind: 'Restaurant indien, Agdal', svc: ['online', 'site'], url: 'https://indianflavors.pages.dev', shot: { src: '/img/clients/shots/indian-flavors.webp', w: 540, h: 1002 } },
   { name: 'Relais Marin', logo: 'relais-marin', accent: '#d9b25b', bg: '#051935', kind: 'Rabat', svc: ['orders', 'site'], url: 'https://site.amplifygrowthstudio.com/relais-marin', shot: { src: '/img/clients/shots/relais-marin.webp', w: 540, h: 1002 } },
+  { name: 'Castle Fish', logo: 'castle-fish', accent: '#f2c63e', bg: '#ffffff', fit: 'contain', kind: 'Harhoura', svc: ['site'], url: 'https://site.amplifygrowthstudio.com/castle-fish', homeBandOnly: true },
   { name: 'L’Atelier by Sam', logo: 'atelier-sam', accent: '#b89a78', bg: '#faf7f0', kind: 'Salon de thé et brunch', svc: ['pos', 'site'] },
   { name: 'Zayna Café', logo: 'zayna', accent: '#a0533a', bg: '#ffffff', kind: 'Coffee shop', svc: ['pos', 'site'], url: 'https://zaynacoffeeshop.pages.dev', shot: { src: '/img/clients/shots/zayna.webp', w: 540, h: 1002 } },
   { name: 'Smash’n Cheese', logo: 'smashncheese', accent: '#f2a33a', bg: '#ffffff', kind: 'Burgers smash artisanaux', svc: ['site'], url: 'https://smashncheese.pages.dev', shot: { src: '/img/clients/shots/smashncheese.webp', w: 540, h: 1002 } },
