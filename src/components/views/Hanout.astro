@@ -8,6 +8,7 @@ import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import CountUp from '../CountUp.astro';
+import PhotoBand from '../PhotoBand.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -132,6 +133,8 @@ const faq = [
     </div>
   </section>
 
+  <PhotoBand name="hanout-comptoir" big="1200" w={1200} h={896} pos="50% 45%" class="pt-14 md:pt-24" alt={tt('Le soir dans un hanout : le propriétaire regarde son téléphone derrière le comptoir, le pain et la balance devant lui')} kicker={tt('Le comptoir')} title={tt('Tout le quartier passe par ici.')} />
+
   <!-- today / with Amplify -->
   <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24" data-tf>
     <div class="grid gap-4 md:grid-cols-2">
@@ -202,6 +205,8 @@ const faq = [
     </div>
   </section>
 
+  <PhotoBand name="hanout-cliente" big="1200" w={1200} h={896} pos="60% 35%" class="pt-14 md:pt-24" alt={tt('Chez elle, une cliente lit le rappel de la boutique sur son téléphone, un verre de thé à côté')} kicker={tt('Chez la cliente')} title={tt('Le rappel arrive. Sans gêne.')} />
+
   <!-- what sleeps in the notebook, with the shop's own numbers -->
   <section id="calcul" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-cahier data-tf>
     <div class="tf-x mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1fr_1fr] lg:items-center">
@@ -247,6 +252,8 @@ const faq = [
     </div>
   </section>
 
+  <PhotoBand name="hanout-livraison" big="1200" w={1200} h={896} pos="60% 50%" class="pb-14 md:pb-24" alt={tt('Le livreur décharge les caisses de lait et d’eau, le propriétaire photographie le bon devant sa boutique')} kicker={tt('Livraison')} title={tt('Le livreur passe. Le stock suit.')} />
+
   <!-- stock and suppliers -->
   <section id="stock" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
     <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
@@ -268,6 +275,8 @@ const faq = [
       </ul>
     </div>
   </section>
+
+  <PhotoBand name="hanout-quartier" big="1200" w={1200} h={896} pos="60% 55%" class="pt-14 md:pt-24" alt={tt('Un garçon livre le pain et une bouteille de gaz dans la rue d’à côté, à la tombée de la nuit')} kicker={tt('20:30')} title={tt('La commande part dans la rue d’à côté.')} />
 
   <!-- the neighbourhood orders and the usual basket -->
   <section id="quartier" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
@@ -296,6 +305,8 @@ const faq = [
       </div>
     </div>
   </section>
+
+  <PhotoBand name="hanout-soir" big="1200" w={1200} h={896} pos="55% 40%" class="pb-14 md:pb-24" alt={tt('Tard le soir, le propriétaire compte les billets et les pièces sur le comptoir, le téléphone à côté')} kicker={tt('23:00')} title={tt('La caisse comptée. La journée finie.')} />
 
   <!-- the evening: the till, the count, the figures, the team -->
   <section id="soir" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
