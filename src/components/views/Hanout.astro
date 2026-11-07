@@ -1,0 +1,412 @@
+---
+// Hanout page (corner shops, épiceries): linked from the products menu and the footer.
+// Same look as the pressing and salons pages. Real screenshots of the demo shop ("Hanout Fatima", invented
+// names), in Arabic on the Arabic page. No clients, results or prices are claimed: the price is given on request.
+import Base from '../../layouts/Base.astro';
+import Device from '../Device.astro';
+import Faq from '../Faq.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import CountUp from '../CountUp.astro';
+import { tr } from '../../i18n/t';
+import { ROUTES, type Lang } from '../../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const wa = tt('Bonjour, je voudrais voir Amplify pour mon hanout.');
+// the app's screens: Arabic on the Arabic page, French elsewhere
+const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp`;
+const scr = '#EDF1F6';
+const today = [
+  'Un cahier de kridi plein de ratures, et des pages qu’on ne relit plus.',
+  '« Je te paie la semaine prochaine. » Trois mois plus tard, on n’ose plus demander.',
+  'Le soir, la caisse ne tombe jamais juste, et on ne sait pas pourquoi.',
+  'Le yaourt périmé découvert au fond du frigo.',
+  'Le grossiste dit que vous lui devez 1 800 DH. Vous pensiez 1 200.',
+];
+const withUs = [
+  'Chaque client a son compte, le total est toujours juste.',
+  'Un rappel poli sur WhatsApp en un geste, avec le détail de son compte.',
+  'La caisse du jour, comptée et clôturée en deux minutes.',
+  'Les dates de péremption qui approchent, avant qu’il soit trop tard.',
+  'Ce que vous devez à chaque fournisseur, ligne par ligne.',
+];
+// the ten modules, and the three ways to start (k: which profiles switch it on)
+const modules = [
+  ['book', 'Kridi', 'Le cahier, client par client.', 'kcb'],
+  ['till', 'Caisse', 'Vendre en scannant ou d’un geste.', 'cb'],
+  ['printer', 'Imprimante', 'Le ticket papier, en bluetooth.', 'cb'],
+  ['box', 'Stock', 'Ce qui reste, ce qu’il faut commander.', 'b'],
+  ['calendar', 'Dates', 'Les produits qui vont périmer.', 'b'],
+  ['truck', 'Fournisseurs', 'Livraisons, dettes et commandes.', 'b'],
+  ['phone', 'Recharges et factures', 'Les recharges et la commission.', 'b'],
+  ['bag', 'Commandes du quartier', 'Votre boutique sur leur téléphone.', 'b'],
+  ['users', 'Équipe', 'Un code et des droits pour chacun.', 'b'],
+  ['message', 'Voix', 'Dites-le, l’application le note.', 'b'],
+] as const;
+const profiles = [
+  ['k', 'Kridi seulement', 'Vous gardez votre façon de vendre. Le cahier passe dans le téléphone, rien d’autre ne change.'],
+  ['c', 'Kridi et caisse', 'Chaque vente notée, la monnaie calculée, le total du jour sans faire de calcul.'],
+  ['b', 'Toute ma boutique', 'Le stock, les fournisseurs, les recharges, l’équipe et les commandes du quartier. Tout au même endroit.'],
+] as const;
+const kridi = [
+  ['users', 'Un compte par client', 'Ce qu’il a pris, ce qu’il a payé, le total. Chaque ligne avec la date et qui l’a notée.'],
+  ['message', 'Le rappel sur WhatsApp', 'Un message poli, prêt à envoyer, dans sa langue. Il ouvre son compte avec le lien, sans application.'],
+  ['calendar', 'La promesse de paiement', '« Je paie samedi » : notée. Samedi passé sans paiement, le client remonte avec « Promesse non tenue ».'],
+  ['shield', 'Un plafond par client', 'Au-delà de votre limite, l’application vous prévient avant de donner encore.'],
+  ['bell', 'À relancer', 'Ceux qui n’ont rien payé depuis longtemps, en haut de la liste.'],
+  ['check', 'Rien ne s’efface', 'Une erreur se corrige par une ligne, l’ancienne reste visible. Pas de dispute.'],
+] as const;
+const till = [
+  ['qr', 'Scannez avec le téléphone', 'La caméra lit le code-barres. Un lecteur bluetooth marche aussi.'],
+  ['star', 'Boutons rapides', 'Le pain, les œufs, la menthe : ce qui n’a pas de code, en un geste.'],
+  ['coins', 'Au poids et la monnaie', 'Les olives au kilo, la monnaie à rendre calculée.'],
+  ['book', 'Vendu au kridi', 'Le panier va sur le compte du client en un geste.'],
+  ['printer', 'Ticket papier ou WhatsApp', 'Une petite imprimante bluetooth, ou le ticket sur son téléphone.'],
+  ['message', 'Dites-le', '« Trois pains et un lait pour Ahmed, au kridi. » En darija ou en français, l’application remplit.'],
+] as const;
+const stock = [
+  ['truck', 'La livraison en photo', 'Photographiez le bon du livreur : les produits et les quantités se remplissent.'],
+  ['calendar', 'Les dates de péremption', '« À vendre vite », puis « périmé » : avant que le client le trouve.'],
+  ['bell', 'À commander', 'Sous votre seuil, le produit remonte, avec ce qui se vend en 30 jours.'],
+  ['box', 'Inventaire et pertes', 'Comptez, notez le cassé et le périmé. L’écart est visible.'],
+  ['wallet', 'Ce que vous devez', 'Chaque fournisseur, ses livraisons et vos paiements. Le total juste.'],
+  ['message', 'Commander sur WhatsApp', 'La liste à commander part chez le fournisseur en un message.'],
+] as const;
+const evening = [
+  ['wallet', 'La caisse du jour', 'Ventes, kridi rentré, recharges, dépenses et retraits.'],
+  ['shield', 'Clôture comptée', 'Vous comptez le tiroir, l’écart est noté. Vous gardez le fond de caisse.'],
+  ['chart', 'Mes chiffres', 'Le bénéfice, ce qui se vend, les heures et les jours forts.'],
+  ['users', 'L’équipe', 'Chacun son code. Le vendeur ne voit pas les totaux si vous ne voulez pas.'],
+] as const;
+const faq = [
+  ['Il faut internet ?', 'Pas pour noter : le kridi et les ventes se notent sans internet, et tout part dès que la connexion revient. Les messages WhatsApp et les commandes du quartier, eux, ont besoin d’internet.'],
+  ['Il me faut quel matériel ?', 'Votre téléphone. Rien d’autre à acheter. Une petite imprimante bluetooth si vous voulez des tickets papier, c’est au choix.'],
+  ['C’est en arabe ?', 'Oui. L’arabe d’abord, et le français. Chacun dans l’équipe choisit sa langue. Les messages au client partent dans la sienne.'],
+  ['Mes clients doivent installer une application ?', 'Non. Ils reçoivent un lien sur WhatsApp et voient leur compte, leur ticket ou la boutique. Rien à installer, rien à créer.'],
+  ['Je dois changer de fournisseur ?', 'Non. Vous gardez vos fournisseurs, vos prix et vos clients. Amplify ne vous oblige à rien acheter chez personne.'],
+  ['Et si je perds mon téléphone ?', 'Vos comptes ne sont pas dans le téléphone. Vous reliez un nouveau téléphone, tout est là.'],
+  ['Je dois tout utiliser ?', 'Non. Vous choisissez : le kridi seul, ou plus. Vous ajoutez un module quand vous voulez.'],
+  ['Qui installe tout ?', 'Nous. Nous passons à la boutique, les produits courants sont déjà prêts, et nous vous montrons tout sur votre téléphone.'],
+  ['Et si j’arrête ?', 'Sans engagement : vous arrêtez quand vous voulez. Vous pouvez exporter vos comptes.'],
+];
+---
+<Base lang={lang} page="hanout" title={tt('Amplify Hanout : le kridi, la caisse et le stock du hanout | Amplify Growth Studio')} description={tt('Le cahier de kridi dans votre téléphone, avec le rappel sur WhatsApp. La caisse, le stock, les fournisseurs et les commandes du quartier si vous voulez. En arabe et en français, même sans internet.')} wa={wa}>
+  <!-- hero: the owner's phone lands, the client's kridi page and the till drop beside it, the day plays out in chips -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:pb-14">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>Hanouts et épiceries</p>
+        <h1 class="mt-5 text-[clamp(2.8rem,5.8vw,5rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">Le kridi noté.</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">L’argent qui revient.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">Amplify Hanout met le cahier de kridi dans votre téléphone, avec un rappel poli sur WhatsApp en un geste. Et si vous voulez : la caisse, le stock, les fournisseurs et les commandes du quartier. En arabe ou en français, même sans internet.</p>
+        <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Demander une démo')} where="hanout-hero" class="px-7 text-lg" />
+          <a href="#kridi" class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold ring-1 ring-line hover:bg-paper">Voir le kridi</a>
+        </div>
+      </div>
+
+      <div class="relative isolate aspect-[4/3.9] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/5] lg:rounded-[2.25rem]">
+        <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+        <span class="shadow-in absolute start-[30%] top-[93%] h-5 w-[40%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+        <div class="drop absolute start-[6%] top-[22%] w-[27%]" style="--d:650ms"><Device kind="phone" src={img('client')} alt={tt('Le compte d’un client dans l’application : 320 DH dus, le bouton Payé et le rappel WhatsApp')} w={600} h={1298} eager screenBg={scr} class="-rotate-[5deg]" /></div>
+        <div class="land absolute start-[33%] top-[9%] w-[34%]" style="--d:300ms"><Device kind="phone" src={img('today')} alt={tt('L’écran Aujourd’hui du propriétaire : les ventes du jour, le stock, une commande du quartier et le kridi dehors')} w={600} h={1298} eager screenBg={scr} /></div>
+        <div class="drop absolute end-[6%] top-[22%] w-[27%]" style="--d:850ms"><Device kind="phone" src={img('compte')} alt={tt('La page du client, ouverte depuis WhatsApp : ce qu’il doit, ligne par ligne')} w={600} h={1298} eager screenBg={scr} class="rotate-[5deg]" /></div>
+        <div class="absolute start-[4%] top-[4%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-green text-navy sm:size-7"><Icon name="book" class="size-3.5 sm:size-4" /></span>Kridi : Ahmed +46 DH</p></div></div>
+        <div class="absolute end-[4%] top-[9%] z-10 sm:top-[5%]"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-[#25D366] py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-white shadow-lg sm:text-sm" style="--d:3300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-white text-[#25D366] sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>Rappel envoyé à Ahmed</p></div></div>
+        <div class="absolute bottom-[5%] end-[5%] z-10"><div class="tf-float" style="--d:2400ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4300ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>+200 DH rentrés aujourd’hui</p></div></div>
+      </div>
+    </div>
+
+    <!-- three facts -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['1', 'téléphone : le vôtre, rien à acheter'], ['2', 'langues : arabe et français'], ['10', 'modules, vous choisissez lesquels']].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- today / with Amplify -->
+  <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="grid gap-4 md:grid-cols-2">
+      <div class="tf rounded-[2rem] bg-paper p-7 ring-1 ring-line">
+        <p class="text-sm font-semibold text-muted">Aujourd’hui</p>
+        <ul class="mt-4 space-y-3">{today.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${200 + i * 90}ms`}><span class="mt-2 size-2 shrink-0 rounded-full bg-muted/50"></span>{x}</li>)}</ul>
+      </div>
+      <div class="tf rounded-[2rem] bg-navy p-7 text-white" style="--d:120ms">
+        <p class="text-sm font-semibold text-green">Avec Amplify</p>
+        <ul class="mt-4 space-y-3">{withUs.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${320 + i * 90}ms`}><span class="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- your shop, your way: pick a start, the modules light up; tap a module to switch it -->
+  <section id="modules" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf mx-auto max-w-6xl rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12" data-mods>
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Votre boutique.</span><span class="block text-green-deep">À votre façon.</span></h2>
+      <p class="mt-5 max-w-2xl text-lg text-muted">Chaque hanout est différent. Commencez par le kridi seul, ou prenez tout. Choisissez un départ, ou touchez les modules vous-même.</p>
+      <div class="mt-8 flex flex-wrap gap-2" role="tablist">
+        {profiles.map(([k, h], i) => (
+          <button type="button" role="tab" data-prof={k} aria-selected={i === 2 ? 'true' : 'false'} class="hm-tab min-h-11 rounded-full px-5 font-semibold ring-1 ring-line transition-colors">{h}</button>
+        ))}
+      </div>
+      {profiles.map(([k, , x]) => <p class="hm-why mt-4 max-w-2xl text-lg font-semibold" data-why={k} hidden={k !== 'b'}>{x}</p>)}
+      <ul class="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {modules.map(([i, h, x, on]) => (
+          <li><button type="button" data-mod={on} aria-pressed="true" class="hm-mod flex h-full w-full flex-col items-start rounded-[1.5rem] p-4 text-start ring-1 transition-all duration-300">
+            <span class="hm-ic grid size-11 place-items-center rounded-2xl transition-colors duration-300"><Icon name={i} class="size-5" /></span>
+            <span class="mt-3 font-semibold leading-tight">{h}</span>
+            <span class="mt-1 text-[0.85rem] leading-snug opacity-75">{x}</span>
+          </button></li>
+        ))}
+      </ul>
+      <p class="mt-6 text-muted"><span class="hm-n display text-3xl text-navy" dir="ltr">10</span> <span>modules activés. Vous changez quand vous voulez, depuis les réglages.</span></p>
+    </div>
+  </section>
+
+  <!-- the kridi -->
+  <section id="kridi" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le kridi.</span><span class="block text-green">Sans cahier, sans gêne.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">Le client prend, vous notez en deux gestes. Le jour où il faut demander, ce n’est pas vous qui gênez : c’est un message poli, avec son compte détaillé. Il voit ce qu’il doit, sans discussion.</p>
+          <!-- the reminder, as the client receives it -->
+          <div class="mt-8 max-w-sm rounded-[1.4rem] rounded-ss-md bg-[#DCF8C6] p-4 text-[0.95rem] leading-relaxed text-[#111B21] shadow-lg">
+            <p>Hanout Fatima : bonjour Ahmed, votre compte chez nous est de 320 DH. Le détail ici :</p>
+            <p class="mt-1 font-semibold text-[#027EB5] underline" dir="ltr">menu.amplifygrowthstudio.com/…</p>
+            <p class="mt-1 text-end text-xs text-[#667781]" dir="ltr">19:42 ✓✓</p>
+          </div>
+        </div>
+        <div class="tf relative mx-auto grid w-full max-w-md grid-cols-2 items-start gap-5" style="--d:150ms">
+          <div class="tf-float"><Device kind="phone" src={img('kridi')} alt={tt('Le kridi : 1 146 DH dehors chez 3 clients, la liste des clients avec ce qu’ils doivent')} w={600} h={1298} screenBg={scr} class="-rotate-[2deg]" /></div>
+          <div class="tf-float mt-14" style="--d:1500ms"><Device kind="phone" src={img('compte')} alt={tt('La page du client : ce qu’il doit, ligne par ligne, et le bouton pour appeler la boutique')} w={600} h={1298} screenBg={scr} class="rotate-[2deg]" /></div>
+        </div>
+      </div>
+      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        {kridi.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 80}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- what sleeps in the notebook, with the shop's own numbers -->
+  <section id="calcul" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-cahier data-tf>
+    <div class="tf-x mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+      <div>
+        <h2 class="text-[2.2rem] leading-[0.95] sm:text-[2.8rem]"><span class="block">Combien d’argent dort</span><span class="block text-green-deep">dans votre cahier ?</span></h2>
+        <p class="mt-4 text-muted">Faites le calcul avec vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
+        <div class="mt-8 space-y-6">
+          <label class="block"><span class="flex justify-between font-semibold"><span>Clients au kridi</span><span class="ck-v tabular-nums" data-for="cli">40</span></span>
+            <input type="range" min="5" max="200" step="5" value="40" data-k="cli" class="ck-r mt-2 w-full accent-[#05B962]" /></label>
+          <label class="block"><span class="flex justify-between font-semibold"><span>Ce que doit un client, en moyenne (DH)</span><span class="ck-v tabular-nums" data-for="moy">250</span></span>
+            <input type="range" min="20" max="2000" step="10" value="250" data-k="moy" class="ck-r mt-2 w-full accent-[#05B962]" /></label>
+          <label class="block"><span class="flex justify-between font-semibold"><span>Sur 100 clients, combien ne paient plus depuis un mois ?</span><span class="ck-v tabular-nums" data-for="taux">20</span></span>
+            <input type="range" min="0" max="80" step="1" value="20" data-k="taux" class="ck-r mt-2 w-full accent-[#05B962]" /></label>
+        </div>
+      </div>
+      <div class="rounded-[2rem] bg-navy p-8 text-white">
+        <p class="text-white/60">Le kridi dehors, dans votre cahier</p>
+        <p class="mt-1"><span class="ck-all display text-5xl tabular-nums" dir="ltr">10 000</span> <span class="text-xl font-semibold">DH</span></p>
+        <p class="mt-6 text-white/60">Dont l’argent qui dort depuis plus d’un mois</p>
+        <p class="mt-1"><span class="ck-out display text-6xl text-green tabular-nums" dir="ltr">2 000</span> <span class="text-2xl font-semibold">DH</span></p>
+        <p class="mt-6 rounded-2xl bg-white/[0.07] p-4 text-white/80">Avec Amplify, ces clients sont en haut de la liste « À relancer », avec un rappel prêt à partir sur WhatsApp.</p>
+        <p class="mt-4 text-sm text-white/50">Calcul : clients au kridi × ce que doit un client, puis la part qui ne paie plus. Combien de ces clients paient après un rappel dépend d’eux : nous ne promettons pas de chiffre.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- the till -->
+  <section id="caisse" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <div class="tf order-last mx-auto w-[62%] max-w-[17rem] lg:order-first lg:w-[70%]" style="--d:150ms"><div class="tf-float"><Device kind="phone" src={img('vente')} alt={tt('La caisse : le panier avec le pain, les œufs et la menthe, les boutons rapides et le bouton Encaisser')} w={600} h={1298} screenBg={scr} class="-rotate-[2deg]" /></div></div>
+      <div class="tf-x">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La caisse.</span><span class="block text-green-deep">Dans la main.</span></h2>
+        <p class="mt-5 max-w-md text-lg text-muted">Pas d’ordinateur, pas de comptoir à refaire. Vous scannez avec le téléphone, ou vous touchez le pain et les œufs. La monnaie est calculée, la vente est notée.</p>
+        <ul class="mt-10 grid gap-x-8 gap-y-7 sm:grid-cols-2">
+          {till.map(([i, h, x], k) => (
+            <li class="tf" style={`--d:${k * 80}ms`}>
+              <span class="grid size-11 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i} class="size-5" /></span>
+              <p class="mt-3 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- stock and suppliers -->
+  <section id="stock" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le stock et les fournisseurs.</span><span class="block text-green">Plus de surprise.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">Le livreur passe, vous photographiez son bon. Le stock monte, la dette chez le fournisseur aussi, et vous voyez ce qui va périmer avant le client.</p>
+        </div>
+        <div class="tf mx-auto w-[62%] max-w-[17rem] lg:w-[70%]" style="--d:150ms"><div class="tf-float"><Device kind="phone" src={img('stock')} alt={tt('Le stock : les dates de péremption, le yaourt à retirer, le lait à vendre vite, et l’huile à commander')} w={600} h={1298} screenBg={scr} class="rotate-[2deg]" /></div></div>
+      </div>
+      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+        {stock.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 80}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the neighbourhood orders and the usual basket -->
+  <section id="quartier" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-14">
+      <div class="grid items-center gap-10 md:grid-cols-[1fr_0.95fr]">
+        <div>
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le quartier commande.</span><span class="block text-green-deep">Sur son téléphone.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-muted">Votre boutique a sa page, avec vos produits et vos prix. Le voisin choisit, dit s’il passe ou s’il faut livrer, et envoie. Votre téléphone sonne.</p>
+          <ol class="mt-8 space-y-3">
+            {['Le voisin commande depuis le lien ou le QR sur la porte.', 'Vous acceptez : il reçoit un WhatsApp.', 'C’est prêt : livré par votre garçon, ou il passe le prendre.', 'Encaissé en un geste, comme une vente.'].map((x, k) => (
+              <li class="hq-step flex items-center gap-3 text-lg" style={`--k:${k}`}><span class="hq-ic grid size-8 shrink-0 place-items-center rounded-full bg-white font-bold text-muted ring-1 ring-line" dir="ltr">{k + 1}</span>{x}</li>
+            ))}
+          </ol>
+        </div>
+        <div class="mx-auto grid w-full max-w-sm grid-cols-2 items-start gap-4">
+          <div class="tf-float"><Device kind="phone" src={img('boutique')} alt={tt('La page de la boutique sur le téléphone du voisin : les produits avec leur prix et le panier')} w={600} h={1298} screenBg={scr} class="-rotate-[2deg]" /></div>
+          <div class="tf-float mt-12" style="--d:1500ms"><Device kind="phone" src={img('panier')} alt={tt('Le panier habituel d’une cliente : ses produits de chaque semaine, le rappel chaque vendredi, un bouton pour commander')} w={600} h={1298} screenBg={scr} class="rotate-[2deg]" /></div>
+        </div>
+      </div>
+      <div class="mt-12 grid gap-6 rounded-[2rem] bg-navy p-7 text-white md:grid-cols-[auto_1fr] md:items-center md:p-9">
+        <span class="grid size-14 place-items-center rounded-2xl bg-green text-navy"><Icon name="bag" class="size-7" /></span>
+        <div>
+          <p class="display text-3xl leading-tight sm:text-4xl">Le panier habituel.</p>
+          <p class="mt-2 max-w-3xl text-lg text-white/75">Hajja Aicha prend la même chose chaque vendredi : pain, lait, œufs, sucre, thé, menthe. Elle garde sa commande comme panier habituel. Le vendredi, vous lui envoyez un rappel en un geste, et elle recommande en un geste. Aux prix du jour.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the evening: the till, the count, the figures, the team -->
+  <section id="soir" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le soir, vos chiffres.</span><span class="block text-green-deep">Au dirham près.</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Ce que vous avez vendu, ce que le kridi a rapporté, ce que vous avez dépensé. Et surtout : ce que vous avez vraiment gagné.</p>
+    <div class="mt-12 grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+      <div class="tf mx-auto w-[62%] max-w-[17rem] lg:w-[78%]" style="--d:150ms"><div class="tf-float"><Device kind="phone" src={img('chiffres')} alt={tt('Mes chiffres : le bénéfice net de la semaine, les ventes, la marge, les recharges, les dépenses et les pertes')} w={600} h={1298} screenBg={scr} /></div></div>
+      <ul class="grid gap-4 sm:grid-cols-2">
+        {evening.map(([i, h, x], k) => (
+          <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- what stays yours -->
+  <section class="px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
+      {[['store', 'Votre boutique reste la vôtre', 'Vos fournisseurs, vos prix, votre façon de faire. Nous ne vous vendons pas de marchandise.'], ['shield', 'Vos clients restent à vous', 'Pas de place de marché : votre page montre votre boutique, jamais un concurrent.'], ['check', 'Sans engagement', 'Vous arrêtez quand vous voulez, et vous gardez vos comptes.']].map(([i, h, x], k) => (
+        <div class="rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
+          <span class="grid size-11 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i as 'store'} class="size-5" /></span>
+          <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <Faq lang={lang} items={faq} wa={wa} />
+
+  <!-- final -->
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Voyez-le sur votre téléphone.</span><span class="block text-green">En 10 minutes.</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">Écrivez-nous sur WhatsApp. Nous passons à la boutique, nous montrons l’application avec une boutique de démonstration, et vous choisissez ce que vous voulez utiliser.</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <WaButton text={wa} label={tt('Demander une démo')} where="hanout-final" class="px-8 text-lg" />
+        <a href={ROUTES.systems[lang]} class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold text-white ring-1 ring-white/25 hover:bg-white/10">Voir tous nos systèmes</a>
+      </div>
+    </div>
+  </section>
+  <CountUp />
+</Base>
+
+<style>
+  /* the modules: on = navy tile with a green icon, off = quiet */
+  .hm-mod { background: #001E3E; color: #fff; --tw-ring-color: #001E3E; }
+  .hm-mod .hm-ic { background: #05B962; color: #001E3E; }
+  .hm-mod[aria-pressed="false"] { background: #fff; color: #001E3E; --tw-ring-color: rgb(0 30 62 / .12); }
+  .hm-mod[aria-pressed="false"] .hm-ic { background: rgb(0 30 62 / .06); color: rgb(0 30 62 / .45); }
+  .hm-mod[aria-pressed="false"] > span:not(.hm-ic) { opacity: .55; }
+  .hm-mod:focus-visible, .hm-tab:focus-visible { outline: 3px solid #05B962; outline-offset: 2px; }
+  .hm-mod.pop { animation: hm-pop .35s ease; }
+  @keyframes hm-pop { 50% { transform: scale(1.04); } }
+  .hm-tab[aria-selected="true"] { background: #001E3E; color: #05B962; --tw-ring-color: #001E3E; }
+  /* the four steps of an order light up one after the other */
+  .js [data-tf].in .hq-ic { animation: hq-lit .6s ease both; animation-delay: calc(var(--k) * 450ms + 600ms); }
+  @keyframes hq-lit { 0% { background: #fff; color: #54637A; } 50% { background: #05B962; color: #001E3E; transform: scale(1.12); } 100% { background: #001E3E; color: #05B962; } }
+  @media (prefers-reduced-motion: reduce) { .js [data-tf].in .hq-ic { animation: none; background: #001E3E; color: #05B962; } .hm-mod.pop { animation: none; } }
+</style>
+
+<script>
+  // the modules: a start lights its modules, a tap switches one
+  document.querySelectorAll<HTMLElement>('[data-mods]').forEach((root) => {
+    const mods = [...root.querySelectorAll<HTMLButtonElement>('.hm-mod')];
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.hm-tab')];
+    const n = root.querySelector<HTMLElement>('.hm-n')!;
+    const count = () => { n.textContent = String(mods.filter(m => m.getAttribute('aria-pressed') === 'true').length); };
+    const pick = (p: string) => {
+      tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.prof === p)));
+      root.querySelectorAll<HTMLElement>('[data-why]').forEach(w => { w.hidden = w.dataset.why !== p; });
+      mods.forEach((m, i) => {
+        const on = m.dataset.mod!.includes(p);
+        if ((m.getAttribute('aria-pressed') === 'true') !== on) window.setTimeout(() => { m.setAttribute('aria-pressed', String(on)); m.classList.remove('pop'); void m.offsetWidth; m.classList.add('pop'); count(); }, i * 45);
+      });
+      window.setTimeout(count, mods.length * 45 + 20);
+    };
+    tabs.forEach(t => t.addEventListener('click', () => pick(t.dataset.prof!)));
+    mods.forEach(m => m.addEventListener('click', () => {
+      // the kridi is the heart: it stays on
+      if (m.dataset.mod!.includes('k')) { m.classList.remove('pop'); void m.offsetWidth; m.classList.add('pop'); return; }
+      m.setAttribute('aria-pressed', String(m.getAttribute('aria-pressed') !== 'true'));
+      tabs.forEach(t => t.setAttribute('aria-selected', 'false'));
+      root.querySelectorAll<HTMLElement>('[data-why]').forEach(w => { w.hidden = true; });
+      count();
+    }));
+  });
+  // the calculator: the shop's own numbers, nothing is sent
+  document.querySelectorAll<HTMLElement>('[data-cahier]').forEach((root) => {
+    const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);
+    const fmt = (x: number) => Math.round(x).toLocaleString('fr-FR').replace(/ | /g, ' ');
+    const run = () => {
+      root.querySelectorAll<HTMLElement>('.ck-v').forEach(v => { v.textContent = String(val(v.dataset.for!)); });
+      const all = val('cli') * val('moy');
+      root.querySelector<HTMLElement>('.ck-all')!.textContent = fmt(all);
+      root.querySelector<HTMLElement>('.ck-out')!.textContent = fmt(all * val('taux') / 100);
+    };
+    root.querySelectorAll('.ck-r').forEach(r => r.addEventListener('input', run));
+    run();
+  });
+  // sections reveal as they scroll in
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];
+  if (still || !('IntersectionObserver' in window)) roots.forEach((r) => r.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
+    roots.forEach((r) => io.observe(r));
+  }
+</script>

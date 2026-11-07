@@ -6,7 +6,8 @@ import { dictAr } from './dict-ar';
 import { venuesEn, venuesAr } from './dict-venues';
 import { immoEn, immoAr } from './dict-immobilier';
 import { pressingEn, pressingAr } from './dict-pressing';
-const D: Record<Lang, Record<string, string>> = { fr: {}, en: { ...dictEn, ...venuesEn, ...immoEn, ...pressingEn }, ar: { ...dictAr, ...venuesAr, ...immoAr, ...pressingAr } };
+import { hanoutEn, hanoutAr } from './dict-hanout';
+const D: Record<Lang, Record<string, string>> = { fr: {}, en: { ...dictEn, ...venuesEn, ...immoEn, ...pressingEn, ...hanoutEn }, ar: { ...dictAr, ...venuesAr, ...immoAr, ...pressingAr, ...hanoutAr } };
 export const tr = (lang: Lang) => (fr: string): string => D[lang][fr] ?? fr;
 /** The language of the page being rendered, from its URL. */
 export const langOf = (url: URL): Lang => (url.pathname.startsWith('/ar/') || url.pathname === '/ar' ? 'ar' : url.pathname.startsWith('/en/') || url.pathname === '/en' ? 'en' : 'fr');

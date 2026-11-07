@@ -684,6 +684,8 @@ x-notr { display: contents; }
   .js [data-tf] .tf { opacity: 0; transform: translateY(28px); }
   .js [data-tf] .tf-x { opacity: 0; transform: translateX(-26px); }
   html[dir="rtl"].js [data-tf] .tf-x { transform: translateX(26px); }
+  /* the rule above outweighs the reveal below: in Arabic the block stayed 26px off for good */
+  html[dir="rtl"].js [data-tf].in .tf-x { transform: none; }
   .js [data-tf].in .tf, .js [data-tf].in .tf-x { opacity: 1; transform: none; transition: opacity .6s var(--d, 0ms), transform .7s var(--d, 0ms) cubic-bezier(.2,.8,.2,1), box-shadow .3s; }
   .js [data-tf].in .tf:hover { transform: translateY(-6px); transition-delay: 0s; }
   .tf-strike { transform: scaleX(0); transform-origin: left; }
