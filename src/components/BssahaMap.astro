@@ -1,0 +1,70 @@
+---
+// Morocco, lighting up: a simplified outline with the cities. Open cities glow, the next one pulses with its waiting list.
+// Only real numbers: the count is the number of listed restaurants of the city.
+import type { BssahaCopy } from '../i18n/bssaha';
+export interface CityRow { id: string; name: string; lon: number; lat: number; open: boolean; soon: boolean; count: number; min: number; ownerHref: string; dinerHref: string; listHref: string }
+interface Props { c: BssahaCopy; rows: CityRow[]; otherHref: string }
+const { c, rows, otherHref } = Astro.props;
+const K = 48, X0 = -17.2, Y0 = 36.2;
+const pt = (lon: number, lat: number) => `${((lon - X0) * K).toFixed(1)},${((Y0 - lat) * K).toFixed(1)}`;
+// simplified outline (the whole kingdom), clockwise from Tangier; stylised on purpose
+const outline = [[-5.9,35.8],[-6.4,34.8],[-6.85,34.0],[-7.6,33.6],[-8.5,33.25],[-9.25,32.3],[-9.8,31.5],[-9.65,30.5],[-10.2,29.4],[-11.1,28.45],[-12.9,27.95],[-13.2,27.15],[-14.5,26.1],[-15.9,23.7],[-16.6,22.3],[-17.1,21.35],[-13.17,21.35],[-13.2,27.67],[-8.67,27.67],[-8.67,28.72],[-7.5,29.4],[-5.8,29.95],[-4.8,30.5],[-3.7,30.95],[-3.6,31.65],[-2.8,32.0],[-1.25,32.1],[-1.7,32.6],[-1.5,33.2],[-1.7,34.0],[-1.9,34.7],[-2.2,35.1],[-2.95,35.2],[-3.95,35.2],[-4.6,35.2],[-5.35,35.55],[-5.35,35.9]].map(([x, y]) => pt(x, y)).join(' ');
+const W = Math.round(16.2 * K), H = Math.round(15.2 * K);
+const fill = (s: string, r: CityRow) => s.replace('{v}', r.name).replace('{n}', String(r.count)).replace('{m}', String(r.min));
+const btn = 'inline-flex min-h-12 items-center justify-center rounded-full px-6 font-semibold';
+---
+<section id="villes" class="scroll-mt-20 bg-navy text-white">
+  <div class="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[0.9fr_1.1fr] md:items-center md:py-20">
+    <div>
+      <h2 class="text-5xl md:text-6xl">{c.mapTitle}</h2>
+      <p class="measure mt-4 text-lg text-white/80">{c.mapLead}</p>
+      <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={c.mapAria} class="mx-auto mt-8 h-auto w-full max-w-sm md:max-w-none">
+        <polygon points={outline} fill="rgba(255,255,255,0.07)" stroke="rgba(255,255,255,0.35)" stroke-width="2" stroke-linejoin="round" />
+        {rows.map(r => {
+          const [x, y] = pt(r.lon, r.lat).split(',').map(Number);
+          const left = r.id === 'casablanca' || r.id === 'marrakech' || r.id === 'agadir';
+          return (
+            <g>
+              {r.soon && <circle cx={x} cy={y} r="9" class="bm-pulse" fill="none" stroke="#7CE6B0" stroke-width="2" />}
+              {r.open && <circle cx={x} cy={y} r="9" class="bm-pulse" fill="#06C167" />}
+              <circle cx={x} cy={y} r={r.open || r.soon ? 7 : 4.5} fill={r.open ? '#06C167' : r.soon ? '#001E3E' : 'rgba(255,255,255,0.4)'} stroke={r.soon ? '#7CE6B0' : 'none'} stroke-width="2.5" />
+              <text x={left ? x - 14 : x + 14} y={y + 5} text-anchor={left ? 'end' : 'start'} font-size={r.open || r.soon ? 24 : 20} font-weight={r.open || r.soon ? 700 : 400} fill={r.open || r.soon ? '#fff' : 'rgba(255,255,255,0.55)'}>{r.name}</text>
+            </g>
+          );
+        })}
+      </svg>
+      <p class="mt-2 text-xs text-white/50">{c.mapNote}</p>
+    </div>
+    <ul class="grid gap-4">
+      {rows.filter(r => r.open || r.soon).map(r => (
+        <li class="rounded-[1.4rem] bg-white/10 p-6 ring-1 ring-white/15">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="text-3xl">{r.name}</h3>
+            <span class={`rounded-full px-3 py-1 text-xs font-bold ${r.open ? 'bg-green text-navy' : 'bg-white/15 text-mint'}`}>{r.open ? c.stLive : c.stSoon}</span>
+          </div>
+          {r.open
+            ? <><p class="mt-3 text-white/85">{r.count === 1 ? c.countOne : c.countMany.replace('{n}', String(r.count))}. {c.liveLine}</p>
+                <a href={r.listHref} class={`${btn} mt-5 bg-green text-navy hover:bg-[#04A859]`}>{c.ctaList}</a></>
+            : <><p class="mt-3 text-white/85">{fill(c.soonLine, r)}</p>
+                {r.count > 0 && <div class="mt-4"><div class="h-2 overflow-hidden rounded-full bg-white/15"><div class="h-full rounded-full bg-green" style={`width:${Math.min(100, Math.round(r.count / r.min * 100))}%`}></div></div><p class="mt-2 text-sm text-white/70">{fill(c.progress, r)}</p></div>}
+                <div class="mt-5 flex flex-col gap-3 sm:flex-row">
+                  <a href={r.ownerHref} target="_blank" rel="noopener" class={`${btn} bg-green text-navy hover:bg-[#04A859]`}>{fill(c.btnOwner, r)}</a>
+                  <a href={r.dinerHref} target="_blank" rel="noopener" class={`${btn} border border-white/35 hover:border-white`}>{c.btnDiner}</a>
+                </div></>}
+        </li>
+      ))}
+      <li class="rounded-[1.4rem] border border-dashed border-white/25 p-6">
+        <h3 class="text-xl">{c.otherTitle}</h3>
+        <p class="mt-2 text-white/75">{c.otherLine}</p>
+        <a href={otherHref} target="_blank" rel="noopener" class="mt-3 inline-block font-semibold text-mint underline underline-offset-4">{c.otherBtn}</a>
+      </li>
+    </ul>
+  </div>
+</section>
+<style>
+  .bm-pulse { transform-box: fill-box; transform-origin: center; }
+  @media (prefers-reduced-motion: no-preference) {
+    .bm-pulse { animation: bm-ring 2.2s ease-out infinite; }
+    @keyframes bm-ring { from { transform: scale(1); opacity: .7; } to { transform: scale(2.6); opacity: 0; } }
+  }
+</style>

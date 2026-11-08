@@ -21,6 +21,14 @@ const fr = {
   fLien: 'Lien de votre site ou page de commande (facultatif)', send: 'Envoyer sur WhatsApp',
   formNote: 'Le bouton ouvre WhatsApp avec vos réponses. Vous pouvez modifier le message avant l’envoi.', writeUs: 'Ou écrivez-nous directement.',
   ctaH2: 'Vendez sans commission', ctaP: 'Une question avant de vous inscrire ? Écrivez-nous sur WhatsApp.',
+  tSlider: 'Montant de la commande', calcTitle: 'Et pour le restaurant ?', calcPct: 'Commission payée ailleurs', calcOrders: 'Commandes par mois',
+  calcOut: 'Reste au restaurant chaque mois', calcHow: 'Calcul : commandes × montant × commission. Le pourcentage est le vôtre : mettez celui que vous payez aujourd’hui.',
+  mapTitle: 'Le Maroc qui s’allume', mapLead: 'Une ville ouvre quand assez de restaurants sont prêts. Rabat est ouverte. Casablanca est la prochaine.',
+  mapAria: 'Carte du Maroc : Rabat est ouverte, Casablanca arrive bientôt.', mapNote: 'Carte simplifiée.',
+  stLive: 'Ouvert', stSoon: 'Bientôt', progress: '{n} restaurants sur {m} pour ouvrir', liveLine: 'Commandez dès maintenant.',
+  soonLine: 'Vous avez un restaurant à {v} ? Soyez parmi les premiers.', btnOwner: 'Je suis restaurateur à {v}', btnDiner: 'Me prévenir à l’ouverture',
+  otherTitle: 'Une autre ville ?', otherLine: 'Dites-nous laquelle sur WhatsApp.', otherBtn: 'Proposer ma ville',
+  cityLabel: 'Ville', listCity: 'Restaurants à {v}', fVille: 'Ville', fVillePh: 'Rabat, Casablanca…',
 };
 const en: typeof fr = {
   title: 'Bssaha: order directly from the restaurant, no commission | Rabat',
@@ -43,6 +51,14 @@ const en: typeof fr = {
   fLien: 'Link to your website or order page (optional)', send: 'Send on WhatsApp',
   formNote: 'The button opens WhatsApp with your answers. You can edit the message before sending.', writeUs: 'Or write to us directly.',
   ctaH2: 'Sell without commission', ctaP: 'A question before you sign up? Write to us on WhatsApp.',
+  tSlider: 'Order amount', calcTitle: 'And for the restaurant?', calcPct: 'Commission paid elsewhere', calcOrders: 'Orders per month',
+  calcOut: 'Stays with the restaurant each month', calcHow: 'Calculation: orders × amount × commission. The percentage is yours: enter what you pay today.',
+  mapTitle: 'Morocco, lighting up', mapLead: 'A city opens when enough restaurants are ready. Rabat is open. Casablanca is next.',
+  mapAria: 'Map of Morocco: Rabat is open, Casablanca is coming soon.', mapNote: 'Simplified map.',
+  stLive: 'Open', stSoon: 'Soon', progress: '{n} of {m} restaurants needed to open', liveLine: 'Order now.',
+  soonLine: 'Do you run a restaurant in {v}? Be among the first.', btnOwner: 'I run a restaurant in {v}', btnDiner: 'Tell me when it opens',
+  otherTitle: 'Another city?', otherLine: 'Tell us which one on WhatsApp.', otherBtn: 'Suggest my city',
+  cityLabel: 'City', listCity: 'Restaurants in {v}', fVille: 'City', fVillePh: 'Rabat, Casablanca…',
 };
 const ar: typeof fr = {
   title: 'Bssaha: اطلب مباشرة من المطعم، بدون عمولة | الرباط',
@@ -65,6 +81,14 @@ const ar: typeof fr = {
   fLien: 'رابط موقعك أو صفحة الطلب (اختياري)', send: 'أرسل عبر واتساب',
   formNote: 'يفتح الزر واتساب بإجاباتك. يمكنك تعديل الرسالة قبل الإرسال.', writeUs: 'أو راسلنا مباشرة.',
   ctaH2: 'بِع بلا عمولة', ctaP: 'سؤال قبل التسجيل؟ راسلنا على واتساب.',
+  tSlider: 'مبلغ الطلب', calcTitle: 'وماذا عن المطعم؟', calcPct: 'العمولة التي تدفعها في مكان آخر', calcOrders: 'عدد الطلبات في الشهر',
+  calcOut: 'يبقى للمطعم كل شهر', calcHow: 'الحساب: عدد الطلبات × المبلغ × العمولة. النسبة من اختيارك: ضع ما تدفعه اليوم.',
+  mapTitle: 'المغرب يضيء', mapLead: 'تفتح المدينة عندما يجتمع عدد كاف من المطاعم. الرباط مفتوحة. الدار البيضاء هي التالية.',
+  mapAria: 'خريطة المغرب: الرباط مفتوحة والدار البيضاء قريباً.', mapNote: 'خريطة مبسطة.',
+  stLive: 'مفتوحة', stSoon: 'قريباً', progress: '{n} مطاعم من أصل {m} لفتح المدينة', liveLine: 'اطلب من الآن.',
+  soonLine: 'هل لديك مطعم في {v}؟ كن من الأوائل.', btnOwner: 'أنا صاحب مطعم في {v}', btnDiner: 'نبهوني عند الافتتاح',
+  otherTitle: 'مدينة أخرى؟', otherLine: 'قل لنا أي مدينة على واتساب.', otherBtn: 'اقترح مدينتي',
+  cityLabel: 'المدينة', listCity: 'مطاعم {v}', fVille: 'المدينة', fVillePh: 'الرباط، الدار البيضاء…',
 };
 export const bssahaCopy = (lang: Lang) => ({ fr, en, ar })[lang];
 export type BssahaCopy = typeof fr;
