@@ -89,7 +89,7 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
 
   <!-- HERO: the promise left; right, one scene with four trades: the till lands, three phones drop, the day plays out in chips -->
   <section class="relative">
-    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-6 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:pb-14">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-6 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-12 lg:pb-16">
       <div>
         <h1 class="text-[clamp(2.4rem,9.5vw,3.3rem)] md:text-[clamp(2.8rem,4.3vw,3.9rem)]">
           <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:60ms">Votre commerce perd</span></span>
@@ -118,7 +118,7 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
         </div>
       </div>
 
-      <div class="relative isolate aspect-[4/3.6] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.7] lg:rounded-[2.25rem]">
+      <div class="relative isolate aspect-[4/3.6] overflow-hidden rounded-[1.75rem] bg-navy lg:mt-3 lg:aspect-[5/4.6] lg:rounded-[2.25rem]">
         <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
         <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
         <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
@@ -128,21 +128,13 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
         <div class="drop absolute bottom-[6%] start-[63%] w-[19%]" style="--d:850ms"><Device kind="phone" src="/img/salon-rdv-phone.webp" alt={tt('Un rendez-vous de salon pris depuis le téléphone')} w={600} h={1298} eager class="rotate-[2deg]" /></div>
         <div class="drop absolute end-[3%] top-[30%] w-[22%]" style="--d:1050ms"><Device kind="phone" src={img('today')} alt={tt('Le téléphone d’un hanout : les ventes du jour, le stock et le kridi')} w={600} h={1298} eager screenBg="#EDF1F6" class="rotate-[5deg]" /></div>
         <ul class="pointer-events-none text-[0.68rem] font-semibold sm:text-sm" aria-hidden="true">
-          {[['chart', 'Restaurant : marge calculée', 'top-[4%] start-[4%]', 'bg-paper text-navy'], ['book', 'Hanout : +200 DH de kridi rentrés', 'top-[4%] end-[4%] max-sm:hidden', 'bg-green text-navy'], ['message', 'Pressing : client prévenu', 'bottom-[30%] start-[3%] max-sm:hidden', 'bg-paper text-navy'], ['calendar', 'Salon : rendez-vous confirmé', 'bottom-[3%] start-[3%]', 'bg-paper text-navy']].map(([i, l, p, col], k) => (
+          {[['chart', 'Restaurant : marge calculée', 'top-[4%] start-[4%]', 'bg-paper text-navy'], ['book', 'Hanout : +200 DH rentrés', 'top-[19%] end-[3%] max-sm:hidden', 'bg-green text-navy'], ['message', 'Pressing : client prévenu', 'bottom-[30%] start-[3%] max-sm:hidden', 'bg-paper text-navy'], ['calendar', 'Salon : rendez-vous confirmé', 'bottom-[3%] start-[3%]', 'bg-paper text-navy']].map(([i, l, p, col], k) => (
             <li class={`absolute z-10 ${p}`}><div class="tf-float" style={`--d:${k * 900}ms`}><p class={`chat-in flex items-center gap-2 rounded-full py-1.5 pe-3.5 ps-1.5 shadow-lg ${col}`} style={`--d:${1800 + k * 700}ms`}><span class="grid size-6 place-items-center rounded-full bg-navy text-green sm:size-7"><Icon name={i as 'chart'} class="size-3.5 sm:size-4" /></span>{l}</p></div></li>
           ))}
         </ul>
       </div>
     </div>
 
-    <!-- three facts -->
-    <div class="border-y border-line bg-paper">
-      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
-        {[['8', 'métiers, un seul partenaire'], ['2', 'langues : arabe et français'], ['0', 'engagement : vous arrêtez quand vous voulez']].map(([n, l]) => (
-          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</span></li>
-        ))}
-      </ul>
-    </div>
   </section>
 
   <!-- CLIENTS: the businesses already running on Amplify -->
