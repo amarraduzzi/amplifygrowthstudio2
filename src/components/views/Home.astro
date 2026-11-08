@@ -93,21 +93,14 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   <section class="relative">
     <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-6 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.05fr] lg:items-start lg:gap-12 lg:pb-16">
       <div>
-        <h1 class="text-[clamp(2.4rem,9.5vw,3.3rem)] md:text-[clamp(2.8rem,4.3vw,3.9rem)]">
+        <h1 class="text-[clamp(2.05rem,8.4vw,3.3rem)] md:text-[clamp(2.8rem,4.3vw,3.9rem)]">
           <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:60ms">Votre commerce perd</span></span>
           <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:180ms">de l’argent sans le voir.</span></span>
           <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:300ms">Nous le retrouvons.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:800ms" aria-hidden="true"></span></span></span>
         </h1>
-        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:350ms">Caisse, marges, kridi, rendez-vous, dépôts, site et clients : Amplify met de l’ordre dans les commerces marocains, et vous montre ce que vous gagnez vraiment. Une équipe à Rabat, en arabe et en français.</p>
-        <div class="fade-up mt-6" style="--d:450ms">
-          <p class="text-sm font-semibold text-muted">Votre métier</p>
-          <ul class="mt-2 flex flex-wrap gap-2">
-            {chips.map(([k, l]) => <li><a href={ROUTES[k][lang]} class="inline-flex min-h-10 items-center rounded-full bg-paper px-4 text-[0.95rem] font-semibold ring-1 ring-line transition-colors hover:bg-navy hover:text-white">{l}</a></li>)}
-            <li><a href="#metiers" class="inline-flex min-h-10 items-center rounded-full px-3 text-[0.95rem] font-semibold text-green-deep underline underline-offset-4">Tous les métiers</a></li>
-          </ul>
-        </div>
-        <div class="fade-up mt-6 flex flex-wrap items-center gap-x-5 gap-y-3" style="--d:550ms">
-          <WaButton text={wa} label={c.hero.diag} where="home-hero" class="px-7 text-lg" />
+        <p class="fade-up mt-4 max-w-xl text-base text-muted sm:mt-5 sm:text-lg md:text-xl" style="--d:350ms">Caisse, marges, kridi, rendez-vous, dépôts, site et clients : Amplify met de l’ordre dans les commerces marocains, et vous montre ce que vous gagnez vraiment. Une équipe à Rabat, en arabe et en français.</p>
+        <div class="fade-up mt-5 flex flex-wrap sm:mt-6 items-center gap-x-5 gap-y-3" style="--d:450ms">
+          <WaButton id="hero-cta" text={wa} label={c.hero.diag} where="home-hero" class="px-7 text-lg" />
           <ul class="flex items-center gap-x-4 text-[0.85rem] md:text-[0.95rem]">
             <li>
               <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:underline">
@@ -116,6 +109,13 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
               </a>
             </li>
             <li class="flex items-center gap-2 text-muted"><span class="size-2 shrink-0 rounded-full bg-green" aria-hidden="true"></span>{c.hero.local}</li>
+          </ul>
+        </div>
+        <div class="fade-up mt-6 sm:mt-7" style="--d:550ms">
+          <p class="text-sm font-semibold text-muted">Votre métier</p>
+          <ul class="mt-2 flex flex-wrap gap-2">
+            {chips.map(([k, l]) => <li><a href={ROUTES[k][lang]} class="inline-flex min-h-10 items-center rounded-full bg-paper px-3.5 text-[0.9rem] sm:px-4 sm:text-[0.95rem] font-semibold ring-1 ring-line transition-colors hover:bg-navy hover:text-white">{l}</a></li>)}
+            <li><a href="#metiers" class="inline-flex min-h-10 items-center rounded-full px-3 text-[0.95rem] font-semibold text-green-deep underline underline-offset-4">Tous les métiers</a></li>
           </ul>
         </div>
       </div>
