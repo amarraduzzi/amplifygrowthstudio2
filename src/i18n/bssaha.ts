@@ -29,6 +29,11 @@ const fr = {
   soonLine: 'Vous avez un restaurant à {v} ? Soyez parmi les premiers.', btnOwner: 'Je suis restaurateur à {v}', btnDiner: 'Me prévenir à l’ouverture',
   otherTitle: 'Une autre ville ?', otherLine: 'Dites-nous laquelle sur WhatsApp.', otherBtn: 'Proposer ma ville',
   cityLabel: 'Ville', listCity: 'Restaurants à {v}', fVille: 'Ville', fVillePh: 'Rabat, Casablanca…',
+  liveTitle: 'La commande arrive chez vous. L’argent aussi.', liveLead: 'Voyez ce qui se passe quand un client commande. Appuyez sur le bouton.',
+  liveRemote: 'Vous n’êtes pas à Rabat ? Nous installons et formons votre équipe en appel vidéo.', liveCta: 'Je veux ça dans mon restaurant',
+  liveClient: 'Le client', liveKitchen: 'Votre restaurant', liveItem1: 'Burger maison', liveItem2: 'Thé à la menthe', liveBtn: 'Passer la commande',
+  liveSent: 'Commande envoyée', liveReplay: 'Rejouer', liveExample: 'Exemple, avec un faux restaurant.', liveWait: 'En attente d’une commande…',
+  liveNew: 'Nouvelle commande', liveSlip: 'Bon de cuisine', liveReceived: 'Reçu par le restaurant',
 };
 const en: typeof fr = {
   title: 'Bssaha: order directly from the restaurant, no commission | Rabat',
@@ -59,6 +64,11 @@ const en: typeof fr = {
   soonLine: 'Do you run a restaurant in {v}? Be among the first.', btnOwner: 'I run a restaurant in {v}', btnDiner: 'Tell me when it opens',
   otherTitle: 'Another city?', otherLine: 'Tell us which one on WhatsApp.', otherBtn: 'Suggest my city',
   cityLabel: 'City', listCity: 'Restaurants in {v}', fVille: 'City', fVillePh: 'Rabat, Casablanca…',
+  liveTitle: 'The order lands with you. So does the money.', liveLead: 'See what happens when a customer orders. Press the button.',
+  liveRemote: 'Not in Rabat? We set up and train your team over a video call.', liveCta: 'I want this in my restaurant',
+  liveClient: 'The customer', liveKitchen: 'Your restaurant', liveItem1: 'House burger', liveItem2: 'Mint tea', liveBtn: 'Place the order',
+  liveSent: 'Order sent', liveReplay: 'Play again', liveExample: 'Example, with a made-up restaurant.', liveWait: 'Waiting for an order…',
+  liveNew: 'New order', liveSlip: 'Kitchen slip', liveReceived: 'Received by the restaurant',
 };
 const ar: typeof fr = {
   title: 'Bssaha: اطلب مباشرة من المطعم، بدون عمولة | الرباط',
@@ -89,6 +99,11 @@ const ar: typeof fr = {
   soonLine: 'هل لديك مطعم في {v}؟ كن من الأوائل.', btnOwner: 'أنا صاحب مطعم في {v}', btnDiner: 'نبهوني عند الافتتاح',
   otherTitle: 'مدينة أخرى؟', otherLine: 'قل لنا أي مدينة على واتساب.', otherBtn: 'اقترح مدينتي',
   cityLabel: 'المدينة', listCity: 'مطاعم {v}', fVille: 'المدينة', fVillePh: 'الرباط، الدار البيضاء…',
+  liveTitle: 'الطلب يصل إليك. والمال أيضاً.', liveLead: 'شاهد ماذا يحدث عندما يطلب زبون. اضغط على الزر.',
+  liveRemote: 'لست في الرباط؟ نقوم بالتركيب وتكوين فريقك عبر مكالمة فيديو.', liveCta: 'أريد هذا في مطعمي',
+  liveClient: 'الزبون', liveKitchen: 'مطعمك', liveItem1: 'برغر البيت', liveItem2: 'أتاي بالنعناع', liveBtn: 'أرسل الطلب',
+  liveSent: 'تم إرسال الطلب', liveReplay: 'أعد التشغيل', liveExample: 'مثال، بمطعم وهمي.', liveWait: 'في انتظار طلب…',
+  liveNew: 'طلب جديد', liveSlip: 'ورقة المطبخ', liveReceived: 'وصل إلى المطعم',
 };
 export const bssahaCopy = (lang: Lang) => ({ fr, en, ar })[lang];
 export type BssahaCopy = typeof fr;

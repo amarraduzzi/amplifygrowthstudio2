@@ -1,0 +1,72 @@
+---
+// La Commande en direct: the visitor presses one button and sees what happens at the restaurant (order lands, kitchen slip,
+// 0 DH commission, 100 DH received). Built for restaurateurs outside Rabat, whom Amplify cannot visit. An example, labelled as such.
+import type { BssahaCopy } from '../i18n/bssaha';
+interface Props { c: BssahaCopy }
+const { c } = Astro.props;
+const step = 'bl-step';
+---
+<section id="commande" class="bg-blue text-white">
+  <div class="bl mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[0.8fr_1.2fr] md:items-center md:py-20">
+    <div>
+      <h2 class="text-5xl md:text-6xl">{c.liveTitle}</h2>
+      <p class="measure mt-4 text-lg text-white/85">{c.liveLead}</p>
+      <p class="mt-5 text-white/70">{c.liveRemote}</p>
+      <a href="#rejoindre" class="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{c.liveCta}</a>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2" aria-live="polite">
+      <div class="flex flex-col rounded-[1.6rem] bg-paper p-5 text-navy">
+        <p class="text-sm font-semibold text-muted">{c.liveClient}</p>
+        <ul class="mt-3 space-y-2">
+          <li class="flex justify-between gap-3"><span>{c.liveItem1}</span><span dir="ltr">70 DH</span></li>
+          <li class="flex justify-between gap-3"><span>{c.liveItem2}</span><span dir="ltr">30 DH</span></li>
+        </ul>
+        <hr class="my-3 border-dashed border-line" />
+        <p class="flex justify-between gap-3 text-lg font-bold"><span>{c.ticketTotal}</span><span dir="ltr">100 DH</span></p>
+        <button type="button" id="bl-go" data-sent={c.liveSent} data-send={c.liveBtn} data-replay={c.liveReplay} class="mt-5 min-h-12 rounded-full bg-green px-6 font-semibold text-navy hover:bg-[#04A859]">{c.liveBtn}</button>
+        <p class="mt-3 text-xs text-muted">{c.liveExample}</p>
+      </div>
+      <div class="flex flex-col rounded-[1.6rem] bg-navy p-5 ring-1 ring-white/20">
+        <p class="text-sm font-semibold text-mint">{c.liveKitchen}</p>
+        <p class="bl-wait mt-3 text-white/60">{c.liveWait}</p>
+        <div class={`${step} mt-3 rounded-xl bg-green px-4 py-2 font-semibold text-navy`} data-s="1"><span aria-hidden="true">🔔 </span>{c.liveNew}</div>
+        <div class={`${step} mt-3 rounded-xl bg-paper p-4 font-mono text-sm text-navy`} data-s="2">
+          <p class="font-bold">{c.liveSlip}</p>
+          <p class="mt-1 flex justify-between gap-3"><span>1 × {c.liveItem1}</span></p>
+          <p class="flex justify-between gap-3"><span>1 × {c.liveItem2}</span></p>
+        </div>
+        <div class={`${step} mt-3 space-y-1 border-t border-dashed border-white/30 pt-3`} data-s="3">
+          <p class="flex justify-between gap-3 text-sm text-white/80"><span>{c.ticketComm}</span><span dir="ltr">0 DH</span></p>
+          <p class="flex justify-between gap-3 text-lg font-bold text-green"><span>{c.liveReceived}</span><span dir="ltr">100 DH</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<style is:global>
+  .js .bl-step { opacity: 0; transform: translateY(10px); }
+  .js .bl-step.on { opacity: 1; transform: none; }
+  .js .bl.go .bl-wait { display: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .bl-step { transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1); }
+    .bl-step[data-s="2"].on { animation: tk-print .6s steps(8, end) both; }
+  }
+</style>
+<script>
+  const root = document.querySelector<HTMLElement>('.bl');
+  const go = document.getElementById('bl-go') as HTMLButtonElement | null;
+  if (root && go) {
+    const steps = [...root.querySelectorAll<HTMLElement>('.bl-step')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timers: number[] = [], done = false;
+    const reset = () => { timers.forEach(clearTimeout); timers = []; steps.forEach(s => s.classList.remove('on')); root.classList.remove('go'); go.textContent = go.dataset.send!; go.disabled = false; done = false; };
+    go.addEventListener('click', () => {
+      if (done) { reset(); return; }
+      go.disabled = true; go.textContent = go.dataset.sent!; root.classList.add('go');
+      steps.forEach((s, i) => timers.push(window.setTimeout(() => {
+        s.classList.add('on');
+        if (i === steps.length - 1) { done = true; go.disabled = false; go.textContent = go.dataset.replay!; }
+      }, still ? 0 : 700 + i * 900)));
+    });
+  }
+</script>
