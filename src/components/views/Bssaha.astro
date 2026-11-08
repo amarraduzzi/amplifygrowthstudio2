@@ -2,7 +2,6 @@
 // Bssaha: commission-free ordering directory for Rabat restaurants (fr, en, ar).
 // Text: src/i18n/bssaha.ts. Restaurants: src/data/bssaha.ts.
 import Base from '../../layouts/Base.astro';
-import Bars from '../Bars.astro';
 import FinalCta from '../FinalCta.astro';
 import BssahaTicket from '../BssahaTicket.astro';
 import BssahaMap from '../BssahaMap.astro';
@@ -28,7 +27,7 @@ const rows = CITIES.map(ct => {
   const count = restos.filter(r => r.ville === ct.id).length;
   const open = ct.status === 'live' || count >= MIN_TO_OPEN;
   const name = ct.name[lang];
-  return { id: ct.id, name, lon: ct.lon, lat: ct.lat, open, soon: !open && ct.status === 'soon', count, min: MIN_TO_OPEN,
+  return { id: ct.id, name, lon: ct.lon, lat: ct.lat, color: ct.color, ink: ct.ink, open, soon: !open && ct.status === 'soon', count, min: MIN_TO_OPEN,
     ownerHref: waLink(`Bonjour, je suis restaurateur à ${ct.name.fr} et je voudrais faire partie des premiers restaurants sur Bssaha.`),
     dinerHref: waLink(`Bonjour, prévenez-moi quand Bssaha ouvre à ${ct.name.fr}.`), listHref: '#liste' };
 });
@@ -40,16 +39,16 @@ const schema = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', n
 const WA_JOIN = waLink(wa);
 ---
 <Base lang={lang} page="bssaha" title={c.title} description={c.description} wa={wa} schema={schema}>
-  <section class="relative isolate overflow-hidden bg-blue text-white">
-    <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32 md:h-44" animate />
-    <div class="mx-auto grid max-w-6xl gap-12 px-4 pb-24 pt-12 sm:px-6 md:grid-cols-[1.2fr_0.8fr] md:items-center md:pb-28 md:pt-20">
+  <div class="bs-page" data-city={openRows[0].id} style={`--city:${openRows[0].color};--ink:${openRows[0].ink}`}>
+  <section class="bs-bg relative isolate overflow-hidden">
+    <div class="mx-auto grid max-w-6xl gap-12 px-4 pb-16 pt-10 sm:px-6 md:grid-cols-[1.1fr_0.9fr] md:items-center md:pb-24 md:pt-20">
       <div>
-        <p class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-semibold text-mint"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{c.badge}</p>
-        <h1 class="mt-5 text-[3.2rem] sm:text-6xl lg:text-[5.2rem]">{c.h1a} <span class="text-green">{c.h1b}</span></h1>
-        <p class="measure mt-6 text-lg text-white/85">{c.lead}</p>
+        <p class="bs-paper font-dot inline-block px-3 py-1 text-sm">{c.badge}</p>
+        <h1 class="mt-5 text-[3.2rem] leading-[1.02] sm:text-6xl lg:text-[5.2rem]">{c.h1a} <span class="bs-mark">{c.h1b}</span></h1>
+        <p class="measure mt-6 text-lg opacity-90">{c.lead}</p>
         <div class="mt-9 flex flex-col gap-3 sm:flex-row">
-          <a id="hero-cta" href="#liste" class="inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{c.ctaList}</a>
-          <a href="#rejoindre" class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 px-7 text-lg hover:border-white">{c.ctaJoin}</a>
+          <a id="hero-cta" href="#liste" class="inline-flex min-h-12 items-center justify-center rounded-full bg-[#FFE600] px-7 text-lg font-bold text-[#0a0a0a]">{c.ctaList}</a>
+          <a href="#rejoindre" class="inline-flex min-h-12 items-center justify-center rounded-full border-2 border-current px-7 text-lg font-semibold">{c.ctaJoin}</a>
         </div>
       </div>
       <BssahaTicket c={c} />
@@ -62,8 +61,8 @@ const WA_JOIN = waLink(wa);
     <h2 id="list-title" class="text-5xl md:text-6xl">{c.listCity.replace('{v}', openRows[0].name)}</h2>
     <div class="mt-6 flex flex-wrap items-center gap-2" role="group" aria-label={c.cityLabel}>
       {rows.filter(r => r.open || r.soon).map(r => r.open
-        ? <button type="button" data-city={r.id} data-name={r.name} aria-pressed={r.id === openRows[0].id ? 'true' : 'false'} class="city-tab min-h-11 rounded-full bg-paper px-5 font-semibold ring-1 ring-line aria-pressed:bg-navy aria-pressed:text-white">{r.name}</button>
-        : <a href="#villes" class="inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-muted ring-1 ring-line">{r.name} <span class="rounded-full bg-mint px-2 py-0.5 text-xs font-bold text-green-deep">{c.stSoon}</span></a>)}
+        ? <button type="button" data-theme-city={r.id} data-color={r.color} data-ink={r.ink} data-city={r.id} data-name={r.name} aria-pressed={r.id === openRows[0].id ? 'true' : 'false'} class="city-tab min-h-11 rounded-full bg-paper px-5 font-semibold ring-1 ring-line aria-pressed:bg-navy aria-pressed:text-white">{r.name}</button>
+        : <a href="#villes" data-theme-city={r.id} data-color={r.color} data-ink={r.ink} class="inline-flex min-h-11 items-center gap-2 rounded-full px-5 text-muted ring-1 ring-line">{r.name} <span class="rounded-full bg-mint px-2 py-0.5 text-xs font-bold text-green-deep">{c.stSoon}</span></a>)}
     </div>
     <div class="mt-8 grid gap-3 md:grid-cols-[2fr_1fr_1fr]">
       <input id="q-text" type="search" placeholder={c.search} aria-label={c.search} class="min-h-12 rounded-full bg-paper px-5 ring-1 ring-line" />
@@ -122,6 +121,7 @@ const WA_JOIN = waLink(wa);
   </section>
 
   <FinalCta lang={lang} page="bssaha" wa={wa} h2={c.ctaH2} p={c.ctaP} />
+  </div>
 
   <script is:inline define:vars={{ number: '212611053649', one: c.countOne, many: c.countMany, listCity: c.listCity, first: openRows[0].id }}>
     (function () {

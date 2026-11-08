@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "@fontsource-variable/archivo/wdth.css";
 @import "@fontsource-variable/readex-pro/wght.css";
+@import "@fontsource-variable/doto/index.css";
 
 @theme {
   --font-sans: "Archivo Variable", "Readex Pro Variable", system-ui, sans-serif;
@@ -749,3 +750,20 @@ x-notr { display: contents; }
   .sc-run .sc-flag.on { animation: sc-flash 1.1s ease .5s 2; }
   @keyframes sc-flash { 0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0); } 50% { box-shadow: 0 0 0 6px rgba(192, 57, 43, .2); } }
 }
+
+/* Bssaha, "Le Rouleau": the page is a thermal receipt on the colour of the city's petit taxi (--city, --ink set on .bs-page). */
+.bs-page { --city: #1F5FD1; --ink: #fff; --paper: #F5F7F7; }
+.bs-bg { background-color: var(--city); color: var(--ink); transition: background-color .5s ease, color .5s ease; }
+.bs-bg-deep { background-color: color-mix(in srgb, var(--city) 76%, black); color: var(--ink); transition: background-color .5s ease; }
+.bs-paper { background: var(--paper); color: #0a0a0a; }
+.font-dot { font-family: 'Doto Variable', 'Readex Pro Variable', ui-monospace, monospace; font-weight: 800; letter-spacing: .01em; }
+.bs-mark { background: #FFE600; color: #0a0a0a; -webkit-box-decoration-break: clone; box-decoration-break: clone; padding: 0 .18em; }
+.bs-leader { flex: 1; min-width: .75rem; border-bottom: 2px dotted rgba(10,10,10,.45); transform: translateY(-.3em); }
+.bs-barcode { height: 2.5rem; background: repeating-linear-gradient(90deg, #0a0a0a 0 2px, transparent 2px 5px, #0a0a0a 5px 6px, transparent 6px 10px, #0a0a0a 10px 14px, transparent 14px 16px); }
+.bs-torn { -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 18px 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .bs-roll { animation: bs-roll 1.2s cubic-bezier(.3,.7,.2,1) both; animation-delay: var(--d, 0ms); }
+  @keyframes bs-roll { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 -20px 0); } }
+  .tk-line { animation: tk-print .5s steps(8, end) both; animation-delay: calc(var(--d, 0ms) + 700ms); }
+}
+@keyframes tk-print { from { clip-path: inset(0 100% 0 0); opacity: 0; } to { clip-path: inset(0 0 0 0); opacity: 1; } }
