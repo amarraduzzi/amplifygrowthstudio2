@@ -7,6 +7,9 @@ import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import CountUp from '../CountUp.astro';
+import GarageQuote from '../GarageQuote.astro';
+import GarageBoard from '../GarageBoard.astro';
+import GarageReminder from '../GarageReminder.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -87,21 +90,24 @@ const faq = [
         </div>
       </div>
 
-      <div class="relative isolate aspect-[4/3.7] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.7] lg:rounded-[2.25rem]">
+      <div class="relative isolate aspect-[4/3.7] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.7] lg:rounded-[2.25rem]" data-hero>
         <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
         <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
         <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
         <span class="shadow-in absolute start-[10%] top-[78%] h-6 w-[60%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
-        <!-- the repair order (example: invented car, invented prices) -->
-        <div class="land absolute start-[6%] top-[16%] w-[66%] rounded-2xl bg-paper p-4 text-navy shadow-2xl sm:p-5" style="--d:300ms" aria-hidden="true">
-          <div class="flex items-center justify-between gap-2"><p class="display text-xl sm:text-2xl">OR n° 214</p><p class="rounded-full bg-green/20 px-2.5 py-0.5 text-[0.65rem] font-semibold text-green-deep sm:text-xs">Devis accepté</p></div>
-          <p class="mt-1 text-[0.7rem] text-muted sm:text-sm" dir="ltr">Dacia Logan · 48213-B-6 · 126 400 km</p>
-          <ul class="mt-3 space-y-1.5 border-t border-line pt-3 text-[0.72rem] sm:text-sm">
-            <li class="flex justify-between gap-3"><span>Vidange + filtre à huile</span><span class="tabular-nums" dir="ltr">430 DH</span></li>
-            <li class="flex justify-between gap-3"><span>Plaquettes avant</span><span class="tabular-nums" dir="ltr">520 DH</span></li>
-            <li class="flex justify-between gap-3"><span>Main d’œuvre, 1,5 h</span><span class="tabular-nums" dir="ltr">300 DH</span></li>
-          </ul>
-          <p class="mt-3 flex justify-between border-t border-line pt-3 font-semibold"><span>Total</span><span class="tabular-nums" dir="ltr">1 250 DH</span></p>
+        <!-- the repair order, built line by line (example: invented car, invented prices) -->
+        <div class="land absolute start-[6%] top-[16%] w-[66%]" style="--d:300ms" aria-hidden="true">
+          <div class="gor-tilt rounded-2xl bg-paper p-4 text-navy shadow-2xl sm:p-5" data-or>
+            <div class="flex items-center justify-between gap-2"><p class="display text-xl sm:text-2xl">OR n° 214</p><p class="rounded-full bg-green/20 px-2.5 py-0.5 text-[0.65rem] font-semibold text-green-deep transition-colors sm:text-xs" data-pill>Devis accepté</p></div>
+            <p class="mt-1 text-[0.7rem] text-muted sm:text-sm" dir="ltr">Dacia Logan · 48213-B-6 · 126 400 km</p>
+            <ul class="mt-3 space-y-1.5 border-t border-line pt-3 text-[0.72rem] sm:text-sm">
+              <li class="gor-l flex justify-between gap-3" data-amt="430"><span>Vidange + filtre à huile</span><span class="tabular-nums" dir="ltr">430 DH</span></li>
+              <li class="gor-l flex justify-between gap-3" data-amt="520"><span>Plaquettes avant</span><span class="tabular-nums" dir="ltr">520 DH</span></li>
+              <li class="gor-l flex justify-between gap-3" data-amt="300"><span>Main d’œuvre, 1,5 h</span><span class="tabular-nums" dir="ltr">300 DH</span></li>
+            </ul>
+            <p class="mt-3 flex justify-between border-t border-line pt-3 font-semibold"><span>Total</span><span class="tabular-nums" dir="ltr"><span data-tot>1 250</span> DH</span></p>
+            <span hidden data-l="sent">Devis envoyé</span><span hidden data-l="ok">Devis accepté</span><span hidden data-l="wip">Réparation en cours</span>
+          </div>
         </div>
         <div class="absolute start-[5%] top-[4%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-green text-navy sm:size-7"><Icon name="door" class="size-3.5 sm:size-4" /></span>Voiture reçue</p></div></div>
         <div class="absolute end-[4%] top-[14%] z-10 sm:top-[6%]"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:3300ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>Réparation en cours</p></div></div>
@@ -117,6 +123,19 @@ const faq = [
         ))}
       </ul>
     </div>
+  </section>
+
+  <!-- two bands running in opposite directions: what the workshop does, what the system keeps -->
+  <section class="overflow-hidden py-8" aria-label={tt('Les prestations du garage, et ce que le système garde')}>
+    {[['Vidange', 'Filtres', 'Plaquettes', 'Batterie', 'Courroie', 'Climatisation', 'Pneus', 'Visite technique', 'Embrayage', 'Amortisseurs'], ['Devis écrit', 'Accord sur WhatsApp', 'Remise réservée au manager', 'Rappel vidange prêt', 'Historique par plaque']].map((row, r) => (
+      <div class={`flex overflow-hidden [mask-image:linear-gradient(90deg,transparent,black_8%,black_92%,transparent)] ${r ? 'mt-3' : ''}`}>
+        <ul class={`mk-marquee flex shrink-0 gap-3 pe-3 ${r ? 'mk-rev' : ''}`} aria-hidden={r ? 'true' : undefined}>
+          {[...row, ...row].map((x) => (
+            <li class={`flex items-center gap-2.5 whitespace-nowrap rounded-full px-4 py-2 text-base font-semibold sm:px-5 sm:py-2.5 sm:text-xl ${r ? 'bg-green text-navy' : 'bg-paper text-navy ring-1 ring-line'}`}><span class={`grid size-6 place-items-center rounded-full text-sm font-bold ${r ? 'bg-navy text-green' : 'bg-green/20 text-green-deep'}`} aria-hidden="true">{r ? '✓' : '•'}</span>{x}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
   </section>
 
   <!-- today / with Amplify -->
@@ -167,26 +186,8 @@ const faq = [
     </div>
   </section>
 
-  <!-- the quote on WhatsApp -->
-  <section id="devis" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
-    <div class="tf relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:grid-cols-[1fr_0.8fr] md:p-14">
-      <div>
-        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">« C’était combien déjà ? »</span><span class="block text-green-deep">Le devis est écrit.</span></h2>
-        <p class="mt-5 max-w-md text-lg text-muted">Vous chiffrez la main d’œuvre et les pièces sur l’OR, puis vous envoyez le devis sur WhatsApp. Le client l’accepte depuis son téléphone : la promesse est écrite, des deux côtés.</p>
-        <ul class="mt-8 space-y-3">
-          {['Devis envoyé', 'Devis accepté', 'Réparation en cours', 'Voiture remise'].map((x, k) => (
-            <li class="flex items-center gap-3 text-lg"><span class={`grid size-8 shrink-0 place-items-center rounded-full font-bold ${k < 3 ? 'bg-navy text-green' : 'bg-white text-muted ring-1 ring-line'}`} dir="ltr">{k < 2 ? <Icon name="check" class="size-4" /> : k + 1}</span>{x}</li>
-          ))}
-        </ul>
-        <p class="mt-8 text-sm text-muted">Sans application, sans compte. Passé le délai que vous avez choisi, le client vous appelle et vous décidez à la caisse.</p>
-      </div>
-      <div class="mx-auto w-full max-w-[19rem]" aria-hidden="true"><div class="tf-float rounded-[1.75rem] bg-[#E7F5EC] p-4 shadow-xl ring-1 ring-line">
-        <p class="rounded-2xl rounded-es-sm bg-white p-3 text-[0.85rem] leading-snug text-navy shadow-sm">Bonjour Karim, voici le devis pour votre Logan : vidange, plaquettes avant, main d’œuvre.</p>
-        <p class="mt-2 rounded-2xl rounded-es-sm bg-white p-3 text-[0.85rem] leading-snug text-navy shadow-sm"><span class="block font-semibold">Total : <span dir="ltr">1 250 DH</span></span><span class="mt-1 block rounded-full bg-green px-3 py-1.5 text-center font-semibold">Accepter le devis</span></p>
-        <p class="mt-2 ms-auto w-fit rounded-2xl rounded-ee-sm bg-[#D1F4CC] px-3 py-2 text-[0.85rem] text-navy shadow-sm">Accepté ✓</p>
-      </div></div>
-    </div>
-  </section>
+  <!-- the quote on WhatsApp: the visitor builds it, accepts it, hands the car back -->
+  <GarageQuote />
 
   <!-- the workshop counter -->
   <section id="atelier" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
@@ -207,6 +208,7 @@ const faq = [
           </li>
         ))}
       </ul>
+      <GarageBoard />
     </div>
   </section>
 
@@ -227,6 +229,7 @@ const faq = [
         </li>
       ))}
     </ul>
+    <GarageReminder />
   </section>
 
   <!-- the evening -->
@@ -286,6 +289,13 @@ const faq = [
   <CountUp />
 </Base>
 
+<style is:global>
+  .gor-tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .25s ease-out; will-change: transform; }
+  .js .gor-l { opacity: 0; transform: translateY(6px); transition: opacity .4s ease, transform .4s ease; }
+  .js .gor-l.on { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .gor-tilt { transition: none; } .js .gor-l { opacity: 1; transform: none; transition: none; } }
+</style>
+
 <style>
   /* the four steps light up one after the other, then stay lit */
   .js [data-steps].in .pr-ic { animation: pr-lit .6s ease both; animation-delay: calc(var(--k) * 450ms + 500ms); }
@@ -297,6 +307,36 @@ const faq = [
 </style>
 
 <script>
+  // hero: the repair order is written line by line, the status changes, the card follows the pointer
+  {
+    const still0 = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll<HTMLElement>('[data-or]').forEach((or) => {
+      const lines = [...or.querySelectorAll<HTMLElement>('.gor-l')];
+      const tot = or.querySelector<HTMLElement>('[data-tot]')!, pill = or.querySelector<HTMLElement>('[data-pill]')!;
+      const L = (k: string) => or.querySelector(`[data-l="${k}"]`)!.textContent!.trim();
+      const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+      const sum = lines.reduce((a, l) => a + Number(l.dataset.amt), 0);
+      const tone = (bg: string, fg: string) => { pill.style.background = bg; pill.style.color = fg; };
+      let raf = 0, shown = sum;
+      const tween = (to: number) => { cancelAnimationFrame(raf); const from = shown, t0 = performance.now(); const f = (t: number) => { const k = Math.min(1, (t - t0) / 600); shown = from + (to - from) * (1 - Math.pow(1 - k, 3)); tot.textContent = fmt(shown); if (k < 1) raf = requestAnimationFrame(f); }; raf = requestAnimationFrame(f); };
+      if (still0) return;
+      const at = (ms: number, f: () => void) => setTimeout(f, ms);
+      const cycle = () => {
+        lines.forEach(l => l.classList.remove('on')); tween(0); pill.textContent = L('sent'); tone('rgba(245,179,1,.22)', '#8a6400');
+        lines.forEach((l, i) => at(600 + i * 650, () => l.classList.add('on')));
+        at(2700, () => tween(sum));
+        at(3900, () => { pill.textContent = L('ok'); tone('rgba(5,185,98,.2)', '#02894a'); });
+        at(6200, () => { pill.textContent = L('wip'); tone('#001E3E', '#05B962'); });
+        at(10500, cycle);
+      };
+      cycle();
+      const hero = or.closest<HTMLElement>('[data-hero]');
+      if (hero && matchMedia('(hover: hover)').matches) {
+        hero.addEventListener('pointermove', (e) => { const r = hero.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5; or.style.setProperty('--rx', `${(-y * 8).toFixed(2)}deg`); or.style.setProperty('--ry', `${(x * 10).toFixed(2)}deg`); });
+        hero.addEventListener('pointerleave', () => { or.style.setProperty('--rx', '0deg'); or.style.setProperty('--ry', '0deg'); });
+      }
+    });
+  }
   // the calculator: the garage's own numbers, nothing is sent
   document.querySelectorAll<HTMLElement>('[data-rails]').forEach((root) => {
     const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);

@@ -1,0 +1,76 @@
+---
+// "L'atelier en direct": a looping illustration of the workshop board. Cars move from quote to repair to ready
+// to handed back, and the day's takings count up. Invented cars and plates, example prices, said as such.
+// With reduced motion the first state stays still. Job names come from a hidden list, so they get translated.
+const COLS = ['Devis en attente', 'En cours', 'Prête', 'Remise'];
+const JOBS = [['Vidange + filtre à huile', 430], ['Plaquettes avant', 520], ['Batterie', 900], ['Courroie de distribution', 650], ['Climatisation, recharge', 400]] as const;
+---
+<div class="tf mt-14 rounded-[2rem] bg-white/[0.06] p-5 ring-1 ring-white/15 md:p-8" data-gb>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <p class="display text-3xl leading-[0.95] sm:text-[2.6rem]">Voyez l’atelier tourner.</p>
+    <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/70 ring-1 ring-white/15">Exemple d’illustration</span>
+  </div>
+  <p class="sr-only">Illustration : les voitures passent du devis à la réparation, puis prête, puis remise au client. L’encaissé du jour augmente à chaque remise.</p>
+  <div class="mt-7 grid grid-cols-2 gap-3 lg:grid-cols-4" aria-hidden="true">
+    {COLS.map((c, i) => (
+      <div class="rounded-2xl bg-white/[0.07] p-3 ring-1 ring-white/10">
+        <p class="flex items-center justify-between text-sm font-semibold"><span class={i === 3 ? 'text-green' : ''}>{c}</span><span class="grid size-6 place-items-center rounded-full bg-white/10 text-xs" dir="ltr" data-n={i}>0</span></p>
+        <ul class="mt-3 flex min-h-[11.5rem] flex-col gap-2" data-col={i}></ul>
+      </div>
+    ))}
+  </div>
+  <p class="mt-6 flex flex-wrap items-baseline gap-x-3 gap-y-1" aria-hidden="true"><span class="text-white/60">Encaissé aujourd’hui</span><span class="display text-4xl text-green tabular-nums" dir="ltr"><span data-cash>1 250</span> DH</span></p>
+  <ul hidden data-jobs>{JOBS.map(([n, p]) => <li data-amt={p}>{n}</li>)}</ul>
+</div>
+
+<style is:global>
+  .gb-card { animation: gb-in .55s cubic-bezier(.2,1.2,.4,1) both; }
+  @keyframes gb-in { from { opacity: 0; transform: translateY(-10px) scale(.94); } to { opacity: 1; transform: none; } }
+  .gb-card.gb-glow { animation: gb-in .55s cubic-bezier(.2,1.2,.4,1) both, gb-glow 1.4s ease-out; }
+  @keyframes gb-glow { 0% { box-shadow: 0 0 0 0 rgba(5,185,98,.7); } 100% { box-shadow: 0 0 0 14px rgba(5,185,98,0); } }
+  @media (prefers-reduced-motion: reduce) { .gb-card, .gb-card.gb-glow { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-gb]').forEach((root) => {
+    const cols = [...root.querySelectorAll<HTMLElement>('[data-col]')];
+    const counts = [...root.querySelectorAll<HTMLElement>('[data-n]')];
+    const cash = root.querySelector<HTMLElement>('[data-cash]')!;
+    const jobs = [...root.querySelectorAll<HTMLElement>('[data-jobs] li')].map(li => ({ name: li.textContent!.trim(), amt: Number(li.dataset.amt) }));
+    const cars = [['Dacia Logan', '48213-B-6'], ['Renault Clio', '27764-A-6'], ['Peugeot 208', '11902-D-6'], ['Hyundai i10', '50377-H-6'], ['Dacia Sandero', '33518-B-6'], ['Ford Figo', '61045-A-6'], ['Kia Picanto', '72891-B-6'], ['Fiat Tipo', '18426-D-6']];
+    type Card = { el: HTMLElement; amt: number };
+    const col: Card[][] = [[], [], [], []];
+    let n = 0, total = 1250, shown = 1250, visible = false, raf = 0;
+    const fmt = (v: number) => Math.round(v).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+    const mk = (): Card => {
+      const [car, plate] = cars[n % cars.length]; const j = jobs[n % jobs.length]; n++;
+      const el = document.createElement('li'); el.className = 'gb-card rounded-xl bg-white/10 p-2.5 ring-1 ring-white/10';
+      el.innerHTML = '<p class="flex items-center justify-between gap-2 text-xs"><span class="font-semibold"></span><span class="rounded bg-white/15 px-1.5 py-0.5 font-mono text-[0.65rem]" dir="ltr"></span></p><p class="mt-1 flex justify-between gap-2 text-xs text-white/65"><span class="truncate"></span><span class="tabular-nums" dir="ltr"></span></p>';
+      const s = el.querySelectorAll('span');
+      s[0].textContent = car; s[1].textContent = plate; s[2].textContent = j.name; s[3].textContent = `${j.amt} DH`;
+      return { el, amt: j.amt };
+    };
+    const paint = () => { col.forEach((c, i) => { counts[i].textContent = String(c.length); }); };
+    const put = (c: Card, to: number) => { col[to].push(c); cols[to].append(c.el); c.el.classList.remove('gb-glow'); void c.el.offsetWidth; c.el.style.animation = 'none'; void c.el.offsetWidth; c.el.style.animation = ''; if (to === 3) c.el.classList.add('gb-glow'); };
+    const tween = () => { cancelAnimationFrame(raf); const from = shown, t0 = performance.now(); const f = (t: number) => { const k = Math.min(1, (t - t0) / 700); shown = from + (total - from) * k; cash.textContent = fmt(shown); if (k < 1) raf = requestAnimationFrame(f); }; raf = requestAnimationFrame(f); };
+    // start: two quotes, two in the works, one ready, one handed back
+    [0, 0, 1, 1, 2, 3].forEach(to => put(mk(), to)); paint();
+    if (still || !('IntersectionObserver' in window)) return;
+    const step = () => {
+      if (!visible || document.hidden) return;
+      // the car furthest along that can move: ready -> handed back, then in the works -> ready, then quote -> in the works
+      const order = [2, 1, 0].filter(i => col[i].length && col[i + 1].length < 3);
+      const from = order.length ? order[Math.floor(Math.random() * order.length)] : -1;
+      if (from >= 0) {
+        const c = col[from].shift()!; c.el.remove();
+        put(c, from + 1);
+        if (from + 1 === 3) { total += c.amt; tween(); if (col[3].length > 3) { const o = col[3].shift()!; o.el.remove(); } }
+      }
+      if (col[0].length < 2) put(mk(), 0);
+      paint();
+    };
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }, { threshold: 0.25 }).observe(root);
+    setInterval(step, 2200);
+  });
+</script>

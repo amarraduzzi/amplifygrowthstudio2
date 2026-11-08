@@ -1,0 +1,121 @@
+---
+// "Composez le devis": the visitor taps services, the quote builds itself on a WhatsApp-style phone, accepts it,
+// then hands the car back. Invented car and example prices, said as such. Without a tap the demo plays by itself
+// once (not with reduced motion). The words the script writes come from hidden spans, so they get translated.
+const SERVICES = [
+  ['Vidange + filtre à huile', 430], ['Plaquettes avant', 520], ['Batterie', 900],
+  ['Courroie de distribution', 650], ['Climatisation, recharge', 400], ['Main d’œuvre, 1,5 h', 300],
+] as const;
+const STEPS = ['Devis envoyé', 'Devis accepté', 'Réparation en cours', 'Voiture remise'];
+---
+<section id="devis" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+  <div class="tf relative isolate mx-auto grid max-w-6xl items-center gap-10 overflow-hidden rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:grid-cols-[1fr_0.85fr] md:p-14" data-gq>
+    <div>
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">« C’était combien déjà ? »</span><span class="block text-green-deep">Le devis est écrit.</span></h2>
+      <p class="mt-5 max-w-md text-lg text-muted">Vous chiffrez la main d’œuvre et les pièces sur l’OR, puis vous envoyez le devis sur WhatsApp. Le client l’accepte depuis son téléphone : la promesse est écrite, des deux côtés.</p>
+      <p class="mt-8 flex flex-wrap items-center gap-2 text-sm font-semibold text-muted">Essayez : touchez les prestations<span class="rounded-full bg-white px-2.5 py-0.5 text-xs ring-1 ring-line">Exemple d’illustration</span></p>
+      <div class="mt-3 flex flex-wrap gap-2" role="group" aria-label="Prestations">
+        {SERVICES.map(([n, p]) => (
+          <button type="button" aria-pressed="false" data-p={p} class="gq-chip inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-4 py-2 text-[0.95rem] font-semibold text-navy ring-1 ring-line transition hover:ring-green"><span data-nm>{n}</span><span class="text-muted" dir="ltr">{p} DH</span></button>
+        ))}
+      </div>
+      <ol class="mt-8 space-y-3">
+        {STEPS.map((x, k) => (
+          <li class="gq-step flex items-center gap-3 text-lg" data-s><span class="gq-c grid size-8 shrink-0 place-items-center rounded-full bg-white font-bold text-muted ring-1 ring-line transition-colors duration-500" dir="ltr" data-c>{k + 1}</span>{x}</li>
+        ))}
+      </ol>
+      <p class="mt-8 text-sm text-muted">Sans application, sans compte. Passé le délai que vous avez choisi, le client vous appelle et vous décidez à la caisse.</p>
+    </div>
+
+    <div class="mx-auto w-full max-w-[19.5rem]">
+      <div class="rounded-[2.4rem] bg-navy p-2 shadow-2xl ring-1 ring-navy/20">
+        <div class="relative flex min-h-[27rem] flex-col rounded-[1.95rem] bg-[#E7F5EC] p-3.5">
+          <p class="flex items-center gap-2 border-b border-navy/10 pb-2.5 text-sm font-semibold text-navy"><span class="grid size-7 place-items-center rounded-full bg-[#25D366] text-white" aria-hidden="true">✓</span>Garage Atlas<span class="ms-auto text-xs font-normal text-muted" dir="ltr">OR n° 214</span></p>
+          <p class="mt-3 rounded-2xl rounded-es-sm bg-white p-3 text-[0.85rem] leading-snug text-navy shadow-sm">Bonjour Karim, voici le devis pour votre Logan.</p>
+          <div class="mt-2 rounded-2xl rounded-es-sm bg-white p-3 text-[0.85rem] text-navy shadow-sm" aria-live="polite">
+            <p class="text-muted" data-empty>Touchez une prestation pour commencer.</p>
+            <ul class="space-y-1.5" data-lines></ul>
+            <p class="mt-2 flex justify-between gap-3 border-t border-line pt-2 font-semibold" data-totrow hidden><span>Total :</span><span class="tabular-nums" dir="ltr"><span data-total>0</span> DH</span></p>
+            <button type="button" disabled data-btn class="mt-3 min-h-11 w-full rounded-full bg-green px-3 text-center font-semibold text-navy transition disabled:bg-navy/10 disabled:text-navy/40">Accepter le devis</button>
+          </div>
+          <p class="gq-pop ms-auto mt-2 w-fit rounded-2xl rounded-ee-sm bg-[#D1F4CC] px-3 py-2 text-[0.85rem] text-navy shadow-sm" data-acc>Accepté ✓</p>
+          <p class="gq-pop mt-2 rounded-2xl rounded-es-sm bg-white p-3 text-[0.85rem] font-semibold text-green-deep shadow-sm" data-paid>Payé : voiture remise à Karim.</p>
+          <button type="button" hidden data-reset class="mt-auto pt-3 text-start text-xs font-semibold text-muted underline underline-offset-2">Recommencer</button>
+        </div>
+      </div>
+    </div>
+    <span hidden data-l="accept">Accepter le devis</span>
+    <span hidden data-l="handover">Remettre la voiture</span>
+    <span hidden data-l="done">Terminé</span>
+  </div>
+</section>
+
+<style is:global>
+  .gq-chip[aria-pressed="true"] { background: #001E3E; color: #fff; box-shadow: 0 0 0 1px #001E3E; }
+  .gq-chip[aria-pressed="true"] span:last-child { color: #05B962; }
+  .gq-chip[aria-disabled="true"] { pointer-events: none; opacity: .55; }
+  .gq-step.on .gq-c { background: #001E3E; color: #05B962; box-shadow: none; animation: gq-bump .5s ease; }
+  .gq-pop { opacity: 0; transform: translateY(8px) scale(.96); transition: opacity .4s ease, transform .4s cubic-bezier(.2,1.4,.4,1); height: 0; margin: 0; padding-block: 0; overflow: hidden; }
+  .gq-pop.on { opacity: 1; transform: none; height: auto; margin-top: .5rem; padding-block: .5rem; }
+  [data-paid].gq-pop.on { padding-block: .75rem; }
+  .gq-line { animation: gq-in .35s ease both; }
+  @keyframes gq-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  @keyframes gq-bump { 0% { transform: scale(.7); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
+  @media (prefers-reduced-motion: reduce) { .gq-line, .gq-step.on .gq-c { animation: none; } .gq-pop { transition: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-gq]').forEach((root) => {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const L = (k: string) => q(`[data-l="${k}"]`).textContent!.trim();
+    const chips = [...root.querySelectorAll<HTMLButtonElement>('.gq-chip')];
+    const lines = q('[data-lines]'), empty = q('[data-empty]'), totRow = q('[data-totrow]'), totEl = q('[data-total]');
+    const btn = q<HTMLButtonElement>('[data-btn]'), acc = q('[data-acc]'), paid = q('[data-paid]'), reset = q('[data-reset]');
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-s]')];
+    const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+    let phase = 0, shown = 0, raf = 0;
+    const timers: number[] = [];
+    const tween = (to: number) => {
+      cancelAnimationFrame(raf); const from = shown, t0 = performance.now();
+      const f = (t: number) => { const k = Math.min(1, (t - t0) / 450); shown = from + (to - from) * (1 - Math.pow(1 - k, 3)); totEl.textContent = fmt(shown); if (k < 1) raf = requestAnimationFrame(f); };
+      raf = requestAnimationFrame(f);
+    };
+    const sel = () => chips.filter(c => c.getAttribute('aria-pressed') === 'true');
+    const lit = (n: number) => steps.forEach((s, i) => { const on = i < n; const was = s.classList.contains('on'); s.classList.toggle('on', on); if (on !== was) s.querySelector<HTMLElement>('[data-c]')!.textContent = on ? '✓' : String(i + 1); });
+    const render = () => {
+      const s = sel(); const total = s.reduce((a, c) => a + Number(c.dataset.p), 0);
+      lines.innerHTML = '';
+      s.forEach(c => {
+        const li = document.createElement('li'); li.className = 'gq-line flex justify-between gap-3';
+        const a = document.createElement('span'); a.textContent = c.querySelector('[data-nm]')!.textContent;
+        const b = document.createElement('span'); b.className = 'tabular-nums'; b.dir = 'ltr'; b.textContent = `${c.dataset.p} DH`;
+        li.append(a, b); lines.append(li);
+      });
+      empty.hidden = s.length > 0; totRow.hidden = s.length === 0; tween(total);
+      btn.disabled = s.length === 0 && phase === 0;
+      btn.textContent = phase === 0 ? L('accept') : phase === 1 ? L('handover') : L('done');
+      btn.hidden = phase === 2;
+      acc.classList.toggle('on', phase >= 1); paid.classList.toggle('on', phase >= 2); reset.hidden = phase < 2;
+      chips.forEach(c => c.toggleAttribute('aria-disabled', phase > 0));
+      lit(phase === 0 ? (s.length ? 1 : 0) : phase === 1 ? 3 : 4);
+    };
+    const toggle = (c: HTMLButtonElement) => { if (phase) return; c.setAttribute('aria-pressed', String(c.getAttribute('aria-pressed') !== 'true')); render(); };
+    const advance = () => { if (phase === 0 && sel().length) phase = 1; else if (phase === 1) phase = 2; render(); };
+    const stop = () => { timers.splice(0).forEach(clearTimeout); };
+    chips.forEach(c => c.addEventListener('click', () => { stop(); toggle(c); }));
+    btn.addEventListener('click', () => { stop(); advance(); });
+    reset.addEventListener('click', () => { stop(); phase = 0; chips.forEach(c => c.setAttribute('aria-pressed', 'false')); render(); });
+    root.addEventListener('pointerdown', stop);
+    render();
+    // one automatic run when the section scrolls into view, if nobody has touched it
+    if (still || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return; io.disconnect();
+      const at = (ms: number, f: () => void) => timers.push(window.setTimeout(f, ms));
+      at(900, () => toggle(chips[0])); at(1700, () => toggle(chips[1])); at(2500, () => toggle(chips[5]));
+      at(3700, advance); at(5200, advance);
+    }, { threshold: 0.45 });
+    io.observe(root);
+  });
+</script>

@@ -1,0 +1,85 @@
+---
+// "Faites glisser le kilométrage": the visitor slides the km driven since the last oil change. The ring fills,
+// the state goes from fine to soon to due, and when it is due the WhatsApp message to the client is there,
+// ready. Invented client and car, example interval of 10 000 km. Words the script writes come from hidden spans.
+---
+<div class="tf mt-14 overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-12" data-gr>
+  <div class="grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center">
+    <div>
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p class="display text-3xl leading-[0.95] sm:text-[2.6rem]">Faites rouler la voiture.</p>
+        <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/70 ring-1 ring-white/15">Exemple d’illustration</span>
+      </div>
+      <div class="mt-7 flex items-center gap-6">
+        <div class="relative size-36 shrink-0 sm:size-44" aria-hidden="true">
+          <svg viewBox="0 0 120 120" class="size-full -rotate-90">
+            <circle cx="60" cy="60" r="52" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="10" />
+            <circle cx="60" cy="60" r="52" fill="none" stroke="#05B962" stroke-width="10" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" data-ring style="transition: stroke-dashoffset .25s linear, stroke .4s" />
+          </svg>
+          <span class="absolute inset-0 grid place-items-center text-center"><span><span class="display block text-3xl tabular-nums sm:text-4xl" dir="ltr" data-pct>0 %</span><span class="block text-xs text-white/60">de l’intervalle</span></span></span>
+        </div>
+        <div class="min-w-0">
+          <p class="text-sm text-white/60">Dacia Logan · 48213-B-6</p>
+          <p class="mt-1 rounded-lg bg-black/40 px-3 py-2 font-mono text-2xl tabular-nums tracking-wider text-[#FFB347] sm:text-3xl" dir="ltr"><span data-odo>126 048</span> km</p>
+          <p class="mt-3 inline-block rounded-full bg-green/20 px-3 py-1 text-sm font-semibold text-green transition-colors" data-state>À jour</p>
+        </div>
+      </div>
+      <label class="mt-8 block"><span class="flex justify-between gap-3 font-semibold"><span>Kilomètres depuis la dernière vidange</span><span class="tabular-nums" dir="ltr"><span data-v>0</span> km</span></span>
+        <input type="range" min="0" max="12000" step="100" value="0" data-r class="mt-3 w-full accent-[#05B962]" aria-describedby="gr-note" /></label>
+      <p id="gr-note" class="mt-3 text-sm text-white/55">Intervalle de vidange réglé à 10 000 km. Vous pouvez le changer, et ajouter une date pour la visite technique ou l’assurance.</p>
+    </div>
+
+    <div class="mx-auto w-full max-w-[22rem]">
+      <p class="text-sm font-semibold text-green">Clients à prévenir</p>
+      <ul class="mt-3 space-y-2 text-sm">
+        <li class="flex items-center justify-between gap-3 rounded-xl bg-white/10 px-3 py-2.5 ring-1 ring-white/10"><span>Renault Clio · visite technique</span><span class="shrink-0 rounded-full bg-[#F5B301]/20 px-2.5 py-0.5 text-xs font-semibold text-[#F5B301]">Dans 12 jours</span></li>
+        <li class="flex items-center justify-between gap-3 rounded-xl bg-white/10 px-3 py-2.5 ring-1 ring-white/10"><span>Peugeot 208 · assurance</span><span class="shrink-0 rounded-full bg-[#F5B301]/20 px-2.5 py-0.5 text-xs font-semibold text-[#F5B301]">Dans 5 jours</span></li>
+        <li class="flex items-center justify-between gap-3 rounded-xl bg-white/10 px-3 py-2.5 ring-1 ring-white/10 transition" data-row><span>Dacia Logan · vidange</span><span class="shrink-0 rounded-full bg-white/10 px-2.5 py-0.5 text-xs font-semibold text-white/60" data-badge>À jour</span></li>
+      </ul>
+      <div class="mt-4 min-h-[8.5rem] rounded-[1.5rem] bg-[#E7F5EC] p-3 text-navy">
+        <p class="gr-msg rounded-2xl rounded-es-sm bg-white p-3 text-[0.85rem] leading-snug shadow-sm" data-msg>…</p>
+        <p class="gr-msg mt-2 w-fit rounded-full bg-green px-4 py-2 text-sm font-semibold shadow-sm" data-send>Envoyer sur WhatsApp</p>
+      </div>
+    </div>
+  </div>
+  <span hidden data-l="ok">À jour</span>
+  <span hidden data-l="in">Dans {n} km</span>
+  <span hidden data-l="soon">Bientôt</span>
+  <span hidden data-l="due">À prévenir</span>
+  <span hidden data-l="wait">Le message apparaît quand la vidange approche.</span>
+  <span hidden data-l="msg">Bonjour Karim, votre Logan arrive à {km} km : c’est l’heure de la vidange. On vous réserve un créneau ?</span>
+</div>
+
+<style is:global>
+  .gr-msg { transition: opacity .4s ease, transform .4s cubic-bezier(.2,1.3,.4,1); }
+  .gr-msg.off { opacity: .35; transform: scale(.98); }
+  [data-gr] [data-row].hot { background: rgba(245,179,1,.18); box-shadow: inset 0 0 0 1px rgba(245,179,1,.5); }
+  @media (prefers-reduced-motion: reduce) { .gr-msg { transition: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-gr]').forEach((root) => {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const L = (k: string) => q(`[data-l="${k}"]`).textContent!.trim();
+    const r = q<HTMLInputElement>('[data-r]'), ring = q<HTMLElement>('[data-ring]') as unknown as SVGElement, v = q('[data-v]'), odo = q('[data-odo]'), pct = q('[data-pct]');
+    const state = q('[data-state]'), badge = q('[data-badge]'), row = q('[data-row]'), msg = q('[data-msg]'), send = q('[data-send]');
+    const BASE = 126048, INTERVAL = 10000;
+    const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+    const run = () => {
+      const km = Number(r.value), p = Math.min(1, km / INTERVAL);
+      v.textContent = fmt(km); odo.textContent = fmt(BASE + km); pct.textContent = `${Math.round(p * 100)} %`;
+      ring.setAttribute('stroke-dashoffset', String(326.7 * (1 - p)));
+      const due = km >= INTERVAL, soon = !due && km >= 8000;
+      const word = due ? L('due') : soon ? L('soon') : L('ok');
+      state.textContent = word;
+      badge.textContent = due || soon ? word : km >= 1000 ? L('in').replace('{n}', fmt(INTERVAL - km)) : L('ok');
+      const tone = due ? ['rgba(245,179,1,.2)', '#F5B301'] : soon ? ['rgba(245,179,1,.12)', '#F5B301'] : ['rgba(5,185,98,.2)', '#05B962'];
+      state.style.background = tone[0]; state.style.color = tone[1]; ring.setAttribute('stroke', due || soon ? '#F5B301' : '#05B962');
+      badge.style.background = due ? 'rgba(245,179,1,.25)' : 'rgba(255,255,255,.1)'; badge.style.color = due ? '#F5B301' : 'rgba(255,255,255,.6)';
+      row.classList.toggle('hot', due);
+      msg.textContent = due ? L('msg').replace('{km}', fmt(Math.round((BASE + INTERVAL) / 100) * 100)) : L('wait');
+      msg.classList.toggle('off', !due); send.classList.toggle('off', !due);
+    };
+    r.addEventListener('input', run); run();
+  });
+</script>
