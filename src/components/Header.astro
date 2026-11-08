@@ -39,12 +39,13 @@ const SECTORS = [
   { k: 'salons', name: 'Coiffeurs et barbiers', short: 'Agenda et file d’attente', img: '/img/photos/salon-barbier-800.webp', pos: '62% 45%' },
   { k: 'spas', name: 'Spas et instituts', short: 'Cabines et soins', img: '/img/photos/spa-cabine-800.webp', pos: '55% 50%' },
   { k: 'pressing', name: 'Pressings', short: 'Une étiquette par pièce', img: '/img/nav-pressing.webp', pos: '55% 45%' },
+  { k: 'garage', name: 'Garages', short: 'Devis, OR et rappels', img: '/img/nav-garage.webp', pos: '50% 50%' },
   { k: 'hanout', name: 'Hanouts', short: 'Kridi, caisse et stock', img: '/img/photos/hanout-comptoir-800.webp', pos: '62% 45%' },
   { k: 'immobilier', name: 'Immobilier', short: 'Biens, visites et loyers', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%' },
 ] as const;
 const sectors = SECTORS.map(x => ({ ...x, href: ROUTES[x.k][lang] }));
 const products = PRODUCTS.map(p => ({ ...p, label: t.nav[p.k], href: ROUTES[p.k][lang] }));
-const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems', 'maitre', 'bakery', 'salons', 'spas', 'pressing', 'hanout', 'immobilier', 'immoAgent', 'immoStay'];
+const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems', 'maitre', 'bakery', 'salons', 'spas', 'pressing', 'garage', 'hanout', 'immobilier', 'immoAgent', 'immoStay'];
 const links = [
   { k: 'pricing', label: tt('Tarifs'), href: ROUTES.pricing[lang] },
   ...(lang === 'fr' ? [{ k: 'blog', label: 'Blog', href: ROUTES.blog[lang] }] : []),
@@ -64,7 +65,7 @@ const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 
 // real estate: no trial is promised, the button asks for a demo
 const immo = page === 'immobilier' || page === 'immoAgent' || page === 'immoStay';
 const trialLabel = immo ? tt('Demander une démo') : t.nav.trial;
-const trial = page === 'salons' || page === 'spas' || page === 'pressing' || page === 'hanout' || immo ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
+const trial = page === 'salons' || page === 'spas' || page === 'pressing' || page === 'garage' || page === 'hanout' || immo ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
 ---
 <header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/95 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 md:gap-4 sm:px-6 2xl:max-w-7xl">
@@ -91,7 +92,7 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
               <span class="text-muted">{tt('Pas un restaurant ? Amplify existe aussi pour votre métier.')}</span>
               <a href={ROUTES.restaurants[lang]} class="whitespace-nowrap font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} <span aria-hidden="true" class="inline-block rtl:-scale-x-100">→</span></a>
             </div>
-            <div class="grid grid-cols-7 gap-2.5">
+            <div class="grid grid-cols-8 gap-2.5">
               {sectors.map(x => (
                 <a href={x.href} class={`group/s relative isolate flex h-36 flex-col justify-end overflow-hidden rounded-[1.1rem] bg-navy p-3 text-white shadow-[0_14px_30px_-22px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5 ${page === x.k ? 'ring-2 ring-green' : ''}`}>
                   <img src={x.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover/s:scale-105" style={`object-position:${x.pos}`} />

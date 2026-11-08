@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'pressing' | 'hanout' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'pressing' | 'garage' | 'hanout' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -20,6 +20,8 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   spas: { fr: '/spas/', ar: '/ar/spas/', en: '/en/spas/' },
   // dry cleaners and laundries (Amplify Pressing)
   pressing: { fr: '/pressing/', ar: '/ar/pressing/', en: '/en/dry-cleaners/' },
+  // garages and workshops (Amplify Garage)
+  garage: { fr: '/garages/', ar: '/ar/garages/', en: '/en/garages/' },
   // corner shops and épiceries (Amplify Hanout)
   hanout: { fr: '/hanout/', ar: '/ar/hanout/', en: '/en/corner-shops/' },
   // real estate: Amplify Immobilier (agencies, rentals, syndics, developers)
