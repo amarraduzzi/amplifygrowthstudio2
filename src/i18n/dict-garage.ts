@@ -1,6 +1,9 @@
 // Texts of the garages page (Amplify Garage). The French text is the key, as in dict-en.ts and dict-ar.ts.
 // Spread FIRST in t.ts and middleware.ts: a key that already has a translation elsewhere keeps that one.
 export const garageEn: Record<string, string> = {
+  "Deux hommes au comptoir d’un garage : le mécanicien montre un message sur son téléphone au client": "Two men at a garage counter: the mechanic shows a message on his phone to the client",
+  "Un mécanicien penché sur le moteur d’une voiture, dans un petit atelier de quartier": "A mechanic leaning over a car engine in a small neighbourhood workshop",
+  "Le compteur d’une voiture à 126 048 km, avec le voyant d’entretien allumé, et un téléphone au premier plan": "A car's odometer at 126,048 km with the service light on, and a phone in the foreground",
   "Bonjour, je voudrais voir Amplify pour mon garage.": "Hello, I would like to see Amplify for my garage.",
   "Amplify pour les garages et ateliers | Amplify Growth Studio": "Amplify for garages and workshops | Amplify Growth Studio",
   "La caisse des garages : un ordre de réparation par voiture, le devis accepté sur WhatsApp, les remises réservées au manager, les rappels vidange et visite technique. À Rabat et Salé.": "The till for garages: one repair order per car, the quote accepted on WhatsApp, discounts reserved to the manager, oil change and inspection reminders. In Rabat and Salé.",
@@ -125,6 +128,9 @@ export const garageEn: Record<string, string> = {
 };
 
 export const garageAr: Record<string, string> = {
+  "Deux hommes au comptoir d’un garage : le mécanicien montre un message sur son téléphone au client": "رجلان عند كونطوار كراج: الميكانيكي يُري الزبون رسالة على هاتفه",
+  "Un mécanicien penché sur le moteur d’une voiture, dans un petit atelier de quartier": "ميكانيكي منحنٍ على محرك سيارة في ورشة حي صغيرة",
+  "Le compteur d’une voiture à 126 048 km, avec le voyant d’entretien allumé, et un téléphone au premier plan": "عداد سيارة على 126 048 كلم مع ضوء الصيانة مضاء، وهاتف في المقدمة",
   "Bonjour, je voudrais voir Amplify pour mon garage.": "مرحبا، أريد أن أرى Amplify لكراجي.",
   "Amplify pour les garages et ateliers | Amplify Growth Studio": "Amplify للكراجات والورشات | Amplify Growth Studio",
   "La caisse des garages : un ordre de réparation par voiture, le devis accepté sur WhatsApp, les remises réservées au manager, les rappels vidange et visite technique. À Rabat et Salé.": "صندوق الكراجات: أمر إصلاح لكل سيارة، وعرض السعر يُقبل عبر واتساب، والتخفيضات للمسير فقط، وتذكيرات تغيير الزيت والفحص التقني. في الرباط وسلا.",

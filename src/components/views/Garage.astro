@@ -149,9 +149,12 @@ const faq = [
     <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
     <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-      <div class="tf-x max-w-2xl">
-        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La réception.</span><span class="block text-green">Une fois, bien faite.</span></h2>
-        <p class="mt-5 max-w-md text-lg text-white/70">La voiture arrive. Vous saisissez la plaque, le kilométrage, ce que le client signale. La fiche est créée, et l’ordre de réparation s’ouvre avec votre liste de prestations.</p>
+      <div class="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La réception.</span><span class="block text-green">Une fois, bien faite.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">La voiture arrive. Vous saisissez la plaque, le kilométrage, ce que le client signale. La fiche est créée, et l’ordre de réparation s’ouvre avec votre liste de prestations.</p>
+        </div>
+        <div class="tf aspect-[4/3]" style="--d:150ms"><img src="/img/photos/garage-atelier-1200.webp" alt={tt('Un mécanicien penché sur le moteur d’une voiture, dans un petit atelier de quartier')} width="1200" height="896" loading="lazy" decoding="async" class="size-full rounded-[2rem] object-cover ring-1 ring-line " /></div>
       </div>
       <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {reception.map(([i, h, x], k) => (
@@ -189,9 +192,12 @@ const faq = [
   <section id="atelier" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
     <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-      <div class="tf-x max-w-2xl">
-        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">À l’atelier.</span><span class="block text-green">Tout est sur l’OR.</span></h2>
-        <p class="mt-5 max-w-md text-lg text-white/70">Ce qui est à l’atelier, les devis qui attendent, ce qui a été remis. Remises et annulations se font ici, par le manager, avec le motif.</p>
+      <div class="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:items-center">
+        <div class="tf order-last aspect-[4/3] lg:order-first" style="--d:150ms"><img src="/img/photos/garage-comptoir-1200.webp" alt={tt('Deux hommes au comptoir d’un garage : le mécanicien montre un message sur son téléphone au client')} width="1200" height="896" loading="lazy" decoding="async" class="size-full rounded-[2rem] object-cover ring-1 ring-line " /></div>
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">À l’atelier.</span><span class="block text-green">Tout est sur l’OR.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">Ce qui est à l’atelier, les devis qui attendent, ce qui a été remis. Remises et annulations se font ici, par le manager, avec le motif.</p>
+        </div>
       </div>
       <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
         {counter.map(([i, h, x], k) => (
@@ -206,8 +212,13 @@ const faq = [
 
   <!-- the reminders -->
   <section id="rappels" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
-    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le client revient.</span><span class="block text-green-deep">Au bon moment.</span></h2>
-    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Vidange, visite technique, assurance, pneus : vous indiquez une date ou un kilométrage, et la liste des clients à prévenir se remplit toute seule.</p>
+    <div class="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+      <div>
+        <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le client revient.</span><span class="block text-green-deep">Au bon moment.</span></h2>
+        <p class="tf mt-4 max-w-xl text-lg text-muted" style="--d:100ms">Vidange, visite technique, assurance, pneus : vous indiquez une date ou un kilométrage, et la liste des clients à prévenir se remplit toute seule.</p>
+      </div>
+      <div class="tf aspect-[4/3]" style="--d:150ms"><img src="/img/photos/garage-rappel-1200.webp" alt={tt('Le compteur d’une voiture à 126 048 km, avec le voyant d’entretien allumé, et un téléphone au premier plan')} width="1200" height="896" loading="lazy" decoding="async" class="size-full rounded-[2rem] object-cover ring-1 ring-line " /></div>
+    </div>
     <ul class="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
       {reminders.map(([i, h, x], k) => (
         <li class="tf" style={`--d:${k * 90}ms`}>
