@@ -165,20 +165,76 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
     </div>
   </section>
 
-  <!-- LEAKS: the same three, in every trade -->
-  <section id="fuites" class="relative isolate overflow-hidden bg-navy text-white" data-tf>
+  <!-- LEAKS: the same three, in every trade. Each card plays its leak (coins dripping from the drawer, the notebook
+       asleep, clients walking away); the switch, or the section after a few seconds, shows the same cards with Amplify. -->
+  <section id="fuites" class="relative isolate overflow-hidden bg-navy text-white" data-tf data-leaks data-mode="off">
     <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
     <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-      <h2 class="tf-x text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Où part votre argent ?</span><span class="block text-green">Toujours au même endroit.</span></h2>
-      <p class="tf-x mt-5 max-w-2xl text-lg text-white/70" style="--d:100ms">Restaurant, salon, pressing ou hanout : le métier change, les fuites restent les mêmes. Ce sont elles que nos systèmes ferment.</p>
-      <ul class="mt-14 grid gap-4 lg:grid-cols-3">
+      <div class="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h2 class="tf-x text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Où part votre argent ?</span><span class="block text-green">Toujours au même endroit.</span></h2>
+          <p class="tf-x mt-5 max-w-2xl text-lg text-white/70" style="--d:100ms">Restaurant, salon, pressing ou hanout : le métier change, les fuites restent les mêmes. Ce sont elles que nos systèmes ferment.</p>
+        </div>
+        <div class="tf relative inline-grid shrink-0 grid-cols-2 self-start rounded-full bg-white/10 p-1 ring-1 ring-white/15 lg:self-auto" role="group" aria-label="Sans ou avec Amplify" style="--d:200ms">
+          <span class="lv-thumb absolute inset-y-1 start-1 w-[calc(50%-0.25rem)] rounded-full bg-white transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)]" aria-hidden="true"></span>
+          <button type="button" data-set="off" aria-pressed="true" class="lv-btn relative z-10 min-h-11 rounded-full px-5 font-semibold transition-colors">Sans Amplify</button>
+          <button type="button" data-set="on" aria-pressed="false" class="lv-btn relative z-10 min-h-11 rounded-full px-5 font-semibold transition-colors">Avec Amplify</button>
+        </div>
+      </div>
+      <ul class="mt-12 grid gap-4 lg:grid-cols-3">
         {leaks.map(([i, h, x, ex], k) => (
-          <li class="tf rounded-[2rem] bg-white/[0.06] p-7 ring-1 ring-white/10" style={`--d:${k * 120}ms`}>
-            <span class="grid size-12 place-items-center rounded-2xl bg-green text-navy"><Icon name={i} class="size-6" /></span>
-            <p class="display mt-5 text-[2rem] leading-[0.95]">{h}</p>
-            <p class="mt-3 leading-relaxed text-white/70">{x}</p>
-            <ul class="mt-5 space-y-2 border-t border-white/10 pt-5">{ex.map(e => <li class="flex gap-2.5 text-[0.95rem] text-white/85"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-green"></span>{e}</li>)}</ul>
+          <li class="tf lv-card flex flex-col overflow-hidden rounded-[2rem] bg-white/[0.06] ring-1 ring-white/10 transition-[background-color,box-shadow] duration-700" style={`--d:${k * 120}ms`}>
+            <div class="lv-vis relative h-52 overflow-hidden border-b border-white/10 bg-[radial-gradient(80%_90%_at_50%_100%,rgba(255,255,255,.07),transparent)]" aria-hidden="true">
+              {k === 0 && (
+                <div class="absolute inset-0 flex items-center justify-center gap-7 px-6">
+                  <div class="relative">
+                    <div class="relative h-32 w-24 overflow-hidden rounded-[1.1rem] bg-white/[0.07] ring-2 ring-white/25">
+                      <span class="lv-fill absolute inset-x-0 bottom-0 bg-linear-to-t from-green to-green/60"></span>
+                      <span class="absolute inset-x-0 top-1/2 h-px bg-white/15"></span>
+                      <span class="absolute inset-x-0 bottom-3 text-center text-[0.65rem] font-bold tracking-wide text-navy/80">DH</span>
+                    </div>
+                    <span class="lv-crack absolute -bottom-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-[#F5B301]"></span>
+                    {[0, 1, 2].map(d => <span class="lv-drop absolute left-1/2 top-full grid size-5 -translate-x-1/2 place-items-center rounded-full bg-[#F5B301] text-[0.5rem] font-black text-navy shadow" style={`--k:${d}`}>DH</span>)}
+                  </div>
+                  <div class="min-w-0">
+                    <p class="lv-off text-xs font-semibold text-white/55">Perdu cette année</p>
+                    <p class="lv-off display mt-1 whitespace-nowrap text-[1.9rem] leading-none text-[#FF8A80] tabular-nums sm:text-[2.2rem]" dir="ltr">− <span class="lv-count">0</span> DH</p>
+                    <p class="lv-on display flex items-center gap-2 text-[1.7rem] leading-none text-green"><span class="grid size-7 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>Fuite fermée</p>
+                  </div>
+                </div>
+              )}
+              {k === 1 && (
+                <div class="absolute inset-0 flex items-center justify-center px-6">
+                  <div class="lv-book w-full max-w-[16rem] -rotate-2 rounded-xl bg-[#FBF7EC] p-3.5 text-navy shadow-[0_20px_40px_-20px_rgba(0,0,0,.6)]">
+                    {[['Ahmed', '640'], ['Khadija', '480'], ['Omar', '420'], ['Nadia', '300']].map(([n, v], j) => (
+                      <div class="lv-row relative flex items-center gap-2 border-b border-dashed border-navy/15 py-1 text-[0.85rem]" style={`--j:${j}`}>
+                        <span class="font-semibold">{n}</span>
+                        <span class="lv-zz text-[0.7rem] font-black text-navy/35">z z</span>
+                        <span class="lv-amt ms-auto font-bold tabular-nums" dir="ltr">{v} DH</span>
+                        <span class="lv-paid grid size-5 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3" /></span>
+                      </div>
+                    ))}
+                    <p class="mt-2 flex items-center justify-between text-[0.8rem] font-bold"><span class="lv-off text-[#C42528]">Dort dans le cahier</span><span class="lv-on text-green-deep">Rentré</span><span dir="ltr">1 840 DH</span></p>
+                  </div>
+                </div>
+              )}
+              {k === 2 && (
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 px-6">
+                  <div class="grid grid-cols-6 gap-2.5">
+                    {Array.from({ length: 12 }, (_, j) => (
+                      <span class={`lv-cl relative grid size-9 place-items-center rounded-full bg-white/85 text-navy ${[1, 4, 7, 9, 10].includes(j) ? 'lv-go' : ''}`} style={`--j:${j}`}><Icon name="users" class="size-4" /><span class="lv-back absolute -end-1 -top-1 grid size-4 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-2.5" /></span></span>
+                    ))}
+                  </div>
+                  <p class="text-sm font-semibold"><span class="lv-off text-[#FF8A80]">5 clients sur 12 ne reviennent pas</span><span class="lv-on text-green">5 clients de retour</span></p>
+                </div>
+              )}
+            </div>
+            <div class="flex flex-1 flex-col p-7">
+              <span class="flex items-center gap-3"><span class="grid size-11 place-items-center rounded-2xl bg-green text-navy"><Icon name={i} class="size-5" /></span><p class="display text-[1.8rem] leading-[0.95]">{h}</p></span>
+              <p class="mt-3 leading-relaxed text-white/70">{x}</p>
+              <ul class="mt-5 space-y-2 border-t border-white/10 pt-5">{ex.map(e => <li class="flex gap-2.5 text-[0.95rem] text-white/85"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-green"></span>{e}</li>)}</ul>
+            </div>
           </li>
         ))}
       </ul>
@@ -274,11 +330,61 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   </section>
 
 <style>
+  /* the leaks: off = the leak plays, on = Amplify closed it */
+  [data-leaks] .lv-btn { color: rgb(255 255 255 / .75); }
+  [data-leaks][data-mode="off"] .lv-btn[data-set="off"], [data-leaks][data-mode="on"] .lv-btn[data-set="on"] { color: #001E3E; }
+  [data-leaks][data-mode="on"] .lv-thumb { transform: translateX(100%); background: #05B962; }
+  :global(html[dir="rtl"]) [data-leaks][data-mode="on"] .lv-thumb { transform: translateX(-100%); }
+  [data-leaks][data-mode="on"] .lv-card { background-color: rgb(5 185 98 / .10); box-shadow: inset 0 0 0 1px rgb(5 185 98 / .45); }
+  [data-leaks][data-mode="off"] .lv-on, [data-leaks][data-mode="on"] .lv-off { display: none; }
+  /* 1. the drawer drains, coins drip; with Amplify it fills back and the drips stop */
+  .lv-fill { height: 82%; transition: height 1s cubic-bezier(.2,.8,.2,1); }
+  [data-leaks][data-mode="off"].in .lv-fill { animation: lv-drain 6s ease-in-out infinite; }
+  @keyframes lv-drain { 0% { height: 82%; } 70% { height: 30%; } 100% { height: 82%; } }
+  .lv-drop { opacity: 0; }
+  [data-leaks][data-mode="off"].in .lv-drop { animation: lv-fall 1.8s ease-in infinite; animation-delay: calc(var(--k) * 600ms); }
+  @keyframes lv-fall { 0% { opacity: 0; transform: translate(-50%, -6px) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, 44px) scale(1) rotate(160deg); } }
+  .lv-crack { transition: opacity .5s; }
+  [data-leaks][data-mode="on"] .lv-crack { opacity: 0; }
+  /* 2. the notebook sleeps; with Amplify every line is paid */
+  .lv-paid { opacity: 0; transform: scale(.4); transition: opacity .4s, transform .4s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--j) * 180ms); }
+  [data-leaks][data-mode="on"] .lv-paid { opacity: 1; transform: none; }
+  [data-leaks][data-mode="on"] .lv-amt { text-decoration: line-through; color: rgb(0 30 62 / .45); transition: color .4s calc(var(--j) * 180ms); }
+  [data-leaks][data-mode="on"] .lv-zz { opacity: 0; }
+  [data-leaks][data-mode="off"].in .lv-zz { animation: lv-zz 2.4s ease-in-out infinite; animation-delay: calc(var(--j) * 400ms); }
+  @keyframes lv-zz { 0%, 100% { opacity: .2; transform: translateY(2px); } 50% { opacity: .8; transform: translateY(-4px); } }
+  [data-leaks][data-mode="off"].in .lv-book { animation: lv-breathe 4s ease-in-out infinite; }
+  @keyframes lv-breathe { 0%, 100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(-2.5deg) translateY(-3px); } }
+  /* 3. five clients walk away; with Amplify they come back */
+  .lv-cl { transition: opacity .6s, transform .6s cubic-bezier(.2,.8,.2,1), box-shadow .6s; }
+  [data-leaks][data-mode="off"].in .lv-go { animation: lv-away 3.6s ease-in-out infinite; animation-delay: calc(var(--j) * 170ms); }
+  @keyframes lv-away { 0%, 15% { opacity: 1; transform: none; } 55%, 80% { opacity: .15; transform: translateX(14px) scale(.85); } 100% { opacity: 1; transform: none; } }
+  .lv-back { opacity: 0; transform: scale(.4); transition: opacity .4s, transform .4s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(var(--j) * 60ms); }
+  [data-leaks][data-mode="on"] .lv-go { box-shadow: 0 0 0 3px #05B962; }
+  [data-leaks][data-mode="on"] .lv-go .lv-back { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { [data-leaks] .lv-fill, [data-leaks] .lv-drop, [data-leaks] .lv-zz, [data-leaks] .lv-book, [data-leaks] .lv-go { animation: none !important; } }
   .lk-tab[aria-selected="true"] { background: #001E3E; color: #05B962; --tw-ring-color: #001E3E; }
   .lk-tab:focus-visible { outline: 3px solid #05B962; outline-offset: 2px; }
 </style>
 
 <script>
+  // the leaks: the year's loss ticks up while it leaks; after a few seconds in view, the section shows the same cards with Amplify
+  document.querySelectorAll<HTMLElement>('[data-leaks]').forEach((root) => {
+    const count = root.querySelector<HTMLElement>('.lv-count');
+    let lost = 0, touched = false, timer = 0;
+    const set = (m: 'on' | 'off') => {
+      root.dataset.mode = m;
+      root.querySelectorAll<HTMLElement>('.lv-btn').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.set === m)));
+    };
+    root.querySelectorAll<HTMLButtonElement>('.lv-btn').forEach(b => b.addEventListener('click', () => { touched = true; window.clearTimeout(timer); set(b.dataset.set as 'on' | 'off'); }));
+    window.setInterval(() => {
+      if (root.dataset.mode !== 'off' || !root.classList.contains('in') || document.visibilityState !== 'visible') return;
+      lost += 7 + Math.floor(Math.random() * 17);
+      if (count) count.textContent = lost.toLocaleString('fr-FR').replace(/ | /g, ' ');
+    }, 90);
+    const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); timer = window.setTimeout(() => { if (!touched) set('on'); }, 6500); } }, { threshold: 0.15 });
+    io.observe(root);
+  });
   // the calculator: one formula per trade, the visitor's own numbers, nothing is sent
   const F: Record<string, (v: number[]) => number> = {
     resto: ([plats, cout, pct]) => plats * 30 * cout * pct / 100,

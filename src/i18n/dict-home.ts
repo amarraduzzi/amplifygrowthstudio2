@@ -114,6 +114,14 @@ export const homeEn: Record<string, string> = {
   "Hanout": "Corner shop",
   "Pressing": "Dry cleaner",
   "Salon": "Salon",
+  "Sans Amplify": "Without Amplify",
+  "Sans ou avec Amplify": "Without or with Amplify",
+  "Perdu cette année": "Lost this year",
+  "Fuite fermée": "Leak closed",
+  "Dort dans le cahier": "Sleeping in the notebook",
+  "Rentré": "Paid back",
+  "5 clients sur 12 ne reviennent pas": "5 clients out of 12 don't come back",
+  "5 clients de retour": "5 clients back",
 };
 
 export const homeAr: Record<string, string> = {
@@ -231,4 +239,16 @@ export const homeAr: Record<string, string> = {
   "Hanout": "حانوت",
   "Pressing": "مصبنة",
   "Salon": "صالون",
+  "Sans Amplify": "بدون Amplify",
+  "Sans ou avec Amplify": "بدون أو مع Amplify",
+  "Perdu cette année": "ضاع هذا العام",
+  "Fuite fermée": "التسرب مغلق",
+  "Dort dans le cahier": "نائم في الدفتر",
+  "Rentré": "تم استرجاعه",
+  "5 clients sur 12 ne reviennent pas": "5 زبناء من 12 لا يعودون",
+  "5 clients de retour": "5 زبناء عادوا",
+  "Ahmed": "أحمد",
+  "Khadija": "خديجة",
+  "Omar": "عمر",
+  "Nadia": "نادية",
 };
