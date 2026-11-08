@@ -1,0 +1,141 @@
+---
+// Bssaha: commission-free ordering directory for Rabat restaurants (fr, en, ar).
+// Text: src/i18n/bssaha.ts. Restaurants: src/data/bssaha.ts.
+import Base from '../../layouts/Base.astro';
+import Bars from '../Bars.astro';
+import FinalCta from '../FinalCta.astro';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { waLink } from '../../config';
+import { RESTOS } from '../../data/bssaha';
+import { bssahaCopy } from '../../i18n/bssaha';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const c = bssahaCopy(lang);
+// WhatsApp messages go to the Amplify team, who read French.
+const wa = 'Bonjour, je voudrais ajouter mon restaurant sur Bssaha.';
+const restos = RESTOS.filter(r => r.actif).map(r => ({
+  nom: r.nom, modes: r.modes, horaires: r.horaires, quartier: r.quartier[lang], cuisine: r.cuisine[lang], description: r.description[lang],
+  href: r.orderUrl || (r.whatsapp ? `https://wa.me/${r.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Bonjour, je souhaite commander (via Bssaha).')}` : ''),
+  isWa: !r.orderUrl && !!r.whatsapp,
+}));
+const quartiers = [...new Set(restos.map(r => r.quartier))].sort();
+const cuisines = [...new Set(restos.map(r => r.cuisine))].sort();
+const schema = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Bssaha', inLanguage: lang, url: abs(ROUTES.bssaha[lang]),
+  about: restos.map(r => ({ '@type': 'Restaurant', name: r.nom, servesCuisine: r.cuisine, address: { '@type': 'PostalAddress', addressLocality: r.quartier, addressCountry: 'MA' } })) }];
+const WA_JOIN = waLink(wa);
+---
+<Base lang={lang} page="bssaha" title={c.title} description={c.description} wa={wa} schema={schema}>
+  <section class="relative isolate overflow-hidden bg-blue text-white">
+    <Bars class="absolute inset-x-0 bottom-0 -z-10 h-32 md:h-44" animate />
+    <div class="mx-auto grid max-w-6xl gap-12 px-4 pb-24 pt-12 sm:px-6 md:grid-cols-[1.2fr_0.8fr] md:items-center md:pb-28 md:pt-20">
+      <div>
+        <p class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-sm font-semibold text-mint"><span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{c.badge}</p>
+        <h1 class="mt-5 text-[3.2rem] sm:text-6xl lg:text-[5.2rem]">{c.h1a} <span class="text-green">{c.h1b}</span></h1>
+        <p class="measure mt-6 text-lg text-white/85">{c.lead}</p>
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+          <a id="hero-cta" href="#liste" class="inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{c.ctaList}</a>
+          <a href="#rejoindre" class="inline-flex min-h-12 items-center justify-center rounded-full border border-white/35 px-7 text-lg hover:border-white">{c.ctaJoin}</a>
+        </div>
+      </div>
+      <!-- the receipt: where the money goes -->
+      <div class="rotate-[1.5deg] rounded-2xl bg-paper p-6 font-mono text-navy shadow-[0_24px_50px_-28px_rgba(0,0,0,0.7)]" aria-label={c.ticketLabel}>
+        <div class="flex justify-between gap-3 py-1"><span>{c.ticketOrder}</span><span dir="ltr">100 DH</span></div>
+        <hr class="my-2 border-dashed border-line" />
+        <div class="flex justify-between gap-3 py-1"><span>{c.ticketResto}</span><span dir="ltr">100 DH</span></div>
+        <div class="flex justify-between gap-3 py-1"><span>{c.ticketComm}</span><span dir="ltr">0 DH</span></div>
+        <hr class="my-2 border-dashed border-line" />
+        <div class="flex justify-between gap-3 py-1 text-lg font-bold"><span>{c.ticketTotal}</span><span dir="ltr">100 DH</span></div>
+        <p class="mt-3 font-sans text-sm text-muted">{c.ticketNote}</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="liste" class="mx-auto max-w-6xl px-4 py-12 sm:px-6 md:py-16">
+    <h2 class="text-5xl md:text-6xl">{c.listTitle}</h2>
+    <div class="mt-8 grid gap-3 md:grid-cols-[2fr_1fr_1fr]">
+      <input id="q-text" type="search" placeholder={c.search} aria-label={c.search} class="min-h-12 rounded-full bg-paper px-5 ring-1 ring-line" />
+      <select id="q-quartier" aria-label={c.fQuartier} class="min-h-12 rounded-full bg-paper px-5 ring-1 ring-line"><option value="">{c.allQ}</option>{quartiers.map(q => <option value={q}>{q}</option>)}</select>
+      <select id="q-cuisine" aria-label={c.allC} class="min-h-12 rounded-full bg-paper px-5 ring-1 ring-line"><option value="">{c.allC}</option>{cuisines.map(x => <option value={x}>{x}</option>)}</select>
+    </div>
+    <label class="mt-4 flex items-center gap-2 text-muted"><input id="q-open" type="checkbox" class="size-5 accent-green" /> {c.openNow}</label>
+    <p id="count" class="mt-4 text-sm text-muted" aria-live="polite"></p>
+    <ul id="grid" class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {restos.map(r => (
+        <li class="resto flex flex-col gap-3 rounded-[1.4rem] bg-paper p-5 ring-1 ring-line" data-nom={`${r.nom} ${r.cuisine} ${r.description}`.toLowerCase()} data-q={r.quartier} data-c={r.cuisine} data-h={JSON.stringify(r.horaires ?? {})}>
+          <h3 class="text-xl">{r.nom}</h3>
+          <p class="text-sm text-muted">{r.cuisine} – {r.quartier}</p>
+          <p class="flex flex-wrap gap-2">
+            <span class="open-tag hidden rounded-full bg-green px-3 py-1 text-xs font-bold text-navy">{c.openTag}</span>
+            {r.modes.map(m => <span class={`rounded-full px-3 py-1 text-xs font-bold ${m === 'direct' ? 'bg-mint text-green-deep' : 'bg-chalk text-navy'}`}>{c.modes[m]}</span>)}
+          </p>
+          <p class="text-[0.95rem]">{r.description}</p>
+          {r.href && <a href={r.href} target="_blank" rel="noopener" class="mt-auto inline-flex min-h-12 items-center justify-center rounded-full bg-green px-6 font-semibold text-navy hover:bg-[#04A859]">{r.isWa ? c.orderWa : c.order}</a>}
+        </li>
+      ))}
+    </ul>
+    <p id="empty" class="mt-4 hidden rounded-2xl border border-dashed border-line p-8 text-center text-muted">{c.empty} <a href="#rejoindre" class="font-semibold text-green-deep underline">{c.emptyLink}</a></p>
+  </section>
+
+  <section class="bg-paper">
+    <div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
+      <h2 class="text-5xl md:text-6xl">{c.howTitle}</h2>
+      <ol class="mt-10 grid gap-6 md:grid-cols-3">
+        {c.how.map(([h, p]) => <li class="border-s-4 border-green ps-5"><h3 class="text-xl">{h}</h3><p class="mt-2 text-muted">{p}</p></li>)}
+      </ol>
+    </div>
+  </section>
+
+  <section id="rejoindre" class="mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20">
+    <div class="grid gap-10 md:grid-cols-2">
+      <div>
+        <h2 class="text-5xl md:text-6xl">{c.joinTitle}</h2>
+        <p class="measure mt-5 text-lg text-muted">{c.joinLead}</p>
+        <ul class="mt-6 space-y-3">{c.rules.map(r => <li>{r}</li>)}</ul>
+      </div>
+      <form id="join" class="grid content-start gap-4 rounded-[1.6rem] bg-paper p-6 ring-1 ring-line">
+        <label class="grid gap-1.5 font-semibold">{c.fNom}<input name="nom" required class="min-h-12 rounded-xl bg-chalk px-4 font-normal" /></label>
+        <label class="grid gap-1.5 font-semibold">{c.fQuartier}<input name="quartier" required placeholder={c.fQuartierPh} class="min-h-12 rounded-xl bg-chalk px-4 font-normal" /></label>
+        <label class="grid gap-1.5 font-semibold">{c.fTel}<input name="tel" type="tel" required placeholder="06 …" dir="ltr" class="min-h-12 rounded-xl bg-chalk px-4 font-normal" /></label>
+        <label class="grid gap-1.5 font-semibold">{c.fCas}
+          <select name="cas" class="min-h-12 rounded-xl bg-chalk px-4 font-normal">{c.cas.map((x, i) => <option value={bssahaCopy('fr').cas[i]}>{x}</option>)}</select></label>
+        <label class="grid gap-1.5 font-semibold">{c.fLien}<input name="lien" type="url" placeholder="https://" dir="ltr" class="min-h-12 rounded-xl bg-chalk px-4 font-normal" /></label>
+        <button type="submit" class="min-h-12 rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{c.send}</button>
+        <p class="text-sm text-muted">{c.formNote} <a href={WA_JOIN} class="underline">{c.writeUs}</a></p>
+      </form>
+    </div>
+  </section>
+
+  <FinalCta lang={lang} page="bssaha" wa={wa} h2={c.ctaH2} p={c.ctaP} />
+
+  <script is:inline define:vars={{ number: '212611053649', one: c.countOne, many: c.countMany }}>
+    (function () {
+      var cards = [].slice.call(document.querySelectorAll('.resto'));
+      var days = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
+      function isOpen(h) {
+        var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Africa/Casablanca' }));
+        var slot = h[days[now.getDay()]]; if (!slot) return null;
+        var p = slot.split('-').map(function (s) { var x = s.split(':'); return +x[0] * 60 + +x[1]; });
+        var m = now.getHours() * 60 + now.getMinutes();
+        return p[1] > p[0] ? (m >= p[0] && m < p[1]) : (m >= p[0] || m < p[1]);
+      }
+      cards.forEach(function (c) { c._o = isOpen(JSON.parse(c.dataset.h || '{}')); if (c._o === true) c.querySelector('.open-tag').classList.remove('hidden'); });
+      var $ = function (s) { return document.querySelector(s); };
+      function draw() {
+        var s = $('#q-text').value.toLowerCase(), q = $('#q-quartier').value, cu = $('#q-cuisine').value, op = $('#q-open').checked, n = 0;
+        cards.forEach(function (c) {
+          var ok = (!s || c.dataset.nom.indexOf(s) > -1) && (!q || c.dataset.q === q) && (!cu || c.dataset.c === cu) && (!op || c._o === true);
+          c.hidden = !ok; if (ok) n++;
+        });
+        $('#count').textContent = n === 1 ? one : many.replace('{n}', n);
+        $('#empty').classList.toggle('hidden', n > 0);
+      }
+      ['#q-text', '#q-quartier', '#q-cuisine', '#q-open'].forEach(function (id) { $(id).addEventListener('input', draw); $(id).addEventListener('change', draw); });
+      draw();
+      $('#join').addEventListener('submit', function (e) {
+        e.preventDefault(); var f = new FormData(e.target);
+        var msg = 'Bonjour, je souhaite rejoindre Bssaha.\nRestaurant : ' + f.get('nom') + '\nQuartier : ' + f.get('quartier') + '\nWhatsApp : ' + f.get('tel') + '\nSituation : ' + f.get('cas') + '\nLien : ' + (f.get('lien') || '-');
+        location.href = 'https://wa.me/' + number + '?text=' + encodeURIComponent(msg);
+      });
+    })();
+  </script>
+</Base>

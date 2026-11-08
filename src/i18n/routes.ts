@@ -41,8 +41,8 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   blogPlateforme: { fr: '/blog/commande-plateforme/', ar: '/blog/commande-plateforme/', en: '/blog/commande-plateforme/' },
   blogCouts: { fr: '/blog/couts-bas-defauts-caches/', ar: '/blog/couts-bas-defauts-caches/', en: '/blog/couts-bas-defauts-caches/' },
   blogCout: { fr: '/blog/cout-dun-plat/', ar: '/blog/cout-dun-plat/', en: '/blog/cout-dun-plat/' },
-  // Bssaha: commission-free ordering directory for Rabat restaurants (French only)
-  bssaha: { fr: '/bssaha/', ar: '/bssaha/', en: '/bssaha/' },
+  // Bssaha: commission-free ordering directory for Rabat restaurants (fr, en, ar)
+  bssaha: { fr: '/bssaha/', ar: '/ar/bssaha/', en: '/en/bssaha/' },
   blogVues: { fr: '/blog/80000-vues/', ar: '/blog/80000-vues/', en: '/blog/80000-vues/' },
 };
 
