@@ -125,6 +125,10 @@ export const homeEn: Record<string, string> = {
   "Sur une année, cela fait": "Over a year, that comes to",
   "Mois 1": "Month 1",
   "Mois 12": "Month 12",
+  "Une consultante montre des chiffres sur une tablette à un restaurateur, autour d’un thé à la menthe": "A consultant shows figures on a tablet to a restaurant owner over mint tea",
+  "Une main branche une imprimante de tickets à côté d’un écran de caisse, dans un café de Rabat": "A hand plugs in a receipt printer next to a till screen in a Rabat café",
+  "Une consultante montre la caisse sur une tablette à trois employés d’un restaurant": "A consultant shows the till on a tablet to three restaurant staff members",
+  "Un patron de café souriant regarde son téléphone derrière son comptoir": "A smiling café owner looks at his phone behind his counter",
 };
 
 export const homeAr: Record<string, string> = {
@@ -257,4 +261,8 @@ export const homeAr: Record<string, string> = {
   "Sur une année, cela fait": "على مدار سنة، يصير هذا",
   "Mois 1": "الشهر 1",
   "Mois 12": "الشهر 12",
+  "Une consultante montre des chiffres sur une tablette à un restaurateur, autour d’un thé à la menthe": "مستشارة تعرض الأرقام على لوحة إلكترونية لصاحب مطعم حول كأس شاي بالنعناع",
+  "Une main branche une imprimante de tickets à côté d’un écran de caisse, dans un café de Rabat": "يد توصل طابعة التذاكر بجانب شاشة الصندوق في مقهى بالرباط",
+  "Une consultante montre la caisse sur une tablette à trois employés d’un restaurant": "مستشارة تعرض الصندوق على لوحة إلكترونية لثلاثة موظفين في مطعم",
+  "Un patron de café souriant regarde son téléphone derrière son comptoir": "صاحب مقهى مبتسم ينظر إلى هاتفه خلف الكونتوار",
 };

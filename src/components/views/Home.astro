@@ -80,10 +80,10 @@ const partner = [
   ['megaphone', 'Plus de clients', 'Google, WhatsApp, dégustations et campagnes : du marketing qui fait venir des clients, pas des vues.', ROUTES.marketing[lang], 'Voir Amplify Clients'],
 ] as const;
 const method = [
-  ['pin', 'Nous passons vous voir', 'À Rabat et Salé, dans votre commerce. Ailleurs, en appel vidéo. Nous regardons comment vous travaillez.'],
-  ['box', 'Nous installons', 'Avec vos produits, vos prix et votre équipe. Vous n’avez rien à préparer.'],
-  ['users', 'Nous formons votre équipe', 'En arabe ou en français, jusqu’à ce que chacun soit à l’aise.'],
-  ['message', 'Nous restons là', 'Une question ? WhatsApp. Et nous regardons vos chiffres avec vous.'],
+  ['pin', 'Nous passons vous voir', 'À Rabat et Salé, dans votre commerce. Ailleurs, en appel vidéo. Nous regardons comment vous travaillez.', '/img/equipe-client.webp', '55% 40%', 'Une consultante montre des chiffres sur une tablette à un restaurateur, autour d’un thé à la menthe'],
+  ['box', 'Nous installons', 'Avec vos produits, vos prix et votre équipe. Vous n’avez rien à préparer.', '/img/equipe-installation.webp', '60% 50%', 'Une main branche une imprimante de tickets à côté d’un écran de caisse, dans un café de Rabat'],
+  ['users', 'Nous formons votre équipe', 'En arabe ou en français, jusqu’à ce que chacun soit à l’aise.', '/img/equipe-formation.webp', '55% 40%', 'Une consultante montre la caisse sur une tablette à trois employés d’un restaurant'],
+  ['message', 'Nous restons là', 'Une question ? WhatsApp. Et nous regardons vos chiffres avec vous.', '/img/equipe-patron.webp', '50% 30%', 'Un patron de café souriant regarde son téléphone derrière son comptoir'],
 ] as const;
 const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp`;
 ---
@@ -243,25 +243,33 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
 
   <!-- METHOD: we come by, we set up, we train, we stay -->
   <section id="methode" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
-    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-14">
+    <div class="relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-12">
       <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
-      <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+      <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end lg:gap-10">
         <div>
-          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Pas un logiciel.</span><span class="block text-green">Une équipe à Rabat.</span></h2>
-          <p class="mt-5 max-w-md text-lg text-white/70">Vous ne restez pas seul avec une application. Nous venons, nous installons, nous expliquons, et nous restons joignables.</p>
-          <ul class="mt-8 flex flex-wrap gap-2 text-sm font-semibold">
-            {['Arabe et français', 'WhatsApp', 'Votre commerce reste le vôtre', 'Sans engagement'].map(x => <li class="rounded-full bg-white/10 px-3.5 py-2 ring-1 ring-white/15">{x}</li>)}
-          </ul>
+          <h2 class="tf-x text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Pas un logiciel.</span><span class="block text-green">Une équipe à Rabat.</span></h2>
+          <p class="tf-x mt-5 max-w-lg text-lg text-white/70" style="--d:100ms">Vous ne restez pas seul avec une application. Nous venons, nous installons, nous expliquons, et nous restons joignables.</p>
         </div>
-        <ol class="grid gap-3 sm:grid-cols-2">
-          {method.map(([i, h, x], k) => (
-            <li class="rounded-[1.6rem] bg-white/[0.06] p-6 ring-1 ring-white/10">
-              <span class="flex items-center gap-3"><span class="grid size-11 place-items-center rounded-2xl bg-green text-navy"><Icon name={i} class="size-5" /></span><span class="display text-3xl text-white/25" dir="ltr">{k + 1}</span></span>
-              <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
-            </li>
-          ))}
-        </ol>
+        <ul class="tf-x flex flex-wrap gap-2 text-sm font-semibold lg:justify-end" style="--d:200ms">
+          {['Arabe et français', 'WhatsApp', 'Votre commerce reste le vôtre', 'Sans engagement'].map(x => <li class="rounded-full bg-white/10 px-3.5 py-2 ring-1 ring-white/15">{x}</li>)}
+        </ul>
       </div>
+      <ol class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {method.map(([i, h, x, src, pos, alt], k) => (
+          <li class="tf group/m relative isolate flex min-h-[21rem] flex-col justify-between overflow-hidden rounded-[1.7rem] p-5 shadow-[0_24px_50px_-28px_rgba(0,0,0,0.7)] sm:min-h-[26rem]" style={`--d:${k * 120}ms`}>
+            <img src={src} alt={tt(alt)} width="1000" height="747" loading="lazy" decoding="async" class="ms-photo absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover/m:scale-105" style={`object-position:${pos}`} />
+            <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy via-navy/55 to-navy/0" aria-hidden="true"></span>
+            <span class="flex items-center justify-between">
+              <span class="grid size-11 place-items-center rounded-2xl bg-green text-navy shadow-lg"><Icon name={i} class="size-5" /></span>
+              <span class="display text-4xl text-white/70" dir="ltr">{k + 1}</span>
+            </span>
+            <div>
+              <p class="display text-[1.6rem] leading-[0.95]">{h}</p>
+              <p class="mt-2 text-[0.95rem] leading-relaxed text-white/80">{x}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -274,8 +282,8 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
     <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
       <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
-      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
-      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
+      <img src="/img/rabat-rue.webp" alt="" width="1376" height="768" loading="lazy" decoding="async" class="ms-photo absolute inset-0 -z-20 size-full object-cover object-[70%_50%]" />
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-linear-to-r from-navy via-navy/90 to-navy/35 max-md:to-navy/70" aria-hidden="true"></span>
       <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trouvons votre fuite.</span><span class="block text-green">En 20 minutes.</span></h2>
       <p class="mt-5 max-w-xl text-lg text-white/75">Écrivez-nous sur WhatsApp. Nous passons voir votre commerce, ou nous nous appelons en vidéo, et nous vous montrons où part votre argent. C’est gratuit.</p>
       <div class="mt-8 flex flex-wrap items-center gap-3">
@@ -286,6 +294,10 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   </section>
 
 <style>
+  @media (prefers-reduced-motion: no-preference) {
+    .js [data-tf]:not(.in) .ms-photo { scale: 1.14; }
+    .ms-photo { transition: scale 1.8s cubic-bezier(.2,.8,.2,1), transform .7s ease-out; }
+  }
   /* the leaks: off = the leak plays, on = Amplify closed it */
   [data-leaks] .lv-btn { color: rgb(255 255 255 / .75); }
   [data-leaks][data-mode="off"] .lv-btn[data-set="off"], [data-leaks][data-mode="on"] .lv-btn[data-set="on"] { color: #001E3E; }
