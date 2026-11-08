@@ -1,94 +1,154 @@
 ---
-// Le Rouleau, cities: a second receipt with Morocco drawn in dot-matrix dots. Open cities are marked in yellow, the next one pulses.
-// Tapping a city re-colours the page in its petit-taxi colour. Only real numbers: the count is the number of listed restaurants.
+// Bssaha, cities: a radar map of Morocco. Open cities are lit, the next one pulses, a sweep rotates around the selected city.
+// Choosing a city (map, tab or list tab) tints the whole page in that city's glow. Only real numbers: the count is the number of listed restaurants.
 import type { BssahaCopy } from '../i18n/bssaha';
-export interface CityRow { id: string; name: string; lon: number; lat: number; open: boolean; soon: boolean; count: number; min: number; color: string; ink: string; ownerHref: string; dinerHref: string; listHref: string }
-interface Props { c: BssahaCopy; rows: CityRow[]; otherHref: string }
-const { c, rows, otherHref } = Astro.props;
+export interface CityRow { id: string; name: string; lon: number; lat: number; open: boolean; soon: boolean; count: number; min: number; color: string; ink: string; glow: string; ownerHref: string; dinerHref: string; listHref: string }
+interface Props { c: BssahaCopy; rows: CityRow[]; otherHref: string; first: string }
+const { c, rows, otherHref, first } = Astro.props;
 const K = 48, X0 = -17.2, Y0 = 36.2;
-const pt = (lon: number, lat: number) => `${((lon - X0) * K).toFixed(1)},${((Y0 - lat) * K).toFixed(1)}`;
+const px = (lon: number) => +((lon - X0) * K).toFixed(1), py = (lat: number) => +((Y0 - lat) * K).toFixed(1);
+const pt = (lon: number, lat: number) => `${px(lon)},${py(lat)}`;
 // simplified outline (the whole kingdom), clockwise from Tangier; stylised on purpose
 const outline = [[-5.9,35.8],[-6.4,34.8],[-6.85,34.0],[-7.6,33.6],[-8.5,33.25],[-9.25,32.3],[-9.8,31.5],[-9.65,30.5],[-10.2,29.4],[-11.1,28.45],[-12.9,27.95],[-13.2,27.15],[-14.5,26.1],[-15.9,23.7],[-16.6,22.3],[-17.1,21.35],[-13.17,21.35],[-13.2,27.67],[-8.67,27.67],[-8.67,28.72],[-7.5,29.4],[-5.8,29.95],[-4.8,30.5],[-3.7,30.95],[-3.6,31.65],[-2.8,32.0],[-1.25,32.1],[-1.7,32.6],[-1.5,33.2],[-1.7,34.0],[-1.9,34.7],[-2.2,35.1],[-2.95,35.2],[-3.95,35.2],[-4.6,35.2],[-5.35,35.55],[-5.35,35.9]].map(([x, y]) => pt(x, y)).join(' ');
 const W = Math.round(16.2 * K), H = Math.round(15.2 * K);
 const fill = (s: string, r: CityRow) => s.replace('{v}', r.name).replace('{n}', String(r.count)).replace('{m}', String(r.min));
-const btn = 'inline-flex min-h-12 items-center justify-center rounded-full px-6 font-semibold';
-const active = rows.filter(r => r.open || r.soon);
+const hot = rows.filter(r => r.open || r.soon);
+const hub = rows.find(r => r.id === first) ?? rows[0];
+const hx = px(hub.lon), hy = py(hub.lat);
+const arcs = rows.filter(r => r.id !== hub.id).map(r => {
+  const x = px(r.lon), y = py(r.lat), mx = (hx + x) / 2, my = (hy + y) / 2, dx = x - hx, dy = y - hy;
+  const len = Math.hypot(dx, dy) || 1, bend = Math.min(90, len * 0.28);
+  return { id: r.id, hot: r.open || r.soon, d: `M${hx},${hy} Q${(mx + (-dy / len) * bend).toFixed(1)},${(my + (dx / len) * bend).toFixed(1)} ${x},${y}` };
+});
+const grat = { lon: [-16, -14, -12, -10, -8, -6, -4, -2], lat: [22, 24, 26, 28, 30, 32, 34, 36] };
+const btn = 'bx-btn';
 ---
-<section id="villes" class="bs-bg-deep scroll-mt-20">
-  <div class="mx-auto max-w-5xl px-4 py-14 sm:px-6 md:py-20">
-    <div class="[filter:drop-shadow(0_18px_22px_rgba(0,0,0,0.35))]">
-      <div class="bs-paper bs-torn px-5 pb-14 pt-8 md:px-10">
-        <h2 class="font-dot text-4xl leading-none md:text-5xl">{c.mapTitle}</h2>
-        <p class="measure mt-3 font-sans text-base font-normal text-black/70">{c.mapLead}</p>
-        <hr class="my-6 border-t-2 border-dashed border-black/40" />
-        <div class="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-start">
-          <div>
-            <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={c.mapAria} class="mx-auto h-auto w-full max-w-xs md:max-w-none">
-              <polygon points={outline} fill="none" stroke="#0a0a0a" stroke-width="3.5" stroke-dasharray="0.1 9" stroke-linecap="round" stroke-linejoin="round" />
-              {rows.map(r => {
-                const [x, y] = pt(r.lon, r.lat).split(',').map(Number);
-                const left = r.id === 'casablanca' || r.id === 'marrakech' || r.id === 'agadir';
-                const hot = r.open || r.soon;
-                return (
-                  <g {...(hot ? { 'data-theme-city': r.id, 'data-color': r.color, 'data-ink': r.ink, role: 'button', tabindex: 0, 'aria-label': r.name, style: 'cursor:pointer' } : {})}>
-                    {hot && <circle cx={x} cy={y} r="9" class="bm-pulse" fill={r.open ? '#FFE600' : 'none'} stroke={r.open ? 'none' : '#0a0a0a'} stroke-width="2.5" />}
-                    <circle cx={x} cy={y} r={hot ? 8 : 4.5} fill={r.open ? '#FFE600' : hot ? '#F5F7F7' : 'rgba(10,10,10,0.45)'} stroke={hot ? '#0a0a0a' : 'none'} stroke-width="3" />
-                    <text x={left ? x - 16 : x + 16} y={y + 6} text-anchor={left ? 'end' : 'start'} font-size={hot ? 26 : 20} fill={hot ? '#0a0a0a' : 'rgba(10,10,10,0.55)'} class="font-dot" style="paint-order:stroke;stroke:#F5F7F7;stroke-width:5px">{r.name}</text>
-                  </g>
-                );
-              })}
-            </svg>
-            <p class="mt-2 font-sans text-xs font-normal text-black/50">{c.mapNote}</p>
-          </div>
-          <ul class="grid gap-6">
-            {active.map(r => (
-              <li class="border-b-2 border-dashed border-black/40 pb-6">
-                <button type="button" data-theme-city={r.id} data-color={r.color} data-ink={r.ink} class="font-dot flex w-full items-baseline gap-2 text-start text-3xl">
-                  <span>{r.name}</span><span class="bs-leader"></span>
-                  <span class={`text-base ${r.open ? 'bs-mark' : 'border-2 border-dashed border-black px-2'}`}>{r.open ? c.stLive : c.stSoon}</span>
-                </button>
-                {r.open
-                  ? <><p class="mt-3 font-sans font-normal">{r.count === 1 ? c.countOne : c.countMany.replace('{n}', String(r.count))}. {c.liveLine}</p>
-                      <a href={r.listHref} class={`${btn} mt-4 bg-[#0a0a0a] text-white`}>{c.ctaList}</a></>
-                  : <><p class="mt-3 font-sans font-normal">{fill(c.soonLine, r)}</p>
-                      {r.count > 0 && <div class="mt-4"><div class="h-3 border-2 border-black"><div class="h-full bg-[#FFE600]" style={`width:${Math.min(100, Math.round(r.count / r.min * 100))}%`}></div></div><p class="mt-2 font-sans text-sm font-normal">{fill(c.progress, r)}</p></div>}
-                      <div class="mt-4 flex flex-col gap-3 sm:flex-row">
-                        <a href={r.ownerHref} target="_blank" rel="noopener" class={`${btn} bg-[#0a0a0a] text-white`}>{fill(c.btnOwner, r)}</a>
-                        <a href={r.dinerHref} target="_blank" rel="noopener" class={`${btn} border-2 border-[#0a0a0a]`}>{c.btnDiner}</a>
-                      </div></>}
-              </li>
-            ))}
-            <li>
-              <p class="font-dot text-2xl">{c.otherTitle}</p>
-              <p class="mt-2 font-sans font-normal text-black/75">{c.otherLine}</p>
-              <a href={otherHref} target="_blank" rel="noopener" class="mt-2 inline-block font-sans font-semibold underline underline-offset-4">{c.otherBtn}</a>
-            </li>
-          </ul>
+<section id="villes" class="bx-sec bx-sec--alt scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="rv">
+      <p class="bx-eyebrow">{c.liveNow} · MA</p>
+      <h2 class="bx-h2 mt-3">{c.mapTitle}</h2>
+      <span class="bx-glow-line" aria-hidden="true"></span>
+      <p class="measure bx-mute mt-5 text-lg">{c.mapLead}</p>
+    </div>
+    <div class="mt-10 grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+      <div class="bx-map rv" id="bx-map">
+        <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={c.mapAria} direction="ltr">
+          <defs>
+            <pattern id="bx-dots" width="13" height="13" patternUnits="userSpaceOnUse"><circle cx="6.5" cy="6.5" r="1.7" fill="#3DFFA0" fill-opacity=".34" /></pattern>
+            <clipPath id="bx-clip"><polygon points={outline} /></clipPath>
+            <filter id="bx-blur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7" /></filter>
+            <linearGradient id="bx-sw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3DFFA0" stop-opacity="0" /><stop offset="1" stop-color="#3DFFA0" stop-opacity=".6" /></linearGradient>
+          </defs>
+          <g stroke="#3DFFA0" stroke-opacity=".08" stroke-width="1" aria-hidden="true">
+            {grat.lon.map(l => <line x1={px(l)} y1="0" x2={px(l)} y2={H} />)}
+            {grat.lat.map(l => <line x1="0" y1={py(l)} x2={W} y2={py(l)} />)}
+          </g>
+          <g clip-path="url(#bx-clip)" aria-hidden="true">
+            <rect width={W} height={H} fill="url(#bx-dots)" />
+            <rect width={W} height={H} fill="#3DFFA0" fill-opacity=".05" />
+            <g id="bx-radar" transform={`translate(${hx} ${hy})`}><g class="bx-sweep"><path d="M0,0 L340,0 A340,340 0 0 1 261,218 Z" fill="url(#bx-sw)" /></g></g>
+          </g>
+          <polygon points={outline} fill="none" stroke="#3DFFA0" stroke-width="7" stroke-opacity=".5" filter="url(#bx-blur)" aria-hidden="true" />
+          <polygon points={outline} fill="none" stroke="#3DFFA0" stroke-width="2.5" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" class="bx-draw" aria-hidden="true" />
+          <g id="bx-rings" transform={`translate(${hx} ${hy})`} fill="none" stroke="#3DFFA0" stroke-opacity=".25" aria-hidden="true">
+            <circle r="70" stroke-dasharray="3 7" /><circle r="140" stroke-dasharray="3 9" /><circle r="210" stroke-dasharray="3 11" />
+          </g>
+          {arcs.map(a => <path d={a.d} fill="none" stroke="#3DFFA0" stroke-width={a.hot ? 2.2 : 1.2} stroke-opacity={a.hot ? 0.75 : 0.22} stroke-dasharray="4 10" stroke-linecap="round" class="bx-flow" aria-hidden="true" />)}
+          {rows.map(r => {
+            const x = px(r.lon), y = py(r.lat);
+            const left = r.id === 'casablanca' || r.id === 'marrakech' || r.id === 'agadir';
+            const on = r.open || r.soon;
+            return (
+              <g class={`bx-node${r.id === first ? ' is-sel' : ''}`} data-city={r.id} data-glow={r.glow} data-open={r.open ? '1' : '0'} {...(on ? { role: 'button', tabindex: 0, 'aria-label': r.name } : { 'aria-hidden': 'true' })} style={on ? '' : 'cursor:default'}>
+                {on && <circle class="halo" cx={x} cy={y} r="9" fill={r.glow} fill-opacity=".55" />}
+                {on && <circle cx={x} cy={y} r="26" fill="transparent" />}
+                <circle class="core" cx={x} cy={y} r={on ? 9 : 4.5} fill={on ? '#fff' : 'rgba(255,255,255,.35)'} stroke={on ? r.glow : 'none'} stroke-width="4" />
+                <text x={r.id === 'rabat' ? x - 16 : left ? x - 18 : x + 18} y={r.id === 'rabat' ? y - 14 : y + 8} text-anchor={r.id === 'rabat' || left ? 'end' : 'start'} font-size={on ? 27 : 20} fill={on ? '#fff' : 'rgba(255,255,255,.55)'} class="font-dot">{r.name}</text>
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+      <div class="rv" style="--d:120ms">
+        <div class="bx-chip-row mb-5" role="group" aria-label={c.cityLabel}>
+          {hot.map(r => <button type="button" class="bx-city-btn" data-city-btn={r.id} aria-pressed={r.id === first ? 'true' : 'false'}>{r.name}{!r.open && <span class="pill">{c.stSoon}</span>}</button>)}
         </div>
-        <div class="bs-barcode mt-10" aria-hidden="true"></div>
+        <div class="bx-glass bx-hud">
+          {hot.map(r => (
+            <div class={`bx-panel${r.id === first ? ' is-on' : ''}`} data-panel={r.id} hidden={r.id !== first}>
+              <p class="bx-eyebrow"><span class="bx-dot me-2 align-middle"></span>{r.open ? c.stLive : c.stSoon}</p>
+              <h3 class="display mt-3 text-6xl md:text-7xl">{r.name}</h3>
+              <div class="mt-5 flex items-end gap-4">
+                <b class="bx-led text-6xl leading-none" data-n={r.count} dir="ltr">{r.count}</b>
+                <span class="pb-1 bx-mute">{c.restos}</span>
+              </div>
+              {r.open
+                ? <>
+                    <p class="mt-5 text-lg">{c.liveLine}</p>
+                    <a href={r.listHref} class={`${btn} bx-btn--go mt-6`} data-mag>{c.ctaList}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+                  </>
+                : <>
+                    <p class="mt-5 text-lg">{fill(c.soonLine, r)}</p>
+                    <div class="mt-5">
+                      <div class="bx-prog" role="progressbar" aria-valuemin="0" aria-valuemax={r.min} aria-valuenow={r.count}><i style={`width:${Math.max(3, Math.min(100, Math.round(r.count / r.min * 100)))}%`}></i></div>
+                      <p class="mt-2 text-sm bx-mute">{fill(c.progress, r)}</p>
+                    </div>
+                    <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                      <a href={r.ownerHref} target="_blank" rel="noopener" class={`${btn} bx-btn--go`} data-mag>{fill(c.btnOwner, r)}</a>
+                      <a href={r.dinerHref} target="_blank" rel="noopener" class={`${btn} bx-btn--ghost`}>{c.btnDiner}</a>
+                    </div>
+                  </>}
+            </div>
+          ))}
+        </div>
+        <p class="mt-5 bx-mute"><span class="font-semibold text-white">{c.otherTitle}</span> {c.otherLine} <a href={otherHref} target="_blank" rel="noopener" class="font-semibold text-[#3DFFA0] underline underline-offset-4">{c.otherBtn}</a></p>
+        <p class="mt-2 text-xs bx-mute">{c.mapNote}</p>
       </div>
     </div>
   </div>
 </section>
-<style>
-  .bm-pulse { transform-box: fill-box; transform-origin: center; }
-  @media (prefers-reduced-motion: no-preference) {
-    .bm-pulse { animation: bm-ring 2.2s ease-out infinite; }
-    @keyframes bm-ring { from { transform: scale(1); opacity: .8; } to { transform: scale(2.6); opacity: 0; } }
-  }
-</style>
 <script>
-  // Tapping a city (map, city line or list tab) re-colours the page in that city's petit-taxi colour.
-  const page = document.querySelector<HTMLElement>('.bs-page');
-  const theme = (el: HTMLElement | null) => {
-    if (!page || !el?.dataset.color) return;
-    page.dataset.city = el.dataset.themeCity!;
-    page.style.setProperty('--city', el.dataset.color);
-    page.style.setProperty('--ink', el.dataset.ink || '#fff');
-  };
-  document.addEventListener('click', e => theme((e.target as Element).closest<HTMLElement>('[data-theme-city]')));
-  document.addEventListener('keydown', e => {
-    const t = (e.target as Element).closest<HTMLElement>('svg [data-theme-city]');
-    if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); theme(t); }
-  });
+  // One selected city for the whole page. Sources: map nodes, city buttons, and the tabs in the list (they announce 'bx:city').
+  const root = document.querySelector<HTMLElement>('.bx-page');
+  const map = document.getElementById('bx-map');
+  if (root && map) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const nodes = [...map.querySelectorAll<SVGGElement>('.bx-node')];
+    const panels = [...document.querySelectorAll<HTMLElement>('.bx-panel')];
+    const btns = [...document.querySelectorAll<HTMLButtonElement>('[data-city-btn]')];
+    const radar = document.getElementById('bx-radar'), rings = document.getElementById('bx-rings');
+    const count = (el: HTMLElement) => {
+      const to = +(el.dataset.n || 0);
+      if (still || to === 0) { el.textContent = String(to); return; }
+      const t0 = performance.now();
+      const step = (now: number) => { const k = Math.min(1, (now - t0) / 700); el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(step); };
+      requestAnimationFrame(step);
+    };
+    const apply = (id: string) => {
+      const node = nodes.find(n => n.dataset.city === id);
+      if (!node) return;
+      nodes.forEach(n => n.classList.toggle('is-sel', n === node));
+      btns.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.cityBtn === id)));
+      panels.forEach(p => { const on = p.dataset.panel === id; if (on && p.hidden) { p.hidden = false; p.classList.remove('is-on'); void p.offsetWidth; p.classList.add('is-on'); p.querySelectorAll<HTMLElement>('[data-n]').forEach(count); } else if (!on) { p.hidden = true; p.classList.remove('is-on'); } });
+      const c = node.querySelector('.core')!;
+      const x = c.getAttribute('cx'), y = c.getAttribute('cy');
+      [radar, rings].forEach(g => g && g.setAttribute('transform', `translate(${x} ${y})`));
+      root.style.setProperty('--city', node.dataset.glow || '#3DFFA0');
+    };
+    const choose = (id: string) => { apply(id); const n = nodes.find(x => x.dataset.city === id); document.dispatchEvent(new CustomEvent('bx:city', { detail: { id, open: n?.dataset.open === '1', from: 'map' } })); };
+    nodes.forEach(n => {
+      if (n.getAttribute('role') !== 'button') return;
+      n.addEventListener('click', () => choose(n.dataset.city!));
+      n.addEventListener('keydown', e => { if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') { e.preventDefault(); choose(n.dataset.city!); } });
+    });
+    btns.forEach(b => b.addEventListener('click', () => choose(b.dataset.cityBtn!)));
+    document.addEventListener('bx:city', e => { const d = (e as CustomEvent<{ id: string; from: string }>).detail; if (d.from !== 'map') apply(d.id); });
+    const first = panels.find(p => !p.hidden)?.querySelector<HTMLElement>('[data-n]');
+    if (first && !still && 'IntersectionObserver' in window) {
+      first.textContent = '0';
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { count(first); io.disconnect(); } }, { threshold: 0.4 });
+      io.observe(map);
+    }
+  }
 </script>

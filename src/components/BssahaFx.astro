@@ -1,0 +1,173 @@
+---
+// Bssaha, shared effects. Everything here is decoration: without JavaScript, or with reduced motion, the page still reads and works.
+// - scroll progress bar, pointer aura, reveal on scroll, 3D tilt with glare, magnetic buttons
+// - headline "decode" (not for Arabic: scrambled letters would break the joined script)
+// - hero canvas: a living network of orders; green signals travel between nodes, the pointer pulls them in
+---
+<div class="bx-progress" aria-hidden="true"></div>
+<div class="bx-aura" aria-hidden="true"></div>
+<script>
+  const root = document.querySelector<HTMLElement>('.bx-page');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(pointer: fine)').matches;
+  const lang = document.documentElement.lang;
+
+  if (root) {
+    // ---- progress bar
+    const prog = document.querySelector<HTMLElement>('.bx-progress')!;
+    let tick = false;
+    const onScroll = () => {
+      tick = false;
+      const r = root.getBoundingClientRect();
+      const p = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - innerHeight)));
+      prog.style.setProperty('--sp', p.toFixed(4));
+    };
+    addEventListener('scroll', () => { if (!tick) { tick = true; requestAnimationFrame(onScroll); } }, { passive: true });
+    onScroll();
+
+    // ---- pointer aura (mouse only)
+    const aura = document.querySelector<HTMLElement>('.bx-aura')!;
+    if (fine && !still) {
+      let ax = innerWidth / 2, ay = innerHeight / 2, tx = ax, ty = ay, running = false;
+      const loop = () => {
+        ax += (tx - ax) * 0.12; ay += (ty - ay) * 0.12;
+        aura.style.transform = `translate(${ax.toFixed(1)}px, ${ay.toFixed(1)}px)`;
+        if (Math.abs(tx - ax) + Math.abs(ty - ay) > 0.5) requestAnimationFrame(loop); else running = false;
+      };
+      addEventListener('pointermove', e => {
+        tx = e.clientX; ty = e.clientY; aura.classList.add('on');
+        if (!running) { running = true; requestAnimationFrame(loop); }
+      }, { passive: true });
+      document.addEventListener('pointerleave', () => aura.classList.remove('on'));
+    }
+
+    // ---- reveal on scroll
+    const rv = [...root.querySelectorAll<HTMLElement>('.rv')];
+    if ('IntersectionObserver' in window && !still) {
+      const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
+      rv.forEach(el => io.observe(el));
+    } else rv.forEach(el => el.classList.add('in'));
+
+    // ---- 3D tilt + cursor-following glow edge (mouse only; touch keeps the calm float animation)
+    const glowTrack = (el: HTMLElement, e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', `${((e.clientX - r.left) / r.width * 100).toFixed(1)}%`);
+      el.style.setProperty('--my', `${((e.clientY - r.top) / r.height * 100).toFixed(1)}%`);
+      return r;
+    };
+    if (fine) {
+      root.querySelectorAll<HTMLElement>('.bx-glass').forEach(el => el.addEventListener('pointermove', e => glowTrack(el, e as PointerEvent)));
+      if (!still) root.querySelectorAll<HTMLElement>('[data-tilt]').forEach(el => {
+        const max = parseFloat(el.dataset.tilt || '8');
+        el.addEventListener('pointermove', e => {
+          const r = glowTrack(el, e as PointerEvent);
+          const x = ((e as PointerEvent).clientX - r.left) / r.width - 0.5, y = ((e as PointerEvent).clientY - r.top) / r.height - 0.5;
+          el.classList.add('is-live');
+          el.style.setProperty('--ry', `${(x * max * 2).toFixed(2)}deg`);
+          el.style.setProperty('--rx', `${(-y * max * 2).toFixed(2)}deg`);
+        });
+        el.addEventListener('pointerleave', () => { el.classList.remove('is-live'); el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); });
+      });
+      // magnetic buttons
+      if (!still) root.querySelectorAll<HTMLElement>('[data-mag]').forEach(el => {
+        el.addEventListener('pointermove', e => {
+          const r = el.getBoundingClientRect();
+          const x = ((e as PointerEvent).clientX - r.left - r.width / 2) * 0.22, y = ((e as PointerEvent).clientY - r.top - r.height / 2) * 0.3;
+          el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+        });
+        el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+      });
+    }
+
+    // ---- headline decode
+    if (!still && lang !== 'ar') {
+      const glyphs = '01<>/\\[]{}#%$&*+=?';
+      root.querySelectorAll<HTMLElement>('[data-scramble]').forEach((el, n) => {
+        const final = el.textContent || '';
+        const start = performance.now() + 250 + n * 380, dur = 900 + final.length * 22;
+        const frame = (now: number) => {
+          const t = (now - start) / dur;
+          if (t < 0) { el.textContent = final.replace(/\S/g, ' '); return requestAnimationFrame(frame); }
+          if (t >= 1) { el.textContent = final; return; }
+          const keep = Math.floor(t * final.length);
+          let out = '';
+          for (let i = 0; i < final.length; i++) out += i < keep || final[i] === ' ' ? final[i] : glyphs[(Math.random() * glyphs.length) | 0];
+          el.textContent = out;
+          requestAnimationFrame(frame);
+        };
+        el.style.minHeight = '1em';
+        requestAnimationFrame(frame);
+      });
+    }
+
+    // ---- hero canvas: the network of orders
+    const cv = document.getElementById('bx-net') as HTMLCanvasElement | null;
+    const hero = cv?.parentElement;
+    if (cv && hero) {
+      const ctx = cv.getContext('2d')!;
+      type N = { x: number; y: number; vx: number; vy: number; r: number };
+      type P = { a: N; b: N; t: number; s: number };
+      let w = 0, h = 0, dpr = 1, nodes: N[] = [], pk: P[] = [], mx = -9999, my = -9999, vis = true, raf = 0, last = 0, spawn = 0;
+      const rgb = () => getComputedStyle(root).getPropertyValue('--city').trim() || '#3DFFA0';
+      const size = () => {
+        dpr = Math.min(devicePixelRatio || 1, 2);
+        w = hero.clientWidth; h = hero.clientHeight;
+        cv.width = w * dpr; cv.height = h * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const count = Math.round(Math.min(110, Math.max(34, (w * h) / 15000)));
+        nodes = Array.from({ length: count }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.35, vy: (Math.random() - 0.5) * 0.35, r: Math.random() * 1.6 + 0.9 }));
+        pk = [];
+      };
+      const link = Math.min(170, Math.max(110, w / 9));
+      const draw = (now: number) => {
+        raf = 0;
+        if (!vis) return;
+        const dt = Math.min(48, now - last || 16); last = now;
+        ctx.clearRect(0, 0, w, h);
+        const L = Math.min(170, Math.max(110, w / 9));
+        for (const n of nodes) {
+          if (!still) {
+            n.x += n.vx * dt * 0.06 * 16 / 16; n.y += n.vy * dt * 0.06 * 16 / 16;
+            const dx = n.x - mx, dy = n.y - my, d2 = dx * dx + dy * dy;
+            if (d2 < 22500) { const f = (1 - Math.sqrt(d2) / 150) * 0.035; n.x -= dx * f; n.y -= dy * f; }
+          }
+          if (n.x < -20) n.x = w + 20; if (n.x > w + 20) n.x = -20; if (n.y < -20) n.y = h + 20; if (n.y > h + 20) n.y = -20;
+        }
+        ctx.lineWidth = 1;
+        const edges: [N, N][] = [];
+        for (let i = 0; i < nodes.length; i++) for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i], b = nodes[j], dx = a.x - b.x, dy = a.y - b.y, d = Math.hypot(dx, dy);
+          if (d < L) { ctx.strokeStyle = `rgba(61,255,160,${((1 - d / L) * 0.32).toFixed(3)})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke(); if (d < L * 0.8) edges.push([a, b]); }
+        }
+        // pointer links
+        for (const n of nodes) {
+          const d = Math.hypot(n.x - mx, n.y - my);
+          if (d < 190) { ctx.strokeStyle = `rgba(255,255,255,${((1 - d / 190) * 0.55).toFixed(3)})`; ctx.beginPath(); ctx.moveTo(n.x, n.y); ctx.lineTo(mx, my); ctx.stroke(); }
+        }
+        // signals travelling along links: an order on its way to a restaurant
+        if (!still) {
+          spawn -= dt;
+          if (spawn <= 0 && edges.length && pk.length < 16) { const [a, b] = edges[(Math.random() * edges.length) | 0]; pk.push({ a, b, t: 0, s: 0.0007 + Math.random() * 0.0011 }); spawn = 140 + Math.random() * 260; }
+        }
+        pk = pk.filter(p => p.t < 1);
+        for (const p of pk) {
+          p.t += p.s * dt;
+          const x = p.a.x + (p.b.x - p.a.x) * p.t, y = p.a.y + (p.b.y - p.a.y) * p.t;
+          const g = ctx.createRadialGradient(x, y, 0, x, y, 12);
+          g.addColorStop(0, 'rgba(255,255,255,.95)'); g.addColorStop(0.25, 'rgba(61,255,160,.8)'); g.addColorStop(1, 'rgba(61,255,160,0)');
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, 12, 0, 6.2832); ctx.fill();
+        }
+        ctx.fillStyle = rgb();
+        for (const n of nodes) { ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.arc(n.x, n.y, n.r, 0, 6.2832); ctx.fill(); }
+        ctx.globalAlpha = 1;
+        if (!still) raf = requestAnimationFrame(draw);
+      };
+      const start = () => { if (!raf) { last = performance.now(); raf = requestAnimationFrame(draw); } };
+      size(); start();
+      new ResizeObserver(() => { size(); if (still) requestAnimationFrame(draw); }).observe(hero);
+      new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis) start(); }).observe(hero);
+      hero.addEventListener('pointermove', e => { const r = hero.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top; }, { passive: true });
+      hero.addEventListener('pointerleave', () => { mx = my = -9999; });
+      void link;
+    }
+  }
+</script>

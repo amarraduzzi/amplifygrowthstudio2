@@ -1,0 +1,89 @@
+---
+// Bssaha, "what stays with the restaurant": the visitor types their own commission % and monthly orders. Nothing is claimed about
+// any other platform. The money that would have left appears as a striped bar; with Bssaha it comes back, outlined in green.
+import type { BssahaCopy } from '../i18n/bssaha';
+interface Props { c: BssahaCopy }
+const { c } = Astro.props;
+const coins = Array.from({ length: 16 }, (_, i) => ({ x: (i * 37 + 11) % 96, d: 5 + (i * 7) % 6, s: -((i * 13) % 9) }));
+---
+<section id="calcul" class="bx-sec px-4 py-16 sm:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl">
+    <div class="bx-glass bx-calc rv overflow-hidden">
+      <div class="bx-coins" aria-hidden="true">
+        {coins.map(k => <span class="bx-coin absolute block size-6 rounded-full bg-[#3DFFA0]/15 text-center text-[10px] font-black leading-6 text-[#3DFFA0]/60 ring-1 ring-[#3DFFA0]/30" style={`left:${k.x}%;top:-2rem;animation-duration:${k.d + 5}s;animation-delay:${k.s}s`}>DH</span>)}
+      </div>
+      <div class="relative grid gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+        <div>
+          <p class="bx-eyebrow">{c.ticketComm} · 0 DH</p>
+          <h2 class="bx-h2 mt-3">{c.calcTitle}</h2>
+          <span class="bx-glow-line" aria-hidden="true"></span>
+          <div class="mt-8 grid gap-6">
+            <div>
+              <label for="c-amt" class="bx-lab"><span>{c.tSlider}</span><output id="c-amt-out" for="c-amt" dir="ltr" class="bx-led">100 DH</output></label>
+              <input id="c-amt" type="range" min="30" max="500" step="10" value="100" class="bx-range" />
+            </div>
+            <div>
+              <label for="c-pct" class="bx-lab"><span>{c.calcPct}</span><output id="c-pct-out" for="c-pct" dir="ltr" class="bx-led">20 %</output></label>
+              <input id="c-pct" type="range" min="5" max="35" step="1" value="20" class="bx-range" />
+            </div>
+            <div>
+              <label for="c-ord" class="bx-lab"><span>{c.calcOrders}</span><output id="c-ord-out" for="c-ord" dir="ltr" class="bx-led">200</output></label>
+              <input id="c-ord" type="range" min="20" max="1000" step="10" value="200" class="bx-range" />
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="font-semibold bx-mute">{c.calcOut}</p>
+          <p class="bx-led bx-out mt-2" dir="ltr" id="c-out" aria-live="polite">4 000 DH</p>
+          <div class="bx-leak" aria-hidden="true">
+            <div>
+              <p class="mb-1.5 text-sm bx-mute">{c.calcPct}</p>
+              <div class="bx-bar"><i class="keep" id="b1-keep" style="width:80%"></i><i class="gone" id="b1-gone" style="width:20%">20 %</i></div>
+            </div>
+            <div>
+              <p class="mb-1.5 text-sm bx-mute">Bssaha · 0 %</p>
+              <div class="bx-bar"><i class="keep" style="width:100%"></i><i class="ghost" id="b2-ghost" style="width:20%">+20 %</i></div>
+            </div>
+          </div>
+          <p class="mt-5 text-sm bx-mute">{c.calcHow}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  const q = <T extends HTMLElement>(id: string) => document.getElementById(id) as T | null;
+  const amt = q<HTMLInputElement>('c-amt'), pct = q<HTMLInputElement>('c-pct'), ord = q<HTMLInputElement>('c-ord'), out = q('c-out');
+  if (amt && pct && ord && out) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fmt = (n: number) => Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    const fill = (el: HTMLInputElement) => el.style.setProperty('--fill', `${((+el.value - +el.min) / (+el.max - +el.min) * 100).toFixed(1)}%`);
+    let shown = 0, raf = 0;
+    const tween = (to: number) => {
+      cancelAnimationFrame(raf);
+      if (still) { shown = to; out.textContent = `${fmt(to)} DH`; return; }
+      const from = shown, t0 = performance.now();
+      const step = (now: number) => { const k = Math.min(1, (now - t0) / 450), e = 1 - Math.pow(1 - k, 3); shown = from + (to - from) * e; out.textContent = `${fmt(shown)} DH`; if (k < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    };
+    const update = (fromEvent = false) => {
+      const a = +amt.value, p = +pct.value, o = +ord.value;
+      [amt, pct, ord].forEach(fill);
+      q('c-amt-out')!.textContent = `${a} DH`; q('c-pct-out')!.textContent = `${p} %`; q('c-ord-out')!.textContent = fmt(o);
+      q('b1-keep')!.style.width = `${100 - p}%`; q('b1-gone')!.style.width = `${p}%`; q('b1-gone')!.textContent = `${p} %`;
+      q('b2-ghost')!.style.width = `${p}%`; q('b2-ghost')!.textContent = `+${p} %`;
+      tween(a * o * p / 100);
+      if (!fromEvent) document.dispatchEvent(new CustomEvent('bx:amt', { detail: a }));
+    };
+    [amt, pct, ord].forEach(el => el.addEventListener('input', () => update()));
+    document.addEventListener('bx:amt', e => { const v = (e as CustomEvent<number>).detail; if (v !== +amt.value) { amt.value = String(v); update(true); } });
+    // count up once when the block scrolls into view
+    update(true);
+    const sec = document.getElementById('calcul');
+    if (sec && !still && 'IntersectionObserver' in window) {
+      cancelAnimationFrame(raf); shown = 0; out.textContent = '0 DH';
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { tween(+amt.value * +ord.value * +pct.value / 100); io.disconnect(); } }, { threshold: 0.35 });
+      io.observe(sec);
+    }
+  }
+</script>

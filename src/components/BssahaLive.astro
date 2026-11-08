@@ -1,72 +1,99 @@
 ---
-// La Commande en direct: the visitor presses one button and sees what happens at the restaurant (order lands, kitchen slip,
-// 0 DH commission, 100 DH received). Built for restaurateurs outside Rabat, whom Amplify cannot visit. An example, labelled as such.
+// La Commande en direct: the visitor presses one button on a phone and watches the order travel to the restaurant: bell, kitchen slip,
+// 0 DH commission, 100 DH received. Built for restaurateurs outside Rabat, whom Amplify cannot visit. An example, labelled as such.
 import type { BssahaCopy } from '../i18n/bssaha';
 interface Props { c: BssahaCopy }
 const { c } = Astro.props;
-const step = 'bl-step';
+const sparks = Array.from({ length: 22 }, (_, i) => { const a = (i / 22) * Math.PI * 2, r = 70 + (i * 29) % 80; return { dx: Math.round(Math.cos(a) * r), dy: Math.round(Math.sin(a) * r), d: (i % 5) * 40 }; });
 ---
-<section id="commande" class="bs-bg">
-  <div class="bl mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[0.8fr_1.2fr] md:items-center md:py-20">
-    <div>
-      <h2 class="text-5xl md:text-6xl">{c.liveTitle}</h2>
-      <p class="measure mt-4 text-lg text-white/85">{c.liveLead}</p>
-      <p class="mt-5 text-white/70">{c.liveRemote}</p>
-      <a href="#rejoindre" class="mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-7 text-lg font-semibold text-navy hover:bg-[#04A859]">{c.liveCta}</a>
+<section id="commande" class="bx-sec px-4 py-16 sm:px-6 md:py-24">
+  <div class="bx-live mx-auto max-w-6xl">
+    <div class="rv max-w-3xl">
+      <p class="bx-eyebrow">{c.liveExample}</p>
+      <h2 class="bx-h2 mt-3">{c.liveTitle}</h2>
+      <span class="bx-glow-line" aria-hidden="true"></span>
+      <p class="measure mt-5 text-lg bx-mute">{c.liveLead}</p>
     </div>
-    <div class="grid gap-4 sm:grid-cols-2" aria-live="polite">
-      <div class="flex flex-col rounded-[1.6rem] bg-paper p-5 text-navy">
-        <p class="text-sm font-semibold text-muted">{c.liveClient}</p>
-        <ul class="mt-3 space-y-2">
-          <li class="flex justify-between gap-3"><span>{c.liveItem1}</span><span dir="ltr">70 DH</span></li>
-          <li class="flex justify-between gap-3"><span>{c.liveItem2}</span><span dir="ltr">30 DH</span></li>
-        </ul>
-        <hr class="my-3 border-dashed border-line" />
-        <p class="flex justify-between gap-3 text-lg font-bold"><span>{c.ticketTotal}</span><span dir="ltr">100 DH</span></p>
-        <button type="button" id="bl-go" data-sent={c.liveSent} data-send={c.liveBtn} data-replay={c.liveReplay} class="mt-5 min-h-12 rounded-full bg-green px-6 font-semibold text-navy hover:bg-[#04A859]">{c.liveBtn}</button>
-        <p class="mt-3 text-xs text-muted">{c.liveExample}</p>
-      </div>
-      <div class="flex flex-col rounded-[1.6rem] bg-navy p-5 ring-1 ring-white/20">
-        <p class="text-sm font-semibold text-mint">{c.liveKitchen}</p>
-        <p class="bl-wait mt-3 text-white/60">{c.liveWait}</p>
-        <div class={`${step} mt-3 rounded-xl bg-green px-4 py-2 font-semibold text-navy`} data-s="1"><span aria-hidden="true">🔔 </span>{c.liveNew}</div>
-        <div class={`${step} mt-3 rounded-xl bg-paper p-4 font-mono text-sm text-navy`} data-s="2">
-          <p class="font-bold">{c.liveSlip}</p>
-          <p class="mt-1 flex justify-between gap-3"><span>1 × {c.liveItem1}</span></p>
-          <p class="flex justify-between gap-3"><span>1 × {c.liveItem2}</span></p>
-        </div>
-        <div class={`${step} mt-3 space-y-1 border-t border-dashed border-white/30 pt-3`} data-s="3">
-          <p class="flex justify-between gap-3 text-sm text-white/80"><span>{c.ticketComm}</span><span dir="ltr">0 DH</span></p>
-          <p class="flex justify-between gap-3 text-lg font-bold text-green"><span>{c.liveReceived}</span><span dir="ltr">100 DH</span></p>
+    <div class="mt-12 grid items-center gap-6 lg:grid-cols-[17.5rem_1fr_minmax(0,1.15fr)] lg:gap-8" aria-live="polite">
+      <!-- the customer's phone -->
+      <div class="bx-phone rv" data-tilt="6">
+        <div class="bx-screen">
+          <p class="text-xs font-bold uppercase tracking-widest text-[#00804A]">{c.liveClient}</p>
+          <p class="display mt-1 text-4xl">Chez Ali</p>
+          <ul class="mt-4 space-y-2.5 text-[0.95rem]">
+            <li class="flex justify-between gap-3 border-b border-dashed border-[#001E3E]/20 pb-2"><span>{c.liveItem1}</span><span dir="ltr" class="font-semibold">70 DH</span></li>
+            <li class="flex justify-between gap-3 border-b border-dashed border-[#001E3E]/20 pb-2"><span>{c.liveItem2}</span><span dir="ltr" class="font-semibold">30 DH</span></li>
+          </ul>
+          <p class="mt-3 flex justify-between gap-3 text-lg font-extrabold"><span>{c.ticketTotal}</span><span dir="ltr">100 DH</span></p>
+          <button type="button" id="bl-go" data-sent={c.liveSent} data-send={c.liveBtn} data-sending={c.liveSending} class="mt-auto min-h-12 rounded-full bg-[#05B962] px-4 text-[1.02rem] font-bold text-[#00101F] shadow-[0_10px_30px_-8px_rgba(5,185,98,.9)] transition hover:bg-[#3DFFA0] active:scale-95 disabled:cursor-default disabled:opacity-90">{c.liveBtn}</button>
         </div>
       </div>
+      <!-- the wire -->
+      <div class="bx-link" aria-hidden="true"><span class="bx-pkt">DH</span></div>
+      <!-- the restaurant's screen -->
+      <div class="bx-kitchen rv" style="--d:140ms">
+        <div class="mb-4 flex items-center justify-between gap-3 border-b border-dashed border-white/20 pb-3">
+          <p class="font-dot text-sm tracking-widest text-[#3DFFA0]">{c.liveKitchen}</p>
+          <span class="bx-bell inline-block text-xl" id="bl-bell" aria-hidden="true">🔔</span>
+        </div>
+        <p class="bx-wait bx-mute" id="bl-wait">{c.liveWait}</p>
+        <div class="bx-step-i mt-1 inline-flex items-center gap-2 rounded-xl bg-[#05B962] px-4 py-2 font-bold text-[#00101F]" data-s="1"><span class="bx-dot" style="background:#00101F;box-shadow:none"></span>{c.liveNew}</div>
+        <div class="bx-step-i mt-4 rounded-xl bg-white p-4 text-[#00101F]" data-s="2">
+          <div class="bx-slip" data-slip>
+            <p class="text-sm font-extrabold tracking-widest">{c.liveSlip}</p>
+            <p class="mt-2 flex justify-between gap-3"><span>1 × {c.liveItem1}</span><span dir="ltr">70</span></p>
+            <p class="flex justify-between gap-3"><span>1 × {c.liveItem2}</span><span dir="ltr">30</span></p>
+          </div>
+        </div>
+        <div class="bx-step-i mt-4 space-y-2 border-t border-dashed border-white/25 pt-4" data-s="3">
+          <p class="flex justify-between gap-3 text-white/80"><span>{c.ticketComm}</span><span dir="ltr" class="bx-led">0 DH</span></p>
+          <p class="flex items-end justify-between gap-3 text-lg font-bold"><span>{c.liveReceived}</span><span dir="ltr" class="bx-led whitespace-nowrap text-4xl leading-none" id="bl-got">0 DH</span></p>
+        </div>
+        <div class="bx-burst" id="bl-burst" aria-hidden="true">{sparks.map(s => <i style={`--x:78%;--y:84%;--dx:${s.dx}px;--dy:${s.dy}px;animation-delay:${s.d}ms;display:none`}></i>)}</div>
+      </div>
+    </div>
+    <div class="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+      <a href="#rejoindre" class="bx-btn bx-btn--go" data-mag>{c.liveCta}<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+      <button type="button" id="bl-replay" class="bx-btn bx-btn--ghost" hidden data-label={c.liveReplay}>↻ {c.liveReplay}</button>
+      <p class="bx-mute sm:ms-4">{c.liveRemote}</p>
     </div>
   </div>
 </section>
-<style is:global>
-  .js .bl-step { opacity: 0; transform: translateY(10px); }
-  .js .bl-step.on { opacity: 1; transform: none; }
-  .js .bl.go .bl-wait { display: none; }
-  @media (prefers-reduced-motion: no-preference) {
-    .bl-step { transition: opacity .45s ease, transform .45s cubic-bezier(.2,.8,.2,1); }
-    .bl-step[data-s="2"].on { animation: tk-print .6s steps(8, end) both; }
-  }
-</style>
 <script>
-  const root = document.querySelector<HTMLElement>('.bl');
+  const root = document.querySelector<HTMLElement>('.bx-live');
   const go = document.getElementById('bl-go') as HTMLButtonElement | null;
-  if (root && go) {
-    const steps = [...root.querySelectorAll<HTMLElement>('.bl-step')];
+  const replay = document.getElementById('bl-replay') as HTMLButtonElement | null;
+  if (root && go && replay) {
     const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let timers: number[] = [], done = false;
-    const reset = () => { timers.forEach(clearTimeout); timers = []; steps.forEach(s => s.classList.remove('on')); root.classList.remove('go'); go.textContent = go.dataset.send!; go.disabled = false; done = false; };
-    go.addEventListener('click', () => {
-      if (done) { reset(); return; }
-      go.disabled = true; go.textContent = go.dataset.sent!; root.classList.add('go');
-      steps.forEach((s, i) => timers.push(window.setTimeout(() => {
-        s.classList.add('on');
-        if (i === steps.length - 1) { done = true; go.disabled = false; go.textContent = go.dataset.replay!; }
-      }, still ? 0 : 700 + i * 900)));
-    });
+    const steps = [...root.querySelectorAll<HTMLElement>('.bx-step-i')];
+    const bell = document.getElementById('bl-bell')!, got = document.getElementById('bl-got')!, wait = document.getElementById('bl-wait')!;
+    const burst = document.getElementById('bl-burst')!, slip = root.querySelector<HTMLElement>('[data-slip]')!;
+    let timers: number[] = [], raf = 0;
+    const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, still ? 0 : ms));
+    const reset = () => {
+      timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf);
+      steps.forEach(s => s.classList.remove('on')); slip.classList.remove('on'); bell.classList.remove('on');
+      root.classList.remove('go'); wait.style.display = ''; got.textContent = '0 DH';
+      go.textContent = go.dataset.send!; go.disabled = false; replay.hidden = true;
+      burst.querySelectorAll<HTMLElement>('i').forEach(i => { i.style.display = 'none'; });
+    };
+    const countUp = () => {
+      if (still) { got.textContent = '100 DH'; return; }
+      const t0 = performance.now();
+      const step = (now: number) => { const k = Math.min(1, (now - t0) / 900); got.textContent = `${Math.round(100 * (1 - Math.pow(1 - k, 3)))} DH`; if (k < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    };
+    const run = () => {
+      go.disabled = true; go.textContent = go.dataset.sending!; root.classList.add('go'); wait.style.display = 'none';
+      at(1500, () => { go.textContent = go.dataset.sent!; steps[0].classList.add('on'); bell.classList.add('on'); });
+      at(2300, () => { steps[1].classList.add('on'); slip.classList.add('on'); });
+      at(3500, () => {
+        steps[2].classList.add('on'); countUp();
+        burst.querySelectorAll<HTMLElement>('i').forEach(i => { i.style.display = ''; i.style.animation = 'none'; void i.offsetWidth; i.style.animation = ''; });
+        replay.hidden = false;
+      });
+    };
+    go.addEventListener('click', run);
+    replay.addEventListener('click', () => { reset(); setTimeout(run, 60); });
   }
 </script>

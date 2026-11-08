@@ -34,6 +34,7 @@ const fr = {
   liveClient: 'Le client', liveKitchen: 'Votre restaurant', liveItem1: 'Burger maison', liveItem2: 'Thé à la menthe', liveBtn: 'Passer la commande',
   liveSent: 'Commande envoyée', liveReplay: 'Rejouer', liveExample: 'Exemple, avec un faux restaurant.', liveWait: 'En attente d’une commande…',
   liveNew: 'Nouvelle commande', liveSlip: 'Bon de cuisine', liveReceived: 'Reçu par le restaurant',
+  liveNow: 'En direct', zeroLabel: 'de commission', surprise: 'Surprenez-moi', previewTitle: 'Aperçu de votre fiche', previewName: 'Votre restaurant', sending: 'Transmission…', restos: 'Restaurants', liveSending: 'Envoi…',
 };
 const en: typeof fr = {
   title: 'Bssaha: order directly from the restaurant, no commission | Rabat',
@@ -69,6 +70,7 @@ const en: typeof fr = {
   liveClient: 'The customer', liveKitchen: 'Your restaurant', liveItem1: 'House burger', liveItem2: 'Mint tea', liveBtn: 'Place the order',
   liveSent: 'Order sent', liveReplay: 'Play again', liveExample: 'Example, with a made-up restaurant.', liveWait: 'Waiting for an order…',
   liveNew: 'New order', liveSlip: 'Kitchen slip', liveReceived: 'Received by the restaurant',
+  liveNow: 'Live', zeroLabel: 'commission', surprise: 'Surprise me', previewTitle: 'Preview of your listing', previewName: 'Your restaurant', sending: 'Transmitting…', restos: 'Restaurants', liveSending: 'Sending…',
 };
 const ar: typeof fr = {
   title: 'Bssaha: اطلب مباشرة من المطعم، بدون عمولة | الرباط',
@@ -104,6 +106,7 @@ const ar: typeof fr = {
   liveClient: 'الزبون', liveKitchen: 'مطعمك', liveItem1: 'برغر البيت', liveItem2: 'أتاي بالنعناع', liveBtn: 'أرسل الطلب',
   liveSent: 'تم إرسال الطلب', liveReplay: 'أعد التشغيل', liveExample: 'مثال، بمطعم وهمي.', liveWait: 'في انتظار طلب…',
   liveNew: 'طلب جديد', liveSlip: 'ورقة المطبخ', liveReceived: 'وصل إلى المطعم',
+  liveNow: 'مباشر', zeroLabel: 'عمولة', surprise: 'فاجئني', previewTitle: 'معاينة بطاقة مطعمك', previewName: 'مطعمك', sending: 'جارٍ الإرسال…', restos: 'المطاعم', liveSending: 'جارٍ الإرسال…',
 };
 export const bssahaCopy = (lang: Lang) => ({ fr, en, ar })[lang];
 export type BssahaCopy = typeof fr;
