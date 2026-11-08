@@ -122,6 +122,9 @@ export const homeEn: Record<string, string> = {
   "Rentré": "Paid back",
   "5 clients sur 12 ne reviennent pas": "5 clients out of 12 don't come back",
   "5 clients de retour": "5 clients back",
+  "Sur une année, cela fait": "Over a year, that comes to",
+  "Mois 1": "Month 1",
+  "Mois 12": "Month 12",
 };
 
 export const homeAr: Record<string, string> = {
@@ -251,4 +254,7 @@ export const homeAr: Record<string, string> = {
   "Khadija": "خديجة",
   "Omar": "عمر",
   "Nadia": "نادية",
+  "Sur une année, cela fait": "على مدار سنة، يصير هذا",
+  "Mois 1": "الشهر 1",
+  "Mois 12": "الشهر 12",
 };

@@ -10,6 +10,7 @@ import Icon from '../Icon.astro';
 import Faq from '../Faq.astro';
 import LogoBand from '../LogoBand.astro';
 import ZaynaProof from '../ZaynaProof.astro';
+import LeakCalc from '../LeakCalc.astro';
 import { SITE, CONTACT } from '../../config';
 import { copy } from '../../i18n';
 import { tr } from '../../i18n/t';
@@ -233,32 +234,8 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
     </div>
   </section>
 
-  <!-- CALCULATOR: one per trade, the visitor's own numbers, nothing sent -->
-  <section id="calcul" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
-    <div class="tf mx-auto max-w-6xl rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12" data-leak>
-      <h2 class="text-[2.4rem] leading-[0.95] sm:text-[3.2rem]"><span class="block">Combien perdez-vous</span><span class="block text-green-deep">sans le voir ?</span></h2>
-      <p class="mt-4 max-w-2xl text-muted">Choisissez votre métier et mettez vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
-      <div class="mt-7 flex flex-wrap gap-2" role="tablist">
-        {calcs.map((x, i) => <button type="button" role="tab" data-tab={x.k} aria-selected={i === 0 ? 'true' : 'false'} class="lk-tab min-h-11 rounded-full px-5 font-semibold ring-1 ring-line transition-colors">{tt(x.tab)}</button>)}
-      </div>
-      {calcs.map((x, i) => (
-        <div class="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center" data-calc={x.k} hidden={i !== 0}>
-          <div class="space-y-6">
-            {x.s.map(([l, mn, mx, st, v], j) => (
-              <label class="block"><span class="flex justify-between gap-4 font-semibold"><span>{tt(l)}</span><span class="lk-v tabular-nums" dir="ltr">{v}</span></span>
-                <input type="range" min={mn} max={mx} step={st} value={v} data-i={j} class="lk-r mt-2 w-full accent-[#05B962]" /></label>
-            ))}
-          </div>
-          <div class="rounded-[2rem] bg-navy p-8 text-white">
-            <p class="text-white/60">{tt(x.out)}</p>
-            <p class="mt-2"><span class="lk-out display text-6xl text-green tabular-nums" dir="ltr">0</span> <span class="text-2xl font-semibold">DH</span></p>
-            <p class="mt-6 rounded-2xl bg-white/[0.07] p-4 text-white/80">{tt(x.with)}</p>
-            <p class="mt-4 text-sm text-white/50">{tt(x.how)} {tt('C’est un exemple avec vos chiffres : nous ne promettons pas de résultat.')}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </section>
+  <!-- CALCULATOR: one per trade, the visitor's own numbers, nothing sent (LeakCalc.astro) -->
+  <LeakCalc calcs={calcs} />
 
   <!-- PARTNER: the trade's system, the site, the clients -->
   <section id="partenaire" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
@@ -355,8 +332,6 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   [data-leaks][data-mode="on"] .lv-go { box-shadow: 0 0 0 3px #05B962; }
   [data-leaks][data-mode="on"] .lv-go .lv-back { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) { [data-leaks] .lv-fill, [data-leaks] .lv-drop, [data-leaks] .lv-zz, [data-leaks] .lv-book, [data-leaks] .lv-go { animation: none !important; } }
-  .lk-tab[aria-selected="true"] { background: #001E3E; color: #05B962; --tw-ring-color: #001E3E; }
-  .lk-tab:focus-visible { outline: 3px solid #05B962; outline-offset: 2px; }
 </style>
 
 <script>
@@ -376,27 +351,6 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
     }, 90);
     const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); timer = window.setTimeout(() => { if (!touched) set('on'); }, 6500); } }, { threshold: 0.15 });
     io.observe(root);
-  });
-  // the calculator: one formula per trade, the visitor's own numbers, nothing is sent
-  const F: Record<string, (v: number[]) => number> = {
-    resto: ([plats, cout, pct]) => plats * 30 * cout * pct / 100,
-    hanout: ([cli, moy, pct]) => cli * moy * pct / 100,
-    pressing: ([dep, prix, pct]) => dep * 4.3 * pct / 100 * prix,
-    salon: ([rdv, prix, pct]) => rdv * 4.3 * pct / 100 * prix,
-  };
-  const fmt = (x: number) => Math.round(x).toLocaleString('fr-FR').replace(/ | /g, ' ');
-  document.querySelectorAll<HTMLElement>('[data-leak]').forEach((root) => {
-    const panels = [...root.querySelectorAll<HTMLElement>('[data-calc]')];
-    const run = (p: HTMLElement) => {
-      const rs = [...p.querySelectorAll<HTMLInputElement>('.lk-r')];
-      rs.forEach((r, i) => { p.querySelectorAll<HTMLElement>('.lk-v')[i].textContent = r.value; });
-      p.querySelector<HTMLElement>('.lk-out')!.textContent = fmt(F[p.dataset.calc!](rs.map(r => Number(r.value))));
-    };
-    panels.forEach(p => { p.querySelectorAll('.lk-r').forEach(r => r.addEventListener('input', () => run(p))); run(p); });
-    root.querySelectorAll<HTMLButtonElement>('.lk-tab').forEach(b => b.addEventListener('click', () => {
-      root.querySelectorAll('.lk-tab').forEach(x => x.setAttribute('aria-selected', String(x === b)));
-      panels.forEach(p => { p.hidden = p.dataset.calc !== b.dataset.tab; });
-    }));
   });
   // sections reveal as they scroll in
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -1,0 +1,190 @@
+---
+// "Combien perdez-vous sans le voir ?" The calculator, built like the rest of the home page: a navy stage that moves.
+// The visitor picks a trade and sets their own numbers. The result is hidden at first (that is the point: you don't see
+// it), a green scan line sweeps the stage and the figure appears and counts up. Then every slider moves the number,
+// the 12-month staircase and the coins dropping into it. The visitor's own numbers, nothing is sent, no promise of gain.
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+interface Calc {
+  k: string; tab: string; out: string; how: string; with: string;
+  s: readonly (readonly [string, number, number, number, number])[];
+}
+interface Props { calcs: readonly Calc[] }
+const { calcs } = Astro.props;
+// every trade's result is the product of its three sliders times a constant (weeks or days in a month, per 100)
+const COEF: Record<string, number> = { resto: 30, hanout: 1, pressing: 4.3, salon: 4.3 };
+const month = (c: Calc, at: 'def' | 'max') => c.s.reduce((a, r) => a * (at === 'def' ? r[4] : r[2]), 1) * COEF[c.k] / 100;
+const level = (c: Calc) => Math.min(1, Math.log10(1 + month(c, 'def')) / Math.log10(1 + month(c, 'max')));
+const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+const first = calcs[0];
+const COINS = [6, 13, 20, 28, 37];
+---
+<section id="calcul" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+  <div class="cs-card relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-12" data-cs>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+
+    <div>
+      <div>
+        <h2 class="tf-x text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Combien perdez-vous</span><span class="block text-green">sans le voir ?</span></h2>
+        <p class="tf-x mt-4 max-w-xl text-lg text-white/70" style="--d:100ms">Choisissez votre métier et mettez vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
+      </div>
+      <div class="tf-x cs-tabs relative mt-8 flex w-fit max-w-full overflow-x-auto rounded-full bg-white/10 p-1 ring-1 ring-white/15" role="tablist" aria-label={tt('Votre métier')} style="--d:200ms">
+        <span class="cs-thumb absolute inset-y-1 rounded-full bg-green" aria-hidden="true"></span>
+        {calcs.map((x, i) => (
+          <button type="button" role="tab" data-tab={x.k} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1} class="cs-tab relative z-10 min-h-11 shrink-0 rounded-full px-3.5 font-semibold sm:px-5">{tt(x.tab)}</button>
+        ))}
+      </div>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-[1fr_1.1fr] lg:gap-10">
+      <!-- the visitor's own numbers -->
+      <div>
+        {calcs.map((x, i) => (
+          <div class="cs-panel space-y-4" data-calc={x.k} data-coef={COEF[x.k]} data-max={month(x, 'max')} hidden={i !== 0}>
+            {x.s.map(([l, mn, mx, st, v], j) => (
+              <label class="block rounded-[1.4rem] bg-white/[0.06] p-4 ring-1 ring-white/10 sm:p-5">
+                <span class="flex items-center justify-between gap-4 font-semibold"><span>{tt(l)}</span><span class="lk-v display shrink-0 rounded-lg bg-white/10 px-2.5 py-0.5 text-2xl tabular-nums" dir="ltr">{v}</span></span>
+                <input type="range" min={mn} max={mx} step={st} value={v} data-i={j} class="lk-r pc-range pl-range mt-3 w-full" style={`--fill:${(v - mn) / (mx - mn) * 100}%`} />
+              </label>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <!-- what it costs: hidden until the scan line passes, then it counts up -->
+      <div class="cs-stage relative overflow-hidden rounded-[1.75rem] bg-white/[0.05] p-6 ring-1 ring-white/15 sm:p-8" aria-live="polite" style={`--lvl:${level(first).toFixed(3)}`}>
+        <span class="cs-scan" aria-hidden="true"></span>
+        <div class="grid">
+          {calcs.map((x, i) => <p class={`cs-t col-start-1 row-start-1 text-white/65 ${i === 0 ? 'on' : ''}`} data-for={x.k}>{tt(x.out)}</p>)}
+        </div>
+        <p class="mt-2 flex flex-wrap items-baseline gap-x-3 text-[#FF8A80]">
+          <span class="cs-num display whitespace-nowrap text-[4.2rem] leading-none tabular-nums sm:text-[6.5rem]" dir="ltr" data-init={Math.round(month(first, 'def'))}>{fmt(month(first, 'def'))}</span>
+          <span class="text-2xl font-semibold">DH</span>
+        </p>
+        <p class="mt-3 flex flex-wrap items-baseline gap-x-2 text-white/70"><span>Sur une année, cela fait</span><span class="whitespace-nowrap"><span class="cs-year display text-2xl tabular-nums text-white" dir="ltr">{fmt(month(first, 'def') * 12)}</span> <span class="font-semibold text-white">DH</span></span></p>
+
+        <div class="cs-chart relative mt-7 h-40" aria-hidden="true">
+          {COINS.map((p, c) => <span class="cs-coin" style={`--p:${p};--c:${c}`}>DH</span>)}
+          <div class="relative flex h-full items-end gap-1.5">
+            {Array.from({ length: 12 }, (_, k) => <span class="cs-bar flex-1 rounded-t-md" style={`--k:${k}`}></span>)}
+          </div>
+        </div>
+        <p class="mt-2 flex justify-between text-xs text-white/50" aria-hidden="true"><span>Mois 1</span><span>Mois 12</span></p>
+
+        <div class="mt-6 grid rounded-2xl bg-white/[0.07] p-4 text-white/85 ring-1 ring-green/35">
+          {calcs.map((x, i) => <p class={`cs-t col-start-1 row-start-1 ${i === 0 ? 'on' : ''}`} data-for={x.k}>{tt(x.with)}</p>)}
+        </div>
+        <div class="mt-4 grid text-sm text-white/50">
+          {calcs.map((x, i) => <p class={`cs-t col-start-1 row-start-1 ${i === 0 ? 'on' : ''}`} data-for={x.k}>{tt(x.how)} {tt('C’est un exemple avec vos chiffres : nous ne promettons pas de résultat.')}</p>)}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* trade switch: a green pill slides to the chosen trade */
+  .cs-tab { color: rgb(255 255 255 / .82); transition: color .3s; }
+  .cs-tab[aria-selected="true"] { color: #001E3E; }
+  .cs-tab:focus-visible { outline-color: #fff; outline-offset: -3px; }
+  .cs-thumb { left: 0; width: 0; transition: left .5s cubic-bezier(.2,.8,.2,1), width .5s cubic-bezier(.2,.8,.2,1); }
+  .cs-tabs:not(.ready) .cs-tab[aria-selected="true"] { background: #05B962; }
+  /* the three texts of the stage cross-fade when the trade changes */
+  .cs-t { opacity: 0; visibility: hidden; transition: opacity .35s, visibility 0s .35s; }
+  .cs-t.on { opacity: 1; visibility: visible; transition: opacity .35s .1s, visibility 0s; }
+  /* the figure is hidden until the scan has passed: you don't see it, that is the whole point */
+  .cs-num, .cs-year { transition: filter .8s, opacity .8s; }
+  .js .cs-stage:not(.seen) .cs-num, .js .cs-stage:not(.seen) .cs-year { filter: blur(16px); opacity: .5; }
+  .cs-scan { position: absolute; inset-inline: 0; top: -7rem; height: 7rem; z-index: 5; opacity: 0; pointer-events: none;
+    background: linear-gradient(to bottom, transparent, rgb(5 185 98 / .28) 78%, rgb(5 185 98 / .95) 97%, transparent); }
+  .cs-stage.scanning .cs-scan { animation: cs-scan 1.5s cubic-bezier(.5,0,.3,1) forwards; }
+  @keyframes cs-scan { 0% { top: -7rem; opacity: 1; } 88% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+  /* twelve months, each one a little taller: the same leak, month after month. Height follows --lvl, set by the sliders */
+  .cs-bar { transform-origin: bottom; background: linear-gradient(to top, #C42528, #FF8A80);
+    height: calc((var(--k) + 1) / 12 * (16% + 84% * var(--lvl)));
+    transition: height .8s cubic-bezier(.2,.8,.2,1) calc(var(--k) * 30ms), transform .7s cubic-bezier(.2,.8,.2,1) calc(var(--k) * 55ms); }
+  .cs-bar:last-child { background: linear-gradient(to top, #E5484D, #FFB4AE); box-shadow: 0 0 26px rgb(255 138 128 / .5); }
+  .js .cs-stage:not(.seen) .cs-bar { transform: scaleY(0); }
+  /* coins drop into the tall months; the fuller the leak, the faster they fall */
+  .cs-coin { position: absolute; top: 0; inset-inline-end: calc(var(--p) * 1%); display: grid; width: 1.4rem; aspect-ratio: 1; place-items: center; border-radius: 50%;
+    background: #F5B301; color: #001E3E; font-size: .5rem; font-weight: 900; opacity: 0; box-shadow: 0 2px 6px rgb(0 0 0 / .35); }
+  @keyframes cs-fall { 0% { opacity: 0; transform: translateY(-6px) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(7.5rem) rotate(200deg); } }
+  @keyframes cs-in { from { opacity: 0; transform: translateY(12px); } }
+  @media (prefers-reduced-motion: no-preference) {
+    .cs-stage.seen .cs-coin { animation: cs-fall calc(2.8s - var(--lvl) * 1.7s) ease-in infinite; animation-delay: calc(var(--c) * 520ms); }
+    .cs-panel { animation: cs-in .45s cubic-bezier(.2,.8,.2,1); }
+    .js [data-tf] .cs-card { opacity: 0; transform: translateY(32px) scale(.985); }
+    .js [data-tf].in .cs-card { opacity: 1; transform: none; transition: opacity .7s, transform .9s cubic-bezier(.2,.8,.2,1); }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cs]').forEach((root) => {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.cs-tab')];
+    const panels = [...root.querySelectorAll<HTMLElement>('.cs-panel')];
+    const texts = [...root.querySelectorAll<HTMLElement>('[data-for]')];
+    const stage = q('.cs-stage'), num = q('.cs-num'), year = q('.cs-year'), thumb = q('.cs-thumb'), box = q('.cs-tabs');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/[\u202f\u00a0]/g, ' ');
+    let cur = tabs[0].dataset.tab!, shown = Number(num.dataset.init), raf = 0, seen = false;
+    const panel = () => panels.find((p) => p.dataset.calc === cur)!;
+    const paint = (v: number) => { num.textContent = fmt(v); year.textContent = fmt(v * 12); };
+    const tween = (to: number, ms = 550) => {
+      cancelAnimationFrame(raf);
+      const from = shown, t0 = performance.now();
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / ms);
+        shown = from + (to - from) * (1 - (1 - k) ** 3); paint(shown);
+        if (k < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+    // reads the sliders of the shown trade, updates their chips and fills, returns the loss per month
+    const read = () => {
+      const p = panel(), rs = [...p.querySelectorAll<HTMLInputElement>('.lk-r')];
+      rs.forEach((r) => {
+        r.closest('label')!.querySelector<HTMLElement>('.lk-v')!.textContent = r.value;
+        r.style.setProperty('--fill', `${(Number(r.value) - Number(r.min)) / (Number(r.max) - Number(r.min)) * 100}%`);
+      });
+      const m = rs.reduce((a, r) => a * Number(r.value), 1) * Number(p.dataset.coef) / 100;
+      stage.style.setProperty('--lvl', Math.min(1, Math.log10(1 + m) / Math.log10(1 + Number(p.dataset.max))).toFixed(3));
+      return m;
+    };
+    const update = () => { const m = read(); if (seen) tween(m); };
+    // first time: the scan line sweeps down, the figure comes out of the blur and counts up
+    const reveal = () => {
+      if (seen) return; seen = true;
+      if (still) { stage.classList.add('seen'); shown = read(); paint(shown); return; }
+      stage.classList.add('scanning');
+      window.setTimeout(() => { stage.classList.add('seen'); shown = 0; tween(read(), 1100); }, 650);
+    };
+    const move = (b: HTMLElement) => { thumb.style.width = `${b.offsetWidth}px`; thumb.style.left = `${b.offsetLeft}px`; };
+    const select = (b: HTMLButtonElement) => {
+      cur = b.dataset.tab!;
+      tabs.forEach((x) => { x.setAttribute('aria-selected', String(x === b)); x.tabIndex = x === b ? 0 : -1; });
+      panels.forEach((p) => { p.hidden = p.dataset.calc !== cur; });
+      texts.forEach((t) => t.classList.toggle('on', t.dataset.for === cur));
+      move(b); b.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: still ? 'auto' : 'smooth' }); reveal(); update();
+    };
+    tabs.forEach((b, i) => {
+      b.addEventListener('click', () => select(b));
+      b.addEventListener('keydown', (e) => {
+        const n = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : -1;
+        if (n < 0 || n >= tabs.length) return;
+        e.preventDefault(); tabs[n].focus(); select(tabs[n]);
+      });
+    });
+    root.querySelectorAll('.lk-r').forEach((r) => r.addEventListener('input', () => { reveal(); update(); }));
+    const place = () => move(tabs.find((b) => b.getAttribute('aria-selected') === 'true')!);
+    place(); box.classList.add('ready');
+    if ('ResizeObserver' in window) new ResizeObserver(place).observe(box);
+    document.fonts?.ready.then(place);
+    read();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); reveal(); } }, { threshold: 0.4 });
+      io.observe(stage);
+    } else reveal();
+  });
+</script>
