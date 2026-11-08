@@ -1826,4 +1826,13 @@ export const dictEn: Record<string, string> = {
   "Livraison": "Delivery",
   "La farine arrive. Le stock suit.": "The flour arrives. The stock follows.",
   "Le meilleur service, c’est celui qu’on ne voit pas. Pas de main levée, pas d’allergie répétée, pas de table oubliée.": "The best service is the one you do not see. No raised hand, no allergy said twice, no forgotten table.",
+  "Pas un restaurant ? Amplify existe aussi pour votre métier.": "Not a restaurant? Amplify is made for your trade too.",
+  "Pour votre métier": "For your trade",
+  "Le service à table": "Service at the table",
+  "La production du jour": "The day's production",
+  "Agenda et file d’attente": "Bookings and queue",
+  "Cabines et soins": "Rooms and treatments",
+  "Une étiquette par pièce": "A tag for every item",
+  "Kridi, caisse et stock": "Credit, till and stock",
+  "Biens, visites et loyers": "Listings, visits and rents",
 };

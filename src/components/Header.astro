@@ -32,8 +32,19 @@ const GROUPS = [
 const groups = GROUPS.map(g => ({ ...g, label: tt(g.label), modules: g.keys.map(k => fx.modules.find(m => m.key === k)).filter((m): m is (typeof fx.modules)[number] => !!m) }));
 const fxLeft = fx.modules.filter(m => !GROUPS.some(g => (g.keys as readonly string[]).includes(m.key)));   // a module added later still shows up
 if (fxLeft.length) groups[groups.length - 1].modules.push(...fxLeft);
+// Other trades: one photo card each under the four products (desktop), a row to swipe on the phone.
+const SECTORS = [
+  { k: 'maitre', name: 'Fine dining', short: 'Le service à table', img: '/img/nav-dining.webp', pos: '62% 55%' },
+  { k: 'bakery', name: 'Pâtisseries', short: 'La production du jour', img: '/img/photos/pat-matin-800.webp', pos: '72% 50%' },
+  { k: 'salons', name: 'Coiffeurs et barbiers', short: 'Agenda et file d’attente', img: '/img/photos/salon-barbier-800.webp', pos: '62% 45%' },
+  { k: 'spas', name: 'Spas et instituts', short: 'Cabines et soins', img: '/img/photos/spa-cabine-800.webp', pos: '55% 50%' },
+  { k: 'pressing', name: 'Pressings', short: 'Une étiquette par pièce', img: '/img/nav-pressing.webp', pos: '55% 45%' },
+  { k: 'hanout', name: 'Hanouts', short: 'Kridi, caisse et stock', img: '/img/photos/hanout-comptoir-800.webp', pos: '62% 45%' },
+  { k: 'immobilier', name: 'Immobilier', short: 'Biens, visites et loyers', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%' },
+] as const;
+const sectors = SECTORS.map(x => ({ ...x, href: ROUTES[x.k][lang] }));
 const products = PRODUCTS.map(p => ({ ...p, label: t.nav[p.k], href: ROUTES[p.k][lang] }));
-const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems', 'maitre'];
+const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems', 'maitre', 'bakery', 'salons', 'spas', 'pressing', 'hanout', 'immobilier', 'immoAgent', 'immoStay'];
 const links = [
   { k: 'pricing', label: tt('Tarifs'), href: ROUTES.pricing[lang] },
   ...(lang === 'fr' ? [{ k: 'blog', label: 'Blog', href: ROUTES.blog[lang] }] : []),
@@ -75,9 +86,21 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
               </a>
             ))}
           </div>
-          <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 border-t border-line px-6 py-3 text-sm 2xl:max-w-7xl">
-            <span class="text-muted">{tt('Deux systèmes qui se parlent, et un marketing qui remplit la salle.')}</span>
-            <span class="flex items-center gap-5"><a href={ROUTES.maitre[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Fine dining')} →</a><a href={ROUTES.salons[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Coiffeurs et barbiers')} →</a><a href={ROUTES.spas[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Spas et instituts')} →</a><a href={ROUTES.pressing[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Pressings')} →</a><a href={ROUTES.hanout[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Hanouts')} →</a><a href={ROUTES.immobilier[lang]} class="font-semibold text-navy underline underline-offset-4 hover:text-green-deep">{tt('Immobilier')} →</a><a href={ROUTES.restaurants[lang]} class="font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} →</a></span>
+          <div class="mx-auto max-w-6xl border-t border-line px-6 pb-6 pt-4 2xl:max-w-7xl">
+            <div class="mb-3 flex items-center justify-between gap-4 text-sm">
+              <span class="text-muted">{tt('Pas un restaurant ? Amplify existe aussi pour votre métier.')}</span>
+              <a href={ROUTES.restaurants[lang]} class="whitespace-nowrap font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} <span aria-hidden="true" class="inline-block rtl:-scale-x-100">→</span></a>
+            </div>
+            <div class="grid grid-cols-7 gap-2.5">
+              {sectors.map(x => (
+                <a href={x.href} class={`group/s relative isolate flex h-36 flex-col justify-end overflow-hidden rounded-[1.1rem] bg-navy p-3 text-white shadow-[0_14px_30px_-22px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5 ${page === x.k ? 'ring-2 ring-green' : ''}`}>
+                  <img src={x.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover/s:scale-105" style={`object-position:${x.pos}`} />
+                  <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/45 to-navy/5" aria-hidden="true"></span>
+                  <span class="display text-[1.15rem] leading-[0.95]">{tt(x.name)}</span>
+                  <span class="mt-1 text-[0.72rem] leading-tight text-white/80">{tt(x.short)}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -158,12 +181,17 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
             ))}
           </div>
           <a href={ROUTES.restaurants[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:mt-1 md:px-6">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <a href={ROUTES.maitre[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Fine dining')}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <a href={ROUTES.salons[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Coiffeurs et barbiers')}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <a href={ROUTES.spas[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Spas et instituts')}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <a href={ROUTES.pressing[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Pressings')}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <a href={ROUTES.hanout[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Hanouts')}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <a href={ROUTES.immobilier[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:px-6">{tt('Immobilier')}<span class="text-green-deep" aria-hidden="true">→</span></a>
+          <p class="mt-3 text-sm font-semibold text-muted">{tt('Pour votre métier')}</p>
+          <div class="-mx-4 mb-4 mt-2 flex snap-x scroll-px-4 gap-2.5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6 [scrollbar-width:none]">
+            {sectors.map(x => (
+              <a href={x.href} class="relative isolate flex aspect-[4/5] w-[9.5rem] shrink-0 snap-start flex-col justify-end overflow-hidden rounded-[1.25rem] bg-navy p-3 text-white active:scale-[0.98] md:w-44">
+                <img src={x.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover" style={`object-position:${x.pos}`} />
+                <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/35 to-transparent" aria-hidden="true"></span>
+                <span class="display text-[1.2rem] leading-[0.95]">{tt(x.name)}</span>
+                <span class="mt-1 text-[0.75rem] leading-tight text-white/85">{tt(x.short)}</span>
+              </a>
+            ))}
+          </div>
         </details>
         <details class="group/m border-b border-line">
           <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl md:py-5 md:text-[1.9rem] [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>

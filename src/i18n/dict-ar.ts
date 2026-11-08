@@ -1826,4 +1826,13 @@ export const dictAr: Record<string, string> = {
   "Livraison": "التسليم",
   "La farine arrive. Le stock suit.": "يصل الدقيق. والمخزون يتبعه.",
   "Le meilleur service, c’est celui qu’on ne voit pas. Pas de main levée, pas d’allergie répétée, pas de table oubliée.": "أفضل خدمة هي التي لا تراها. لا يد مرفوعة، لا حساسية تُعاد مرتين، ولا طاولة منسية.",
+  "Pas un restaurant ? Amplify existe aussi pour votre métier.": "لستم مطعما؟ Amplify موجود أيضا لمهنتكم.",
+  "Pour votre métier": "لمهنتكم",
+  "Le service à table": "الخدمة على الطاولة",
+  "La production du jour": "إنتاج اليوم",
+  "Agenda et file d’attente": "المواعيد وقائمة الانتظار",
+  "Cabines et soins": "الغرف والعلاجات",
+  "Une étiquette par pièce": "ملصق لكل قطعة",
+  "Kridi, caisse et stock": "الكريدي والصندوق والمخزون",
+  "Biens, visites et loyers": "العقارات والزيارات والإيجارات",
 };
