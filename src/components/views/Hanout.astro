@@ -140,11 +140,11 @@ const faq = [
     <div class="grid gap-4 md:grid-cols-2">
       <div class="tf rounded-[2rem] bg-paper p-7 ring-1 ring-line">
         <p class="text-sm font-semibold text-muted">Aujourd’hui</p>
-        <ul class="mt-4 space-y-3">{today.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${200 + i * 90}ms`}><span class="mt-2 size-2 shrink-0 rounded-full bg-muted/50"></span>{x}</li>)}</ul>
+        <ul class="mt-4 space-y-3">{today.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${200 + i * 90}ms`}><span class="mt-2 size-2 shrink-0 rounded-full bg-muted/50"></span><span class="hm-strike" style={`--sd:${1000 + i * 260}ms`}>{x}</span></li>)}</ul>
       </div>
       <div class="tf rounded-[2rem] bg-navy p-7 text-white" style="--d:120ms">
         <p class="text-sm font-semibold text-green">Avec Amplify</p>
-        <ul class="mt-4 space-y-3">{withUs.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${320 + i * 90}ms`}><span class="mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}</ul>
+        <ul class="mt-4 space-y-3">{withUs.map((x, i) => <li class="tf-x flex gap-3 text-lg" style={`--d:${320 + i * 90}ms`}><span class="hm-pop mt-1 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy" style={`--sd:${1200 + i * 260}ms`}><Icon name="check" class="size-4" /></span>{x}</li>)}</ul>
       </div>
     </div>
   </section>
@@ -182,11 +182,18 @@ const faq = [
         <div class="tf-x">
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le kridi.</span><span class="block text-green">Sans cahier, sans gêne.</span></h2>
           <p class="mt-5 max-w-md text-lg text-white/70">Le client prend, vous notez en deux gestes. Le jour où il faut demander, ce n’est pas vous qui gênez : c’est un message poli, avec son compte détaillé. Il voit ce qu’il doit, sans discussion.</p>
-          <!-- the reminder, as the client receives it -->
-          <div class="mt-8 max-w-sm rounded-[1.4rem] rounded-ss-md bg-[#DCF8C6] p-4 text-[0.95rem] leading-relaxed text-[#111B21] shadow-lg">
-            <p>Hanout Fatima : bonjour Ahmed, votre compte chez nous est de 320 DH. Le détail ici :</p>
-            <p class="mt-1 font-semibold text-[#027EB5] underline" dir="ltr">menu.amplifygrowthstudio.com/…</p>
-            <p class="mt-1 text-end text-xs text-[#667781]" dir="ltr">19:42 ✓✓</p>
+          <!-- the reminder, played live: the account counts up, the message is typed, the ticks turn blue, the money comes back (tap to replay) -->
+          <div class="hm-live mt-8 max-w-sm" data-live>
+            <p class="flex items-baseline gap-2"><span class="display text-6xl text-green tabular-nums" dir="ltr" data-live-n>320</span><span class="text-xl font-semibold text-white/80">DH</span><span class="ps-2 text-white/55">Ahmed</span></p>
+            <div class="relative mt-4 min-h-[8.5rem]">
+              <div class="hm-typing absolute start-0 top-0 items-center gap-1.5 rounded-[1.4rem] rounded-ss-md bg-[#DCF8C6] px-4 py-3.5 shadow-lg" aria-hidden="true"><i></i><i></i><i></i></div>
+              <button type="button" class="hm-bubble block w-full cursor-pointer rounded-[1.4rem] rounded-ss-md bg-[#DCF8C6] p-4 text-start text-[0.95rem] leading-relaxed text-[#111B21] shadow-lg">
+                <span class="block">Hanout Fatima : bonjour Ahmed, votre compte chez nous est de 320 DH. Le détail ici :</span>
+                <span class="mt-1 block font-semibold text-[#027EB5] underline" dir="ltr">menu.amplifygrowthstudio.com/…</span>
+                <span class="hm-ticks mt-1 block text-end text-xs text-[#667781]" dir="ltr">19:42 ✓✓</span>
+              </button>
+            </div>
+            <p class="hm-chip mt-4 inline-flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-sm font-semibold text-navy shadow-lg"><span class="sl-live size-2 rounded-full bg-navy"></span>+200 DH rentrés aujourd’hui</p>
           </div>
         </div>
         <div class="tf relative mx-auto grid w-full max-w-md grid-cols-2 items-start gap-5" style="--d:150ms">
@@ -236,7 +243,7 @@ const faq = [
   <!-- the till -->
   <section id="caisse" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
     <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-      <div class="tf order-last mx-auto w-[62%] max-w-[17rem] lg:order-first lg:w-[70%]" style="--d:150ms"><div class="tf-float"><Device kind="phone" src={img('vente')} alt={tt('La caisse : le panier avec le pain, les œufs et la menthe, les boutons rapides et le bouton Encaisser')} w={600} h={1298} screenBg={scr} class="-rotate-[2deg]" /></div></div>
+      <div class="tf relative order-last mx-auto w-[62%] max-w-[17rem] lg:order-first lg:w-[70%]" style="--d:150ms"><span class="hm-beam pointer-events-none absolute inset-x-[5%] top-[3%] bottom-[3%] z-10 overflow-hidden rounded-[2rem]" aria-hidden="true"><i></i></span><p class="hm-chipx absolute end-[-14%] top-[34%] z-20 flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--cd:900ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>{tt('Scannez avec le téléphone')}</p><div class="tf-float"><Device kind="phone" src={img('vente')} alt={tt('La caisse : le panier avec le pain, les œufs et la menthe, les boutons rapides et le bouton Encaisser')} w={600} h={1298} screenBg={scr} class="-rotate-[2deg]" /></div></div>
       <div class="tf-x">
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">La caisse.</span><span class="block text-green-deep">Dans la main.</span></h2>
         <p class="mt-5 max-w-md text-lg text-muted">Pas d’ordinateur, pas de comptoir à refaire. Vous scannez avec le téléphone, ou vous touchez le pain et les œufs. La monnaie est calculée, la vente est notée.</p>
@@ -263,7 +270,11 @@ const faq = [
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le stock et les fournisseurs.</span><span class="block text-green">Plus de surprise.</span></h2>
           <p class="mt-5 max-w-md text-lg text-white/70">Le livreur passe, vous photographiez son bon. Le stock monte, la dette chez le fournisseur aussi, et vous voyez ce qui va périmer avant le client.</p>
         </div>
-        <div class="tf mx-auto w-[62%] max-w-[17rem] lg:w-[70%]" style="--d:150ms"><div class="tf-float"><Device kind="phone" src={img('stock')} alt={tt('Le stock : les dates de péremption, le yaourt à retirer, le lait à vendre vite, et l’huile à commander')} w={600} h={1298} screenBg={scr} class="rotate-[2deg]" /></div></div>
+        <div class="tf relative mx-auto w-[62%] max-w-[17rem] lg:w-[70%]" style="--d:150ms">
+          <p class="hm-chipx absolute start-[-16%] top-[26%] z-20 flex items-center gap-2 rounded-full bg-[#FF5A5F] py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-white shadow-lg sm:text-sm" style="--cd:700ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-white"></span>{tt('Périmé')}</p>
+          <p class="hm-chipx absolute end-[-14%] top-[46%] z-20 flex items-center gap-2 rounded-full bg-[#FFB020] py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--cd:1300ms" aria-hidden="true"><span class="size-2 rounded-full bg-navy"></span>{tt('À vendre vite')}</p>
+          <p class="hm-chipx absolute start-[-12%] top-[70%] z-20 flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--cd:1900ms" aria-hidden="true"><span class="size-2 rounded-full bg-green"></span>{tt('À commander')}</p>
+          <div class="tf-float"><Device kind="phone" src={img('stock')} alt={tt('Le stock : les dates de péremption, le yaourt à retirer, le lait à vendre vite, et l’huile à commander')} w={600} h={1298} screenBg={scr} class="rotate-[2deg]" /></div></div>
       </div>
       <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
         {stock.map(([i, h, x], k) => (
@@ -285,9 +296,10 @@ const faq = [
         <div>
           <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le quartier commande.</span><span class="block text-green-deep">Sur son téléphone.</span></h2>
           <p class="mt-5 max-w-md text-lg text-muted">Votre boutique a sa page, avec vos produits et vos prix. Le voisin choisit, dit s’il passe ou s’il faut livrer, et envoie. Votre téléphone sonne.</p>
-          <ol class="mt-8 space-y-3">
+          <ol class="hq-list relative mt-8 space-y-3">
+            <span class="hq-line pointer-events-none absolute start-[15px] top-4 bottom-4 w-0.5 bg-green" aria-hidden="true"></span>
             {['Le voisin commande depuis le lien ou le QR sur la porte.', 'Vous acceptez : il reçoit un WhatsApp.', 'C’est prêt : livré par votre garçon, ou il passe le prendre.', 'Encaissé en un geste, comme une vente.'].map((x, k) => (
-              <li class="hq-step flex items-center gap-3 text-lg" style={`--k:${k}`}><span class="hq-ic grid size-8 shrink-0 place-items-center rounded-full bg-white font-bold text-muted ring-1 ring-line" dir="ltr">{k + 1}</span>{x}</li>
+              <li class="hq-step relative z-10 flex items-center gap-3 text-lg" style={`--k:${k}`}><span class="hq-ic grid size-8 shrink-0 place-items-center rounded-full bg-white font-bold text-muted ring-1 ring-line" dir="ltr">{k + 1}</span>{x}</li>
             ))}
           </ol>
         </div>
@@ -356,7 +368,7 @@ const faq = [
   <CountUp />
 </Base>
 
-<style>
+<style is:global>
   /* the modules: on = navy tile with a green icon, off = quiet */
   .hm-mod { background: #001E3E; color: #fff; --tw-ring-color: #001E3E; }
   .hm-mod .hm-ic { background: #05B962; color: #001E3E; }
@@ -370,6 +382,37 @@ const faq = [
   /* the four steps of an order light up one after the other */
   .js [data-tf].in .hq-ic { animation: hq-lit .6s ease both; animation-delay: calc(var(--k) * 450ms + 600ms); }
   @keyframes hq-lit { 0% { background: #fff; color: #54637A; } 50% { background: #05B962; color: #001E3E; transform: scale(1.12); } 100% { background: #001E3E; color: #05B962; } }
+  /* the old notebook gets struck out line by line, the Amplify checks pop in after */
+  .hm-strike { background: linear-gradient(currentColor, currentColor) left .62em / 0% 2px no-repeat; }
+  [dir="rtl"] .hm-strike { background-position: right .62em; }
+  .js [data-tf].in .hm-strike { background-size: 100% 2px; color: rgb(84 99 122 / .75); transition: background-size .55s var(--sd) cubic-bezier(.6,0,.2,1), color .4s calc(var(--sd) + .2s); }
+  .js [data-tf] .hm-pop { transform: scale(0); }
+  .js [data-tf].in .hm-pop { animation: hm-check .5s var(--sd) cubic-bezier(.3,1.6,.5,1) both; }
+  @keyframes hm-check { from { transform: scale(0) rotate(-40deg); } to { transform: none; } }
+  /* the order line draws down through the four steps, in step with the lights */
+  .hq-line { transform-origin: top; }
+  .js [data-tf] .hq-line { transform: scaleY(0); }
+  .js [data-tf].in .hq-line { transform: scaleY(1); transition: transform 1.7s .6s linear; }
+  /* the live reminder: typing dots, message, blue ticks, the money coming back */
+  .hm-typing { display: none; }
+  .hm-typing i { width: .45rem; height: .45rem; border-radius: 99px; background: #667781; animation: hm-dot 1s infinite ease-in-out; }
+  .hm-typing i:nth-child(2) { animation-delay: .15s; } .hm-typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes hm-dot { 0%, 60%, 100% { transform: none; opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
+  .hm-bubble, .hm-chip { transition: opacity .45s, transform .5s cubic-bezier(.2,.8,.2,1); }
+  .hm-ticks { transition: color .4s; }
+  .js [data-live]:not(.all) .hm-bubble, .js [data-live]:not(.all) .hm-chip { opacity: 0; transform: translateY(12px) scale(.97); }
+  .js [data-live].t1 .hm-typing { display: flex; }
+  .js [data-live].t2 .hm-typing { display: none; }
+  .js [data-live].t2 .hm-bubble, .js [data-live].t4 .hm-chip { opacity: 1; transform: none; }
+  .js [data-live].t3 .hm-ticks, .js [data-live].all .hm-ticks { color: #53BDEB; }
+  .hm-bubble:active { transform: scale(.98); }
+  /* the barcode beam sweeps the till, the chips pop in around the phones */
+  .hm-beam i { position: absolute; inset-inline: 0; top: 0; height: 3px; background: #05B962; box-shadow: 0 0 18px 6px rgb(5 185 98 / .55); animation: hm-sweep 3.2s ease-in-out infinite; opacity: 0; }
+  @keyframes hm-sweep { 0% { top: 8%; opacity: 0; } 12% { opacity: .9; } 50% { top: 62%; opacity: .9; } 62% { opacity: 0; } 100% { top: 62%; opacity: 0; } }
+  .js [data-tf] .hm-chipx { opacity: 0; }
+  .js [data-tf].in .hm-chipx { animation: hm-chip .55s var(--cd) cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes hm-chip { from { opacity: 0; transform: translateY(14px) scale(.9); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .hm-beam { display: none; } .js [data-tf] .hm-chipx, .js [data-tf] .hm-pop { opacity: 1; transform: none; } .js [data-tf] .hq-line { transform: none; } .hm-strike { background-size: 100% 2px; } .hm-typing i { animation: none; } }
   @media (prefers-reduced-motion: reduce) { .js [data-tf].in .hq-ic { animation: none; background: #001E3E; color: #05B962; } .hm-mod.pop { animation: none; } }
 </style>
 
@@ -403,14 +446,46 @@ const faq = [
   document.querySelectorAll<HTMLElement>('[data-cahier]').forEach((root) => {
     const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);
     const fmt = (x: number) => Math.round(x).toLocaleString('fr-FR').replace(/ | /g, ' ');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cur = new WeakMap<HTMLElement, number>();
+    const tween = (el: HTMLElement, to: number) => {
+      const from = cur.get(el) ?? to;
+      if (still || from === to) { cur.set(el, to); el.textContent = fmt(to); return; }
+      const t0 = performance.now(), id = (el as any)._t = ((el as any)._t || 0) + 1;
+      const tick = (t: number) => {
+        if ((el as any)._t !== id) return;
+        const k = Math.min(1, (t - t0) / 450), v = from + (to - from) * (1 - Math.pow(1 - k, 3));
+        cur.set(el, v); el.textContent = fmt(v);
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
     const run = () => {
       root.querySelectorAll<HTMLElement>('.ck-v').forEach(v => { v.textContent = String(val(v.dataset.for!)); });
       const all = val('cli') * val('moy');
-      root.querySelector<HTMLElement>('.ck-all')!.textContent = fmt(all);
-      root.querySelector<HTMLElement>('.ck-out')!.textContent = fmt(all * val('taux') / 100);
+      tween(root.querySelector<HTMLElement>('.ck-all')!, all);
+      tween(root.querySelector<HTMLElement>('.ck-out')!, all * val('taux') / 100);
     };
     root.querySelectorAll('.ck-r').forEach(r => r.addEventListener('input', run));
     run();
+  });
+  // the reminder plays by itself when it scrolls in, and again when you tap it
+  document.querySelectorAll<HTMLElement>('[data-live]').forEach((el) => {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const n = el.querySelector<HTMLElement>('[data-live-n]')!;
+    const timers: number[] = [];
+    const play = () => {
+      timers.forEach(window.clearTimeout); timers.length = 0;
+      el.classList.remove('all', 't1', 't2', 't3', 't4'); n.textContent = '0';
+      const t0 = performance.now();
+      const tick = (t: number) => { const k = Math.min(1, (t - t0) / 1000); n.textContent = String(Math.round(320 * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+      [[1100, 't1'], [2300, 't2'], [3100, 't3'], [3700, 't4']].forEach(([ms, c]) => timers.push(window.setTimeout(() => el.classList.add(c as string), ms as number)));
+    };
+    if (still || !('IntersectionObserver' in window)) { el.classList.add('all'); return; }
+    el.querySelector('.hm-bubble')!.addEventListener('click', play);
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { io.disconnect(); play(); } }), { threshold: 0.6 });
+    io.observe(el);
   });
   // sections reveal as they scroll in
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;

@@ -1,6 +1,8 @@
 // Texts of the corner shops page (Amplify Hanout). The French text is the key, as in dict-en.ts and dict-ar.ts.
 export const hanoutEn: Record<string, string> = {
   "Hanouts": "Corner shops",
+  "Périmé": "Expired",
+  "À vendre vite": "Sell quickly",
   "Bonjour, je voudrais voir Amplify pour mon hanout.": "Hello, I would like to see Amplify for my shop.",
   "Amplify Hanout : le kridi, la caisse et le stock du hanout | Amplify Growth Studio": "Amplify Hanout: the credit book, till and stock of the corner shop | Amplify Growth Studio",
   "Le cahier de kridi dans votre téléphone, avec le rappel sur WhatsApp. La caisse, le stock, les fournisseurs et les commandes du quartier si vous voulez. En arabe et en français, même sans internet.": "The kridi (credit) book on your phone, with the reminder on WhatsApp. The till, stock, suppliers and neighbourhood orders if you want them. In Arabic and French, even without internet.",
@@ -175,6 +177,8 @@ export const hanoutEn: Record<string, string> = {
 };
 
 export const hanoutAr: Record<string, string> = {
+  "Périmé": "سالات الصلاحية",
+  "À vendre vite": "بيعو بسرعة",
   "Hanouts": "الحوانت",
   "Bonjour, je voudrais voir Amplify pour mon hanout.": "السلام، بغيت نشوف Amplify للحانوت ديالي.",
   "Amplify Hanout : le kridi, la caisse et le stock du hanout | Amplify Growth Studio": "Amplify Hanout: الكريدي والصندوق والسلعة ديال الحانوت | Amplify Growth Studio",
