@@ -2,7 +2,7 @@
 // what costs the most. Same shape as restaurants-fr.ts; everything maps to features that exist.
 export const rsAr = {
   meta: {
-    title: 'رقمنة مطعمك أو مقهاك في المغرب | Amplify',
+    title: 'الصندوق والهوامش والتسويق للمطاعم والمقاهي في المغرب | Amplify',
     description: 'كاشير، طلبات، هوامش ربح، مخزون وتسويق للمطاعم والمقاهي والسناك في المغرب. شريك واحد، نبدأ معه بما يكلفك أكثر. الرباط.',
   },
   wa: 'السلام عليكم، أريد رقمنة محلي.',

@@ -2,7 +2,7 @@
 // what costs the most. Everything here maps to features that exist (see products-fr and marketing-fr).
 export const rsFr = {
   meta: {
-    title: 'Digitaliser votre restaurant ou café au Maroc | Amplify',
+    title: 'Caisse, marges et marketing pour restaurants et cafés au Maroc | Amplify',
     description: 'Caisse, commandes, marges, stock et marketing pour restaurants, cafés et snacks au Maroc. Un seul partenaire, en commençant par ce qui vous coûte le plus. Rabat.',
   },
   wa: 'Bonjour, je voudrais digitaliser mon établissement.',

@@ -9,6 +9,10 @@ import Faq from '../Faq.astro';
 import SecurityTrace from '../SecurityTrace.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
+import ScaleBand from '../ScaleBand.astro';
+import MarginSim from '../MarginSim.astro';
+import Tour from '../Tour.astro';
+import QrOrders from '../QrOrders.astro';
 import { copy } from '../../i18n';
 import { OFFER, signupUrl } from '../../config';
 import { rsOf } from '../../i18n/content';
@@ -80,6 +84,12 @@ const TYPE_IMG = { resto: 'metier-restaurant', cafe: 'metier-cafe', snack: 'meti
       <p class="rt-loop mx-auto mt-8 flex w-fit items-center gap-2 rounded-full bg-white/[0.06] px-4 py-2 text-sm font-semibold text-white/80 ring-1 ring-white/10"><span class="text-green">↺</span>{tt('Ventes, marges, site et clients : tout est relié.')}</p>
     </div>
   </section>
+
+  <!-- moved from the home page: the scale, the margin simulator, the real product, QR ordering -->
+  <ScaleBand />
+  <div id="marge"><MarginSim /></div>
+  <div id="produit"><Tour lang={lang} /></div>
+  <div id="qr"><QrOrders lang={lang} /></div>
 
   <!-- per trade -->
   <section class="mx-auto max-w-6xl px-4 py-14 md:py-24 sm:px-6" data-rstypes>

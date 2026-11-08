@@ -7,8 +7,9 @@ import { dictAr } from './i18n/dict-ar';
 import { immoEn, immoAr } from './i18n/dict-immobilier';
 import { pressingEn, pressingAr } from './i18n/dict-pressing';
 import { hanoutEn, hanoutAr } from './i18n/dict-hanout';
-const mergedEn = { ...dictEn, ...immoEn, ...pressingEn, ...hanoutEn };
-const mergedAr = { ...dictAr, ...immoAr, ...pressingAr, ...hanoutAr };
+import { homeEn, homeAr } from './i18n/dict-home';
+const mergedEn = { ...dictEn, ...immoEn, ...pressingEn, ...hanoutEn, ...homeEn };
+const mergedAr = { ...dictAr, ...immoAr, ...pressingAr, ...hanoutAr, ...homeAr };
 
 const decode = (s: string) => s.replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
 const encText = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

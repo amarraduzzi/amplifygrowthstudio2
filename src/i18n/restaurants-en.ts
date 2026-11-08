@@ -2,7 +2,7 @@
 // what costs the most. Everything here maps to features that exist (see products-en and marketing-en).
 export const rsEn = {
   meta: {
-    title: 'Digitalise your restaurant or café in Morocco | Amplify',
+    title: 'Till, margins and marketing for restaurants and cafés in Morocco | Amplify',
     description: 'POS, orders, margins, stock and marketing for restaurants, cafés and snack bars in Morocco. One partner, starting with what costs you the most. Rabat.',
   },
   wa: 'Hello, I’d like to digitalise my venue.',

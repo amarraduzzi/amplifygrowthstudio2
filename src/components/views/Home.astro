@@ -1,172 +1,318 @@
 ---
+// Home: Amplify for every Moroccan trade. One promise (the money a shop loses without seeing it), the trades
+// to choose from, a calculator per trade, one partner from the counter to Google, how we work, proof, FAQ.
+// The restaurant blocks that lived here (scale, margin simulator, tour, QR ordering) moved to /restaurants.
+// No results are claimed for a trade without clients: the calculators show the visitor's own numbers.
 import Base from '../../layouts/Base.astro';
-import ChatThread from '../ChatThread.astro';
 import WaButton from '../WaButton.astro';
 import Device from '../Device.astro';
-import { tr as trAlt, langOf as langAlt } from '../../i18n/t';
-const tt = trAlt(langAlt(Astro.url));
-import Bars from '../Bars.astro';
 import Icon from '../Icon.astro';
-import Tour from '../Tour.astro';
-import Sectors from '../Sectors.astro';
-import VenuePicker from '../VenuePicker.astro';
-import QrOrders from '../QrOrders.astro';
-import MarginSim from '../MarginSim.astro';
-import ScaleBand from '../ScaleBand.astro';
-import QuickStart from '../QuickStart.astro';
-import ChatFaq from '../ChatFaq.astro';
-import Ph from '../Ph.astro';
-import Mark from '../Mark.astro';
+import Faq from '../Faq.astro';
 import LogoBand from '../LogoBand.astro';
 import ZaynaProof from '../ZaynaProof.astro';
-import { SITE, CONTACT, signupUrl } from '../../config';
+import { SITE, CONTACT } from '../../config';
 import { copy } from '../../i18n';
+import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema } from '../../lib/schema';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
+const tt = tr(lang);
 const t = copy(lang);
 const c = t.home;
+const wa = tt('Bonjour, je voudrais un diagnostic gratuit pour mon commerce.');
+const faq = [
+  ['Pour quels commerces ?', 'Restaurants, cafés et snacks, pâtisseries, fine dining, coiffeurs et barbiers, spas et instituts, pressings, hanouts et agences immobilières. Chaque métier a son propre système, pensé pour lui.'],
+  ['Je ne suis pas à Rabat.', 'Nous passons sur place à Rabat et Salé. Ailleurs au Maroc, nous installons et formons votre équipe en appel vidéo.'],
+  ['Il me faut quel matériel ?', 'Souvent rien de plus que ce que vous avez : un téléphone, une tablette ou un ordinateur. Pour une caisse ou des tickets, nous vous conseillons le matériel qui convient.'],
+  ['Vos systèmes sont en arabe ?', 'Oui. Nos systèmes sont en arabe et en français, et les messages à vos clients partent dans leur langue.'],
+  ['Combien ça coûte ?', 'Cela dépend de votre métier et de ce que vous utilisez. Les prix sont sur la page Tarifs et sur la page de chaque métier. Le diagnostic est gratuit.'],
+  ['Je dois m’engager ?', 'Non. Vous arrêtez quand vous voulez, et vous gardez vos données.'],
+];
 const schema = [
   { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE.url}/#org`, name: SITE.name, url: SITE.url,
     logo: abs('/favicon.svg'), email: CONTACT.email, telephone: `+${CONTACT.whatsapp}` },
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: abs(ROUTES.home[lang]), inLanguage: lang },
-  faqSchema(c.faq),
+  faqSchema(faq.map(([q, a]) => [tt(q), tt(a)])),
 ].filter(Boolean) as Record<string, unknown>[];
 const toc = [
-  { id: 'marge', label: tt('Simulateur de marge') },
-  { id: 'parcours', label: tt('Par où commencer') },
-  { id: 'metiers', label: tt('Par métier') },
-  { id: 'produit', label: tt('Le produit') },
-  { id: 'qr', label: tt('Commande par QR') },
-  { id: 'zayna', label: tt('Chez Zayna Café') },
-  { id: 'demarrer', label: tt('Démarrer') },
+  { id: 'metiers', label: tt('Votre métier') },
+  { id: 'calcul', label: tt('Faire le calcul') },
+  { id: 'partenaire', label: tt('Un seul partenaire') },
+  { id: 'methode', label: tt('Comment nous travaillons') },
   { id: 'faq', label: t.ui.faq },
 ];
-const SIZES: Record<string, [number, number]> = { caisse: [1600, 937], tables: [1600, 937], cuisine: [1600, 937], marges: [1400, 714], 'menu-qr': [780, 1688] };
+// the trades: the restaurant card is the big one (most of today's clients)
+const TRADES = [
+  { k: 'restaurants', name: 'Restaurants et cafés', line: 'La caisse, le menu QR et la marge de chaque plat.', img: '/img/photos/metier-restaurant-1600.webp', pos: '50% 55%', cls: 'col-span-2 lg:row-span-2' },
+  { k: 'bakery', name: 'Pâtisseries', line: 'Le plan de production et le coût de chaque pièce.', img: '/img/photos/pat-matin-800.webp', pos: '72% 50%', cls: '' },
+  { k: 'maitre', name: 'Fine dining', line: 'Le service à table, sans papier.', img: '/img/nav-dining.webp', pos: '62% 55%', cls: '' },
+  { k: 'salons', name: 'Coiffeurs et barbiers', line: 'L’agenda, la file d’attente et les rappels.', img: '/img/photos/salon-barbier-800.webp', pos: '62% 45%', cls: '' },
+  { k: 'spas', name: 'Spas et instituts', line: 'Les cabines, les soins et les forfaits.', img: '/img/photos/spa-cabine-800.webp', pos: '55% 50%', cls: '' },
+  { k: 'pressing', name: 'Pressings', line: 'Une étiquette par pièce, le client prévenu.', img: '/img/nav-pressing.webp', pos: '55% 45%', cls: '' },
+  { k: 'hanout', name: 'Hanouts', line: 'Le kridi, la caisse et le stock, sur le téléphone.', img: '/img/photos/hanout-comptoir-800.webp', pos: '62% 45%', cls: '' },
+  { k: 'immobilier', name: 'Immobilier', line: 'Les biens, les visites et les loyers.', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%', cls: 'col-span-2' },
+] as const;
+const trades = TRADES.map(x => ({ ...x, href: ROUTES[x.k][lang] }));
+const chips = [['restaurants', 'Restaurants'], ['salons', 'Coiffeurs'], ['spas', 'Spas'], ['pressing', 'Pressings'], ['hanout', 'Hanouts'], ['immobilier', 'Immobilier']] as const;
+// where the money goes: the same three leaks in every trade
+const leaks = [
+  ['coins', 'L’argent qui fuit', 'Une portion trop généreuse, un produit périmé, une caisse qui ne tombe pas juste. Petit chaque jour, énorme sur l’année.', ['Restaurant : 10 g de fromage en trop par pizza', 'Hanout : le yaourt périmé au fond du frigo', 'Tous : l’écart de caisse du soir']],
+  ['clock', 'L’argent qui dort', 'Ce qu’on vous doit, mais que personne ne vient régler. Écrit dans un cahier, ou pas écrit du tout.', ['Hanout : le kridi qui ne revient pas', 'Pressing : les costumes jamais récupérés', 'Immobilier : le loyer en retard']],
+  ['users', 'Les clients qui ne reviennent pas', 'Un client content qui oublie de revenir, un rendez-vous manqué, un nouveau client qui ne vous trouve pas sur Google.', ['Salon : le rendez-vous oublié', 'Restaurant : l’habitué qu’on ne relance jamais', 'Tous : pas de site, pas de fiche Google']],
+] as const;
+// one calculator per trade: three sliders, one formula, the visitor's own numbers
+const calcs = [
+  { k: 'resto', tab: 'Restaurant', out: 'Ce que coûtent les portions trop généreuses, chaque mois', how: 'Calcul : plats par jour × 30 jours × coût matière d’un plat × la part en trop.', with: 'Avec Amplify Profit, chaque plat a sa fiche au gramme près, et vous voyez l’écart entre ce qui est sorti du stock et ce qui a été vendu.',
+    s: [['Plats vendus par jour', 20, 400, 10, 120], ['Coût matière d’un plat (DH)', 5, 100, 1, 25], ['Portion trop généreuse (%)', 0, 30, 1, 8]] },
+  { k: 'hanout', tab: 'Hanout', out: 'Le kridi qui dort depuis plus d’un mois', how: 'Calcul : clients au kridi × ce que doit un client × la part qui ne paie plus.', with: 'Avec Amplify Hanout, ces clients sont en haut de la liste, avec un rappel poli prêt à partir sur WhatsApp.',
+    s: [['Clients qui achètent au kridi', 5, 200, 5, 40], ['Ce que doit un client en moyenne (DH)', 20, 2000, 10, 250], ['Sur 100, combien ne paient plus depuis un mois', 0, 80, 1, 20]] },
+  { k: 'pressing', tab: 'Pressing', out: 'L’argent qui attend sur vos rails, chaque mois', how: 'Calcul : dépôts par semaine × 4,3 semaines × la part récupérée en retard × prix moyen.', with: 'Avec Amplify Pressing, les dépôts qui traînent sont listés, avec un WhatsApp prêt à envoyer au client.',
+    s: [['Dépôts par semaine', 10, 400, 10, 60], ['Prix moyen d’un dépôt (DH)', 30, 600, 10, 120], ['Dépôts récupérés en retard sur 100', 0, 40, 1, 8]] },
+  { k: 'salon', tab: 'Salon', out: 'Ce que coûtent les rendez-vous manqués, chaque mois', how: 'Calcul : rendez-vous par semaine × 4,3 semaines × la part de rendez-vous manqués × prix moyen.', with: 'Avec Amplify Agenda, le client reçoit un rappel WhatsApp la veille, envoyé en un geste.',
+    s: [['Rendez-vous par semaine', 10, 300, 5, 80], ['Prix moyen d’une prestation (DH)', 30, 800, 10, 120], ['Rendez-vous manqués sur 100', 0, 30, 1, 10]] },
+] as const;
+const partner = [
+  ['till', 'Le système de votre métier', 'La caisse, l’agenda, le kridi ou les dépôts : l’outil de tous les jours, pensé pour votre métier.', ROUTES.systems[lang], 'Voir nos systèmes'],
+  ['store', 'Votre site', 'Un vrai site à votre nom, relié à votre système : le menu, les prix, les rendez-vous ou les commandes.', ROUTES.site[lang], 'Voir Amplify Site'],
+  ['megaphone', 'Plus de clients', 'Google, WhatsApp, dégustations et campagnes : du marketing qui fait venir des clients, pas des vues.', ROUTES.marketing[lang], 'Voir Amplify Clients'],
+] as const;
+const method = [
+  ['pin', 'Nous passons vous voir', 'À Rabat et Salé, dans votre commerce. Ailleurs, en appel vidéo. Nous regardons comment vous travaillez.'],
+  ['box', 'Nous installons', 'Avec vos produits, vos prix et votre équipe. Vous n’avez rien à préparer.'],
+  ['users', 'Nous formons votre équipe', 'En arabe ou en français, jusqu’à ce que chacun soit à l’aise.'],
+  ['message', 'Nous restons là', 'Une question ? WhatsApp. Et nous regardons vos chiffres avec vous.'],
+] as const;
+const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp`;
 ---
-<Base lang={lang} page="home" title={c.meta.title} description={c.meta.description} wa={c.wa} schema={schema} toc={toc}>
+<Base lang={lang} page="home" title={tt('Amplify : les systèmes des commerces marocains | Amplify Growth Studio')} description={tt('Caisse, marges, kridi, agenda, dépôts, site et marketing : Amplify aide les commerces marocains à retrouver l’argent qu’ils perdent sans le voir. Restaurants, salons, pressings, hanouts et agences. Une équipe à Rabat.')} wa={wa} schema={schema} toc={toc}>
 
-  <!-- HERO: light, the promise left, the real product on a mint panel right.
-       One orchestrated moment: an order travels from the QR menu to the kitchen to the margin. -->
+  <!-- HERO: the promise left; right, one scene with four trades: the till lands, three phones drop, the day plays out in chips -->
   <section class="relative">
-    <div class="mx-auto grid max-w-6xl gap-6 px-4 pb-10 pt-5 sm:px-6 md:grid-cols-[1fr_1.05fr] md:items-center md:gap-10 md:pb-14 md:pt-14 lg:gap-12">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-6 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.05fr] lg:gap-12 lg:pb-14">
       <div>
-        <h1 class="text-[clamp(2.75rem,12.5vw,3.4rem)] md:text-[clamp(3.1rem,5.6vw,5.4rem)]">{c.hero.h1.map((l, i) => (
-          <span class="block overflow-hidden pb-[0.04em]"><span class={`rise relative inline-block whitespace-nowrap ${i === 2 ? 'text-green-deep' : ''}`} style={`--d:${i * 130}ms`}>{l}{i === 2 && <span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.05em] origin-left rounded-full bg-green md:h-[0.07em] rtl:origin-right" style="--d:650ms" aria-hidden="true"></span>}</span></span>
-        ))}</h1>
-        <p class="fade-up mt-4 max-w-xl text-[1.05rem] leading-snug text-muted md:mt-5 md:text-xl" style="--d:300ms"><span class="md:hidden">{c.hero.leadShort}</span><span class="hidden md:inline">{c.hero.lead}</span></p>
-        <div id="hero-cta" class="fade-up mt-5 flex flex-wrap items-center gap-x-3.5 gap-y-2 md:mt-7 md:gap-3" style="--d:400ms">
-          <WaButton text={c.wa} label={c.hero.diag} where="home-hero" class="whitespace-nowrap px-4 text-[0.95rem] md:px-7 md:text-lg" />
-          <a href={signupUrl(lang)} class="inline-flex items-center whitespace-nowrap text-sm font-medium underline underline-offset-4 md:min-h-12 md:rounded-full md:border md:border-navy/25 md:px-7 md:text-lg md:font-normal md:no-underline md:hover:border-navy">{c.hero.trial}</a>
+        <h1 class="text-[clamp(2.4rem,9.5vw,3.3rem)] md:text-[clamp(2.8rem,4.3vw,3.9rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:60ms">Votre commerce perd</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:180ms">de l’argent sans le voir.</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:300ms">Nous le retrouvons.<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:800ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:350ms">Caisse, marges, kridi, rendez-vous, dépôts, site et clients : Amplify met de l’ordre dans les commerces marocains, et vous montre ce que vous gagnez vraiment. Une équipe à Rabat, en arabe et en français.</p>
+        <div class="fade-up mt-6" style="--d:450ms">
+          <p class="text-sm font-semibold text-muted">Votre métier</p>
+          <ul class="mt-2 flex flex-wrap gap-2">
+            {chips.map(([k, l]) => <li><a href={ROUTES[k][lang]} class="inline-flex min-h-10 items-center rounded-full bg-paper px-4 text-[0.95rem] font-semibold ring-1 ring-line transition-colors hover:bg-navy hover:text-white">{l}</a></li>)}
+            <li><a href="#metiers" class="inline-flex min-h-10 items-center rounded-full px-3 text-[0.95rem] font-semibold text-green-deep underline underline-offset-4">Tous les métiers</a></li>
+          </ul>
         </div>
-        <ul class="fade-up mt-4 flex items-center gap-x-4 text-[0.8rem] md:mt-6 md:gap-x-6 md:text-[0.95rem]" style="--d:500ms">
-          <li>
-            <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:underline md:gap-2">
-              <span class="flex text-[#F5B301]" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-3.5 md:size-4"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
-              <span><strong class="font-semibold">{CONTACT.googleRating}</strong> {c.hero.rating}</span>
-            </a>
-          </li>
-          <li class="flex items-center gap-2 text-muted"><span class="size-2 shrink-0 rounded-full bg-green" aria-hidden="true"></span>{c.hero.local}</li>
-        </ul>
+        <div class="fade-up mt-6 flex flex-wrap items-center gap-x-5 gap-y-3" style="--d:550ms">
+          <WaButton text={wa} label={c.hero.diag} where="home-hero" class="px-7 text-lg" />
+          <ul class="flex items-center gap-x-4 text-[0.85rem] md:text-[0.95rem]">
+            <li>
+              <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:underline">
+                <span class="flex text-[#F5B301]" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-3.5 md:size-4"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
+                <span><strong class="font-semibold">{CONTACT.googleRating}</strong> {c.hero.rating}</span>
+              </a>
+            </li>
+            <li class="flex items-center gap-2 text-muted"><span class="size-2 shrink-0 rounded-full bg-green" aria-hidden="true"></span>{c.hero.local}</li>
+          </ul>
+        </div>
       </div>
 
-      <div>
-        <div class="relative isolate aspect-[4/3.1] overflow-hidden rounded-[1.75rem] bg-mint md:aspect-[5/4.3] md:rounded-[2.25rem]">
-          <!-- a café counter in Rabat (AI image), behind the real product -->
-          <img src="/img/comptoir-1200.webp" srcset="/img/comptoir-760.webp 760w, /img/comptoir-1200.webp 1200w" sizes="(min-width: 768px) 50vw, 100vw"
-            alt={tt('Le comptoir d’un café à Rabat')} width="1200" height="900" decoding="async" class="absolute inset-0 -z-20 size-full object-cover object-[50%_75%]" />
-          <div class="absolute inset-0 -z-10 bg-linear-to-b from-navy/10 via-transparent to-navy/30" aria-hidden="true"></div>
+      <div class="relative isolate aspect-[4/3.6] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.7] lg:rounded-[2.25rem]">
+        <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+        <span class="shadow-in absolute start-[10%] top-[66%] h-6 w-[64%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+        <div class="land absolute start-[5%] top-[17%] w-[72%]" style="--d:250ms"><Device src="/img/caisse-ticket.webp" alt={tt('La caisse d’un restaurant : une table ouverte avec ses articles et le total')} w={1200} h={878} eager /></div>
+        <div class="drop absolute bottom-[4%] start-[44%] w-[19%]" style="--d:650ms"><Device kind="phone" src="/img/pressing-suivi-phone.webp" alt={tt('Le suivi d’un dépôt de pressing sur le téléphone du client')} w={600} h={1298} eager class="-rotate-[4deg]" /></div>
+        <div class="drop absolute bottom-[6%] start-[63%] w-[19%]" style="--d:850ms"><Device kind="phone" src="/img/salon-rdv-phone.webp" alt={tt('Un rendez-vous de salon pris depuis le téléphone')} w={600} h={1298} eager class="rotate-[2deg]" /></div>
+        <div class="drop absolute end-[3%] top-[30%] w-[22%]" style="--d:1050ms"><Device kind="phone" src={img('today')} alt={tt('Le téléphone d’un hanout : les ventes du jour, le stock et le kridi')} w={600} h={1298} eager screenBg="#EDF1F6" class="rotate-[5deg]" /></div>
+        <ul class="pointer-events-none text-[0.68rem] font-semibold sm:text-sm" aria-hidden="true">
+          {[['chart', 'Restaurant : marge calculée', 'top-[4%] start-[4%]', 'bg-paper text-navy'], ['book', 'Hanout : +200 DH de kridi rentrés', 'top-[4%] end-[4%] max-sm:hidden', 'bg-green text-navy'], ['message', 'Pressing : client prévenu', 'bottom-[30%] start-[3%] max-sm:hidden', 'bg-paper text-navy'], ['calendar', 'Salon : rendez-vous confirmé', 'bottom-[3%] start-[3%]', 'bg-paper text-navy']].map(([i, l, p, col], k) => (
+            <li class={`absolute z-10 ${p}`}><div class="tf-float" style={`--d:${k * 900}ms`}><p class={`chat-in flex items-center gap-2 rounded-full py-1.5 pe-3.5 ps-1.5 shadow-lg ${col}`} style={`--d:${1800 + k * 700}ms`}><span class="grid size-6 place-items-center rounded-full bg-navy text-green sm:size-7"><Icon name={i as 'chart'} class="size-3.5 sm:size-4" /></span>{l}</p></div></li>
+          ))}
+        </ul>
+      </div>
+    </div>
 
-          <!-- phones: the iPhone in front, a narrow crop of the ticket behind; no labels on the picture -->
-          <div class="absolute inset-0 md:hidden">
-            <span class="shadow-in absolute bottom-[7%] end-[6%] h-5 w-[52%] rounded-[50%] bg-black/45 blur-lg" style="--d:700ms" aria-hidden="true"></span>
-            <span class="shadow-in absolute bottom-[3%] start-[12%] h-4 w-[26%] rounded-[50%] bg-black/50 blur-md" style="--d:900ms" aria-hidden="true"></span>
-            <div class="land absolute bottom-[10%] end-[5%] w-[56%]" style="--d:450ms">
-              <Device src="/img/caisse-ticket-m.webp" alt={c.hero.shotAlt} w={900} h={888} eager class="rounded-[1.1rem]! p-1.5!">
-                <span class="glow absolute start-[34%] top-[84.5%] h-[10%] w-[32%] rounded-md ring-2 ring-green" style="--d:1700ms" aria-hidden="true"></span>
-              </Device>
-            </div>
-            <div class="drop absolute bottom-[5%] start-[9%] w-[31%]" style="--d:700ms"><Device kind="phone" src="/img/menu-liste.webp" alt={c.hero.phoneAlt} w={600} h={1298} eager class="-rotate-[3deg]" /></div>
+    <!-- three facts -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['8', 'métiers, un seul partenaire'], ['2', 'langues : arabe et français'], ['0', 'engagement : vous arrêtez quand vous voulez']].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- CLIENTS: the businesses already running on Amplify -->
+  <LogoBand />
+
+  <!-- TRADES: a photo card per trade, the restaurants first and biggest -->
+  <section id="metiers" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Choisissez votre métier.</span><span class="block text-green-deep">Le système est fait pour lui.</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Un restaurant ne travaille pas comme un pressing, un salon ou un hanout. Chaque métier a son système, avec ses mots, ses habitudes et ses chiffres.</p>
+    <div class="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:grid-rows-[15rem_15rem_15rem]">
+      {trades.map((x, k) => (
+        <a href={x.href} class={`tf group/t relative isolate flex min-h-52 flex-col justify-end overflow-hidden rounded-[1.6rem] bg-navy p-5 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] lg:min-h-0 ${x.cls}`} style={`--d:${k * 60}ms`}>
+          <img src={x.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover/t:scale-105" style={`object-position:${x.pos}`} />
+          <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/40 to-navy/5" aria-hidden="true"></span>
+          <span class={`display leading-[0.95] ${k === 0 ? 'text-[2.2rem] sm:text-5xl' : 'text-[1.45rem] sm:text-[1.7rem]'}`}>{tt(x.name)}</span>
+          <span class={`mt-1.5 leading-snug text-white/85 ${k === 0 ? 'max-w-sm text-base' : 'text-[0.85rem]'}`}>{tt(x.line)}</span>
+          <span class="absolute end-4 top-4 grid size-9 place-items-center rounded-full bg-green text-navy opacity-0 transition-opacity duration-300 group-hover/t:opacity-100" aria-hidden="true"><svg viewBox="0 0 24 24" class="size-4 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- LEAKS: the same three, in every trade -->
+  <section id="fuites" class="relative isolate overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <h2 class="tf-x text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Où part votre argent ?</span><span class="block text-green">Toujours au même endroit.</span></h2>
+      <p class="tf-x mt-5 max-w-2xl text-lg text-white/70" style="--d:100ms">Restaurant, salon, pressing ou hanout : le métier change, les fuites restent les mêmes. Ce sont elles que nos systèmes ferment.</p>
+      <ul class="mt-14 grid gap-4 lg:grid-cols-3">
+        {leaks.map(([i, h, x, ex], k) => (
+          <li class="tf rounded-[2rem] bg-white/[0.06] p-7 ring-1 ring-white/10" style={`--d:${k * 120}ms`}>
+            <span class="grid size-12 place-items-center rounded-2xl bg-green text-navy"><Icon name={i} class="size-6" /></span>
+            <p class="display mt-5 text-[2rem] leading-[0.95]">{h}</p>
+            <p class="mt-3 leading-relaxed text-white/70">{x}</p>
+            <ul class="mt-5 space-y-2 border-t border-white/10 pt-5">{ex.map(e => <li class="flex gap-2.5 text-[0.95rem] text-white/85"><span class="mt-2 size-1.5 shrink-0 rounded-full bg-green"></span>{e}</li>)}</ul>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- CALCULATOR: one per trade, the visitor's own numbers, nothing sent -->
+  <section id="calcul" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="tf mx-auto max-w-6xl rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12" data-leak>
+      <h2 class="text-[2.4rem] leading-[0.95] sm:text-[3.2rem]"><span class="block">Combien perdez-vous</span><span class="block text-green-deep">sans le voir ?</span></h2>
+      <p class="mt-4 max-w-2xl text-muted">Choisissez votre métier et mettez vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
+      <div class="mt-7 flex flex-wrap gap-2" role="tablist">
+        {calcs.map((x, i) => <button type="button" role="tab" data-tab={x.k} aria-selected={i === 0 ? 'true' : 'false'} class="lk-tab min-h-11 rounded-full px-5 font-semibold ring-1 ring-line transition-colors">{tt(x.tab)}</button>)}
+      </div>
+      {calcs.map((x, i) => (
+        <div class="mt-8 grid gap-10 lg:grid-cols-2 lg:items-center" data-calc={x.k} hidden={i !== 0}>
+          <div class="space-y-6">
+            {x.s.map(([l, mn, mx, st, v], j) => (
+              <label class="block"><span class="flex justify-between gap-4 font-semibold"><span>{tt(l)}</span><span class="lk-v tabular-nums" dir="ltr">{v}</span></span>
+                <input type="range" min={mn} max={mx} step={st} value={v} data-i={j} class="lk-r mt-2 w-full accent-[#05B962]" /></label>
+            ))}
           </div>
-
-          <!-- desktop: tablet on the counter, labels on the picture -->
-          <div class="absolute inset-0 hidden md:block">
-            <span class="shadow-in absolute bottom-[10%] end-[8%] h-7 w-[66%] rounded-[50%] bg-black/45 blur-xl" style="--d:700ms" aria-hidden="true"></span>
-            <span class="shadow-in absolute bottom-[4%] start-[7%] h-5 w-[22%] rounded-[50%] bg-black/50 blur-lg" style="--d:900ms" aria-hidden="true"></span>
-            <div class="land absolute bottom-[13%] end-[5%] w-[74%]" style="--d:450ms">
-              <Device src="/img/caisse-ticket.webp" alt={c.hero.shotAlt} w={1200} h={878} eager>
-                <span class="glow absolute start-[52.9%] top-[85.9%] h-[9.4%] w-[22.2%] rounded-[0.6rem] ring-[3px] ring-green" style="--d:1700ms" aria-hidden="true"></span>
-              </Device>
-            </div>
-            <div class="drop absolute bottom-[6%] start-[5%] w-[25%]" style="--d:700ms"><Device kind="phone" src="/img/menu-liste.webp" alt={c.hero.phoneAlt} w={600} h={1298} eager class="-rotate-[4deg]" /></div>
-            <ol class="pointer-events-none text-sm font-semibold" aria-hidden="true">
-              {c.hero.flow.map((label, i) => (
-                <li class={`chat-in absolute flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-navy shadow-[0_12px_30px_-12px_rgba(0,30,62,0.45)] ${['top-5 start-5', 'top-[17%] end-5', 'bottom-4 end-5'][i]}`} style={`--d:${1200 + i * 550}ms`}>
-                  <span class="grid size-7 place-items-center rounded-full bg-navy text-xs font-bold text-white">{i + 1}</span>
-                  <Icon name={(['qr', 'chef', 'chart'] as const)[i]} class="size-4 text-green-deep" />
-                  {label}
-                </li>
-              ))}
-            </ol>
+          <div class="rounded-[2rem] bg-navy p-8 text-white">
+            <p class="text-white/60">{tt(x.out)}</p>
+            <p class="mt-2"><span class="lk-out display text-6xl text-green tabular-nums" dir="ltr">0</span> <span class="text-2xl font-semibold">DH</span></p>
+            <p class="mt-6 rounded-2xl bg-white/[0.07] p-4 text-white/80">{tt(x.with)}</p>
+            <p class="mt-4 text-sm text-white/50">{tt(x.how)} {tt('C’est un exemple avec vos chiffres : nous ne promettons pas de résultat.')}</p>
           </div>
         </div>
-        <!-- phones: the order flow as three steps under the picture -->
-        <ol class="mt-3 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-2 md:hidden" aria-label="Commande">
-          {c.hero.flowShort.map((label, i) => (
-            <li class="chat-in flex items-center gap-1.5 rounded-xl bg-paper px-2 py-2 text-[0.72rem] font-semibold leading-tight text-navy ring-1 ring-line" style={`--d:${1200 + i * 550}ms`}>
-              <span class="grid size-5 shrink-0 place-items-center rounded-full bg-navy text-[0.65rem] font-bold text-white">{i + 1}</span>{label}
+      ))}
+    </div>
+  </section>
+
+  <!-- PARTNER: the trade's system, the site, the clients -->
+  <section id="partenaire" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Un seul partenaire.</span><span class="block text-green-deep">Du comptoir jusqu’à Google.</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Le système de tous les jours, le site et les clients : trois choses qui se parlent, au lieu de trois prestataires qui ne se connaissent pas.</p>
+    <ol class="mt-12 grid gap-4 md:grid-cols-3">
+      {partner.map(([i, h, x, href, cta], k) => (
+        <li class="tf relative flex flex-col rounded-[2rem] bg-paper p-7 ring-1 ring-line" style={`--d:${k * 100}ms`}>
+          <span class="flex items-center justify-between"><span class="grid size-12 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-6" /></span><span class="display text-4xl text-line" dir="ltr">{k + 1}</span></span>
+          <p class="mt-5 text-xl font-semibold">{h}</p>
+          <p class="mt-2 flex-1 leading-relaxed text-muted">{x}</p>
+          <a href={href} class="mt-5 inline-flex items-center gap-1.5 font-semibold text-green-deep underline underline-offset-4">{cta} <span aria-hidden="true" class="inline-block rtl:-scale-x-100">→</span></a>
+          {k < 2 && <span class="absolute -end-3 top-1/2 z-10 hidden h-0.5 w-6 bg-green md:block" aria-hidden="true"></span>}
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <!-- METHOD: we come by, we set up, we train, we stay -->
+  <section id="methode" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div>
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Pas un logiciel.</span><span class="block text-green">Une équipe à Rabat.</span></h2>
+          <p class="mt-5 max-w-md text-lg text-white/70">Vous ne restez pas seul avec une application. Nous venons, nous installons, nous expliquons, et nous restons joignables.</p>
+          <ul class="mt-8 flex flex-wrap gap-2 text-sm font-semibold">
+            {['Arabe et français', 'WhatsApp', 'Votre commerce reste le vôtre', 'Sans engagement'].map(x => <li class="rounded-full bg-white/10 px-3.5 py-2 ring-1 ring-white/15">{x}</li>)}
+          </ul>
+        </div>
+        <ol class="grid gap-3 sm:grid-cols-2">
+          {method.map(([i, h, x], k) => (
+            <li class="rounded-[1.6rem] bg-white/[0.06] p-6 ring-1 ring-white/10">
+              <span class="flex items-center gap-3"><span class="grid size-11 place-items-center rounded-2xl bg-green text-navy"><Icon name={i} class="size-5" /></span><span class="display text-3xl text-white/25" dir="ltr">{k + 1}</span></span>
+              <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
             </li>
           ))}
         </ol>
       </div>
     </div>
-    <div class="border-y border-line bg-paper">
-      <!-- phones: three short rows, the figure then its line; from tablet up: three columns -->
-      <dl class="mx-auto grid max-w-6xl gap-3 px-4 py-5 sm:grid-cols-3 sm:px-6 md:gap-6 md:py-7">
-        {c.hero.facts.map(([n, u, l]) => (
-          <div class="flex items-center gap-4"><dt class="display w-[5.5rem] shrink-0 whitespace-nowrap text-[2rem] text-navy sm:w-auto sm:text-5xl md:text-6xl"><span data-count={n} dir="ltr">{n}</span><span class="ms-1 normal-case text-green-deep">{u}</span></dt><dd class="text-sm leading-snug text-muted md:max-w-[14rem] md:text-[0.95rem]">{l}</dd></div>
-        ))}
-      </dl>
+  </section>
+
+  <!-- PROOF: one real installation -->
+  <ZaynaProof lang={lang} />
+
+  <div id="faq"><Faq lang={lang} items={faq} wa={wa} /></div>
+
+  <!-- FINAL -->
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_70%_at_85%_50%,rgba(5,185,98,.25),transparent_70%)]" aria-hidden="true"></span>
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Trouvons votre fuite.</span><span class="block text-green">En 20 minutes.</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">Écrivez-nous sur WhatsApp. Nous passons voir votre commerce, ou nous nous appelons en vidéo, et nous vous montrons où part votre argent. C’est gratuit.</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <WaButton text={wa} label={c.hero.diag} where="home-final" class="px-8 text-lg" />
+        <a href={ROUTES.pricing[lang]} class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold text-white ring-1 ring-white/25 hover:bg-white/10">{tt('Voir les tarifs')}</a>
+      </div>
     </div>
   </section>
 
-  <!-- CLIENTS: slim logo band, the restaurants already running on Amplify -->
-  <LogoBand />
+<style>
+  .lk-tab[aria-selected="true"] { background: #001E3E; color: #05B962; --tw-ring-color: #001E3E; }
+  .lk-tab:focus-visible { outline: 3px solid #05B962; outline-offset: 2px; }
+</style>
 
-  <!-- SCALE: the cheese on the scale, 130 g becomes 140 g, and what that costs in a year -->
-  <ScaleBand />
-
-  <!-- MARGIN SIMULATOR: the aha, right after the promise (purchase price included) -->
-  <div id="marge"><MarginSim /></div>
-
-  <!-- PLACES: where to start, by problem -->
-  <div id="parcours"><Sectors lang={lang} /></div>
-
-  <!-- TRADES: café, restaurant, pastry, caterer: a live scene for each -->
-  <div id="metiers"><VenuePicker lang={lang} /></div>
-
-  <!-- TOUR: the real product, interactive screenshots -->
-  <div id="produit"><Tour lang={lang} /></div>
-
-  <!-- QR ORDERING: the customer scans, you receive; with or without a till -->
-  <div id="qr"><QrOrders lang={lang} /></div>
-
-  <!-- PROOF: one real installation, right before the button -->
-  <ZaynaProof lang={lang} />
-
-  <!-- START: on your own, today; help as a safety net -->
-  <div id="demarrer"><QuickStart lang={lang} wa={c.wa} /></div>
-
-  <!-- FAQ: a WhatsApp conversation -->
-  <div id="faq"><ChatFaq lang={lang} wa={c.wa} /></div>
 <script>
-  // the facts under the hero count up when they come into view
+  // the calculator: one formula per trade, the visitor's own numbers, nothing is sent
+  const F: Record<string, (v: number[]) => number> = {
+    resto: ([plats, cout, pct]) => plats * 30 * cout * pct / 100,
+    hanout: ([cli, moy, pct]) => cli * moy * pct / 100,
+    pressing: ([dep, prix, pct]) => dep * 4.3 * pct / 100 * prix,
+    salon: ([rdv, prix, pct]) => rdv * 4.3 * pct / 100 * prix,
+  };
+  const fmt = (x: number) => Math.round(x).toLocaleString('fr-FR').replace(/ | /g, ' ');
+  document.querySelectorAll<HTMLElement>('[data-leak]').forEach((root) => {
+    const panels = [...root.querySelectorAll<HTMLElement>('[data-calc]')];
+    const run = (p: HTMLElement) => {
+      const rs = [...p.querySelectorAll<HTMLInputElement>('.lk-r')];
+      rs.forEach((r, i) => { p.querySelectorAll<HTMLElement>('.lk-v')[i].textContent = r.value; });
+      p.querySelector<HTMLElement>('.lk-out')!.textContent = fmt(F[p.dataset.calc!](rs.map(r => Number(r.value))));
+    };
+    panels.forEach(p => { p.querySelectorAll('.lk-r').forEach(r => r.addEventListener('input', () => run(p))); run(p); });
+    root.querySelectorAll<HTMLButtonElement>('.lk-tab').forEach(b => b.addEventListener('click', () => {
+      root.querySelectorAll('.lk-tab').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+      panels.forEach(p => { p.hidden = p.dataset.calc !== b.dataset.tab; });
+    }));
+  });
+  // sections reveal as they scroll in
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];
+  if (still || !('IntersectionObserver' in window)) roots.forEach((r) => r.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.12 });
+    roots.forEach((r) => io.observe(r));
+  }
+  // the facts under the hero count up when they come into view
   const cio = new IntersectionObserver(es => es.forEach(e => {
     if (!e.isIntersecting) return; cio.unobserve(e.target);
     const el = e.target as HTMLElement, to = Number(el.dataset.count);
-    if (still) return;
+    if (still || !to) return;
     const t0 = performance.now(), dur = 1200;
     const step = (now: number) => { const k = Math.min(1, (now - t0) / dur); el.textContent = String(Math.max(k > 0 ? 1 : 0, Math.round(to * (1 - Math.pow(1 - k, 3))))); if (k < 1) requestAnimationFrame(step); };
     requestAnimationFrame(step);
