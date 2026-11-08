@@ -1,0 +1,109 @@
+---
+// "Un seul partenaire. Du comptoir jusqu'à Google." Three things that talk to each other, so they are drawn as a chain:
+// when the section comes into view a green wire runs from the counter to the site to Google, each link lights up as the
+// signal reaches it (its card flashes, its little scene starts), then a pulse keeps travelling along the wire.
+// No new words: only the icons and small scenes made of shapes. Everything is static under prefers-reduced-motion.
+import Icon from './Icon.astro';
+interface Props { partner: readonly (readonly [string, string, string, string, string])[] }
+const { partner } = Astro.props;
+---
+<section id="partenaire" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+  <h2 class="tf-x text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Un seul partenaire.</span><span class="block text-green-deep">Du comptoir jusqu’à Google.</span></h2>
+  <p class="tf-x mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Le système de tous les jours, le site et les clients : trois choses qui se parlent, au lieu de trois prestataires qui ne se connaissent pas.</p>
+
+  <ol class="relative mt-14 grid gap-x-5 gap-y-10 md:grid-cols-3">
+    <!-- the wire the signal runs along (desktop) -->
+    <li class="pt-wire pointer-events-none absolute inset-x-[16.66%] top-7 hidden h-0.5 rounded-full bg-line md:block" aria-hidden="true">
+      <span class="pt-fill absolute inset-0 rounded-full bg-green"></span>
+      <span class="pt-pulse absolute -top-[3px] size-2 rounded-full bg-green"></span>
+    </li>
+
+    {partner.map(([i, h, x, href, cta], k) => (
+      <li class="relative flex flex-col items-center" style={`--k:${k}`}>
+        <span class="pt-node relative z-10 grid size-14 place-items-center rounded-2xl bg-navy text-green"><Icon name={i as 'till'} class="size-6" /></span>
+        <span class="pt-stem h-6 w-0.5 bg-green" aria-hidden="true"></span>
+        <div class="pt-card tf group/p relative flex w-full flex-1 flex-col overflow-hidden rounded-[2rem] bg-paper ring-1 ring-line" style={`--d:${k * 100}ms`}>
+          <!-- a small scene per link, made of shapes -->
+          <div class="relative m-3 h-32 overflow-hidden rounded-[1.4rem] bg-navy" aria-hidden="true">
+            <span class="sl-blob sl-blob-a"></span>
+            {k === 0 && (
+              <div class="absolute inset-0 grid place-items-center">
+                <div class="w-[58%] rounded-lg bg-[#FBF7EC] px-3 py-2.5 shadow-[0_14px_30px_-14px_rgba(0,0,0,.7)]">
+                  {[['70%', '18%'], ['52%', '14%'], ['62%', '18%']].map(([a, b], j) => (
+                    <div class="flex items-center justify-between gap-2 py-[5px]"><span class="pt-ln h-1.5 rounded-full bg-navy/25" style={`width:${a};--j:${j}`}></span><span class="pt-ln h-1.5 rounded-full bg-navy/40" style={`width:${b};--j:${j}`}></span></div>
+                  ))}
+                  <div class="mt-1 flex items-center justify-between border-t border-dashed border-navy/20 pt-1.5"><span class="pt-ln h-1.5 w-[22%] rounded-full bg-navy/50" style="--j:3"></span><span class="pt-ln grid h-4 w-[34%] place-items-center rounded-full bg-green text-[0.5rem] font-black text-navy" style="--j:3">DH</span></div>
+                </div>
+              </div>
+            )}
+            {k === 1 && (
+              <div class="absolute inset-0 grid place-items-center">
+                <div class="pt-pop w-[68%] overflow-hidden rounded-lg bg-white shadow-[0_14px_30px_-14px_rgba(0,0,0,.7)]">
+                  <div class="flex items-center gap-1 bg-chalk px-2 py-1.5"><i class="size-1.5 rounded-full bg-[#E5484D]"></i><i class="size-1.5 rounded-full bg-[#F5B301]"></i><i class="size-1.5 rounded-full bg-green"></i></div>
+                  <div class="p-2">
+                    <div class="pt-shine relative h-9 overflow-hidden rounded-md bg-linear-to-br from-blue-2 to-navy"></div>
+                    <div class="mt-1.5 flex gap-1.5"><span class="h-4 flex-1 rounded bg-chalk"></span><span class="h-4 flex-1 rounded bg-chalk"></span><span class="pt-btn grid h-4 w-7 place-items-center rounded-full bg-green text-navy"><Icon name="message" class="size-2.5" /></span></div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {k === 2 && (
+              <div class="absolute inset-0 flex flex-col items-center justify-center gap-2.5 px-5">
+                <div class="flex w-full max-w-[13rem] items-center gap-2 rounded-full bg-white/95 px-3 py-1.5 text-navy"><Icon name="search" class="size-3.5 shrink-0" /><span class="h-1.5 w-1/2 rounded-full bg-navy/25"></span></div>
+                <div class="pt-pop flex w-full max-w-[13rem] items-center gap-2.5 rounded-xl bg-white/10 p-2 ring-1 ring-white/15">
+                  <span class="grid size-8 shrink-0 place-items-center rounded-lg bg-green text-navy"><Icon name="pin" class="size-4" /></span>
+                  <span class="flex-1"><span class="block h-1.5 w-3/4 rounded-full bg-white/50"></span><span class="mt-1.5 flex gap-0.5">{[0, 1, 2, 3, 4].map((j) => <span class="pt-star text-white/25" style={`--j:${j}`}><Icon name="star" class="size-3" /></span>)}</span></span>
+                </div>
+                <div class="flex -space-x-1.5 rtl:space-x-reverse">{[0, 1, 2, 3].map((j) => <span class="pt-av grid size-6 place-items-center rounded-full bg-paper text-navy ring-2 ring-navy" style={`--j:${j}`}><Icon name="users" class="size-3" /></span>)}</div>
+              </div>
+            )}
+          </div>
+          <div class="flex flex-1 flex-col px-7 pb-7 pt-3">
+            <p class="text-xl font-semibold">{h}</p>
+            <p class="mt-2 flex-1 leading-relaxed text-muted">{x}</p>
+            <a href={href} class="mt-5 inline-flex items-center gap-1.5 font-semibold text-green-deep underline underline-offset-4">{cta} <span aria-hidden="true" class="inline-block transition-transform duration-300 group-hover/p:translate-x-1 rtl:-scale-x-100 rtl:group-hover/p:-translate-x-1">→</span></a>
+          </div>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<style is:global>
+  /* the pulse that keeps running along the wire once the chain is lit */
+  .pt-fill { transform-origin: left; }
+  [dir="rtl"] .pt-fill { transform-origin: right; }
+  .pt-pulse { inset-inline-start: 0; opacity: 0; box-shadow: 0 0 0 4px rgb(5 185 98 / .25), 0 0 16px 4px rgb(5 185 98 / .6); }
+  .pt-ln { transform-origin: left; }
+  [dir="rtl"] .pt-ln { transform-origin: right; }
+  .pt-shine::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 35%, rgb(255 255 255 / .35) 50%, transparent 65%); transform: translateX(-120%); }
+  @keyframes pt-run { 0% { inset-inline-start: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { inset-inline-start: calc(100% - .5rem); opacity: 0; } }
+  @keyframes pt-flash { 30% { box-shadow: 0 0 0 4px rgb(5 185 98 / .4), 0 30px 60px -30px rgb(5 185 98 / .55); } }
+  @keyframes pt-ring { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .55); } 100% { box-shadow: 0 0 0 16px rgb(5 185 98 / 0); } }
+  @keyframes pt-sweep { 40%, 100% { transform: translateX(120%); } }
+  @keyframes pt-beat { 50% { transform: scale(1.18); } }
+
+  @media (prefers-reduced-motion: no-preference) {
+    /* before the section is seen: the wire is empty and the links are asleep */
+    .js [data-tf]:not(.in) .pt-fill { transform: scaleX(0); }
+    .js [data-tf]:not(.in) .pt-node { background: #fff; color: #4A5D74; box-shadow: inset 0 0 0 1px #D3DBD6; transform: scale(.85); }
+    .js [data-tf]:not(.in) .pt-stem { transform: scaleY(0); }
+    .js [data-tf]:not(.in) .pt-ln { transform: scaleX(0); }
+    .js [data-tf]:not(.in) .pt-pop { transform: scale(.85); opacity: 0; }
+    .js [data-tf]:not(.in) .pt-star { color: rgb(255 255 255 / .25); }
+    .js [data-tf]:not(.in) .pt-av { transform: scale(0); }
+    /* the signal reaches link k at .4s + k * 1.2s */
+    .pt-fill { transition: transform 2.4s linear .4s; }
+    .pt-node { transition: background-color .5s, color .5s, box-shadow .5s, transform .6s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(.4s + var(--k) * 1.2s); }
+    .pt-stem { transform-origin: top; transition: transform .4s calc(.7s + var(--k) * 1.2s); }
+    .pt-pop { transition: transform .5s cubic-bezier(.3,1.6,.5,1), opacity .4s; transition-delay: calc(.9s + var(--k) * 1.2s); }
+    .pt-ln { transition: transform .5s cubic-bezier(.2,.8,.2,1); transition-delay: calc(.9s + var(--k) * 1.2s + var(--j) * .25s); }
+    .pt-star { color: #F5B301; transition: color .3s, transform .3s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(1.4s + var(--k) * 1.2s + var(--j) * .18s); }
+    .pt-av { transition: transform .4s cubic-bezier(.3,1.6,.5,1); transition-delay: calc(1.6s + var(--k) * 1.2s + var(--j) * .12s); }
+    [data-tf].in .pt-node::after { content: ""; position: absolute; inset: 0; border-radius: inherit; animation: pt-ring 1s calc(.4s + var(--k) * 1.2s) ease-out; }
+    [data-tf].in .pt-card { animation: pt-flash 1.3s calc(.5s + var(--k) * 1.2s) ease-out; }
+    [data-tf].in .pt-pulse { animation: pt-run 3.4s 3.4s ease-in-out infinite; }
+    [data-tf].in .pt-shine::after { animation: pt-sweep 3.6s calc(1.2s + var(--k) * 1.2s) ease-in-out infinite; }
+    [data-tf].in .pt-btn { animation: pt-beat 2.4s 2.4s ease-in-out infinite; }
+  }
+</style>

@@ -11,6 +11,7 @@ import Faq from '../Faq.astro';
 import LogoBand from '../LogoBand.astro';
 import ZaynaProof from '../ZaynaProof.astro';
 import LeakCalc from '../LeakCalc.astro';
+import PartnerChain from '../PartnerChain.astro';
 import { SITE, CONTACT } from '../../config';
 import { copy } from '../../i18n';
 import { tr } from '../../i18n/t';
@@ -237,22 +238,8 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   <!-- CALCULATOR: one per trade, the visitor's own numbers, nothing sent (LeakCalc.astro) -->
   <LeakCalc calcs={calcs} />
 
-  <!-- PARTNER: the trade's system, the site, the clients -->
-  <section id="partenaire" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
-    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Un seul partenaire.</span><span class="block text-green-deep">Du comptoir jusqu’à Google.</span></h2>
-    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Le système de tous les jours, le site et les clients : trois choses qui se parlent, au lieu de trois prestataires qui ne se connaissent pas.</p>
-    <ol class="mt-12 grid gap-4 md:grid-cols-3">
-      {partner.map(([i, h, x, href, cta], k) => (
-        <li class="tf relative flex flex-col rounded-[2rem] bg-paper p-7 ring-1 ring-line" style={`--d:${k * 100}ms`}>
-          <span class="flex items-center justify-between"><span class="grid size-12 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-6" /></span><span class="display text-4xl text-line" dir="ltr">{k + 1}</span></span>
-          <p class="mt-5 text-xl font-semibold">{h}</p>
-          <p class="mt-2 flex-1 leading-relaxed text-muted">{x}</p>
-          <a href={href} class="mt-5 inline-flex items-center gap-1.5 font-semibold text-green-deep underline underline-offset-4">{cta} <span aria-hidden="true" class="inline-block rtl:-scale-x-100">→</span></a>
-          {k < 2 && <span class="absolute -end-3 top-1/2 z-10 hidden h-0.5 w-6 bg-green md:block" aria-hidden="true"></span>}
-        </li>
-      ))}
-    </ol>
-  </section>
+  <!-- PARTNER: the trade's system, the site, the clients, drawn as a chain (PartnerChain.astro) -->
+  <PartnerChain partner={partner} />
 
   <!-- METHOD: we come by, we set up, we train, we stay -->
   <section id="methode" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
