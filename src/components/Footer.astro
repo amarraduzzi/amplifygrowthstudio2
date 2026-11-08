@@ -16,7 +16,7 @@ const H = [22, 40, 64, 92, 70, 48, 30, 56, 82, 60, 38, 26, 50, 86, 66, 44, 32, 5
 const cols = [
   { h: f.cols.products, links: [[t.nav.pos, ROUTES.pos[lang]], [t.nav.profit, ROUTES.profit[lang]], [t.nav.site, ROUTES.site[lang]], [t.nav.features, ROUTES.features[lang]], [f.pricing, ROUTES.pricing[lang]]] },
   { h: f.cols.services, links: [[t.nav.systems, ROUTES.systems[lang]], [t.nav.marketing, ROUTES.marketing[lang]], [t.nav.restaurants, ROUTES.restaurants[lang]], [tt('Fine dining'), ROUTES.maitre[lang]], [tt('Pâtisseries'), ROUTES.bakery[lang]], [tt('Coiffeurs et barbiers'), ROUTES.salons[lang]], [tt('Spas et instituts'), ROUTES.spas[lang]], [tt('Pressings'), ROUTES.pressing[lang]], [tt('Garages'), ROUTES.garage[lang]], [tt('Hanouts'), ROUTES.hanout[lang]], [tt('Immobilier'), ROUTES.immobilier[lang]], [tt('Agent immobilier'), ROUTES.immoAgent[lang]], [tt('Location courte durée'), ROUTES.immoStay[lang]]] },
-  { h: f.cols.company, links: [...(lang === 'fr' ? [['Blog', ROUTES.blog.fr]] : []), [t.nav.contact, ROUTES.contact[lang]], [t.nav.login, loginUrl(lang)], [t.nav.trial, signupUrl(lang)]] },
+  { h: f.cols.company, links: [...(lang === 'fr' ? [['Blog', ROUTES.blog.fr], ['Bssaha', ROUTES.bssaha.fr]] : []), [t.nav.contact, ROUTES.contact[lang]], [t.nav.login, loginUrl(lang)], [t.nav.trial, signupUrl(lang)]] },
 ];
 const wa = 'Bonjour, je souhaite en savoir plus sur Amplify.';
 ---
