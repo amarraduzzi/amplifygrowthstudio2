@@ -31,6 +31,8 @@ export const FEATURES = { tpe: false };
 export const APPS = {
   admin: 'https://app.amplifygrowthstudio.com',
   menu: 'https://menu.amplifygrowthstudio.com',
+  /** The drivers app (Amplify Livreur). Link of the drivers app. */
+  rider: 'https://amplify-driver.pages.dev',
 };
 /** Start the free trial. product 'pos', 'profit', 'site' or 'loyalty' = that one alone; nothing = both (Contrôle). */
 export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit' | 'site' | 'loyalty') =>

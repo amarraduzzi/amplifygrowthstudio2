@@ -238,6 +238,19 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   <!-- CALCULATOR: one per trade, the visitor's own numbers, nothing sent (LeakCalc.astro) -->
   <LeakCalc calcs={calcs} />
 
+  <!-- DELIVERY: restaurants can deliver without the delivery apps (page /livraison) -->
+  <section id="livraison" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <a href={ROUTES.livraison[lang]} class="tf group/l relative isolate flex flex-col gap-6 overflow-hidden rounded-[2rem] bg-navy p-7 text-white md:flex-row md:items-center md:justify-between md:p-10">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <div class="max-w-2xl">
+        <span class="grid size-14 place-items-center rounded-2xl bg-green text-navy"><Icon name="truck" class="size-7" /></span>
+        <h2 class="display mt-5 text-[2.2rem] leading-[0.95] sm:text-5xl">{tt('Votre livraison, vos clients.')}</h2>
+        <p class="mt-4 text-lg text-white/75">{tt('Commande en ligne, caisse, livreur et suivi : tout est relié, et chaque partie marche aussi seule.')}</p>
+      </div>
+      <span class="inline-flex min-h-12 shrink-0 items-center gap-2 self-start rounded-full bg-green px-7 font-semibold text-navy transition-colors group-hover/l:bg-[#04A859] md:self-auto">{tt('Découvrir la livraison')}<span aria-hidden="true" class="rtl:rotate-180">→</span></span>
+    </a>
+  </section>
+
   <!-- PARTNER: the trade's system, the site, the clients, drawn as a chain (PartnerChain.astro) -->
   <PartnerChain partner={partner} />
 

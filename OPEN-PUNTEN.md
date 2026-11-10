@@ -21,3 +21,7 @@ Alles staat in `src/config.ts` (contact) en `src/i18n/fr.ts` (teksten). Placehol
 1. `src/config.ts`: `live: true`.
 2. In Cloudflare Pages het domein toevoegen onder Custom domains.
 3. Search Console en Bing Webmaster Tools koppelen, sitemap insturen: `/sitemap-index.xml`.
+
+## Livraison (/livraison, /en/delivery/, /ar/livraison/)
+- `APPS.rider` in `src/config.ts` is the drivers app (amplify-driver.pages.dev). When it moves to its own domain, change it there only.
+- No prices on the page. Drivers: "Vos 50 premières courses sont offertes" is the only number. When the restaurant fee is decided, add it in one place (the "Des tarifs simples et transparents…" lines in `Livraison.astro` and its dictionary).

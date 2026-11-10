@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'pressing' | 'garage' | 'hanout' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog' | 'bssaha';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'pressing' | 'garage' | 'hanout' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog' | 'bssaha' | 'livraison';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -43,6 +43,8 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   blogCout: { fr: '/blog/cout-dun-plat/', ar: '/blog/cout-dun-plat/', en: '/blog/cout-dun-plat/' },
   // Bssaha: commission-free ordering directory for Rabat restaurants (fr, en, ar)
   bssaha: { fr: '/bssaha/', ar: '/ar/bssaha/', en: '/en/bssaha/' },
+  // delivery outside delivery apps: order sites, till, driver request, tracking and code
+  livraison: { fr: '/livraison/', ar: '/ar/livraison/', en: '/en/delivery/' },
   blogVues: { fr: '/blog/80000-vues/', ar: '/blog/80000-vues/', en: '/blog/80000-vues/' },
 };
 

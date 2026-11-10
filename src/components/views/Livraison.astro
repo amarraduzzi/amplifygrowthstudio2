@@ -1,0 +1,152 @@
+---
+// Livraison: a restaurant can deliver without the delivery apps. One ecosystem, four steps (order site, till,
+// driver request, handover with a 4-digit code), usable all together or one module at a time.
+// No prices or percentages are written here: restaurants will pay a small fee later, so the page only says
+// "simple, transparent rates, shared before you start". Drivers: their first 50 rides are free (the only number).
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import Faq from '../Faq.astro';
+import FinalCta from '../FinalCta.astro';
+import WaButton from '../WaButton.astro';
+import { APPS, isPlaceholder, waLink } from '../../config';
+import { tr } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const wa = tt('Bonjour, je voudrais livrer mes commandes moi-même, sans app de livraison. Pouvez-vous m’expliquer ?');
+const waRider = tt('Bonjour, je voudrais devenir livreur Amplify.');
+const riderUrl = isPlaceholder(APPS.rider) ? waLink(waRider) : APPS.rider;
+const title = tt('Livraison sans apps de livraison pour restaurants | Amplify Growth Studio');
+const description = tt('Commandes en ligne, caisse, livreur et suivi : un restaurant livre lui-même, sans passer par les apps de livraison. Tout ensemble ou module par module.');
+
+// the four steps of an order
+const steps = [
+  ['qr', 'La commande', 'Le client commande directement chez vous : sur votre site ou sur votre page de commande.'],
+  ['till', 'La caisse', 'La commande arrive tout de suite dans votre système, sans rien retaper. Votre équipe la voit et la prépare.'],
+  ['truck', 'Le livreur', 'En un clic, vous demandez un livreur avec Amplify Livreur. Ou vous gardez votre propre livreur : les deux marchent.'],
+  ['shield', 'La remise', 'Le client suit sa commande et donne un code à 4 chiffres au livreur à la remise. Espèces ou paiement en ligne.'],
+] as const;
+const modules = ['Site et commandes en ligne', 'Caisse', 'Amplify Livreur', 'Suivi et code de remise'];
+const keeps = [
+  'Vos clients restent les vôtres : leur numéro arrive dans votre caisse.',
+  'Espèces ou paiement en ligne : les deux fonctionnent.',
+  'Un code à 4 chiffres prouve que la commande est remise à la bonne personne.',
+];
+const faq = [
+  ['Dois-je quitter les apps de livraison ?', 'Non. Vous pouvez les garder. Amplify vous donne simplement la possibilité de livrer vous-même les clients qui commandent chez vous.'],
+  ['Je dois tout prendre en même temps ?', 'Non. Vous pouvez commencer par un seul module et ajouter les autres plus tard. Tout ensemble, c’est simplement plus simple.'],
+  ['Puis-je garder mes propres livreurs ?', 'Oui. Pour chaque commande, vous choisissez : votre livreur ou un livreur Amplify.'],
+  ['Comment le client paie-t-il ?', 'En espèces à la remise ou en ligne. Les deux fonctionnent.'],
+  ['Combien ça coûte ?', 'Des tarifs simples et transparents, communiqués avant de commencer. Écrivez-nous sur WhatsApp : nous vous les donnons pour votre restaurant.'],
+];
+const toc = [
+  { id: 'parcours', label: tt('Le parcours') },
+  { id: 'ensemble', label: tt('Ensemble ou séparé') },
+  { id: 'livreurs', label: tt('Livreurs') },
+  { id: 'faq', label: tt('Questions fréquentes') },
+];
+const schema = [serviceSchema(tt('Livraison sans apps de livraison'), description, abs(ROUTES.livraison[lang])), faqSchema(faq.map(([q, a]) => [tt(q), tt(a)]))].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="livraison" title={title} description={description} wa={wa} schema={schema} toc={toc}>
+  <!-- HERO: the promise, and one order card that travels from "received" to "delivered" -->
+  <section class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-16 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+    <div>
+      <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt('Amplify Livraison')}</p>
+      <h1 class="mt-5 text-[clamp(2.4rem,5.6vw,4.8rem)]">
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Votre livraison,')}</span></span>
+        <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block text-green-deep" style="--d:200ms">{tt('sans passer par les apps de livraison.')}</span></span>
+      </h1>
+      <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Vos clients commandent chez vous. La commande arrive dans votre caisse. Un livreur est demandé en un clic. Tout est entre vos mains, de la commande à la remise.')}</p>
+      <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+        <WaButton text={wa} label={tt('Parler de ma livraison')} where="livraison-hero" class="px-7 text-lg" />
+        <a href="#parcours" class="inline-flex min-h-12 items-center gap-2 rounded-full px-6 font-semibold ring-1 ring-line hover:bg-paper">{tt('Voir le parcours')}<span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+    <div class="fade-up relative mx-auto w-full max-w-sm" style="--d:350ms" aria-hidden="true">
+      <div class="rounded-[2rem] bg-navy p-5 text-white shadow-[0_40px_80px_-40px_rgba(0,30,62,0.6)]">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold text-white/60">{tt('Commande en livraison')}</span>
+          <span class="rounded-full bg-green px-3 py-1 text-xs font-bold text-navy">{tt('En route')}</span>
+        </div>
+        <ol class="mt-5 space-y-3">
+          {['Commande reçue', 'Livreur demandé', 'En route vers le client'].map((x, i) => (
+            <li class="flex items-center gap-3"><span class="grid size-7 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span><span class="font-semibold">{tt(x)}</span></li>
+          ))}
+          <li class="flex items-center gap-3 text-white/55"><span class="size-7 rounded-full ring-2 ring-white/25"></span><span class="font-semibold">{tt('Remis au client')}</span></li>
+        </ol>
+        <div class="mt-6 rounded-2xl bg-white/[0.07] p-4 text-center">
+          <p class="text-xs font-semibold text-white/60">{tt('Code de livraison')}</p>
+          <p class="display mt-1 text-5xl tracking-[0.3em] text-green" dir="ltr">• • • •</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE JOURNEY: one order, four steps, one line -->
+  <section id="parcours" class="relative isolate scroll-mt-20 overflow-hidden bg-navy py-14 text-white md:py-24" data-tf>
+    <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(50%_60%_at_50%_100%,rgba(5,185,98,.22),transparent_70%)]" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 sm:px-6">
+      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une commande,')}</span><span class="block text-green">{tt('quatre étapes, chez vous.')}</span></h2>
+      <p class="tf mt-4 max-w-2xl text-lg text-white/75" style="--d:100ms">{tt('Pas d’app au milieu. La commande suit une seule ligne, de votre client jusqu’à sa porte.')}</p>
+      <ol class="relative mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <li class="pointer-events-none absolute inset-x-[12%] top-7 hidden h-0.5 rounded-full bg-white/15 lg:block" aria-hidden="true"></li>
+        {steps.map(([i, h, x], k) => (
+          <li class="tf relative flex flex-col" style={`--d:${k * 120}ms`}>
+            <span class="relative z-10 grid size-14 place-items-center rounded-2xl bg-green text-navy"><Icon name={i as 'till'} class="size-7" /></span>
+            <div class="mt-4 flex-1 rounded-[1.75rem] bg-white/[0.05] p-6 ring-1 ring-white/10">
+              <p class="text-sm font-semibold text-green">{tt('Étape')} {k + 1}</p>
+              <h3 class="display mt-1 text-3xl">{tt(h)}</h3>
+              <p class="mt-2 text-white/70">{tt(x)}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ALL TOGETHER OR MODULE BY MODULE -->
+  <section id="ensemble" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Tout ensemble,')}</span><span class="block text-green-deep">{tt('ou module par module.')}</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">{tt('Les quatre étapes forment un seul ensemble. Mais vous n’êtes pas obligé de tout prendre d’un coup : commencez par ce dont vous avez besoin.')}</p>
+    <div class="mt-10 grid gap-4 md:grid-cols-2">
+      <div class="tf rounded-[2rem] bg-green p-7 text-navy" style="--d:100ms">
+        <h3 class="display text-3xl">{tt('Tout ensemble')}</h3>
+        <p class="mt-3 text-lg">{tt('La commande arrive seule dans la caisse, le livreur est demandé depuis la même commande, et le client suit sa livraison. Rien à retaper, rien à rappeler.')}</p>
+      </div>
+      <div class="tf rounded-[2rem] bg-paper p-7 ring-1 ring-line" style="--d:200ms">
+        <h3 class="display text-3xl">{tt('Un module à la fois')}</h3>
+        <p class="mt-3 text-lg text-muted">{tt('Vous avez déjà vos livreurs ? Gardez-les et utilisez seulement les commandes en ligne et la caisse. Vous voulez seulement des livreurs ? Demandez-en quand vous en avez besoin.')}</p>
+      </div>
+    </div>
+    <ul class="tf mt-6 flex flex-wrap gap-2" style="--d:250ms">
+      {modules.map(x => <li class="inline-flex min-h-10 items-center gap-2 rounded-full bg-paper px-4 font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt(x)}</li>)}
+    </ul>
+    <ul class="mt-10 grid gap-4 md:grid-cols-3">
+      {keeps.map((x, k) => (
+        <li class="tf flex gap-3 rounded-[1.5rem] bg-chalk p-5" style={`--d:${k * 100}ms`}>
+          <span class="mt-0.5 grid size-7 shrink-0 place-items-center rounded-full bg-navy text-green"><Icon name="check" class="size-4" /></span>
+          <span class="font-semibold">{tt(x)}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="tf mt-8 rounded-2xl bg-paper px-5 py-4 text-lg ring-1 ring-line">{tt('Des tarifs simples et transparents, communiqués avant de commencer.')}</p>
+  </section>
+
+  <!-- DRIVERS -->
+  <section id="livreurs" class="relative isolate scroll-mt-20 overflow-hidden bg-blue text-white" data-tf>
+    <div class="mx-auto flex max-w-6xl flex-col items-start gap-8 px-4 py-14 sm:px-6 md:flex-row md:items-center md:justify-between md:py-20">
+      <div class="max-w-xl">
+        <span class="grid size-14 place-items-center rounded-2xl bg-white text-navy"><Icon name="truck" class="size-7" /></span>
+        <h2 class="tf mt-5 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Vous voulez livrer ?')}</h2>
+        <p class="tf mt-4 text-lg text-white/80" style="--d:100ms">{tt('Inscrivez-vous comme livreur, recevez des courses de restaurants et livrez. Vos 50 premières courses sont offertes.')}</p>
+      </div>
+      <a href={riderUrl} target="_blank" rel="noopener" data-wa="livraison-livreur" class="inline-flex min-h-14 shrink-0 items-center gap-2 rounded-full bg-green px-8 text-lg font-semibold text-navy hover:bg-[#04A859]">{tt('Devenir livreur')}<span aria-hidden="true" class="rtl:rotate-180">→</span></a>
+    </div>
+  </section>
+
+  <div id="faq"><Faq lang={lang} items={faq.map(([q, a]) => [tt(q), tt(a)])} wa={wa} /></div>
+
+  <FinalCta lang={lang} page="livraison" h2={tt('Livrez par vous-même.')} p={tt('Dites-nous comment vous travaillez aujourd’hui. Nous vous montrons ce qui peut changer.')} wa={wa} />
+</Base>

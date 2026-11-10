@@ -9,7 +9,8 @@ import { pressingEn, pressingAr } from './dict-pressing';
 import { garageEn, garageAr } from './dict-garage';
 import { hanoutEn, hanoutAr } from './dict-hanout';
 import { homeEn, homeAr } from './dict-home';
-const D: Record<Lang, Record<string, string>> = { fr: {}, en: { ...garageEn, ...dictEn, ...venuesEn, ...immoEn, ...pressingEn, ...hanoutEn, ...homeEn }, ar: { ...garageAr, ...dictAr, ...venuesAr, ...immoAr, ...pressingAr, ...hanoutAr, ...homeAr } };
+import { livraisonEn, livraisonAr } from './dict-livraison';
+const D: Record<Lang, Record<string, string>> = { fr: {}, en: { ...garageEn, ...dictEn, ...venuesEn, ...immoEn, ...pressingEn, ...hanoutEn, ...homeEn, ...livraisonEn }, ar: { ...garageAr, ...dictAr, ...venuesAr, ...immoAr, ...pressingAr, ...hanoutAr, ...homeAr, ...livraisonAr } };
 export const tr = (lang: Lang) => (fr: string): string => D[lang][fr] ?? fr;
 /** The language of the page being rendered, from its URL. */
 export const langOf = (url: URL): Lang => (url.pathname.startsWith('/ar/') || url.pathname === '/ar' ? 'ar' : url.pathname.startsWith('/en/') || url.pathname === '/en' ? 'en' : 'fr');
