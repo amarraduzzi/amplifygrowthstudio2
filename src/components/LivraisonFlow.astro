@@ -1,45 +1,74 @@
 ---
-// Livraison, hero terminal: one order travels through the ecosystem on its own, from Bssaha to the handover with its 4-digit code.
-// The code shown is an example (labelled as such). With reduced motion the finished state is shown straight away.
+// Livraison, hero visual: the whole ecosystem in one card. Top: how it works with delivery apps (the app sits in the middle, struck through).
+// Below: Amplify, five steps that all belong to the restaurant, lit one after the other. The code shown is an example (labelled as such).
+// Without JavaScript or with reduced motion every step is lit straight away.
 import Icon from './Icon.astro';
 import { tr } from '../i18n/t';
 import type { Lang } from '../i18n/routes';
 interface Props { lang: Lang }
 const tt = tr(Astro.props.lang);
-const rows = ['Commande via Bssaha', 'Commande reçue', 'Livreur demandé', 'En route vers le client', 'Remis au client'];
+const steps = [
+  ['search', 'Bssaha', 'Vos clients vous trouvent'],
+  ['qr', 'Votre site de commande', 'Ils commandent chez vous, sous votre nom'],
+  ['till', 'Votre caisse', 'La commande arrive toute seule'],
+  ['truck', 'Votre livreur', 'Le vôtre, ou un livreur Amplify en un clic'],
+  ['shield', 'Remise avec code', 'Le client donne son code à 4 chiffres'],
+] as const;
 ---
-<div class="relative mx-auto w-full max-w-md">
-  <div class="bx-glass bx-term lv-flow" data-tilt="6" id="lv-flow" role="group" aria-label={tt('Commande en livraison')}>
-    <div class="bx-term-bar" aria-hidden="true"><i></i><i></i><i></i><span class="font-dot">LIVRAISON // {tt('En route')}</span></div>
-    <ol class="lv-rows">
-      {rows.map((x) => (
-        <li class="lv-row"><span class="lv-dot" aria-hidden="true"><Icon name="check" class="size-4" /></span><span class="font-semibold">{tt(x)}</span></li>
+<div class="eco mx-auto w-full max-w-lg" id="eco" role="group" aria-label={tt('L’écosystème Amplify, sans apps de livraison')}>
+  <div class="bx-glass bx-term eco-card" data-tilt="4">
+    <div class="bx-term-bar" aria-hidden="true"><i></i><i></i><i></i><span class="font-dot" dir="ltr">AMPLIFY // {tt('100 % à vous')}</span></div>
+
+    <div class="eco-apps">
+      <p class="eco-cap">{tt('Avec les apps de livraison')}</p>
+      <div class="eco-lane">
+        <span class="eco-chip">{tt('Client')}</span>
+        <i class="eco-arrow" aria-hidden="true"></i>
+        <span class="eco-chip eco-chip--no"><s>{tt('App de livraison')}</s></span>
+        <i class="eco-arrow" aria-hidden="true"></i>
+        <span class="eco-chip">{tt('Votre restaurant')}</span>
+      </div>
+      <p class="eco-bad">{tt('Une commission sur chaque commande')} · {tt('Les clients restent à l’app')}</p>
+    </div>
+
+    <p class="eco-cap eco-cap--go">{tt('Avec Amplify')}</p>
+    <ol class="eco-steps" id="eco-steps">
+      {steps.map(([ic, h, p]) => (
+        <li class="eco-step">
+          <span class="eco-node" aria-hidden="true"><Icon name={ic} class="size-5" /></span>
+          <div>
+            <p class="eco-h">{tt(h)}</p>
+            <p class="eco-p">{tt(p)}</p>
+          </div>
+        </li>
       ))}
     </ol>
-    <div class="lv-code">
-      <p class="text-xs bx-mute">{tt('Code de livraison')} · {tt('Exemple')}</p>
-      <p class="bx-led lv-digits" dir="ltr" aria-live="polite"><span>•</span><span>•</span><span>•</span><span>•</span></p>
+
+    <div class="eco-code">
+      <p class="eco-code-l">{tt('Code de livraison')} · {tt('Exemple')}</p>
+      <p class="bx-led eco-digits" dir="ltr"><span>4</span><span>8</span><span>2</span><span>7</span></p>
     </div>
+
+    <ul class="eco-yes">
+      <li>{tt('Zéro commission')}</li>
+      <li>{tt('Aucune place de marché')}</li>
+      <li>{tt('Tout est à vous')}</li>
+    </ul>
   </div>
 </div>
 <script>
-  const box = document.getElementById('lv-flow');
-  if (box) {
-    const rows = [...box.querySelectorAll<HTMLElement>('.lv-row')];
-    const digits = [...box.querySelectorAll<HTMLElement>('.lv-digits span')];
-    const code = ['4', '8', '2', '7'];
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const box = document.getElementById('eco');
+  if (box && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const list = box.querySelector<HTMLElement>('#eco-steps')!;
+    const items = [...list.querySelectorAll<HTMLElement>('.eco-step')];
     const draw = (n: number) => {
-      rows.forEach((r, i) => r.classList.toggle('done', i < n));
-      rows.forEach((r, i) => r.classList.toggle('now', i === n));
-      digits.forEach((d, i) => { d.textContent = n >= rows.length ? code[i] : '•'; });
-      box.classList.toggle('lv-done', n >= rows.length);
+      items.forEach((r, i) => { r.classList.toggle('done', i < n); r.classList.toggle('now', i === n); });
+      list.style.setProperty('--p', String(Math.min(n, items.length - 1) / (items.length - 1)));
+      box.classList.toggle('eco-done', n >= items.length);
     };
-    if (still) draw(rows.length);
-    else {
-      let n = 0; draw(0);
-      const loop = () => { n = n >= rows.length ? 0 : n + 1; draw(n); setTimeout(loop, n >= rows.length ? 3200 : 1300); };
-      setTimeout(loop, 1200);
-    }
+    box.classList.add('eco-live');
+    let n = 0; draw(0);
+    const loop = () => { n = n >= items.length ? 0 : n + 1; draw(n); setTimeout(loop, n >= items.length ? 3400 : 1200); };
+    setTimeout(loop, 1000);
   }
 </script>
