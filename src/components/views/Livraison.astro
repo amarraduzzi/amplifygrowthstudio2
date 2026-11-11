@@ -12,6 +12,7 @@ import BxArrow from '../BxArrow.astro';
 import BssahaFx from '../BssahaFx.astro';
 import BssahaDirectory from '../BssahaDirectory.astro';
 import LivraisonFlow from '../LivraisonFlow.astro';
+import LivraisonLaunch from '../LivraisonLaunch.astro';
 import { bssahaModel } from '../../lib/bssahaModel';
 import { APPS, isPlaceholder, waLink } from '../../config';
 import { tr } from '../../i18n/t';
@@ -112,6 +113,8 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
     <div class="bx-floor" aria-hidden="true"><i></i></div>
     <div class="bx-grain" aria-hidden="true"></div>
     <div class="bx-scan" aria-hidden="true"></div>
+    <div class="w-full">
+    <div class="relative mx-auto w-full max-w-6xl px-4 pt-6 sm:px-6 lg:pt-8"><LivraisonLaunch lang={lang} /></div>
     <div class="mx-auto grid w-full max-w-6xl gap-x-14 gap-y-8 px-4 py-8 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-12">
       <div class="lg:col-start-1 lg:row-start-1">
         <p class="bx-badge rv"><span class="bx-dot"></span><span class="font-dot text-sm tracking-widest">{tt('Amplify Livraison')}</span></p>
@@ -127,6 +130,7 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
         <div class="bx-stat"><b class="bx-led" dir="ltr">0 DH</b><span>{c.zeroLabel}</span></div>
         <div class="bx-stat"><b class="bx-led" dir="ltr">{restos.length}</b><span>{c.restos}</span></div>
       </div>
+    </div>
     </div>
   </section>
 

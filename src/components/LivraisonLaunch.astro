@@ -1,0 +1,110 @@
+---
+// Livraison, hero opening: the restaurant is held by chains marked "%" (the app commissions). The chains snap one by one,
+// then the restaurant lifts off. Plays once (about 5 s), "Revoir" plays it again. No numbers are invented: the chains only carry "%".
+// Without JavaScript or with reduced motion the final picture is shown straight away.
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const tt = tr(Astro.props.lang);
+// [x of the chain foot on the building, x of the peg, y of the building anchor]
+const chains = [[168, 30, 124], [168, 84, 156], [232, 316, 156], [232, 370, 124]] as const;
+const stars = [[22, 18], [70, 44], [118, 14], [158, 52], [248, 22], [292, 50], [338, 16], [380, 46], [52, 80], [350, 84], [200, 12]] as const;
+---
+<div class="lc" id="lc" role="img" aria-label={tt('Votre restaurant se libère des commissions des apps et décolle.')}>
+  <svg class="lc-svg" viewBox="0 0 400 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <defs>
+      <linearGradient id="lc-trail" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3DFFA0" stop-opacity="0"/><stop offset="1" stop-color="#3DFFA0" stop-opacity=".55"/></linearGradient>
+    </defs>
+    <g class="lc-stars">{stars.map(([x, y], i) => <circle cx={x} cy={y} r={i % 3 === 0 ? 1.6 : 1} style={`--t:${i * 0.37}s`} />)}</g>
+    <line x1="0" y1="172" x2="400" y2="172" class="lc-ground" />
+    {chains.map(([fx, px, y], i) => (
+      <g class={`lc-chain lc-chain--${i}`} style={`--i:${i}`}>
+        <line x1={fx} y1={y} x2={px} y2="170" class="lc-link" />
+        <g class="lc-badge" transform={`translate(${(fx + px) / 2} ${(y + 170) / 2})`}>
+          <g class="lc-badge-in"><circle r="10.5" /><text y="4.5" text-anchor="middle">%</text></g>
+        </g>
+        <rect x={px - 7} y="166" width="14" height="10" rx="2" class="lc-peg" />
+      </g>
+    ))}
+    <g class="lc-ship">
+      <rect x="198" y="170" width="4" height="0" class="lc-trail" />
+      <path d="M190 176 L200 214 L210 176 Z" class="lc-flame" />
+      <path d="M194 176 L200 198 L206 176 Z" class="lc-flame lc-flame--in" />
+      <rect x="168" y="112" width="64" height="60" rx="3" class="lc-body" />
+      <path d="M162 114 L200 88 L238 114 Z" class="lc-roof" />
+      <rect x="193" y="146" width="14" height="26" rx="2" class="lc-door" />
+      <rect x="177" y="124" width="12" height="12" rx="1.5" class="lc-win" />
+      <rect x="211" y="124" width="12" height="12" rx="1.5" class="lc-win" />
+    </g>
+    <g class="lc-zero" dir="ltr"><text x="200" y="158" text-anchor="middle">0 DH</text></g>
+  </svg>
+  <div class="lc-cap">
+    <p class="lc-cap-a">{tt('Les apps gardent un pourcentage de chaque commande.')}</p>
+    <p class="lc-cap-b">{tt('Plus jamais. Votre restaurant reprend le contrôle.')}</p>
+  </div>
+  <button type="button" class="lc-replay" id="lc-replay" hidden>{tt('Revoir l’envol')}</button>
+</div>
+<script is:inline>
+  (function () {
+    var el = document.getElementById('lc');
+    if (el && !matchMedia('(prefers-reduced-motion: reduce)').matches) el.classList.add('lc-play');
+  })();
+</script>
+<script>
+  const el = document.getElementById('lc');
+  const btn = document.getElementById('lc-replay') as HTMLButtonElement | null;
+  if (el && btn && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    btn.hidden = false;
+    btn.addEventListener('click', () => {
+      el.classList.remove('lc-play');
+      void el.getBoundingClientRect();
+      el.classList.add('lc-play');
+    });
+  }
+</script>
+<style>
+  .lc { position: relative; display: grid; justify-items: center; gap: .4rem; }
+  .lc-svg { width: 100%; height: clamp(130px, 19vh, 170px); overflow: visible; }
+  .lc-stars circle { fill: #fff; opacity: .55; }
+  .lc-ground { stroke: rgb(255 255 255 / .22); stroke-width: 1.5; }
+  .lc-link { stroke: var(--coral); stroke-width: 4.5; stroke-dasharray: 9 4; stroke-linecap: round; opacity: 0; }
+  .lc-peg { fill: var(--coral); opacity: .9; }
+  .lc-badge circle { fill: #2a1114; stroke: var(--coral); stroke-width: 1.8; }
+  .lc-badge text { fill: var(--coral); font: 700 14px 'Archivo Variable', sans-serif; }
+  .lc-badge { opacity: 0; }
+  .lc-ship { transform: translateY(-82px); }
+  .lc-body { fill: #0b2a4a; stroke: var(--gl); stroke-width: 2; }
+  .lc-roof { fill: var(--gl); }
+  .lc-door { fill: var(--gl); opacity: .85; }
+  .lc-win { fill: var(--gl); opacity: .9; }
+  .lc-flame { fill: #FFB020; opacity: 0; transform-origin: 200px 176px; }
+  .lc-flame--in { fill: #fff3c4; }
+  .lc-zero text { fill: var(--gl); font: 700 30px 'Doto Variable', 'Archivo Variable', monospace; filter: drop-shadow(0 0 8px rgb(61 255 160 / .7)); }
+  .lc-cap { display: grid; text-align: center; max-width: 34rem; padding-inline: .5rem; }
+  .lc-cap p { grid-area: 1 / 1; font-size: .95rem; line-height: 1.35; }
+  .lc-cap-a { color: var(--coral); opacity: 0; }
+  .lc-cap-b { color: #fff; font-weight: 600; }
+  .lc-replay { font-size: .8rem; color: rgb(255 255 255 / .6); text-decoration: underline; text-underline-offset: 3px; padding: .35rem .6rem; }
+  .lc-replay:hover, .lc-replay:focus-visible { color: var(--gl); }
+
+  /* Timeline. Base styles above are the final picture; .lc-play runs it from the start and ends on it. */
+  .lc-play .lc-link, .lc-play .lc-badge { opacity: 1; }
+  .lc-play .lc-ship { transform: none; animation: lc-lift 1.9s cubic-bezier(.45, 0, .2, 1) 3.1s both; }
+  .lc-play .lc-flame { animation: lc-burn 1.9s ease-out 3.1s both; }
+  .lc-play .lc-zero { animation: lc-in .8s ease-out 4.5s both; }
+  .lc-play .lc-cap-a { animation: lc-in .5s ease-out .3s both, lc-out .4s ease-in 3.1s forwards; }
+  .lc-play .lc-cap-b { animation: lc-in .7s ease-out 4.4s both; }
+  .lc-play .lc-chain .lc-link { animation: lc-tense .5s ease-in-out calc(.5s + var(--i) * .5s) 2, lc-snap .25s ease-in calc(1.2s + var(--i) * .5s) forwards; }
+  .lc-play .lc-chain .lc-badge-in { animation: lc-fly .6s ease-in calc(1.2s + var(--i) * .5s) forwards; }
+  .lc-play .lc-chain--0 .lc-badge-in, .lc-play .lc-chain--1 .lc-badge-in { --dx: -26px; }
+  .lc-play .lc-chain--2 .lc-badge-in, .lc-play .lc-chain--3 .lc-badge-in { --dx: 26px; }
+  .lc-play .lc-stars circle { animation: lc-twinkle 2.6s ease-in-out var(--t) infinite; }
+  @keyframes lc-tense { 50% { stroke-width: 6; } }
+  @keyframes lc-snap { to { opacity: 0; } }
+  @keyframes lc-fly { to { transform: translate(var(--dx), 22px) rotate(40deg); opacity: 0; } }
+  @keyframes lc-lift { from { transform: translateY(0); } to { transform: translateY(-82px); } }
+  @keyframes lc-burn { 0% { opacity: 0; transform: scaleY(.3); } 15%, 70% { opacity: 1; transform: scaleY(1); } 100% { opacity: 0; transform: scaleY(1.5); } }
+  @keyframes lc-in { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes lc-out { to { opacity: 0; } }
+  @keyframes lc-twinkle { 50% { opacity: .15; } }
+</style>
