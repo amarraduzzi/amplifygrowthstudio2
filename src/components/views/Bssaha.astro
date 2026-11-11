@@ -1,49 +1,22 @@
 ---
 // Bssaha: commission-free ordering directory for Rabat restaurants (fr, en, ar). Design: "Le Terminal", a futuristic command-centre
 // in the Amplify palette (navy, green, tall Archivo heads). Text: src/i18n/bssaha.ts. Restaurants: src/data/bssaha.ts.
+// The directory itself (list, map, calculator, live order, join form) is BssahaDirectory, also shown inside the Livraison page.
 import '../../styles/bssaha.css';
 import Base from '../../layouts/Base.astro';
 import FinalCta from '../FinalCta.astro';
 import BxArrow from '../BxArrow.astro';
 import BssahaFx from '../BssahaFx.astro';
 import BssahaTicket from '../BssahaTicket.astro';
-import BssahaCalc from '../BssahaCalc.astro';
-import BssahaMap from '../BssahaMap.astro';
-import BssahaLive from '../BssahaLive.astro';
-import { CITIES, MIN_TO_OPEN } from '../../data/cities';
+import BssahaDirectory from '../BssahaDirectory.astro';
+import { bssahaModel } from '../../lib/bssahaModel';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
-import { waLink } from '../../config';
-import { RESTOS } from '../../data/bssaha';
-import { bssahaCopy } from '../../i18n/bssaha';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
-const c = bssahaCopy(lang);
-// WhatsApp messages go to the Amplify team, who read French.
-const wa = 'Bonjour, je voudrais ajouter mon restaurant sur Bssaha.';
-const restos = RESTOS.filter(r => r.actif).map(r => ({
-  nom: r.nom, ville: r.ville ?? 'rabat', modes: r.modes, horaires: r.horaires, quartier: r.quartier[lang], cuisine: r.cuisine[lang], description: r.description[lang],
-  href: r.orderUrl || (r.whatsapp ? `https://wa.me/${r.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent('Bonjour, je souhaite commander (via Bssaha).')}` : ''),
-  isWa: !r.orderUrl && !!r.whatsapp,
-}));
-const quartiers = [...new Set(restos.map(r => `${r.ville}|${r.quartier}`))].sort().map(x => x.split('|') as [string, string]);
-// The glow of a city on the dark page: Rabat is the brand green, the others glow in their petit-taxi colour (brightened for a dark background).
-const GLOW: Record<string, string> = { rabat: '#3DFFA0', casablanca: '#FF5A5F', fes: '#FF5A5F', tanger: '#6EC6FF', marrakech: '#E8B86D', agadir: '#FFA23A' };
-// cities: open when status is live, or as soon as MIN_TO_OPEN restaurants are listed
-const rows = CITIES.map(ct => {
-  const count = restos.filter(r => r.ville === ct.id).length;
-  const open = ct.status === 'live' || count >= MIN_TO_OPEN;
-  const name = ct.name[lang];
-  return { id: ct.id, name, lon: ct.lon, lat: ct.lat, color: ct.color, ink: ct.ink, glow: GLOW[ct.id] ?? '#3DFFA0', open, soon: !open && ct.status === 'soon', count, min: MIN_TO_OPEN,
-    ownerHref: waLink(`Bonjour, je suis restaurateur à ${ct.name.fr} et je voudrais faire partie des premiers restaurants sur Bssaha.`),
-    dinerHref: waLink(`Bonjour, prévenez-moi quand Bssaha ouvre à ${ct.name.fr}.`), listHref: '#liste' };
-});
-const openRows = rows.filter(r => r.open);
-const first = openRows[0];
-const otherHref = waLink('Bonjour, je voudrais Bssaha dans ma ville : ');
-const cuisines = [...new Set(restos.map(r => r.cuisine))].sort();
+const m = bssahaModel(lang);
+const { c, wa, restos, first } = m;
 const schema = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Bssaha', inLanguage: lang, url: abs(ROUTES.bssaha[lang]),
   about: restos.map(r => ({ '@type': 'Restaurant', name: r.nom, servesCuisine: r.cuisine, address: { '@type': 'PostalAddress', addressLocality: r.quartier, addressCountry: 'MA' } })) }];
-const WA_JOIN = waLink(wa);
 const ticker = [`${c.ticketComm} 0 DH`, c.modes.direct, `100 % ${c.liveReceived}`, c.modes.whatsapp, c.badge, c.modes.livraison, c.modes.emporter];
 ---
 <Base lang={lang} page="bssaha" title={c.title} description={c.description} wa={wa} schema={schema}>
@@ -83,224 +56,9 @@ const ticker = [`${c.ticketComm} 0 DH`, c.modes.direct, `100 % ${c.liveReceived}
     </div>
   </div>
 
-  <!-- ============ LIST ============ -->
-  <section id="liste" class="bx-sec px-4 py-16 sm:px-6 md:py-24">
-    <div class="mx-auto max-w-6xl">
-      <div class="rv">
-        <p class="bx-eyebrow">{c.liveNow} · {c.restos}</p>
-        <h2 id="list-title" class="bx-h2 mt-3">{c.listCity.replace('{v}', first.name)}</h2>
-        <span class="bx-glow-line" aria-hidden="true"></span>
-      </div>
-      <div class="bx-chip-row mt-8" role="group" aria-label={c.cityLabel}>
-        {rows.filter(r => r.open || r.soon).map(r => r.open
-          ? <button type="button" data-city={r.id} data-name={r.name} aria-pressed={r.id === first.id ? 'true' : 'false'} class="city-tab bx-city-btn">{r.name}</button>
-          : <a href="#villes" data-soon-city={r.id} class="bx-city-btn">{r.name} <span class="pill">{c.stSoon}</span></a>)}
-      </div>
-      <div class="mt-6 grid gap-3 md:grid-cols-[2fr_1fr_1fr]">
-        <input id="q-text" type="search" placeholder={c.search} aria-label={c.search} class="bx-field" />
-        <select id="q-quartier" aria-label={c.fQuartier} class="bx-field"><option value="">{c.allQ}</option>{quartiers.map(([v, q]) => <option value={q} data-v={v}>{q}</option>)}</select>
-        <select id="q-cuisine" aria-label={c.allC} class="bx-field"><option value="">{c.allC}</option>{cuisines.map(x => <option value={x}>{x}</option>)}</select>
-      </div>
-      <div class="mt-5 flex flex-wrap items-center justify-between gap-4">
-        <label class="bx-switch"><input id="q-open" type="checkbox" /><span class="tr" aria-hidden="true"></span><span>{c.openNow}</span></label>
-        <div class="flex items-center gap-4">
-          <p id="count" class="font-dot text-[#3DFFA0]" aria-live="polite"></p>
-          <button type="button" id="bx-spin" class="bx-btn bx-btn--ghost !min-h-11 !px-5 !text-base">✦ {c.surprise}</button>
-        </div>
-      </div>
-      <ul id="grid" class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {restos.map((r, n) => (
-          <li class="resto" data-v={r.ville} data-nom={`${r.nom} ${r.cuisine} ${r.description}`.toLowerCase()} data-q={r.quartier} data-c={r.cuisine} data-h={JSON.stringify(r.horaires ?? {})}>
-            <article class="bx-glass bx-card rv" data-tilt="5" style={`--d:${n * 80}ms`}>
-              <span class="idx font-dot" aria-hidden="true">{String(n + 1).padStart(2, '0')}</span>
-              <h3 class="display">{r.nom}</h3>
-              <p class="text-sm bx-mute">{r.cuisine} – {r.quartier}</p>
-              <p class="flex flex-wrap gap-2">
-                <span class="open-tag bx-open hidden"><i></i>{c.openTag}</span>
-                {r.modes.map(m => <span class={`bx-chip ${m === 'direct' ? 'direct' : 'other'}`}>{c.modes[m]}</span>)}
-              </p>
-              <p class="text-[0.97rem] text-white/85">{r.description}</p>
-              {r.href && <a href={r.href} target="_blank" rel="noopener" class="bx-btn bx-btn--go mt-auto" data-mag>{r.isWa ? c.orderWa : c.order}<BxArrow /></a>}
-            </article>
-          </li>
-        ))}
-        <li class="bx-slot">
-          <a href="#rejoindre" class="bx-ghost h-full">
-            <span class="plus" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg></span>
-            <h3 class="display">{c.joinTitle}</h3>
-            <span class="font-semibold text-[#3DFFA0]">{c.ctaJoin} →</span>
-          </a>
-        </li>
-      </ul>
-      <p id="empty" class="mt-5 hidden rounded-2xl border border-dashed border-white/25 p-8 text-center bx-mute">{c.empty} <a href="#rejoindre" class="font-semibold text-[#3DFFA0] underline">{c.emptyLink}</a></p>
-    </div>
-  </section>
-
-  <BssahaMap c={c} rows={rows} otherHref={otherHref} first={first.id} />
-
-  <!-- ============ HOW ============ -->
-  <section class="bx-sec px-4 py-16 sm:px-6 md:py-24">
-    <div class="mx-auto max-w-6xl">
-      <div class="rv">
-        <h2 class="bx-h2">{c.howTitle}</h2>
-        <span class="bx-glow-line" aria-hidden="true"></span>
-      </div>
-      <ol class="bx-steps mt-12" id="bx-steps">
-        {c.how.map(([h, p], i) => (
-          <li class="bx-step">
-            <span class="num font-dot" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-            <div><h3 class="display">{h}</h3><p class="mt-2 text-lg">{p}</p></div>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
-
-  <BssahaCalc c={c} />
-  <BssahaLive c={c} />
-
-  <!-- ============ JOIN ============ -->
-  <section id="rejoindre" class="bx-sec bx-sec--alt px-4 py-16 sm:px-6 md:py-24">
-    <div class="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2">
-      <div>
-        <div class="rv">
-          <h2 class="bx-h2">{c.joinTitle}</h2>
-          <span class="bx-glow-line" aria-hidden="true"></span>
-          <p class="measure mt-5 text-lg bx-mute">{c.joinLead}</p>
-        </div>
-        <ul class="bx-rules mt-8 space-y-4 text-lg">{c.rules.map((r, i) => <li class="rv" style={`--d:${i * 90}ms`}>{r}</li>)}</ul>
-        <div class="mt-10" aria-live="polite">
-          <p class="bx-prev-tag font-dot"><span class="bx-dot"></span>{c.previewTitle}</p>
-          <div class="bx-glass bx-card mt-4 max-w-md" data-tilt="6" id="pv">
-            <span class="idx font-dot" aria-hidden="true">NEW</span>
-            <h3 class="display" id="pv-name" data-ph={c.previewName}>{c.previewName}</h3>
-            <p class="text-sm bx-mute" id="pv-sub">{first.name}</p>
-            <p class="flex flex-wrap gap-2" id="pv-chips"><span class="bx-open"><i></i>{c.openTag}</span></p>
-            <span class="bx-btn bx-btn--go mt-2" aria-hidden="true">{c.order}<BxArrow /></span>
-          </div>
-        </div>
-      </div>
-      <form id="join" class="bx-glass bx-form rv content-start" style="--d:120ms">
-        <label>{c.fNom}<input name="nom" required class="bx-in" autocomplete="organization" /></label>
-        <label>{c.fVille}<input name="ville" required placeholder={c.fVillePh} class="bx-in" /></label>
-        <label>{c.fQuartier}<input name="quartier" required placeholder={c.fQuartierPh} class="bx-in" /></label>
-        <label>{c.fTel}<input name="tel" type="tel" required placeholder="06 …" dir="ltr" class="bx-in" autocomplete="tel" /></label>
-        <label>{c.fCas}
-          <select name="cas" class="bx-in">{c.cas.map((x, i) => <option value={bssahaCopy('fr').cas[i]}>{x}</option>)}</select></label>
-        <label>{c.fLien}<input name="lien" type="url" placeholder="https://" dir="ltr" class="bx-in" /></label>
-        <button type="submit" class="bx-btn bx-btn--go bx-send" data-mag><span class="fill" aria-hidden="true"></span><span class="t">{c.send}</span></button>
-        <p class="text-sm bx-mute">{c.formNote} <a href={WA_JOIN} class="text-[#3DFFA0] underline">{c.writeUs}</a></p>
-      </form>
-    </div>
-  </section>
+  <BssahaDirectory m={m} />
 
   <FinalCta lang={lang} page="bssaha" wa={wa} h2={c.ctaH2} p={c.ctaP} />
   </div>
 
-  <script>
-    const page = document.querySelector<HTMLElement>('.bx-page')!;
-    const D = page.dataset;
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const $ = <T extends HTMLElement>(s: string) => document.querySelector<T>(s)!;
-
-    // ---------- the list: city tabs, filters, "open now", surprise roll
-    const cards = [...document.querySelectorAll<HTMLElement>('.resto')];
-    const days = ['dim', 'lun', 'mar', 'mer', 'jeu', 'ven', 'sam'];
-    const isOpen = (h: Record<string, string>) => {
-      const now = new Date(new Date().toLocaleString('en-US', { timeZone: 'Africa/Casablanca' }));
-      const slot = h[days[now.getDay()]]; if (!slot) return null;
-      const p = slot.split('-').map(s => { const x = s.split(':'); return +x[0] * 60 + +x[1]; });
-      const m = now.getHours() * 60 + now.getMinutes();
-      return p[1] > p[0] ? (m >= p[0] && m < p[1]) : (m >= p[0] || m < p[1]);
-    };
-    const state = new Map<HTMLElement, boolean | null>();
-    cards.forEach(el => { const o = isOpen(JSON.parse(el.dataset.h || '{}')); state.set(el, o); if (o === true) el.querySelector('.open-tag')!.classList.remove('hidden'); });
-    const tabs = [...document.querySelectorAll<HTMLButtonElement>('.city-tab')];
-    let city = D.first!;
-    const draw = (animate = true) => {
-      const s = $<HTMLInputElement>('#q-text').value.toLowerCase(), q = $<HTMLSelectElement>('#q-quartier').value, cu = $<HTMLSelectElement>('#q-cuisine').value, op = $<HTMLInputElement>('#q-open').checked;
-      let n = 0;
-      cards.forEach(el => {
-        const ok = el.dataset.v === city && (!s || el.dataset.nom!.indexOf(s) > -1) && (!q || el.dataset.q === q) && (!cu || el.dataset.c === cu) && (!op || state.get(el) === true);
-        el.hidden = !ok;
-        const art = el.firstElementChild as HTMLElement;
-        art.classList.remove('hl', 'win');
-        if (ok) { art.style.setProperty('--i', String(n)); if (animate && !still) { art.classList.remove('pop'); void art.offsetWidth; art.classList.add('pop'); } n++; }
-      });
-      $('#count').textContent = n === 1 ? D.one! : D.many!.replace('{n}', String(n));
-      $('#empty').classList.toggle('hidden', n > 0);
-    };
-    const pick = (id: string) => {
-      city = id; let name = '';
-      tabs.forEach(t => { const on = t.dataset.city === id; t.setAttribute('aria-pressed', String(on)); if (on) name = t.dataset.name!; });
-      [...$<HTMLSelectElement>('#q-quartier').options].forEach(o => { if (o.value) { o.hidden = o.dataset.v !== id; o.disabled = o.dataset.v !== id; } });
-      $<HTMLSelectElement>('#q-quartier').value = '';
-      if (name) $('#list-title').textContent = D.listCity!.replace('{v}', name);
-      draw();
-    };
-    const announce = (id: string, open: boolean) => document.dispatchEvent(new CustomEvent('bx:city', { detail: { id, open, from: 'list' } }));
-    tabs.forEach(t => t.addEventListener('click', () => { pick(t.dataset.city!); announce(t.dataset.city!, true); }));
-    document.querySelectorAll<HTMLElement>('[data-soon-city]').forEach(a => a.addEventListener('click', () => announce(a.dataset.soonCity!, false)));
-    document.addEventListener('bx:city', e => { const d = (e as CustomEvent<{ id: string; open: boolean; from: string }>).detail; if (d.from !== 'list' && d.open) pick(d.id); });
-    ['#q-text', '#q-quartier', '#q-cuisine', '#q-open'].forEach(id => { $(id).addEventListener('input', () => draw(false)); $(id).addEventListener('change', () => draw(false)); });
-    pick(city);
-
-    // surprise roll: a slot machine over the visible restaurants
-    let rolling = false;
-    $('#bx-spin').addEventListener('click', () => {
-      if (rolling) return;
-      const vis = cards.filter(el => !el.hidden).map(el => el.firstElementChild as HTMLElement);
-      if (!vis.length) return;
-      rolling = true;
-      const win = (Math.random() * vis.length) | 0;
-      const total = still ? 1 : vis.length * 2 + win + 1 + (vis.length < 3 ? 6 : 0);
-      let i = 0, delay = 70;
-      const tick = () => {
-        vis.forEach(v => v.classList.remove('hl'));
-        const cur = vis[(still ? win : i) % vis.length]; cur.classList.add('hl'); i++;
-        if (i < total) { delay *= 1.1; setTimeout(tick, delay); return; }
-        cur.classList.remove('win'); void cur.offsetWidth; cur.classList.add('win');
-        cur.scrollIntoView({ block: 'center', behavior: still ? 'auto' : 'smooth' });
-        setTimeout(() => { cur.classList.remove('hl', 'win'); rolling = false; }, 2800);
-      };
-      tick();
-    });
-
-    // ---------- how it works: the line fills as you scroll, steps light up in order
-    const steps = $('#bx-steps'), items = [...steps.querySelectorAll<HTMLElement>('.bx-step')];
-    const onScroll = () => {
-      const r = steps.getBoundingClientRect(), vh = innerHeight;
-      const p = Math.min(1, Math.max(0, (vh * 0.72 - r.top) / r.height));
-      steps.style.setProperty('--p', p.toFixed(3));
-      items.forEach((it, i) => it.classList.toggle('on', still || p >= (i + 0.35) / items.length * 0.92));
-    };
-    addEventListener('scroll', () => requestAnimationFrame(onScroll), { passive: true }); addEventListener('resize', onScroll); onScroll();
-
-    // ---------- join: live preview of the listing + send to WhatsApp
-    const form = $<HTMLFormElement>('#join');
-    const pvName = $('#pv-name'), pvSub = $('#pv-sub'), pvChips = $('#pv-chips');
-    const casModes: string[][] = [['direct', 'whatsapp'], ['direct'], ['livraison', 'whatsapp'], ['direct', 'livraison']];
-    const labels: Record<string, string> = { direct: D.mDirect!, whatsapp: D.mWhatsapp!, livraison: D.mLivraison!, emporter: D.mEmporter! };
-    const openChip = pvChips.firstElementChild!.cloneNode(true) as HTMLElement;
-    const v = (n: string) => ((form.elements.namedItem(n) as HTMLInputElement | HTMLSelectElement).value || '').trim();
-    const preview = () => {
-      pvName.textContent = v('nom') || pvName.dataset.ph!;
-      pvName.style.opacity = v('nom') ? '1' : '.55';
-      pvSub.textContent = [v('ville'), v('quartier')].filter(Boolean).join(' – ') || '…';
-      const idx = (form.elements.namedItem('cas') as HTMLSelectElement).selectedIndex;
-      pvChips.replaceChildren(openChip.cloneNode(true));
-      (casModes[idx] || casModes[0]).forEach(m => { const s = document.createElement('span'); s.className = `bx-chip ${m === 'direct' ? 'direct' : 'other'}`; s.textContent = labels[m]; pvChips.append(s); });
-    };
-    form.addEventListener('input', preview); form.addEventListener('change', preview); preview();
-    form.addEventListener('submit', e => {
-      e.preventDefault(); const f = new FormData(form);
-      const msg = 'Bonjour, je souhaite rejoindre Bssaha.\nRestaurant : ' + f.get('nom') + '\nVille : ' + f.get('ville') + '\nQuartier : ' + f.get('quartier') + '\nWhatsApp : ' + f.get('tel') + '\nSituation : ' + f.get('cas') + '\nLien : ' + (f.get('lien') || '-');
-      const go = () => { location.href = 'https://wa.me/' + D.number + '?text=' + encodeURIComponent(msg); };
-      const btn = form.querySelector<HTMLButtonElement>('.bx-send')!;
-      if (still) return go();
-      btn.classList.add('run'); btn.disabled = true; btn.querySelector('.t')!.textContent = D.sending!;
-      setTimeout(go, 1000);
-      setTimeout(() => { btn.classList.remove('run'); btn.disabled = false; btn.querySelector('.t')!.textContent = (btn.dataset.label as string) || btn.querySelector('.t')!.textContent; }, 3500);
-    });
-  </script>
 </Base>

@@ -1,0 +1,45 @@
+---
+// Livraison, hero terminal: one order travels through the ecosystem on its own, from Bssaha to the handover with its 4-digit code.
+// The code shown is an example (labelled as such). With reduced motion the finished state is shown straight away.
+import Icon from './Icon.astro';
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const tt = tr(Astro.props.lang);
+const rows = ['Commande via Bssaha', 'Commande reçue', 'Livreur demandé', 'En route vers le client', 'Remis au client'];
+---
+<div class="relative mx-auto w-full max-w-md">
+  <div class="bx-glass bx-term lv-flow" data-tilt="6" id="lv-flow" role="group" aria-label={tt('Commande en livraison')}>
+    <div class="bx-term-bar" aria-hidden="true"><i></i><i></i><i></i><span class="font-dot">LIVRAISON // {tt('En route')}</span></div>
+    <ol class="lv-rows">
+      {rows.map((x) => (
+        <li class="lv-row"><span class="lv-dot" aria-hidden="true"><Icon name="check" class="size-4" /></span><span class="font-semibold">{tt(x)}</span></li>
+      ))}
+    </ol>
+    <div class="lv-code">
+      <p class="text-xs bx-mute">{tt('Code de livraison')} · {tt('Exemple')}</p>
+      <p class="bx-led lv-digits" dir="ltr" aria-live="polite"><span>•</span><span>•</span><span>•</span><span>•</span></p>
+    </div>
+  </div>
+</div>
+<script>
+  const box = document.getElementById('lv-flow');
+  if (box) {
+    const rows = [...box.querySelectorAll<HTMLElement>('.lv-row')];
+    const digits = [...box.querySelectorAll<HTMLElement>('.lv-digits span')];
+    const code = ['4', '8', '2', '7'];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const draw = (n: number) => {
+      rows.forEach((r, i) => r.classList.toggle('done', i < n));
+      rows.forEach((r, i) => r.classList.toggle('now', i === n));
+      digits.forEach((d, i) => { d.textContent = n >= rows.length ? code[i] : '•'; });
+      box.classList.toggle('lv-done', n >= rows.length);
+    };
+    if (still) draw(rows.length);
+    else {
+      let n = 0; draw(0);
+      const loop = () => { n = n >= rows.length ? 0 : n + 1; draw(n); setTimeout(loop, n >= rows.length ? 3200 : 1300); };
+      setTimeout(loop, 1200);
+    }
+  }
+</script>

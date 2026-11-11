@@ -1,0 +1,31 @@
+// Delivery page in the Terminal style (Bssaha inside the ecosystem): EN and AR for the new strings. French text in Livraison.astro is the key.
+export const livraison3En: Record<string, string> = {
+  "Commande via Bssaha": "Order via Bssaha",
+  "Exemple": "Example",
+  "Un seul écosystème,": "One ecosystem,",
+  "de Bssaha jusqu’à la remise.": "from Bssaha to the handover.",
+  "Cinq étapes, une seule ligne. Aucune place de marché au milieu : la commande va de votre client à sa porte en passant par vous.": "Five steps, one line. No marketplace in the middle: the order goes from your customer to their door, through you.",
+  "Bssaha : vos clients vous trouvent": "Bssaha: your customers find you",
+  "La partie marketing de l’écosystème : un annuaire de restaurants où l’on commande sans commission.": "The marketing part of the ecosystem: a directory of restaurants where people order without commission.",
+  "Votre restaurant apparaît dans l’annuaire Bssaha, par ville et par quartier.": "Your restaurant appears in the Bssaha directory, by city and neighbourhood.",
+  "Le client voit si vous êtes ouvert et choisit son mode : commande directe, WhatsApp, livraison ou à emporter.": "The customer sees whether you are open and picks how to order: direct, WhatsApp, delivery or takeaway.",
+  "Un clic l’amène sur votre page de commande ou sur votre WhatsApp, pas sur une app.": "One tap takes them to your order page or your WhatsApp, not to an app.",
+  "Aucune commission sur les commandes qui viennent de Bssaha.": "No commission on orders that come from Bssaha.",
+  "Bssaha, la vitrine de l’écosystème": "Bssaha, the shop window of the ecosystem",
+  "Bssaha est la partie marketing : un annuaire où les clients trouvent les restaurants et commandent directement chez eux, sans commission.": "Bssaha is the marketing part: a directory where customers find restaurants and order directly from them, without commission.",
+};
+export const livraison3Ar: Record<string, string> = {
+  "Commande via Bssaha": "طلب عبر Bssaha",
+  "Exemple": "مثال",
+  "Un seul écosystème,": "منظومة واحدة،",
+  "de Bssaha jusqu’à la remise.": "من Bssaha إلى التسليم.",
+  "Cinq étapes, une seule ligne. Aucune place de marché au milieu : la commande va de votre client à sa porte en passant par vous.": "خمس مراحل في خط واحد. لا سوق وسيطة بينكم: يمر الطلب من زبونك إلى بابه عبرك أنت.",
+  "Bssaha : vos clients vous trouvent": "Bssaha: زبناؤك يجدونك",
+  "La partie marketing de l’écosystème : un annuaire de restaurants où l’on commande sans commission.": "الجزء التسويقي من المنظومة: دليل مطاعم يُطلب منه بدون عمولة.",
+  "Votre restaurant apparaît dans l’annuaire Bssaha, par ville et par quartier.": "يظهر مطعمك في دليل Bssaha حسب المدينة والحي.",
+  "Le client voit si vous êtes ouvert et choisit son mode : commande directe, WhatsApp, livraison ou à emporter.": "يرى الزبون هل أنت مفتوح ويختار طريقة الطلب: مباشرة أو واتساب أو توصيل أو سفري.",
+  "Un clic l’amène sur votre page de commande ou sur votre WhatsApp, pas sur une app.": "نقرة واحدة تأخذه إلى صفحة الطلب عندك أو إلى واتسابك، وليس إلى تطبيق.",
+  "Aucune commission sur les commandes qui viennent de Bssaha.": "لا عمولة على الطلبات القادمة من Bssaha.",
+  "Bssaha, la vitrine de l’écosystème": "Bssaha، واجهة المنظومة",
+  "Bssaha est la partie marketing : un annuaire où les clients trouvent les restaurants et commandent directement chez eux, sans commission.": "Bssaha هو الجزء التسويقي: دليل يجد فيه الزبناء المطاعم ويطلبون منها مباشرة بدون عمولة.",
+};
