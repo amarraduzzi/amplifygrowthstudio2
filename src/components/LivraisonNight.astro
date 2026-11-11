@@ -1,0 +1,282 @@
+---
+// Livraison, hero (night city). The canvas fills the hero (on mobile: a framed card under the headline) and draws, in code, a neon city seen from above.
+// 1: every restaurant sends orange money lines to one giant app tower. 2: the tower flickers and goes out, the city goes dark.
+// 3: the restaurants light up green one by one, customers connect straight to them. 4: a receipt prints out of the bottom of the screen:
+// the five parts of the Amplify system, the app commission struck through, "Total reçu 140 DH". Plays once (about 14 s) and stays on the receipt.
+// The order and the code are examples (labelled as such); no percentage is written anywhere.
+// No JavaScript or reduced motion: the finished receipt is shown straight away (no canvas).
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const tt = tr(Astro.props.lang);
+const steps = ['Bssaha', 'Votre site de commande', 'Votre caisse', 'Votre livreur', 'Remise avec code'];
+---
+<div class="nt" id="nt" data-s="4" data-end={tt('Exemple')}>
+  <div class="nt-scrim" aria-hidden="true"></div>
+  <canvas class="nt-cv" id="nt-cv" aria-hidden="true"></canvas>
+  <span class="nt-tag" id="nt-tag" aria-hidden="true">{tt('App de livraison')}</span>
+  <div class="nt-top">
+    <div class="nt-cap" aria-hidden="true">
+      <p data-c="1">{tt('Chaque commande envoie une part à l’app.')}</p>
+      <p data-c="2">{tt('Et si l’app s’éteignait ?')}</p>
+      <p data-c="3">{tt('Vos clients commandent chez vous.')}</p>
+      <p data-c="4">{tt('Votre argent reste chez vous.')}</p>
+    </div>
+    <button type="button" class="nt-re" id="nt-re" hidden>{tt('Revoir l’histoire')}</button>
+  </div>
+  <div class="rc" id="rc">
+    <div class="rc-clip">
+      <div class="rc-paper">
+        <p class="rc-h font-dot">AMPLIFY</p>
+        <p class="rc-s">{tt('Exemple')}</p>
+        <p class="rc-l"><span>2 × {tt('Tajine poulet')}</span><b dir="ltr">140 DH</b></p>
+        <hr />
+        {steps.map((s, i) => (
+          <p class="rc-l"><span>{tt(s)}{i === 4 && <em class="font-dot" dir="ltr"> 4827</em>}</span><i aria-hidden="true">✓</i></p>
+        ))}
+        <hr />
+        <p class="rc-l rc-no"><s>{tt('Commission app')}</s><b dir="ltr">0 DH</b></p>
+        <p class="rc-t"><span>{tt('Total reçu')}</span><b class="font-dot" dir="ltr">140 DH</b></p>
+        <p class="rc-f">{tt('Votre argent reste chez vous.')}</p>
+        <span class="rc-stamp">{tt('Zéro commission')}</span>
+      </div>
+    </div>
+    <div class="rc-slot" aria-hidden="true"><i></i></div>
+  </div>
+</div>
+<script is:inline>
+  (function () {
+    var n = document.getElementById('nt');
+    if (!n || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    n.classList.add('pre'); n.dataset.s = '1';
+  })();
+</script>
+<script>
+  const root = document.getElementById('nt');
+  const cv = document.getElementById('nt-cv') as HTMLCanvasElement | null;
+  const tag = document.getElementById('nt-tag');
+  const re = document.getElementById('nt-re') as HTMLButtonElement | null;
+  if (root && cv && tag) {
+    const ctx = cv.getContext('2d')!;
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const rtl = getComputedStyle(cv).direction === 'rtl';
+    const GL = '61,255,160', CO = '255,107,91', END = 14200, PRINT = 9000;
+    type Pt = { x: number; y: number };
+    type Path = { pts: Pt[]; seg: number[]; len: number };
+    type Rest = { x: number; y: number; to: Path; lit: number; cust: { x: number; y: number; p: Path }[]; ph: number };
+    let w = 1, h = 1, dpr = 1, R = 40, G = 56, tx = 0, ty = 0, rests: Rest[] = [], city: HTMLCanvasElement | null = null;
+
+    const rnd = (a: number) => () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const ss = (a: number, b: number, x: number) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
+    const mk = (pts: Pt[]): Path => { const seg: number[] = []; let len = 0; for (let i = 1; i < pts.length; i++) { const d = Math.abs(pts[i].x - pts[i - 1].x) + Math.abs(pts[i].y - pts[i - 1].y); seg.push(d); len += d; } return { pts, seg, len: len || 1 }; };
+    const at = (p: Path, u: number): Pt => {
+      let d = u * p.len;
+      for (let i = 0; i < p.seg.length; i++) {
+        if (d <= p.seg[i] || i === p.seg.length - 1) { const k = p.seg[i] ? Math.min(1, d / p.seg[i]) : 0; return { x: p.pts[i].x + (p.pts[i + 1].x - p.pts[i].x) * k, y: p.pts[i].y + (p.pts[i + 1].y - p.pts[i].y) * k }; }
+        d -= p.seg[i];
+      }
+      return p.pts[0];
+    };
+    const sprites: Record<string, HTMLCanvasElement> = {};
+    const sprite = (rgb: string) => {
+      if (sprites[rgb]) return sprites[rgb];
+      const c = document.createElement('canvas'); c.width = c.height = 64;
+      const g = c.getContext('2d')!, gr = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gr.addColorStop(0, `rgba(${rgb},1)`); gr.addColorStop(.28, `rgba(${rgb},.5)`); gr.addColorStop(1, `rgba(${rgb},0)`);
+      g.fillStyle = gr; g.fillRect(0, 0, 64, 64);
+      return (sprites[rgb] = c);
+    };
+    const glow = (x: number, y: number, r: number, rgb: string, a: number) => { if (a <= 0.01) return; ctx.globalAlpha = Math.min(1, a); ctx.drawImage(sprite(rgb), x - r, y - r, 2 * r, 2 * r); ctx.globalAlpha = 1; };
+    const line = (p: Path, rgb: string, a: number, wd = 1.5) => { if (a <= 0.01) return; ctx.beginPath(); p.pts.forEach((q, i) => (i ? ctx.lineTo(q.x, q.y) : ctx.moveTo(q.x, q.y))); ctx.strokeStyle = `rgba(${rgb},${a})`; ctx.lineWidth = wd; ctx.lineJoin = 'round'; ctx.stroke(); };
+
+    const layout = () => {
+      const r = cv.getBoundingClientRect(); w = Math.max(1, r.width); h = Math.max(1, r.height);
+      dpr = Math.min(devicePixelRatio || 1, 2); cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      const wide = matchMedia('(min-width: 1024px)').matches, m = Math.min(w, h);
+      G = Math.round(Math.max(40, Math.min(64, m * 0.075))); R = Math.max(30, Math.min(70, m * 0.078));
+      const fx = (x: number) => (rtl ? w - x : x);
+      tx = Math.round(fx(wide ? w * 0.68 : w * 0.5) / G) * G; ty = Math.round((wide ? h * 0.3 : h * 0.26) / G) * G;
+      const rand = rnd(11);
+      const lo = wide ? (rtl ? w * 0.03 : w * 0.4) : w * 0.08, hi = wide ? (rtl ? w * 0.6 : w * 0.97) : w * 0.92;
+      const want = wide ? 24 : 13, list: { x: number; y: number }[] = [];
+      for (let tries = 0; tries < 500 && list.length < want; tries++) {
+        const x = Math.round((lo + rand() * (hi - lo)) / G) * G, y = Math.round((h * 0.08 + rand() * h * 0.86) / G) * G;
+        if (x < G * 0.5 || x > w - G * 0.5 || y < G * 0.5 || y > h - G * 0.4) continue;
+        if (Math.hypot(x - tx, y - ty) < R * 1.9 + G * 0.6) continue;
+        if (list.some(q => Math.abs(q.x - x) + Math.abs(q.y - y) < G * 2.1)) continue;
+        list.push({ x, y });
+      }
+      const far = Math.max(...list.map(q => Math.hypot(q.x - tx, q.y - ty)), 1);
+      const offs = [[1, 1], [-1, 1], [1, -1], [-1, -1], [2, 0], [-2, 0], [0, 2], [0, -2]];
+      rests = list.map((q, i) => {
+        const to = mk(i % 2 ? [{ x: q.x, y: q.y }, { x: q.x, y: ty }, { x: tx, y: ty }] : [{ x: q.x, y: q.y }, { x: tx, y: q.y }, { x: tx, y: ty }]);
+        const cust: Rest['cust'] = [];
+        const o = offs.slice().sort(() => rand() - 0.5);
+        for (const [dx, dy] of o) {
+          const x = q.x + dx * G, y = q.y + dy * G;
+          if (cust.length >= 2) break;
+          if (x < G * 0.4 || x > w - G * 0.4 || y < G * 0.4 || y > h - G * 0.3 || Math.hypot(x - tx, y - ty) < R * 1.5) continue;
+          cust.push({ x, y, p: mk([{ x, y }, { x: q.x, y }, { x: q.x, y: q.y }]) });
+        }
+        return { x: q.x, y: q.y, to, cust, ph: rand(), lit: 5800 + (Math.hypot(q.x - tx, q.y - ty) / far) * 2300 };
+      });
+      // static layer: street grid and dark city blocks
+      city = document.createElement('canvas'); city.width = cv.width; city.height = cv.height;
+      const g = city.getContext('2d')!; g.scale(dpr, dpr);
+      const br = rnd(5);
+      for (let x = 0; x < w; x += G) for (let y = 0; y < h; y += G) {
+        const v = br(); if (v < 0.62) { g.fillStyle = `rgba(110,160,235,${0.035 + v * 0.07})`; g.fillRect(x + 6, y + 6, G - 12, G - 12); }
+      }
+      g.lineWidth = 1;
+      for (let x = 0, i = 0; x <= w; x += G, i++) { g.strokeStyle = `rgba(130,180,255,${i % 4 ? 0.07 : 0.16})`; g.beginPath(); g.moveTo(x + 0.5, 0); g.lineTo(x + 0.5, h); g.stroke(); }
+      for (let y = 0, i = 0; y <= h; y += G, i++) { g.strokeStyle = `rgba(130,180,255,${i % 4 ? 0.07 : 0.16})`; g.beginPath(); g.moveTo(0, y + 0.5); g.lineTo(w, y + 0.5); g.stroke(); }
+      tag.style.left = `${cv.offsetLeft + tx}px`; tag.style.top = `${cv.offsetTop + ty + R * 1.7 + 4}px`;
+    };
+
+    const OFF: [number, number][] = [[4350, 4430], [4540, 4640], [4760, 4830]];
+    const draw = (t: number) => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+      const dead = ss(4900, 5500, t), flow = 1 - ss(4800, 5100, t);
+      const dim = 1 - 0.8 * ss(4800, 5400, t) + 0.42 * ss(6000, 9000, t);
+      ctx.save();
+      if (t > 4300 && t < 4950) ctx.translate((Math.random() - 0.5) * 4, (Math.random() - 0.5) * 4);
+      if (city) { ctx.globalAlpha = Math.max(0.1, dim); ctx.drawImage(city, 0, 0, w, h); ctx.globalAlpha = 1; }
+      ctx.globalCompositeOperation = 'lighter';
+      // 1: orange money lines to the app tower
+      if (flow > 0.01) rests.forEach((q, i) => {
+        const ap = ss(i * 45, i * 45 + 700, t) * flow;
+        line(q.to, CO, 0.34 * ap, 2);
+        for (let k = 0; k < 4; k++) { const u = (t * 0.00018 * (1 + q.ph * 0.5) + q.ph + k / 4) % 1, p = at(q.to, u); glow(p.x, p.y, 12, CO, 1 * ap); }
+      });
+      for (let k = 0; k < 3; k++) { const u = ((t / 1500) + k / 3) % 1; ctx.beginPath(); ctx.arc(tx, ty, R * (1.2 + u * 3.2), 0, 6.3); ctx.strokeStyle = `rgba(${CO},${0.32 * (1 - u) * flow})`; ctx.lineWidth = 2; ctx.stroke(); }
+      ctx.globalCompositeOperation = 'source-over';
+      // the blackout
+      if (dead > 0) { ctx.fillStyle = `rgba(0,6,14,${0.5 * dead * (1 - 0.7 * ss(6200, 9500, t))})`; ctx.fillRect(-8, -8, w + 16, h + 16); }
+      ctx.globalCompositeOperation = 'lighter';
+      // 3: restaurants wake up, customers connect straight to them
+      rests.forEach(q => {
+        const lit = ss(q.lit, q.lit + 450, t), e = ss(q.lit, q.lit + 1000, t);
+        q.cust.forEach((c, j) => {
+          const cg = ss(q.lit + 250 + j * 150, q.lit + 800 + j * 150, t);
+          if (cg <= 0) return;
+          line(c.p, GL, 0.22 * cg);
+          glow(c.x, c.y, 7, '200,225,255', 0.8 * cg);
+          const u = (t * 0.00026 + q.ph + j * 0.5) % 1, p = at(c.p, u); glow(p.x, p.y, 8, GL, 0.95 * cg);
+        });
+        glow(q.x, q.y, 9, '190,215,255', 0.55 * (1 - lit));
+        if (lit > 0) { glow(q.x, q.y, 26 * lit + 4, GL, 0.9 * lit); if (e < 1) { ctx.beginPath(); ctx.arc(q.x, q.y, 6 + 40 * e, 0, 6.3); ctx.strokeStyle = `rgba(${GL},${0.7 * (1 - e)})`; ctx.lineWidth = 2; ctx.stroke(); } }
+      });
+      ctx.globalCompositeOperation = 'source-over';
+      // 2: the app tower, flickering, then out
+      const off = OFF.some(([a, b]) => t > a && t < b) || t >= 4900;
+      const on = off ? 0 : 1, rot = t * 0.00035;
+      ctx.save(); ctx.globalAlpha = 1 - 0.5 * ss(8000, 10500, t);
+      ctx.globalCompositeOperation = 'lighter'; glow(tx, ty, R * 3.2, CO, 0.5 * on); ctx.globalCompositeOperation = 'source-over';
+      ctx.beginPath(); ctx.arc(tx, ty, R * 0.62, 0, 6.3); ctx.fillStyle = on ? `rgb(${CO})` : 'rgb(24,34,52)'; ctx.fill();
+      for (const [k, dash] of [[1, 18], [1.45, 9], [1.95, 4]] as const) {
+        ctx.save(); ctx.translate(tx, ty); ctx.rotate(rot * (k % 2 ? 1 : -1) * (on ? 1 : 0.15)); ctx.setLineDash([dash * (R / 40), dash * (R / 40) * 0.8]);
+        ctx.beginPath(); ctx.arc(0, 0, R * k, 0, 6.3); ctx.strokeStyle = on ? `rgba(${CO},${0.9 / k})` : 'rgba(150,170,200,.16)'; ctx.lineWidth = 2.4 - k * 0.5; ctx.stroke(); ctx.restore();
+      }
+      ctx.restore();
+      if (!on) { ctx.save(); ctx.globalAlpha = 1 - 0.5 * ss(8000, 10500, t); ctx.beginPath(); ctx.moveTo(tx - R * 0.35, ty - R * 0.35); ctx.lineTo(tx + R * 0.35, ty + R * 0.35); ctx.moveTo(tx + R * 0.35, ty - R * 0.35); ctx.lineTo(tx - R * 0.35, ty + R * 0.35); ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.lineWidth = 2.5; ctx.stroke(); ctx.restore(); }
+      ctx.restore();
+      if (t > 4850 && t < 5350) { ctx.fillStyle = `rgba(255,210,200,${0.5 * (1 - ss(4850, 5350, t))})`; ctx.fillRect(0, 0, w, h); }
+    };
+
+    const sync = (t: number) => {
+      root.dataset.s = String(t < 4200 ? 1 : t < 5900 ? 2 : t < PRINT ? 3 : 4);
+      tag.classList.toggle('dead', t >= 4900);
+      if (t >= PRINT && root.classList.contains('pre')) { root.classList.remove('pre'); root.classList.add('go'); }
+      root.classList.toggle('done', t >= PRINT + 4600);
+    };
+
+    let el = 0, last = 0, raf = 0, vis = true, playing = false;
+    const frame = (now: number) => {
+      el = Math.min(END, el + Math.min(64, now - (last || now))); last = now;
+      sync(el); draw(el);
+      if (el < END) raf = requestAnimationFrame(frame);
+      else { playing = false; if (re) re.hidden = false; }
+    };
+    const run = () => { if (playing && vis) { last = 0; raf = requestAnimationFrame(frame); } };
+    const play = () => {
+      cancelAnimationFrame(raf); el = 0; last = 0; playing = true;
+      root.classList.remove('go', 'done'); root.classList.add('pre'); if (re) re.hidden = true;
+      run();
+    };
+    const final = () => { root.classList.remove('pre', 'go'); root.classList.add('done'); sync(END); draw(END); };
+
+    layout();
+    let rz = 0;
+    new ResizeObserver(() => { cancelAnimationFrame(rz); rz = requestAnimationFrame(() => { layout(); if (!playing) draw(el || END); }); }).observe(cv);
+    if (reduced) { el = END; final(); }
+    else {
+      new IntersectionObserver(es => { vis = es[0].isIntersecting; if (vis) run(); else cancelAnimationFrame(raf); }).observe(root);
+      if (re) re.addEventListener('click', play);
+      setTimeout(play, 500);
+    }
+  }
+</script>
+<style>
+  .nt { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; min-height: 36rem; overflow: hidden; border-radius: 1.4rem; background: rgb(0 10 22 / .55); box-shadow: inset 0 0 0 1px var(--edge), 0 30px 60px rgb(0 0 0 / .35); }
+  .nt-cv { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -1; }
+  .nt-scrim { display: none; }
+  .nt-tag { position: absolute; z-index: 0; translate: -50% 0; white-space: nowrap; padding: .25rem .7rem; border-radius: 99px; font-size: .78rem; font-weight: 800; color: #2a0b07; background: var(--coral); transition: opacity .8s .2s, background .3s, color .3s; }
+  .nt-tag.dead { background: rgb(255 255 255 / .12); color: rgb(255 255 255 / .55); text-decoration: line-through; opacity: .55; }
+  .nt:not(.pre):not(.go) .nt-tag { opacity: .0; }
+  .nt-top { position: absolute; z-index: 2; top: 1rem; inset-inline: 1rem; display: grid; justify-items: start; gap: .3rem; pointer-events: none; }
+  .nt-cap { display: grid; }
+  .nt-cap p { grid-area: 1 / 1; font-size: 1.15rem; font-weight: 800; line-height: 1.25; color: #fff; opacity: 0; transition: opacity .25s; text-shadow: 0 2px 18px rgb(0 0 0 / .8); }
+  .nt[data-s='1'] [data-c='1'], .nt[data-s='2'] [data-c='2'], .nt[data-s='3'] [data-c='3'], .nt[data-s='4'] [data-c='4'] { opacity: 1; transition: opacity .45s .3s; }
+  .nt[data-s='1'] [data-c='1'] { color: var(--coral); }
+  .nt[data-s='4'] [data-c='4'] { color: var(--gl); }
+  .nt-re { pointer-events: auto; font-size: .8rem; color: rgb(255 255 255 / .7); text-decoration: underline; text-underline-offset: 3px; }
+  .nt-re:hover, .nt-re:focus-visible { color: var(--gl); }
+
+  /* the receipt, printed out of a slot at the bottom */
+  .rc { position: relative; z-index: 1; width: min(17rem, 84%); margin: 0 auto; }
+  .rc-clip { overflow: hidden; padding-top: 14px; margin-bottom: -2px; }
+  .rc-paper { position: relative; padding: 1.1rem 1.1rem 1.6rem; color: #1b1b1b; background: #f6f4ec; font-family: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace; font-size: .74rem; box-shadow: 0 0 40px rgb(61 255 160 / .18); }
+  .rc-paper::before { content: ''; position: absolute; left: 0; right: 0; top: -14px; height: 14px; background: linear-gradient(135deg, transparent 7px, #f6f4ec 0) 0 0 / 14px 14px, linear-gradient(225deg, transparent 7px, #f6f4ec 0) 0 0 / 14px 14px; }
+  .nt.pre .rc-paper { transform: translateY(104%); transition: none; }
+  .nt.go .rc-paper { transform: none; transition: transform 4.4s steps(34, end); }
+  .nt.go:not(.done) .rc-clip { animation: rc-jit .12s steps(2) infinite; }
+  @keyframes rc-jit { 50% { translate: .6px 0; } }
+  .rc-paper p { margin: 0; }
+  .rc-paper hr { border: 0; border-top: 1.5px dashed #1b1b1b55; margin: .5rem 0; }
+  .rc-h { text-align: center; font-size: 1.5rem; letter-spacing: .12em; line-height: 1; }
+  .rc-s { text-align: center; margin-bottom: .6rem !important; color: #555; }
+  .rc-l { display: flex; justify-content: space-between; gap: .6rem; padding-block: .12rem; font-weight: 700; }
+  .rc-l i { font-style: normal; font-weight: 900; color: #0a8f4f; }
+  .rc-l em { font-style: normal; color: #0a8f4f; }
+  .rc-no s { text-decoration-thickness: 2px; text-decoration-color: #e0452f; color: #7a2a20; }
+  .rc-no b { color: #0a8f4f; }
+  .rc-t { display: flex; justify-content: space-between; align-items: baseline; margin-top: .45rem !important; padding-top: .45rem; border-top: 2px solid #1b1b1b; font-weight: 900; }
+  .rc-t b { font-size: 1.75rem; line-height: 1; color: #04723b; white-space: nowrap; }
+  .rc-f { margin-top: .55rem !important; font-weight: 700; text-align: center; color: #333; }
+  .rc-stamp { display: block; width: max-content; margin: .8rem auto 0; padding: .15rem .6rem; border: 2.5px solid #0a8f4f; border-radius: .4rem; color: #0a8f4f; font-weight: 900; font-size: .72rem; rotate: -5deg; scale: 1.8; opacity: 0; transition: scale .4s cubic-bezier(.2, 1.4, .4, 1), opacity .2s; }
+  .nt:not(.pre):not(.go) .rc-stamp, .nt.done .rc-stamp { scale: 1; opacity: .92; }
+  .rc-slot { position: relative; z-index: 2; height: .8rem; margin-inline: -.9rem; border-radius: .5rem; background: linear-gradient(#10243a, #050d17); box-shadow: 0 6px 24px rgb(0 0 0 / .6), inset 0 0 0 1px rgb(255 255 255 / .12); }
+  .rc-slot i { position: absolute; inset: .18rem .7rem auto; height: 3px; border-radius: 3px; background: var(--gl); box-shadow: 0 0 12px var(--gl); opacity: .85; }
+  .nt.go:not(.done) .rc-slot i { animation: rc-pulse .5s ease-in-out infinite alternate; }
+  @keyframes rc-pulse { to { opacity: .35; } }
+  .rc-slot { margin-bottom: 1rem; }
+
+  @media (min-width: 1024px) {
+    .nt { position: static; isolation: auto; grid-column: 2; grid-row: 1 / span 3; align-self: end; margin-bottom: -3rem; min-height: 0; overflow: visible; border-radius: 0; background: none; box-shadow: none; }
+    .nt-cv { position: absolute; z-index: -2; }
+    .nt-scrim { display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: linear-gradient(90deg, rgb(0 12 24 / .94) 0, rgb(0 12 24 / .82) 30%, rgb(0 12 24 / .35) 52%, transparent 66%); }
+    :global([dir='rtl']) .nt-scrim { background: linear-gradient(270deg, rgb(0 12 24 / .94) 0, rgb(0 12 24 / .82) 30%, rgb(0 12 24 / .35) 52%, transparent 66%); }
+    .nt-top { top: 1.75rem; inset-inline: auto 2rem; width: min(21rem, 32%); }
+    .nt-cap p { font-size: clamp(1.3rem, 1.9vw, 1.75rem); }
+    .rc { width: 20rem; }
+    .rc-paper { font-size: .88rem; padding: 1.3rem 1.4rem 1.9rem; }
+    .rc-h { font-size: 1.9rem; }
+    .rc-t b { font-size: 2.1rem; }
+    .rc-stamp { font-size: .82rem; }
+    .rc-slot { margin-inline: -1.2rem; margin-bottom: 0; height: 1rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .nt .rc-paper { transform: none !important; } }
+</style>
+<style is:global>
+  .bx-hero { position: relative; }
+</style>

@@ -13,6 +13,11 @@ export const livraison4En: Record<string, string> = {
   "Mais vous n’en avez plus besoin.": "But you don’t need it any more.",
   "Avec Amplify, la commande passe par votre propre système, de Bssaha jusqu’à la remise.": "With Amplify, the order goes through your own system, from Bssaha to the handover.",
   "Votre argent reste chez vous.": "Your money stays with you.",
+  "Chaque commande envoie une part à l’app.": "Every order sends a share to the app.",
+  "Et si l’app s’éteignait ?": "What if the app went dark?",
+  "Vos clients commandent chez vous.": "Your customers order from you.",
+  "Commission app": "App commission",
+  "Total reçu": "Total received",
 };
 export const livraison4Ar: Record<string, string> = {
   "Revoir l’histoire": "شاهد القصة مرة أخرى",
@@ -28,4 +33,9 @@ export const livraison4Ar: Record<string, string> = {
   "Mais vous n’en avez plus besoin.": "لكنك لم تعد بحاجة إليه.",
   "Avec Amplify, la commande passe par votre propre système, de Bssaha jusqu’à la remise.": "مع أمبليفاي، يمر الطلب عبر نظامك الخاص، من بسّاحة حتى التسليم.",
   "Votre argent reste chez vous.": "مالك يبقى عندك.",
+  "Chaque commande envoie une part à l’app.": "كل طلب يرسل حصة إلى التطبيق.",
+  "Et si l’app s’éteignait ?": "ماذا لو انطفأ التطبيق؟",
+  "Vos clients commandent chez vous.": "زبناؤك يطلبون منك مباشرة.",
+  "Commission app": "عمولة التطبيق",
+  "Total reçu": "المبلغ المستلم",
 };
