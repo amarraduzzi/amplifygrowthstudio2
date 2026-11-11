@@ -67,7 +67,7 @@ const { c, restos, quartiers, rows, first, otherHref, cuisines, WA_JOIN } = m;
   <BssahaMap c={c} rows={rows} otherHref={otherHref} first={first.id} />
 
   {how && (
-  <!-- ============ HOW ============ -->
+  <>
   <section class="bx-sec px-4 py-16 sm:px-6 md:py-24">
     <div class="mx-auto max-w-6xl">
       <div class="rv">
@@ -84,7 +84,7 @@ const { c, restos, quartiers, rows, first, otherHref, cuisines, WA_JOIN } = m;
       </ol>
     </div>
   </section>
-
+  </>
   )}
 
   <BssahaCalc c={c} />
