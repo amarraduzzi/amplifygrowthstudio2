@@ -11,8 +11,7 @@ import FinalCta from '../FinalCta.astro';
 import BxArrow from '../BxArrow.astro';
 import BssahaFx from '../BssahaFx.astro';
 import BssahaDirectory from '../BssahaDirectory.astro';
-import LivraisonBon from '../LivraisonBon.astro';
-import LivraisonWarp from '../LivraisonWarp.astro';
+import LivraisonFilm from '../LivraisonFilm.astro';
 import { bssahaModel } from '../../lib/bssahaModel';
 import { APPS, isPlaceholder, waLink } from '../../config';
 import { tr } from '../../i18n/t';
@@ -113,19 +112,20 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
     <div class="bx-floor" aria-hidden="true"><i></i></div>
     <div class="bx-grain" aria-hidden="true"></div>
     <div class="bx-scan" aria-hidden="true"></div>
-    <LivraisonWarp lang={lang} />
-    <div class="mx-auto grid w-full max-w-6xl gap-x-14 gap-y-8 px-4 py-8 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-12">
+    <div class="mx-auto grid w-full max-w-6xl gap-x-14 gap-y-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-12">
       <div class="lg:col-start-1 lg:row-start-1">
         <p class="bx-badge rv"><span class="bx-dot"></span><span class="font-dot text-sm tracking-widest">{tt('Amplify Livraison')}</span></p>
         <h1 class="bx-h1 lv-h1 mt-5 lg:mt-6"><span class="block" data-scramble>{tt('Votre livraison,')}</span><span class="block bx-hot" data-scramble>{tt('sans passer par les apps de livraison.')}</span><span class="bx-under" aria-hidden="true"></span></h1>
-        <p class="measure rv mt-5 text-base bx-mute sm:text-lg md:mt-6 md:text-xl" style="--d:200ms">{tt('Vos clients commandent chez vous. La commande arrive dans votre caisse. Un livreur est demandé en un clic. Tout est entre vos mains, de la commande à la remise.')}</p>
+      </div>
+      <div class="rv lg:col-start-2 lg:row-span-3 lg:row-start-1" style="--d:200ms"><LivraisonFilm lang={lang} /></div>
+      <div class="lg:col-start-1 lg:row-start-2">
+        <p class="measure rv text-base bx-mute sm:text-lg md:text-xl" style="--d:200ms">{tt('Vos clients commandent chez vous. La commande arrive dans votre caisse. Un livreur est demandé en un clic. Tout est entre vos mains, de la commande à la remise.')}</p>
         <div class="rv mt-6 flex flex-col gap-3 sm:flex-row md:mt-8" style="--d:320ms">
           <a href={waLink(wa)} target="_blank" rel="noopener" data-wa="livraison-hero" class="bx-btn bx-btn--go" data-mag>{tt('Parler de ma livraison')}<BxArrow /></a>
           <a href="#parcours" class="bx-btn bx-btn--ghost" data-mag>{tt('Voir le parcours')}</a>
         </div>
       </div>
-      <div class="rv lg:col-start-2 lg:row-span-2 lg:row-start-1" style="--d:260ms"><LivraisonBon lang={lang} /></div>
-      <div class="bx-stats rv lg:col-start-1 lg:row-start-2" style="--d:440ms">
+      <div class="bx-stats rv lg:col-start-1 lg:row-start-3" style="--d:440ms">
         <div class="bx-stat"><b class="bx-led" dir="ltr">0 DH</b><span>{c.zeroLabel}</span></div>
         <div class="bx-stat"><b class="bx-led" dir="ltr">{restos.length}</b><span>{c.restos}</span></div>
       </div>
