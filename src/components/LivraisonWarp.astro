@@ -1,0 +1,89 @@
+---
+// Livraison, hero opening: a hyperspace jump over the whole hero (about 2.5 s). Stars stretch into lines, the promise flies at the
+// visitor, a flash, and the hero is there. Plays once per visit (sessionStorage), click or Escape skips it, "Revoir l’entrée" replays it.
+// Without JavaScript or with reduced motion nothing plays and the hero is simply shown.
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const tt = tr(Astro.props.lang);
+---
+<div class="hs" id="hs" aria-hidden="true">
+  <canvas class="hs-cv"></canvas>
+  <p class="hs-title bx-h1"><span class="block">{tt('Plus jamais de commission')}</span><span class="block bx-hot">{tt('aux apps.')}</span></p>
+  <div class="hs-flash"></div>
+</div>
+<button type="button" class="hs-replay" id="hs-replay" hidden>{tt('Revoir l’entrée')}</button>
+<script is:inline>
+  (function () {
+    var hs = document.getElementById('hs');
+    if (!hs || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    try { if (sessionStorage.getItem('lv-warp')) return; sessionStorage.setItem('lv-warp', '1'); } catch (e) {}
+    hs.classList.add('hs-on');
+  })();
+</script>
+<script>
+  const hs = document.getElementById('hs') as HTMLElement | null;
+  const btn = document.getElementById('hs-replay') as HTMLButtonElement | null;
+  const cv = hs?.querySelector('canvas') as HTMLCanvasElement | null;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let raf = 0, timer = 0;
+  const done = () => {
+    cancelAnimationFrame(raf); clearTimeout(timer);
+    hs?.classList.remove('hs-on');
+    window.dispatchEvent(new Event('lv-warp-done'));
+  };
+  const run = () => {
+    if (!hs || !cv) return;
+    const ctx = cv.getContext('2d'); if (!ctx) return;
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    const w = cv.width = hs.clientWidth * dpr, h = cv.height = hs.clientHeight * dpr;
+    const stars = Array.from({ length: 340 }, () => ({ x: Math.random() * 2 - 1, y: Math.random() * 2 - 1, z: Math.random() * 0.95 + 0.05 }));
+    const t0 = performance.now();
+    const frame = (now: number) => {
+      const t = now - t0;
+      const k = Math.min(t / 1500, 1);
+      const v = 0.0025 + k * k * k * 0.075;
+      ctx.clearRect(0, 0, w, h);
+      for (const s of stars) {
+        const z0 = s.z + v * (3 + k * 9);
+        s.z -= v;
+        const sx = w / 2 + (s.x / s.z) * w * 0.17, sy = h / 2 + (s.y / s.z) * w * 0.17;
+        if (s.z <= 0.02 || sx < -50 || sx > w + 50 || sy < -50 || sy > h + 50) { s.z = 1; s.x = Math.random() * 2 - 1; s.y = Math.random() * 2 - 1; continue; }
+        const px = w / 2 + (s.x / z0) * w * 0.17, py = h / 2 + (s.y / z0) * w * 0.17;
+        const a = Math.min(1, (1 - s.z) * 1.6 + 0.15);
+        ctx.strokeStyle = `rgba(${170 + k * 60}, 255, ${215 + k * 30}, ${a})`;
+        ctx.lineWidth = ((1 - s.z) * 2.6 + 0.5) * dpr;
+        ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(sx, sy); ctx.stroke();
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    raf = requestAnimationFrame(frame);
+    timer = window.setTimeout(done, 2800);
+  };
+  if (hs && cv) {
+    if (hs.classList.contains('hs-on')) run();
+    hs.addEventListener('click', done);
+    addEventListener('keydown', (e) => { if (e.key === 'Escape' && hs.classList.contains('hs-on')) done(); });
+    if (btn && !reduced) {
+      btn.hidden = false;
+      btn.addEventListener('click', () => {
+        done(); hs.classList.remove('hs-on'); void hs.offsetWidth; hs.classList.add('hs-on'); run();
+      });
+    }
+  }
+</script>
+<style is:global>
+  .bx-hero { position: relative; }
+  .hs { position: absolute; inset: 0; z-index: 30; display: none; place-items: center; background: #02101f; overflow: hidden; cursor: pointer; }
+  .hs.hs-on { display: grid; animation: hs-out .6s ease 2.2s forwards; }
+  .hs-cv { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .hs-title { position: relative; text-align: center; padding-inline: 1rem; font-size: clamp(2.4rem, 9.5vw, 6.5rem); animation: hs-zoom 2.1s cubic-bezier(.3, 0, .6, 1) .25s both; }
+  .hs-flash { position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, #fff 0, #b9ffe0 28%, rgb(61 255 160 / 0) 70%); opacity: 0; }
+  .hs-on .hs-flash { animation: hs-flash .9s ease-in 1.8s forwards; }
+  .hs-replay { position: absolute; right: 1rem; bottom: .8rem; z-index: 5; font-size: .8rem; color: rgb(255 255 255 / .6); text-decoration: underline; text-underline-offset: 3px; padding: .4rem .6rem; }
+  .hs-replay:hover, .hs-replay:focus-visible { color: var(--gl); }
+  @keyframes hs-zoom { 0% { opacity: 0; transform: scale(.55); filter: blur(10px); } 22% { opacity: 1; transform: scale(.95); filter: none; } 70% { opacity: 1; transform: scale(1.08); } 100% { opacity: 0; transform: scale(2.6); filter: blur(6px); } }
+  @keyframes hs-flash { 0% { opacity: 0; transform: scale(.4); } 45% { opacity: 1; } 100% { opacity: 0; transform: scale(2.2); } }
+  @keyframes hs-out { to { opacity: 0; } }
+</style>
