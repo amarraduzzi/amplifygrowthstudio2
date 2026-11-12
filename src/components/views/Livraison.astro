@@ -12,6 +12,7 @@ import BxArrow from '../BxArrow.astro';
 import BssahaFx from '../BssahaFx.astro';
 import BssahaDirectory from '../BssahaDirectory.astro';
 import LivraisonFacade from '../LivraisonFacade.astro';
+import LivraisonPv from '../LivraisonPv.astro';
 import { bssahaModel } from '../../lib/bssahaModel';
 import { APPS, isPlaceholder, waLink } from '../../config';
 import { tr } from '../../i18n/t';
@@ -80,6 +81,7 @@ const scenarios = [
   ['Je n’ai pas de livreur', 'Prenez tout le parcours : les commandes arrivent en caisse et vous demandez un livreur Amplify en un clic.'],
   ['Je veux d’abord essayer', 'Commencez par un seul module, ajoutez le reste quand vous êtes prêt.'],
 ] as const;
+const modes = [c.modes.direct, c.modes.whatsapp, c.modes.livraison, c.modes.emporter];
 const modules = ['Site et commandes en ligne', 'Caisse', 'Amplify Livreur', 'Suivi et code de remise'];
 const faq = [
   ['Dois-je quitter les apps de livraison ?', 'Non. Vous pouvez les garder. Amplify vous donne simplement la possibilité de livrer vous-même les clients qui commandent chez vous.'],
@@ -106,76 +108,90 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
     data-m-direct={c.modes.direct} data-m-whatsapp={c.modes.whatsapp} data-m-livraison={c.modes.livraison} data-m-emporter={c.modes.emporter} data-sending={c.sending} style={`--city:${first.glow}`}>
   <BssahaFx />
 
-  <!-- ============ HERO: the promise, and the restaurant facade, hijacked by an app and taken back ============ -->
-  <section class="bx-hero">
+  <!-- ============ HERO: full-screen scene. The restaurant facade (3D) is hijacked by an app and taken back; the headline sits over it ============ -->
+  <section class="bx-hero lv-hero">
     <div class="bx-grain" aria-hidden="true"></div>
     <div class="bx-scan" aria-hidden="true"></div>
-    <div class="mx-auto grid w-full max-w-6xl gap-x-14 gap-y-6 px-4 py-8 sm:px-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-center lg:py-12">
-      <div class="lg:col-start-1 lg:row-start-1">
+    <div class="lv-wrap mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pb-10 pt-8 sm:px-6 lg:py-10">
+      <div class="lv-top">
         <p class="bx-badge rv"><span class="bx-dot"></span><span class="font-dot text-sm tracking-widest">{tt('Amplify Livraison')}</span></p>
-        <h1 class="bx-h1 lv-h1 mt-5 lg:mt-6"><span class="block" data-scramble>{tt('Votre livraison,')}</span><span class="block bx-hot" data-scramble>{tt('sans passer par les apps de livraison.')}</span><span class="bx-under" aria-hidden="true"></span></h1>
+        <h1 class="bx-h1 lv-h1 mt-5 lg:mt-7"><span class="l1 fade-up" style="--d:120ms">{tt('Votre livraison,')}</span><span class="lv-grad block" data-scramble>{tt('sans passer par les apps de livraison.')}</span><span class="bx-under" aria-hidden="true"></span></h1>
       </div>
       <LivraisonFacade lang={lang} />
-      <div class="lg:col-start-1 lg:row-start-2">
+      <div class="lv-bot">
         <p class="measure rv text-base bx-mute sm:text-lg md:text-xl" style="--d:200ms">{tt('Vos clients commandent chez vous. La commande arrive dans votre caisse. Un livreur est demandé en un clic. Tout est entre vos mains, de la commande à la remise.')}</p>
         <div class="rv mt-6 flex flex-col gap-3 sm:flex-row md:mt-8" style="--d:320ms">
           <a href={waLink(wa)} target="_blank" rel="noopener" data-wa="livraison-hero" class="bx-btn bx-btn--go" data-mag>{tt('Parler de ma livraison')}<BxArrow /></a>
           <a href="#parcours" class="bx-btn bx-btn--ghost" data-mag>{tt('Voir le parcours')}</a>
         </div>
-      </div>
-      <div class="bx-stats rv lg:col-start-1 lg:row-start-3" style="--d:440ms">
-        <div class="bx-stat"><b class="bx-led" dir="ltr">0 DH</b><span>{c.zeroLabel}</span></div>
-        <div class="bx-stat"><b class="bx-led" dir="ltr">{restos.length}</b><span>{c.restos}</span></div>
+        <div class="bx-stats rv mt-8 lg:mt-7" style="--d:440ms">
+          <div class="bx-stat"><b class="bx-led" dir="ltr">0 DH</b><span>{c.zeroLabel}</span></div>
+          <div class="bx-stat"><b class="bx-led" dir="ltr">{restos.length}</b><span>{c.restos}</span></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <div class="bx-marq" aria-hidden="true">
+  <div class="bx-marq lv-marq" aria-hidden="true">
     <div class="bx-marq-track">
       {[0, 1, 2, 3].map(() => ticker.map((t, i) => <span><b class={`display ${i % 2 ? 'out' : ''}`}>{t}</b></span>))}
     </div>
+    <div class="bx-marq-track rev">
+      {[0, 1, 2, 3].map(() => [...ticker].reverse().map((t, i) => <span><b class={`display ${i % 2 ? '' : 'out'}`}>{t}</b></span>))}
+    </div>
   </div>
 
-  <!-- ============ THREE THINGS THAT STAY WITH THE RESTAURANT ============ -->
-  <section class="bx-sec px-4 py-16 sm:px-6 md:py-24">
-    <div class="mx-auto max-w-6xl">
+  <!-- ============ 01 · THREE THINGS THAT STAY WITH THE RESTAURANT (light, Amplify chalk) ============ -->
+  <section class="lv-light px-4 py-20 sm:px-6 md:py-32">
+    <div class="mx-auto max-w-7xl">
       <div class="rv">
-        <h2 class="bx-h2"><span class="block">{tt('Trois choses')}</span><span class="block bx-hot-line">{tt('qui restent à vous.')}</span></h2>
-        <span class="bx-glow-line" aria-hidden="true"></span>
+        <p class="lv-lab"><b class="font-dot">01</b><span>{tt('Zéro commission')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Trois choses')}</span><span class="block lv-gr">{tt('qui restent à vous.')}</span></h2>
       </div>
-      <div class="mt-10 grid gap-5 lg:grid-cols-3">
+      <ol class="lv-rows2 mt-12 md:mt-20">
         {pillars.map(([i, h, x], k) => (
-          <div class={`bx-glass lv-pillar rv ${k === 1 ? 'lv-pillar--zero' : ''}`} style={`--d:${k * 110}ms`}>
-            <span class="ic"><Icon name={i as 'till'} class="size-7" /></span>
+          <li class={`lv-r2 rv ${k === 1 ? 'lv-r2--zero' : ''}`}>
+            <span class="n font-dot" aria-hidden="true">{`0${k + 1}`}</span>
             <h3 class="display">{tt(h)}</h3>
-            <p class="text-lg bx-mute">{tt(x)}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ THE JOURNEY: one order, five steps, Bssaha first ============ -->
-  <section id="parcours" class="bx-sec bx-sec--alt scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
-    <div class="mx-auto max-w-6xl">
-      <div class="rv">
-        <h2 class="bx-h2"><span class="block">{tt('Un seul écosystème,')}</span><span class="block bx-hot-line">{tt('de Bssaha jusqu’à la remise.')}</span></h2>
-        <span class="bx-glow-line" aria-hidden="true"></span>
-        <p class="measure mt-5 text-lg bx-mute">{tt('Cinq étapes, une seule ligne. Aucune place de marché au milieu : la commande va de votre client à sa porte en passant par vous.')}</p>
-      </div>
-      <ol class="bx-steps mt-12" id="bx-steps">
-        {chapters.map(([i, h, intro, pts], k) => (
-          <li class="bx-step">
-            <span class="num font-dot" aria-hidden="true">{String(k + 1).padStart(2, '0')}</span>
-            <div>
-              <span class="lv-chapter-ic" aria-hidden="true"><Icon name={i as 'till'} class="size-6" /></span>
-              <h3 class="display mt-3">{tt(h)}</h3>
-              <p class="mt-2 text-lg bx-mute">{tt(intro)}</p>
-              <ul class="lv-pts">{pts.map(x => <li>{tt(x)}</li>)}</ul>
-            </div>
+            <p>{tt(x)}</p>
+            <span class="ic" aria-hidden="true"><Icon name={i as 'till'} class="size-7" /></span>
           </li>
         ))}
       </ol>
+    </div>
+  </section>
+
+  <!-- ============ 02 · THE JOURNEY: one order, five steps. Wide screens: the picture is pinned while the steps scroll past ============ -->
+  <section id="parcours" class="bx-sec bx-sec--alt lv-story scroll-mt-20 px-4 py-20 sm:px-6 md:py-32">
+    <div class="mx-auto max-w-7xl">
+      <div class="rv">
+        <p class="lv-lab"><b class="font-dot">02</b><span>{tt('Le parcours')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Un seul écosystème,')}</span><span class="block bx-hot-line">{tt('de Bssaha jusqu’à la remise.')}</span></h2>
+        <p class="measure mt-6 text-lg bx-mute">{tt('Cinq étapes, une seule ligne. Aucune place de marché au milieu : la commande va de votre client à sa porte en passant par vous.')}</p>
+      </div>
+      <div class="lv-sc mt-14 md:mt-20" id="lv-sc" data-a="0">
+        <ol class="lv-sc-list">
+          {chapters.map(([i, h, intro, pts], k) => (
+            <li class={`lv-sc-it ${k === 0 ? 'on' : ''}`} data-i={k}>
+              <span class="n font-dot" aria-hidden="true">{String(k + 1).padStart(2, '0')}</span>
+              <div class="lv-sc-tx">
+                <span class="lv-chapter-ic" aria-hidden="true"><Icon name={i as 'till'} class="size-6" /></span>
+                <h3 class="display mt-3">{tt(h)}</h3>
+                <p class="mt-3 text-lg bx-mute">{tt(intro)}</p>
+                <ul class="lv-pts">{pts.map(x => <li>{tt(x)}</li>)}</ul>
+              </div>
+              <div class="lv-sc-inl" aria-hidden="true"><LivraisonPv lang={lang} i={k} modes={modes} /></div>
+            </li>
+          ))}
+        </ol>
+        <div class="lv-sc-stage" aria-hidden="true">
+          <div class="lv-sc-frame">
+            <span class="lv-sc-bar"><i></i></span>
+            {chapters.map((_, k) => <LivraisonPv lang={lang} i={k} modes={modes} />)}
+            <p class="lv-sc-count font-dot" dir="ltr"><b id="lv-sc-n">01</b> / 05</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -183,8 +199,8 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
   <section id="bssaha" class="bx-sec scroll-mt-20 px-4 pt-16 sm:px-6 md:pt-24">
     <div class="mx-auto max-w-6xl">
       <div class="rv">
-        <p class="bx-eyebrow">{c.badge}</p>
-        <h2 class="bx-h2 mt-3">{tt('Bssaha, la vitrine de l’écosystème')}</h2>
+        <p class="lv-lab"><b class="font-dot">03</b><span>{c.badge}</span><i></i></p>
+        <h2 class="bx-h2 mt-6">{tt('Bssaha, la vitrine de l’écosystème')}</h2>
         <span class="bx-glow-line" aria-hidden="true"></span>
         <p class="measure mt-5 text-lg bx-mute">{tt('Bssaha est la partie marketing : un annuaire où les clients trouvent les restaurants et commandent directement chez eux, sans commission.')}</p>
       </div>
@@ -192,25 +208,28 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
   </section>
   <BssahaDirectory m={m} how={false} />
 
-  <!-- ============ APPS OR AMPLIFY ============ -->
-  <section id="comparaison" class="bx-sec scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
-    <div class="mx-auto max-w-6xl">
+  <!-- ============ 04 · APPS OR AMPLIFY: drag to compare ============ -->
+  <section id="comparaison" class="bx-sec scroll-mt-20 px-4 py-20 sm:px-6 md:py-32">
+    <div class="mx-auto max-w-7xl">
       <div class="rv">
-        <h2 class="bx-h2"><span class="block">{tt('Moins d’apps,')}</span><span class="block bx-hot-line">{tt('plus de contrôle.')}</span></h2>
-        <span class="bx-glow-line" aria-hidden="true"></span>
-        <p class="measure mt-5 text-lg bx-mute">{tt('Ce qui change quand la commande passe par vous au lieu de passer par une app de livraison.')}</p>
+        <p class="lv-lab"><b class="font-dot">04</b><span>{tt('Apps ou Amplify')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Moins d’apps,')}</span><span class="block bx-hot-line">{tt('plus de contrôle.')}</span></h2>
+        <p class="measure mt-6 text-lg bx-mute">{tt('Ce qui change quand la commande passe par vous au lieu de passer par une app de livraison.')}</p>
       </div>
-      <div class="lv-cmp rv mt-10">
-        <div class="lv-cmp-head"><span></span><span class="bx-mute">{tt('Apps de livraison')}</span><span class="text-[#3DFFA0]">{tt('Avec Amplify')}</span></div>
-        {compare.map(([h, a, b]) => (
-          <div class="lv-cmp-row">
-            <p class="font-semibold">{tt(h)}</p>
-            <p class="no"><span class="font-semibold md:hidden">{tt('Apps de livraison')} : </span>{tt(a)}</p>
-            <p class="yes"><span class="md:hidden">{tt('Avec Amplify')} : </span>{tt(b)}</p>
-          </div>
-        ))}
+      <div class="lv-cmp2 rv mt-12" id="lv-cmp" style="--pos:50%">
+        <div class="lv-cl lv-cl--app">
+          <p class="lv-cl-h"><i></i>{tt('Apps de livraison')}</p>
+          <ul>{compare.map(([h, a]) => <li><small class="font-dot">{tt(h)}</small><p>{tt(a)}</p></li>)}</ul>
+        </div>
+        <div class="lv-cl lv-cl--amp">
+          <p class="lv-cl-h"><i></i>{tt('Avec Amplify')}</p>
+          <ul>{compare.map(([h, , b]) => <li><small class="font-dot">{tt(h)}</small><p>{tt(b)}</p></li>)}</ul>
+        </div>
+        <span class="lv-cmp-line" aria-hidden="true"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" /></svg></i></span>
+        <input class="lv-cmp-range" type="range" min="0" max="100" step="0.1" value="50" aria-label={tt('Glissez pour comparer')} />
+        <p class="lv-cmp-hint" aria-hidden="true">{tt('Glissez pour comparer')}</p>
       </div>
-      <p class="rv bx-glass mt-5 px-5 py-4 text-lg">{tt('Vous pouvez garder les apps en plus : Amplify s’ajoute, il ne vous oblige à rien quitter.')}</p>
+      <p class="rv bx-glass mt-6 px-5 py-4 text-lg">{tt('Vous pouvez garder les apps en plus : Amplify s’ajoute, il ne vous oblige à rien quitter.')}</p>
     </div>
   </section>
 
@@ -218,7 +237,8 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
   <section id="ensemble" class="bx-sec bx-sec--alt scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
     <div class="mx-auto max-w-6xl">
       <div class="rv">
-        <h2 class="bx-h2"><span class="block">{tt('Tout ensemble,')}</span><span class="block bx-hot-line">{tt('ou module par module.')}</span></h2>
+        <p class="lv-lab"><b class="font-dot">05</b><span>{tt('Ensemble ou séparé')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Tout ensemble,')}</span><span class="block bx-hot-line">{tt('ou module par module.')}</span></h2>
         <span class="bx-glow-line" aria-hidden="true"></span>
         <p class="measure mt-5 text-lg bx-mute">{tt('Les quatre étapes forment un seul ensemble. Mais vous n’êtes pas obligé de tout prendre d’un coup : commencez par ce dont vous avez besoin.')}</p>
       </div>
@@ -244,8 +264,8 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
   <section id="livreurs" class="bx-sec scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
     <div class="bx-glass rv mx-auto flex max-w-6xl flex-col items-start gap-8 p-7 md:flex-row md:items-center md:justify-between md:p-12">
       <div class="max-w-xl">
-        <span class="lv-chapter-ic" aria-hidden="true"><Icon name="truck" class="size-6" /></span>
-        <h2 class="bx-h2 mt-4 !text-[clamp(2.2rem,5vw,3.6rem)]">{tt('Vous voulez livrer ?')}</h2>
+        <p class="lv-lab"><b class="font-dot">06</b><span>{tt('Livreurs')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6 !text-[clamp(2.2rem,5vw,3.6rem)]">{tt('Vous voulez livrer ?')}</h2>
         <p class="mt-4 text-lg bx-mute">{tt('Inscrivez-vous comme livreur, recevez des courses de restaurants et livrez. Vos 50 premières courses sont offertes.')}</p>
       </div>
       <a href={riderUrl} target="_blank" rel="noopener" data-wa="livraison-livreur" class="bx-btn bx-btn--go shrink-0" data-mag>{tt('Devenir livreur')}<BxArrow /></a>
@@ -256,7 +276,8 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
   <section id="faq" class="bx-sec bx-sec--alt scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
     <div class="mx-auto max-w-3xl">
       <div class="rv">
-        <h2 class="bx-h2 !text-[clamp(2.4rem,5.5vw,4rem)]">{tt('Questions fréquentes')}</h2>
+        <p class="lv-lab"><b class="font-dot">07</b><span>{tt('Questions fréquentes')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6 !text-[clamp(2.4rem,5.5vw,4rem)]">{tt('Questions fréquentes')}</h2>
         <span class="bx-glow-line" aria-hidden="true"></span>
       </div>
       <div class="lv-faq mt-10">
@@ -268,6 +289,57 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
   <FinalCta lang={lang} page="livraison" h2={tt('Livrez par vous-même.')} p={tt('Dites-nous comment vous travaillez aujourd’hui. Nous vous montrons ce qui peut changer.')} wa={wa} />
   </div>
 
+  <script>
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // rows of the "three things" light up when they pass the middle of the screen
+    const rows = document.querySelectorAll<HTMLElement>('.lv-r2');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('on', e.isIntersecting)), { rootMargin: '-42% 0px -42% 0px' });
+      rows.forEach(r => io.observe(r));
+    }
+    // the journey: the step closest to the middle of the screen is the active one; the pinned picture follows
+    const sc = document.getElementById('lv-sc');
+    if (sc) {
+      const items = [...sc.querySelectorAll<HTMLElement>('.lv-sc-it')];
+      const num = document.getElementById('lv-sc-n');
+      let cur = -1, queued = false;
+      const upd = () => {
+        queued = false;
+        const mid = innerHeight * 0.5; let best = 0, bd = Infinity;
+        items.forEach((it, i) => { const r = it.getBoundingClientRect(); const d = Math.abs(r.top + r.height / 2 - mid); if (d < bd) { bd = d; best = i; } });
+        if (best === cur) return;
+        cur = best; sc.dataset.a = String(best); sc.style.setProperty('--a', String(best));
+        items.forEach((it, i) => it.classList.toggle('on', i === best));
+        if (num) num.textContent = '0' + (best + 1);
+      };
+      addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(upd); } }, { passive: true });
+      addEventListener('resize', upd); upd();
+    }
+    // apps or Amplify: drag the divider (an invisible range input does the work, so keyboard and touch come for free)
+    const cmp = document.getElementById('lv-cmp');
+    if (cmp) {
+      const rng = cmp.querySelector<HTMLInputElement>('.lv-cmp-range')!;
+      const set = (v: number) => { v = Math.min(100, Math.max(0, v)); rng.value = String(v); cmp.style.setProperty('--pos', v + '%'); };
+      let used = false;
+      const use = () => { if (!used) { used = true; cmp.classList.add('used'); } };
+      rng.addEventListener('input', () => { use(); set(+rng.value); });
+      rng.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault(); use();
+        const rtl = document.documentElement.dir === 'rtl';
+        set(+rng.value + ((e.key === 'ArrowRight') !== rtl ? 5 : -5));
+      });
+      if (!still && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(es => {
+          if (!es[0].isIntersecting) return; io.disconnect();
+          const t0 = performance.now();
+          const f = (now: number) => { if (used) return; const k = (now - t0) / 2800; if (k >= 1) { set(50); return; } set(50 + Math.sin(k * Math.PI * 2) * 24 * (1 - k * 0.35)); requestAnimationFrame(f); };
+          requestAnimationFrame(f);
+        }, { threshold: 0.55 });
+        io.observe(cmp);
+      }
+    }
+  </script>
   <script>
     // safety net: if the reveal observer fails for any reason, nothing stays hidden
     setTimeout(() => document.querySelectorAll('.rv').forEach(e => e.classList.add('in')), 4000);

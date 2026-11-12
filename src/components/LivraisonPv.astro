@@ -1,0 +1,76 @@
+---
+// Livraison, "Le parcours": one small picture per step of the order (Bssaha, your site, your till, your driver, the handover code).
+// Used twice by the page: in the pinned stage next to the scroll (wide screens) and inline under each step (phones, no JavaScript).
+// Everything here is example data (Chez Nour, 2 tajines, 140 DH, code 4827), no image files.
+import Icon from './Icon.astro';
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang; i: number; modes?: string[] }
+const { lang, i, modes = [] } = Astro.props;
+const tt = tr(lang);
+// a deterministic little QR-like pattern (not a real code)
+const N = 11;
+let seed = 7;
+const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+const cells: [number, number][] = [];
+const inFinder = (x: number, y: number) => (x < 4 && y < 4) || (x > N - 5 && y < 4) || (x < 4 && y > N - 5);
+for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!inFinder(x, y) && rnd() > 0.52) cells.push([x, y]);
+const finders: [number, number][] = [[0, 0], [N - 3, 0], [0, N - 3]];
+const pins: [number, number][] = [[14, 22], [30, 64], [58, 18], [72, 58], [86, 30], [44, 80], [20, 44]];
+---
+<div class="pv" data-i={i}>
+  {i === 0 && (
+    <div class="pv-card pv-bs">
+      <div class="pv-map" aria-hidden="true">
+        {pins.map(([x, y], k) => <i class="pv-pin" style={`left:${x}%;top:${y}%;--d:${k * 0.35}s`}></i>)}
+        <i class="pv-pin pv-pin--me" style="left:50%;top:44%"></i>
+      </div>
+      <div class="pv-bs-body">
+        <p class="pv-name display">{tt('Chez Nour')}</p>
+        <div class="pv-chips">
+          <span class="bx-chip direct">{tt('Ouvert')}</span>
+          {modes.map((m, k) => <span class={`bx-chip ${k === 0 ? 'direct' : 'other'}`}>{m}</span>)}
+        </div>
+      </div>
+    </div>
+  )}
+  {i === 1 && (
+    <div class="pv-phone">
+      <div class="pv-phone-top"><b class="display">{tt('Chez Nour')}</b><Icon name="qr" class="size-5" /></div>
+      <svg class="pv-qr" viewBox={`0 0 ${N} ${N}`} aria-hidden="true" shape-rendering="crispEdges">
+        {finders.map(([x, y]) => (<g><rect x={x} y={y} width="3" height="3" fill="#fff" /><rect x={x + 0.55} y={y + 0.55} width="1.9" height="1.9" fill="#001E3E" /><rect x={x + 1} y={y + 1} width="1" height="1" fill="#fff" /></g>))}
+        {cells.map(([x, y]) => <rect x={x} y={y} width="1" height="1" fill="#fff" />)}
+      </svg>
+      <div class="pv-line"><span>2 × {tt('Tajine poulet')}</span><b class="font-dot" dir="ltr">140 DH</b></div>
+    </div>
+  )}
+  {i === 2 && (
+    <div class="pv-ticket">
+      <p class="pv-ex">{tt('Exemple')}</p>
+      <p class="pv-t-h display">{tt('La commande')}</p>
+      <div class="pv-line"><span>2 × {tt('Tajine poulet')}</span><b class="font-dot" dir="ltr">140 DH</b></div>
+      <div class="pv-line pv-line--zero"><span>{tt('Zéro commission')}</span><b class="font-dot" dir="ltr">0 DH</b></div>
+      <p class="pv-wa"><Icon name="message" class="size-4" /> WhatsApp ✓</p>
+    </div>
+  )}
+  {i === 3 && (
+    <div class="pv-route">
+      <svg viewBox="0 0 360 280" aria-hidden="true">
+        <path id={`pv-path-${i}`} class="pv-trail" d="M52 224 C 120 40, 230 270, 308 62" />
+        <path class="pv-trail pv-trail--go" d="M52 224 C 120 40, 230 270, 308 62" />
+        <circle cx="52" cy="224" r="9" class="pv-end" /><circle cx="308" cy="62" r="9" class="pv-end pv-end--home" />
+        <g class="pv-rider"><circle r="13" /><animateMotion dur="3.6s" repeatCount="indefinite" calcMode="spline" keySplines=".45 0 .55 1" keyTimes="0;1"><mpath href={`#pv-path-${i}`} /></animateMotion></g>
+      </svg>
+      <span class="pv-tag pv-tag--a">{tt('Chez Nour')}</span>
+      <span class="pv-tag pv-tag--b">{tt('Votre livreur')}</span>
+    </div>
+  )}
+  {i === 4 && (
+    <div class="pv-code">
+      <p class="pv-ex">{tt('Exemple')}</p>
+      <div class="pv-digits" dir="ltr">{['4', '8', '2', '7'].map((d, k) => <b class="font-dot" style={`--d:${k * 0.18}s`}>{d}</b>)}</div>
+      <p class="pv-code-l">{tt('Code de livraison')}</p>
+      <span class="pv-ok"><Icon name="check" class="size-6" /></span>
+    </div>
+  )}
+</div>
