@@ -2,6 +2,8 @@
 // Livraison, hero "Le Parcours": one scroll-driven film (public/video/livraison-hero.mp4, six clips of ~5 s, no sound, no text in it).
 // The picture is pinned while five sentences scroll past; the scroll plays the film forward and backward (currentTime follows the scroll).
 // The six photographs (public/img/livraison/1..6.webp) are the fallback: reduced data, slow connection, video error, or while the film loads.
+// Two films: desktop (wide screen with a mouse) scrubs the 16:9 film with the scroll; phones and tablets get a portrait film (livraison-hero-mobile.mp4,
+// each clip cropped on its subject) where each sentence simply plays its own clip once and holds the last frame (forward play is smooth on phones, seeking is not).
 // The film is fetched whole as a blob so that scrubbing is smooth; until it is ready (or if it fails) the photos do the job.
 // Photos: 1 street at blue hour, 2 the customer, 3 the restaurant, 4 the till, 5 the scooter, 6 the door and the code. The green in each photo is the order.
 // Restaurant name, order and code are examples. No percentage and no price are stated: only "0 DH commission on your orders".
@@ -29,7 +31,7 @@ const img = (n: number, w: number) => (w === 760 ? `/img/livraison/${n}-760.webp
   <div class="mq-pin">
     <div class="mq-stage" aria-hidden="true">
       {shots.map(([n, pos], k) => <img class="mq-ph" src={k === 0 ? img(n, 1376) : undefined} srcset={k === 0 ? `${img(n, 760)} 760w, ${img(n, 1376)} 1376w` : undefined} data-src={img(n, 1376)} data-srcset={`${img(n, 760)} 760w, ${img(n, 1376)} 1376w`} sizes="100vw" alt="" width="1376" height="768" style={`--pos:${pos}`} decoding="async" fetchpriority={k === 0 ? 'high' : 'auto'} />)}
-      <video class="mq-vid" muted playsinline preload="none" tabindex="-1" disablepictureinpicture disableremoteplayback data-src="/video/livraison-hero.mp4" data-src-s="/video/livraison-hero-760.mp4"></video>
+      <video class="mq-vid" muted playsinline preload="none" tabindex="-1" disablepictureinpicture disableremoteplayback data-src="/video/livraison-hero.mp4" data-src-m="/video/livraison-hero-mobile.mp4"></video>
     </div>
     <div class="mq-shade" aria-hidden="true"></div>
     <div class="mq-ui">
@@ -83,10 +85,12 @@ const img = (n: number, w: number) => (w === 760 ? `/img/livraison/${n}-760.webp
     // sentence -> part of the film [from, to] in seconds: street, customer, restaurant, till, scooter, door (cuts at 5.1, 10.1, 15.1, 20.2, 25.2; the first is a dissolve)
     const CLIP = [[0, 4.9], [5.3, 10.05], [10.12, 15.08], [15.15, 20.12], [20.2, 25.15], [25.22, 30.1]];
     const POS = ['50%', '70%', '50%', '38%', '60%', '52%'];
-    let beat = -1, queued = false, mode = 'photo', cur = 0, target = 0, run = false;
+    // portrait film: where each clip starts and ends (seconds), and the clip that is currently playing
+    const CLIPM = [[0, 4.85], [4.9, 9.6], [9.65, 14.56], [14.61, 19.53], [19.58, 24.48], [24.53, 29.38]];
+    let beat = -1, queued = false, mode = 'photo', cur = 0, target = 0, run = false, playEnd = 0, watching = false;
     const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
     const loadPhotos = () => imgs.forEach(im => { if (!im.getAttribute('src')) { im.srcset = im.dataset.srcset; im.src = im.dataset.src; } });
-    const showPhotos = () => { const b = Math.max(beat, 0); imgs.forEach((im, k) => { const on = (mode === 'video' ? b === 6 : true) && k === IMG[b]; if (im.classList.contains('on') !== on) im.classList.toggle('on', on); }); };
+    const showPhotos = () => { const b = Math.max(beat, 0); imgs.forEach((im, k) => { const on = (mode !== 'photo' ? b === 6 : true) && k === IMG[b]; if (im.classList.contains('on') !== on) im.classList.toggle('on', on); }); };
     // film: follow the scroll with a little smoothing; across a cut (more than 1.2 s apart) jump straight there instead of sweeping through the other clips
     const tick = () => {
       if (mode !== 'video') { run = false; return; }
@@ -94,6 +98,19 @@ const img = (n: number, w: number) => (w === 760 ? `/img/livraison/${n}-760.webp
       cur = Math.abs(d) > 1.2 || Math.abs(d) < 0.015 ? target : cur + d * 0.22;
       if (Math.abs(vid.currentTime - cur) > 0.012) vid.currentTime = cur;
       if (cur !== target) requestAnimationFrame(tick); else run = false;
+    };
+    // portrait film: play the clip of the current sentence, then hold its last frame
+    const watch = () => {
+      if (mode !== 'play' || vid.paused) { watching = false; return; }
+      if (vid.currentTime >= playEnd) { vid.pause(); watching = false; return; }
+      requestAnimationFrame(watch);
+    };
+    const playClip = b => {
+      if (b > 5) { vid.pause(); return; }
+      playEnd = CLIPM[b][1]; vid.currentTime = CLIPM[b][0];
+      const pr = vid.play();
+      if (pr && pr.catch) pr.catch(() => { mode = 'photo'; root.classList.remove('mq--vid'); loadPhotos(); upd(); });
+      if (!watching) { watching = true; requestAnimationFrame(watch); }
     };
     const upd = () => {
       queued = false;
@@ -103,7 +120,8 @@ const img = (n: number, w: number) => (w === 760 ? `/img/livraison/${n}-760.webp
       const t = clamp((p - B[b]) / (B[b + 1] - B[b]), 0, 1);
       if (b !== beat) {
         beat = b; blocks.forEach((e, k) => e.classList.toggle('on', k === b)); rail.forEach((e, k) => e.classList.toggle('on', k < b || b === 6));
-        if (b < 6) vid.style.setProperty('--pos', POS[b]);
+        if (b < 6 && mode === 'video') vid.style.setProperty('--pos', POS[b]);
+        if (mode === 'play') playClip(b);
         root.classList.toggle('mq--end', b === 6);
       }
       if (mode === 'video') {
@@ -117,18 +135,18 @@ const img = (n: number, w: number) => (w === 760 ? `/img/livraison/${n}-760.webp
     addEventListener('scroll', q, { passive: true }); addEventListener('resize', q);
     // choose: film, or photos only (data saver, slow connection)
     const nc = navigator.connection, slow = nc && (nc.saveData || /(^|-)2g$|3g/.test(nc.effectiveType || ''));
+    const desktop = matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)').matches;
     if (slow || !vid || !window.fetch || !window.URL) loadPhotos();
     else {
-      const small = matchMedia('(max-width: 760px)').matches;
-      const go = () => fetch(small ? vid.dataset.srcS : vid.dataset.src).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(bl => {
-        vid.addEventListener('loadeddata', () => { mode = 'video'; cur = target = 0; root.classList.add('mq--vid'); upd(); }, { once: true });
+      const go = () => fetch(desktop ? vid.dataset.src : vid.dataset.srcM).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(bl => {
+        vid.addEventListener('loadeddata', () => { mode = desktop ? 'video' : 'play'; cur = target = 0; root.classList.add('mq--vid'); if (!desktop) vid.style.setProperty('--pos', '50%'); beat = -1; upd(); }, { once: true });
         vid.addEventListener('error', () => { mode = 'photo'; root.classList.remove('mq--vid'); loadPhotos(); upd(); }, { once: true });
         vid.preload = 'auto'; vid.src = URL.createObjectURL(bl); vid.load();
       }).catch(() => { mode = 'photo'; loadPhotos(); });
       // start once the page has settled so the first paint (photo 1) is not slowed
       if (document.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
       // the photos are loaded only if the film has not been ready after 6 s
-      setTimeout(() => { if (mode !== 'video') loadPhotos(); }, 6000);
+      setTimeout(() => { if (mode === 'photo') loadPhotos(); }, 6000);
     }
     upd();
   }
