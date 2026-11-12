@@ -2,7 +2,7 @@
 // Livraison: a restaurant can deliver without the delivery apps. One ecosystem, five steps: Bssaha (the marketing: customers find you),
 // your order site, the till, the driver, the handover with a 4-digit code. Usable all together or one module at a time.
 // Style: "Le Terminal", shared with Bssaha (src/styles/bssaha.css). Bssaha is a part of this page (BssahaDirectory) and keeps its own page.
-// No prices or percentages are written here: restaurants will pay a small fee later, so the page only says
+// No Amplify prices or percentages are written here (the only percentage is the hero's "jusqu'à 30 %", a statement about what the delivery apps charge): restaurants will pay a small fee later, so the page only says
 // "simple, transparent rates, shared before you start". Drivers: their first 50 rides are free (the only number).
 import '../../styles/bssaha.css';
 import Base from '../../layouts/Base.astro';
@@ -11,7 +11,7 @@ import FinalCta from '../FinalCta.astro';
 import BxArrow from '../BxArrow.astro';
 import BssahaFx from '../BssahaFx.astro';
 import BssahaDirectory from '../BssahaDirectory.astro';
-import LivraisonNight from '../LivraisonNight.astro';
+import LivraisonFacade from '../LivraisonFacade.astro';
 import { bssahaModel } from '../../lib/bssahaModel';
 import { APPS, isPlaceholder, waLink } from '../../config';
 import { tr } from '../../i18n/t';
@@ -106,16 +106,16 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
     data-m-direct={c.modes.direct} data-m-whatsapp={c.modes.whatsapp} data-m-livraison={c.modes.livraison} data-m-emporter={c.modes.emporter} data-sending={c.sending} style={`--city:${first.glow}`}>
   <BssahaFx />
 
-  <!-- ============ HERO: the promise, and the night city and the receipt ============ -->
+  <!-- ============ HERO: the promise, and the restaurant facade, hijacked by an app and taken back ============ -->
   <section class="bx-hero">
     <div class="bx-grain" aria-hidden="true"></div>
     <div class="bx-scan" aria-hidden="true"></div>
-    <div class="mx-auto grid w-full max-w-6xl gap-x-14 gap-y-6 px-4 py-8 sm:px-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-center lg:py-12">
+    <div class="mx-auto grid w-full max-w-6xl gap-x-14 gap-y-6 px-4 py-8 sm:px-6 lg:grid-cols-[0.86fr_1.14fr] lg:items-center lg:py-12">
       <div class="lg:col-start-1 lg:row-start-1">
         <p class="bx-badge rv"><span class="bx-dot"></span><span class="font-dot text-sm tracking-widest">{tt('Amplify Livraison')}</span></p>
         <h1 class="bx-h1 lv-h1 mt-5 lg:mt-6"><span class="block" data-scramble>{tt('Votre livraison,')}</span><span class="block bx-hot" data-scramble>{tt('sans passer par les apps de livraison.')}</span><span class="bx-under" aria-hidden="true"></span></h1>
       </div>
-      <LivraisonNight lang={lang} />
+      <LivraisonFacade lang={lang} />
       <div class="lg:col-start-1 lg:row-start-2">
         <p class="measure rv text-base bx-mute sm:text-lg md:text-xl" style="--d:200ms">{tt('Vos clients commandent chez vous. La commande arrive dans votre caisse. Un livreur est demandé en un clic. Tout est entre vos mains, de la commande à la remise.')}</p>
         <div class="rv mt-6 flex flex-col gap-3 sm:flex-row md:mt-8" style="--d:320ms">
