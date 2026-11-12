@@ -13,6 +13,7 @@ import BssahaFx from '../BssahaFx.astro';
 import BssahaDirectory from '../BssahaDirectory.astro';
 import LivraisonMaquette from '../LivraisonMaquette.astro';
 import LivraisonPv from '../LivraisonPv.astro';
+import LivraisonWin from '../LivraisonWin.astro';
 import { bssahaModel } from '../../lib/bssahaModel';
 import { APPS, isPlaceholder, waLink } from '../../config';
 import { tr } from '../../i18n/t';
@@ -242,6 +243,8 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
   </section>
 
   <!-- ============ FAQ ============ -->
+  <LivraisonWin lang={lang} />
+
   <section id="faq" class="bx-sec bx-sec--alt scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
     <div class="mx-auto max-w-3xl">
       <div class="rv">

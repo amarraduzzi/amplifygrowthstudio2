@@ -1,0 +1,186 @@
+---
+// "Même plat, trois gagnants": a live calculator on the Livraison page. One dish sold on Glovo vs ordered direct.
+// The 30 % commission is the money that is shared: the customer pays less, the restaurant earns more, the driver keeps the delivery fee.
+// All figures are examples, labelled as such. Nothing here is a promise or an Amplify price.
+import { tr } from '../i18n/t';
+import { waLink } from '../config';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const I18N = {
+  loc: lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-MA' : 'fr-FR', dh: tt('DH'),
+  win: tt('Les trois y gagnent.'),
+  over: tt('Remise trop haute : le restaurant gagnerait moins que sur Glovo. Maximum : {m} %.'),
+  rider: tt('Le livreur gagnerait moins que sur Glovo : augmentez les frais de livraison.'),
+  pick: tt('À emporter : pas de livreur. Le client économise, le restaurant gagne, le livreur garde ses courses.'),
+  none: tt('aucune course'),
+};
+const sliders = [
+  ['price', 'Prix du plat sur Glovo', 40, 300, 100, 5, 'DH'],
+  ['cost', 'Coût des ingrédients', 20, 50, 35, 1, '%'],
+  ['com', 'Commission Glovo', 15, 35, 30, 1, '%'],
+  ['gfee', 'Frais de livraison Glovo payés par le client', 0, 40, 20, 1, 'DH'],
+  ['disc', 'Remise directe pour le client', 0, 35, 20, 1, '%'],
+  ['dfee', 'Frais de livraison en direct', 0, 40, 15, 1, 'DH'],
+  ['rpay', 'Ce que Glovo paie au livreur par course (à mesurer)', 5, 30, 12, 1, 'DH'],
+] as const;
+const wa = waLink(tt('Bonjour, je voudrais calculer ce que je gagnerais en livrant mes commandes moi-même. Pouvez-vous m’aider ?'));
+const cards = [['c', 'Le client', 'paie'], ['r', 'Le restaurant', 'garde'], ['d', 'Le livreur', 'gagne par course']] as const;
+const bars = [['g', 'Sur Glovo'], ['x', 'En direct']] as const;
+---
+<section class="lw relative isolate overflow-hidden bg-navy px-4 py-16 text-white sm:px-6 md:py-24" data-lw data-i18n={JSON.stringify(I18N)}>
+  <div class="pointer-events-none absolute -end-40 -top-40 -z-10 size-[32rem] rounded-full bg-green/20 blur-3xl" aria-hidden="true"></div>
+  <div class="mx-auto max-w-6xl">
+    <div class="mx-auto max-w-3xl text-center">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl">{tt('Même plat, trois gagnants.')}</h2>
+      <p class="mx-auto mt-5 max-w-2xl text-white/75">{tt('Un plat vendu sur Glovo, puis commandé en direct. Réglez la remise, la livraison et le mode : la commission que le restaurant ne paie plus se partage entre le client, le restaurant et le livreur.')}</p>
+    </div>
+
+    <!-- the verdict -->
+    <p class="lw-ban mx-auto mt-8 flex max-w-2xl items-center justify-center gap-3 rounded-full px-5 py-3 text-center font-bold" aria-live="polite"><span class="lw-ico grid size-7 shrink-0 place-items-center rounded-full bg-navy text-green" aria-hidden="true">✓</span><span class="lw-bantxt"></span></p>
+
+    <!-- the three winners -->
+    <div class="mt-6 grid gap-4 md:grid-cols-3">
+      {cards.map(([k, who, verb]) => (
+        <div class="lw-card rounded-[1.75rem] bg-paper p-5 text-navy shadow-[0_40px_90px_-40px_rgba(0,0,0,0.7)]" data-card={k}>
+          <p class="flex items-center justify-between text-sm font-bold"><span>{tt(who)}</span><span class="lw-pill rounded-full px-3 py-1 text-sm" dir="ltr"></span></p>
+          <div class="lw-body">
+            <p class="mt-4 text-xs font-semibold text-muted">{tt('Sur Glovo')} · {tt(verb)}</p>
+            <p class="lw-a display text-2xl tabular-nums text-muted line-through decoration-[#E5484D]/60" dir="ltr"></p>
+            <p class="mt-3 text-xs font-semibold text-green-deep">{tt('En direct')} · {tt(verb)}</p>
+            <p class="lw-b display text-5xl tabular-nums" dir="ltr"></p>
+          </div>
+          <p class="lw-off mt-6 hidden text-sm text-muted"></p>
+        </div>
+      ))}
+    </div>
+
+    <div class="mt-4 grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
+      <!-- where the money of one dish goes -->
+      <div class="rounded-[1.75rem] bg-white/[0.06] p-5 ring-1 ring-white/10 sm:p-7">
+        <p class="font-semibold">{tt('Où va l’argent d’un plat')}</p>
+        <div class="mt-4 space-y-4">
+          {bars.map(([k, lab]) => (
+            <div>
+              <p class="mb-1.5 text-xs font-semibold text-white/60">{tt(lab)}</p>
+              <div class="flex h-12 overflow-hidden rounded-xl text-xs font-bold text-navy" data-bar={k} dir="ltr">
+                <span class="lw-s grid place-items-center bg-white/25 text-white" data-s="cost"></span>
+                <span class="lw-s grid place-items-center overflow-hidden" data-s="mid"></span>
+                <span class="lw-s grid place-items-center overflow-hidden bg-green" data-s="rest"></span>
+              </div>
+            </div>
+          ))}
+        </div>
+        <ul class="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-xs text-white/70">
+          <li class="flex items-center gap-2"><i class="size-3 rounded-sm bg-white/25"></i>{tt('Ingrédients')}</li>
+          <li class="flex items-center gap-2"><i class="size-3 rounded-sm bg-[#E5484D]"></i>{tt('Commission Glovo')}</li>
+          <li class="flex items-center gap-2"><i class="size-3 rounded-sm bg-[#F5B301]"></i>{tt('Remise du client')}</li>
+          <li class="flex items-center gap-2"><i class="size-3 rounded-sm bg-green"></i>{tt('Part du restaurant')}</li>
+        </ul>
+        <p class="mt-4 text-sm text-white/75">{tt('La barre du bas a la même longueur : la commission de Glovo devient la remise du client et le gain du restaurant.')}</p>
+      </div>
+
+      <!-- the levers -->
+      <div class="rounded-[1.75rem] bg-white/[0.06] p-5 ring-1 ring-white/10 sm:p-7">
+        <div class="flex flex-wrap gap-2" role="group">
+          <button type="button" class="lw-mode" data-mode="liv" aria-pressed="true">{tt('Livraison')}</button>
+          <button type="button" class="lw-mode" data-mode="emp" aria-pressed="false">{tt('À emporter')}</button>
+          <button type="button" class="lw-mode" data-prime aria-pressed="false">{tt('Le client a Glovo Prime')}</button>
+        </div>
+        <div class="mt-5 space-y-4">
+          {sliders.map(([k, lab, min, max, val, step, u]) => (
+            <div data-row={k}>
+              <label class="flex items-center justify-between gap-3 text-sm" for={`lw-${k}`}><span class="font-semibold">{tt(lab)}</span><span class="tabular-nums text-white/80" data-v={k} dir="ltr"></span></label>
+              <input id={`lw-${k}`} type="range" min={min} max={max} step={step} value={val} data-k={k} data-u={u} class="pc-range pl-range mt-2 w-full" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <p class="mx-auto mt-6 max-w-2xl text-center text-xs text-white/55">{tt('Exemple chiffré, pas une promesse. Les frais Glovo et la paie des livreurs varient : mesurez-les avec quelques commandes.')}</p>
+    <div class="mt-6 text-center"><a href={wa} class="inline-flex min-h-12 items-center rounded-full bg-green px-6 font-bold text-navy">{tt('Calculer pour mon restaurant')}</a></div>
+  </div>
+</section>
+
+<style is:global>
+  .lw-ban { background: #05B962; color: #001E3E; transition: background .3s, color .3s; }
+  .lw-ban.bad { background: #E5484D; color: #fff; }
+  .lw-ban.bad .lw-ico { color: #E5484D; }
+  .lw-pill { background: #DDF7E9; color: #00804A; font-weight: 800; }
+  .lw-card.bad .lw-pill { background: #FDE8E8; color: #B42318; }
+  .lw-card.bad { box-shadow: 0 0 0 3px #E5484D; }
+  .lw-card.flat .lw-pill { background: #EEF1EC; color: #4A5D74; }
+  .lw-s { transition: width .5s cubic-bezier(.3,1,.5,1); white-space: nowrap; min-width: 0; }
+  .lw-mode { min-height: 2.5rem; padding: 0 1rem; border-radius: 999px; font-weight: 700; font-size: .875rem; background: rgb(255 255 255 / .1); color: #fff; }
+  .lw-mode[aria-pressed="true"] { background: #05B962; color: #001E3E; }
+  .lw input:focus-visible, .lw-mode:focus-visible { outline: 3px solid #05B962; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) { .lw-s, .lw-ban { transition: none; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-lw]').forEach((root) => {
+    const T = JSON.parse(root.dataset.i18n!);
+    const fmt = (n: number) => Math.round(n).toLocaleString(T.loc).replace(/[\u202f\u00a0]/g, ' ');
+    const dh = (n: number) => `${fmt(n)} ${T.dh}`;
+    const sg = (n: number) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${fmt(Math.abs(n))} ${T.dh}`;
+    const q = <E extends HTMLElement>(s: string) => root.querySelector<E>(s)!;
+    const inputs = [...root.querySelectorAll<HTMLInputElement>('[data-k]')];
+    let pickup = false, prime = false;
+    const set = (el: HTMLElement, v: string) => { if (el.textContent !== v) el.textContent = v; };
+    const run = () => {
+      const v: Record<string, number> = {};
+      inputs.forEach((r) => {
+        v[r.dataset.k!] = Number(r.value);
+        r.style.setProperty('--fill', `${(Number(r.value) - Number(r.min)) / (Number(r.max) - Number(r.min)) * 100}%`);
+        set(root.querySelector<HTMLElement>(`[data-v="${r.dataset.k}"]`)!, `${r.value} ${r.dataset.u === '%' ? '%' : T.dh}`);
+      });
+      const P = v.price, cost = P * v.cost / 100;
+      // customer pays
+      const cG = P + (prime ? 0 : v.gfee), cX = P * (1 - v.disc / 100) + (pickup ? 0 : v.dfee);
+      // restaurant keeps (the direct delivery fee goes to the driver, not to the restaurant)
+      const rG = P * (1 - v.com / 100) - cost, rX = P * (1 - v.disc / 100) - cost;
+      // driver earns per delivery
+      const dG = v.rpay, dX = pickup ? 0 : v.dfee;
+      const dc = cG - cX, dr = rX - rG, dd = dX - dG;
+      const set3 = (k: string, a: string, b: string, delta: number, good: boolean, flat = false) => {
+        const c = q(`[data-card="${k}"]`);
+        set(c.querySelector<HTMLElement>('.lw-a')!, a); set(c.querySelector<HTMLElement>('.lw-b')!, b);
+        const pill = c.querySelector<HTMLElement>('.lw-pill')!;
+        set(pill, k === 'c' ? `${sg(-delta)}` : sg(delta));
+        c.classList.toggle('bad', !good && !flat); c.classList.toggle('flat', flat);
+      };
+      set3('c', dh(cG), dh(cX), -dc, dc > 0);
+      set3('r', dh(rG), dh(rX), dr, dr >= -0.5);
+      set3('d', pickup ? T.none : dh(dG), pickup ? T.none : dh(dX), dd, dd >= 0 || pickup, pickup);
+      // the bars: one dish, same length. Glovo: ingredients | commission | restaurant. Direct: ingredients | customer discount | restaurant
+      const bar = (k: string, mid: number, midColor: string, midLabel: string, rest: number) => {
+        const b = q(`[data-bar="${k}"]`);
+        const s = (n: string) => b.querySelector<HTMLElement>(`[data-s="${n}"]`)!;
+        const parts: [string, number][] = [['cost', cost], ['mid', mid], ['rest', Math.max(0, rest)]];
+        parts.forEach(([n, a]) => { const e = s(n); e.style.width = `${a / P * 100}%`; set(e, a / P > 0.08 ? fmt(a) : ''); });
+        s('mid').style.background = midColor; s('mid').style.color = '#001E3E';
+        s('rest').style.background = rest < 0 ? '#E5484D' : '#05B962';
+      };
+      bar('g', P * v.com / 100, '#E5484D', '', rG);
+      bar('x', P * v.disc / 100, '#F5B301', '', rX);
+      q('[data-bar="g"] [data-s="mid"]').style.color = '#fff';
+      // the verdict
+      const bad = dr < -0.5, badRider = !pickup && dd < 0;
+      const ban = q('.lw-ban'); ban.classList.toggle('bad', bad || badRider || dc <= 0);
+      q('.lw-ico').textContent = bad || badRider || dc <= 0 ? '!' : '✓';
+      set(q('.lw-bantxt'), bad ? T.over.replace('{m}', String(v.com)) : badRider ? T.rider : dc <= 0 ? '–' : pickup ? T.pick : T.win);
+      root.querySelector<HTMLElement>('[data-row="gfee"]')!.style.opacity = prime ? '.4' : '1';
+      root.querySelector<HTMLElement>('[data-row="dfee"]')!.style.opacity = pickup ? '.4' : '1';
+    };
+    inputs.forEach((r) => r.addEventListener('input', run));
+    root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((b) => b.addEventListener('click', () => {
+      pickup = b.dataset.mode === 'emp';
+      root.querySelectorAll<HTMLButtonElement>('[data-mode]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      run();
+    }));
+    q('[data-prime]').addEventListener('click', (e) => { prime = !prime; (e.currentTarget as HTMLElement).setAttribute('aria-pressed', String(prime)); run(); });
+    run();
+  });
+</script>
