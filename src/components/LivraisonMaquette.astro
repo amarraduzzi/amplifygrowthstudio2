@@ -1,6 +1,8 @@
 ---
-// Livraison, hero "Le Parcours": one scroll-driven story told in six photographs (public/img/livraison/1..6.webp, AI-made, no text in them).
-// The picture is pinned while five sentences scroll past; the photo changes with the sentence and drifts in slowly. Wide street first and last.
+// Livraison, hero "Le Parcours": one scroll-driven film (public/video/livraison-hero.mp4, six clips of ~5 s, no sound, no text in it).
+// The picture is pinned while five sentences scroll past; the scroll plays the film forward and backward (currentTime follows the scroll).
+// The six photographs (public/img/livraison/1..6.webp) are the fallback: reduced data, slow connection, video error, or while the film loads.
+// The film is fetched whole as a blob so that scrubbing is smooth; until it is ready (or if it fails) the photos do the job.
 // Photos: 1 street at blue hour, 2 the customer, 3 the restaurant, 4 the till, 5 the scooter, 6 the door and the code. The green in each photo is the order.
 // Restaurant name, order and code are examples. No percentage and no price are stated: only "0 DH commission on your orders".
 // No JavaScript / reduced motion: the same five sentences as a plain page (class mq--static); the pinned mode is class mq--pin.
@@ -20,12 +22,15 @@ const beats = [
 ] as const;
 // picture shown with each of the 7 screens (intro, five steps, end) and where to keep the subject in view on a tall phone screen
 const shots = [[1, '50%'], [2, '70%'], [3, '50%'], [4, '38%'], [5, '60%'], [6, '52%'], [1, '50%']] as const;
-const src = (n: number) => `/img/livraison/${n}-800.webp 800w, /img/livraison/${n}-1376.webp 1376w`;
-const imgs = [['1', '50% 50%'], ['2', '74% 50%'], ['3', '55% 50%'], ['4', '38% 60%'], ['5', '62% 50%'], ['6', '52% 50%']] as const;
+const img = (n: number, w: number) => (w === 760 ? `/img/livraison/${n}-760.webp` : `/img/livraison/${n}.webp`);
+---
 ---
 <section class="mq" id="mq">
   <div class="mq-pin">
-    <div class="mq-stage" aria-hidden="true">{shots.map(([n, pos], k) => <img class="mq-ph" src={`/img/livraison/${n}-1376.webp`} srcset={src(n)} sizes="100vw" alt="" width="1376" height="768" style={`--pos:${pos}`} loading={k < 2 ? 'eager' : 'lazy'} decoding="async" fetchpriority={k === 0 ? 'high' : 'auto'} />)}</div>
+    <div class="mq-stage" aria-hidden="true">
+      {shots.map(([n, pos], k) => <img class="mq-ph" src={k === 0 ? img(n, 1376) : undefined} srcset={k === 0 ? `${img(n, 760)} 760w, ${img(n, 1376)} 1376w` : undefined} data-src={img(n, 1376)} data-srcset={`${img(n, 760)} 760w, ${img(n, 1376)} 1376w`} sizes="100vw" alt="" width="1376" height="768" style={`--pos:${pos}`} decoding="async" fetchpriority={k === 0 ? 'high' : 'auto'} />)}
+      <video class="mq-vid" muted playsinline preload="none" tabindex="-1" disablepictureinpicture disableremoteplayback data-src="/video/livraison-hero.mp4" data-src-s="/video/livraison-hero-760.mp4"></video>
+    </div>
     <div class="mq-shade" aria-hidden="true"></div>
     <div class="mq-ui">
       <div class="mq-b on" data-k="0">
@@ -39,7 +44,7 @@ const imgs = [['1', '50% 50%'], ['2', '74% 50%'], ['3', '55% 50%'], ['4', '38% 6
       </div>
       {beats.map(([label, big, small], i) => (
         <div class="mq-b" data-k={i + 1}>
-          <img class="mq-inl" src={`/img/livraison/${shots[i + 1][0]}-800.webp`} alt="" width="800" height="446" loading="lazy" decoding="async" />
+          <img class="mq-inl" src={img(shots[i + 1][0], 760)} alt="" width="760" height="424" loading="lazy" decoding="async" />
           <p class="lv-lab"><b class="font-dot">{`0${i + 1}`}</b><span>{tt(label)}</span><i></i></p>
           <p class="mq-big">{tt(big)}</p>
           <p class="mq-sm">{tt(small)}</p>
@@ -71,23 +76,61 @@ const imgs = [['1', '50% 50%'], ['2', '74% 50%'], ['3', '55% 50%'], ['4', '38% 6
   const root = document.getElementById('mq');
   if (root && root.classList.contains('mq--pin')) {
     const pin = root.querySelector('.mq-pin');
-    const imgs = [...root.querySelectorAll('.mq-ph img')];
+    const imgs = [...root.querySelectorAll('img.mq-ph')], vid = root.querySelector('.mq-vid');
     const blocks = [...root.querySelectorAll('.mq-b')], rail = [...root.querySelectorAll('.mq-rail li')];
     // sentence -> photo (the last sentence returns to the wide street) and where each sentence starts and ends in the scroll
-    const IMG = [0, 1, 2, 3, 4, 5, 0], B = [0, 0.12, 0.26, 0.5, 0.62, 0.84, 0.94, 1];
-    let beat = -1, queued = false;
+    const IMG = [0, 1, 2, 3, 4, 5, 0], B = [0, 0.13, 0.29, 0.45, 0.61, 0.77, 0.92, 1];
+    // sentence -> part of the film [from, to] in seconds: street, customer, restaurant, till, scooter, door (cuts at 5.1, 10.1, 15.1, 20.2, 25.2; the first is a dissolve)
+    const CLIP = [[0, 4.9], [5.3, 10.05], [10.12, 15.08], [15.15, 20.12], [20.2, 25.15], [25.22, 30.1]];
+    const POS = ['50%', '70%', '50%', '38%', '60%', '52%'];
+    let beat = -1, queued = false, mode = 'photo', cur = 0, target = 0, run = false;
     const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+    const loadPhotos = () => imgs.forEach(im => { if (!im.getAttribute('src')) { im.srcset = im.dataset.srcset; im.src = im.dataset.src; } });
+    const showPhotos = () => { const b = Math.max(beat, 0); imgs.forEach((im, k) => { const on = (mode === 'video' ? b === 6 : true) && k === IMG[b]; if (im.classList.contains('on') !== on) im.classList.toggle('on', on); }); };
+    // film: follow the scroll with a little smoothing; across a cut (more than 1.2 s apart) jump straight there instead of sweeping through the other clips
+    const tick = () => {
+      if (mode !== 'video') { run = false; return; }
+      const d = target - cur;
+      cur = Math.abs(d) > 1.2 || Math.abs(d) < 0.015 ? target : cur + d * 0.22;
+      if (Math.abs(vid.currentTime - cur) > 0.012) vid.currentTime = cur;
+      if (cur !== target) requestAnimationFrame(tick); else run = false;
+    };
     const upd = () => {
       queued = false;
-      const r = root.getBoundingClientRect(), hdr = parseFloat(getComputedStyle(pin).top) || 0, run = r.height - pin.clientHeight;
-      const p = run > 0 ? clamp((hdr - r.top) / run, 0, 1) : 0;
+      const r = root.getBoundingClientRect(), hdr = parseFloat(getComputedStyle(pin).top) || 0, span = r.height - pin.clientHeight;
+      const p = span > 0 ? clamp((hdr - r.top) / span, 0, 1) : 0;
       let b = 0; while (b < 6 && p >= B[b + 1]) b++;
       const t = clamp((p - B[b]) / (B[b + 1] - B[b]), 0, 1);
-      imgs.forEach((im, k) => { const on = k === IMG[b]; if (on) im.style.setProperty('--z', (1.03 + 0.07 * (b === 6 ? 1 - t : t)).toFixed(4)); if (im.classList.contains('on') !== on) im.classList.toggle('on', on); });
-      if (b !== beat) { beat = b; blocks.forEach((e, k) => e.classList.toggle('on', k === b)); rail.forEach((e, k) => e.classList.toggle('on', k < b || b === 6)); }
+      if (b !== beat) {
+        beat = b; blocks.forEach((e, k) => e.classList.toggle('on', k === b)); rail.forEach((e, k) => e.classList.toggle('on', k < b || b === 6));
+        if (b < 6) vid.style.setProperty('--pos', POS[b]);
+        root.classList.toggle('mq--end', b === 6);
+      }
+      if (mode === 'video') {
+        const c = CLIP[Math.min(b, 5)]; target = b === 6 ? c[1] : c[0] + (c[1] - c[0]) * t;
+        if (!run) { run = true; requestAnimationFrame(tick); }
+      }
+      showPhotos();
+      imgs.forEach((im, k) => { if (k === IMG[b]) im.style.setProperty('--z', (1.03 + 0.07 * (b === 6 ? 1 - t : t)).toFixed(4)); });
     };
     const q = () => { if (!queued) { queued = true; requestAnimationFrame(upd); } };
-    addEventListener('scroll', q, { passive: true }); addEventListener('resize', q); upd();
+    addEventListener('scroll', q, { passive: true }); addEventListener('resize', q);
+    // choose: film, or photos only (data saver, slow connection)
+    const nc = navigator.connection, slow = nc && (nc.saveData || /(^|-)2g$|3g/.test(nc.effectiveType || ''));
+    if (slow || !vid || !window.fetch || !window.URL) loadPhotos();
+    else {
+      const small = matchMedia('(max-width: 760px)').matches;
+      const go = () => fetch(small ? vid.dataset.srcS : vid.dataset.src).then(r => { if (!r.ok) throw 0; return r.blob(); }).then(bl => {
+        vid.addEventListener('loadeddata', () => { mode = 'video'; cur = target = 0; root.classList.add('mq--vid'); upd(); }, { once: true });
+        vid.addEventListener('error', () => { mode = 'photo'; root.classList.remove('mq--vid'); loadPhotos(); upd(); }, { once: true });
+        vid.preload = 'auto'; vid.src = URL.createObjectURL(bl); vid.load();
+      }).catch(() => { mode = 'photo'; loadPhotos(); });
+      // start once the page has settled so the first paint (photo 1) is not slowed
+      if (document.readyState === 'complete') go(); else addEventListener('load', go, { once: true });
+      // the photos are loaded only if the film has not been ready after 6 s
+      setTimeout(() => { if (mode !== 'video') loadPhotos(); }, 6000);
+    }
+    upd();
   }
 </script>
 <style is:global>
@@ -113,12 +156,19 @@ const imgs = [['1', '50% 50%'], ['2', '74% 50%'], ['3', '55% 50%'], ['4', '38% 6
   .mq--static .mq-hint, .mq--static .mq-b[data-k="0"] .mq-cta { display: none; }
 
   /* pinned mode: the picture is held while the five sentences scroll past */
-  .mq--pin { height: 600vh; height: 600svh; }
+  .mq--pin { height: 700vh; height: 700svh; }
   .mq--pin .mq-inl { display: none; }
   .mq--pin .mq-pin { position: sticky; top: 4.1rem; height: calc(100vh - 4.1rem); height: calc(100svh - 4.1rem); padding: 0; overflow: hidden; }
   .mq--pin .mq-stage { display: block; position: absolute; inset: 0; overflow: hidden; background: #00101f; }
-  .mq-ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50%) 50%; opacity: 0; visibility: hidden; transform-origin: 50% 60%; will-change: transform, opacity; }
-  .mq-ph:first-child { opacity: 1; visibility: visible; }
+  .mq-ph, .mq-vid { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50%) 50%; }
+  .mq-ph { opacity: 0; visibility: hidden; transform: scale(var(--z, 1.03)); transform-origin: 50% 60%; will-change: transform, opacity; transition: opacity .7s ease, visibility 0s linear .7s; }
+  .mq-ph.on { opacity: 1; visibility: visible; transition-delay: 0s; }
+  .mq-ph:first-of-type { opacity: 1; visibility: visible; }
+  .mq-vid { opacity: 0; visibility: hidden; background: #00101f; pointer-events: none; }
+  /* film ready: the film is the picture; the photos only come back for the closing wide street */
+  .mq--vid .mq-vid { opacity: 1; visibility: visible; transition: opacity .7s ease; }
+  .mq--vid .mq-ph:first-of-type:not(.on) { opacity: 0; visibility: hidden; }
+  .mq--vid.mq--end .mq-vid { opacity: 0; }
   .mq--pin .mq-shade { display: block; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(0deg, #00101f 0%, rgb(0 16 31 / .88) 34%, rgb(0 16 31 / 0) 64%), linear-gradient(#00101f 0%, transparent 12%); }
   .mq--pin .mq-ui { position: absolute; inset: 0; max-width: none; margin: 0; padding: 0 1.25rem 4.2rem; display: grid; align-items: end; gap: 0; }
   .mq--pin .mq-b { grid-area: 1 / 1; opacity: 0; visibility: hidden; transform: translateY(16px); pointer-events: none; transition: opacity .5s ease, transform .7s cubic-bezier(.2, .8, .2, 1), visibility 0s linear .5s; }
@@ -130,8 +180,8 @@ const imgs = [['1', '50% 50%'], ['2', '74% 50%'], ['3', '55% 50%'], ['4', '38% 6
   @media (max-height: 640px) and (max-width: 1023px) { .mq--pin .mq-lead { display: none; } }
   @media (min-width: 1024px) {
     .mq--pin { --mq-pad: max(2rem, calc((100vw - 80rem) / 2 + 1.5rem)); }
-    .mq--pin .mq-ph { inset-inline-start: 34%; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%); mask-image: linear-gradient(90deg, transparent 0%, #000 30%); }
-    [dir="rtl"] .mq--pin .mq-ph { -webkit-mask-image: linear-gradient(270deg, transparent 0%, #000 30%); mask-image: linear-gradient(270deg, transparent 0%, #000 30%); }
+    .mq--pin .mq-ph, .mq--pin .mq-vid { inset-inline-start: 34%; -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 30%); mask-image: linear-gradient(90deg, transparent 0%, #000 30%); }
+    [dir="rtl"] .mq--pin .mq-ph, [dir="rtl"] .mq--pin .mq-vid { -webkit-mask-image: linear-gradient(270deg, transparent 0%, #000 30%); mask-image: linear-gradient(270deg, transparent 0%, #000 30%); }
     .mq--pin .mq-shade { background: linear-gradient(#00101f 0%, transparent 10%, transparent 90%, #00101f 100%); }
     .mq--pin .mq-ui { inset-inline-end: auto; width: min(48rem, 52%); padding: 0 2rem 0 var(--mq-pad); align-items: center; }
     [dir="rtl"] .mq--pin .mq-ui { padding: 0 var(--mq-pad) 0 2rem; }
