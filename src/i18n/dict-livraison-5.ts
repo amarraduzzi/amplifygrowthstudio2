@@ -1,7 +1,37 @@
-// Livraison, scroll-story hero: EN and AR for the new strings. French text in the component is the key.
+// Livraison: EN and AR for the scroll-story strings and the "maquette" hero. French text in the components is the key.
 export const livraison5En: Record<string, string> = {
   "Glissez pour comparer": "Drag to compare",
+  "Faites défiler": "Scroll",
+  "Vos clients vous trouvent.": "Your customers find you.",
+  "Un annuaire où l’on commande sans commission.": "A directory where people order without commission.",
+  "Ils commandent chez vous.": "They order from you.",
+  "Sous votre nom, par lien ou QR code. Pas de place de marché.": "Under your name, by link or QR code. No marketplace.",
+  "La commande arrive seule.": "The order arrives by itself.",
+  "Rien à retaper : l’adresse et le numéro du client sont déjà là.": "Nothing to retype: the address and the customer’s number are already there.",
+  "Le vôtre, ou le nôtre.": "Yours, or ours.",
+  "Vous choisissez à chaque commande.": "You choose for every order.",
+  "Le code de remise": "The handover code",
+  "Remise prouvée.": "Handover, proven.",
+  "Le client donne son code à 4 chiffres au livreur. Exemple : 4827.": "The customer gives the driver a 4-digit code. Example: 4827.",
+  "de commission sur vos commandes.": "commission on your orders.",
+  "Votre client. Votre caisse. Votre livreur.": "Your customer. Your till. Your driver.",
+  "Une maquette de ville : une commande part de votre client, arrive dans votre caisse, est livrée par votre livreur et remise avec un code. Aucune commission.": "A model of a city: an order leaves your customer, arrives in your till, is delivered by your driver and handed over with a code. No commission.",
 };
 export const livraison5Ar: Record<string, string> = {
   "Glissez pour comparer": "اسحب للمقارنة",
+  "Faites défiler": "مرّر للأسفل",
+  "Vos clients vous trouvent.": "عملاؤك يجدونك.",
+  "Un annuaire où l’on commande sans commission.": "دليل يطلب منه الناس دون عمولة.",
+  "Ils commandent chez vous.": "يطلبون منك مباشرة.",
+  "Sous votre nom, par lien ou QR code. Pas de place de marché.": "باسمك أنت، عبر رابط أو رمز QR. بلا سوق وسيط.",
+  "La commande arrive seule.": "يصل الطلب وحده.",
+  "Rien à retaper : l’adresse et le numéro du client sont déjà là.": "لا شيء لإعادة كتابته: العنوان ورقم الزبون جاهزان.",
+  "Le vôtre, ou le nôtre.": "سائقك أو سائقنا.",
+  "Vous choisissez à chaque commande.": "أنت تختار في كل طلب.",
+  "Le code de remise": "رمز التسليم",
+  "Remise prouvée.": "التسليم مُثبَت.",
+  "Le client donne son code à 4 chiffres au livreur. Exemple : 4827.": "يعطي الزبون السائق رمزاً من 4 أرقام. مثال: 4827.",
+  "de commission sur vos commandes.": "عمولة على طلباتك.",
+  "Votre client. Votre caisse. Votre livreur.": "زبونك. صندوقك. سائقك.",
+  "Une maquette de ville : une commande part de votre client, arrive dans votre caisse, est livrée par votre livreur et remise avec un code. Aucune commission.": "مجسّم لمدينة: يخرج الطلب من زبونك، يصل إلى صندوقك، يوصله سائقك ويُسلَّم برمز. بلا أي عمولة.",
 };

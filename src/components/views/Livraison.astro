@@ -11,7 +11,7 @@ import FinalCta from '../FinalCta.astro';
 import BxArrow from '../BxArrow.astro';
 import BssahaFx from '../BssahaFx.astro';
 import BssahaDirectory from '../BssahaDirectory.astro';
-import LivraisonFacade from '../LivraisonFacade.astro';
+import LivraisonMaquette from '../LivraisonMaquette.astro';
 import LivraisonPv from '../LivraisonPv.astro';
 import { bssahaModel } from '../../lib/bssahaModel';
 import { APPS, isPlaceholder, waLink } from '../../config';
@@ -100,7 +100,6 @@ const toc = [
   { id: 'livreurs', label: tt('Livreurs') },
   { id: 'faq', label: tt('Questions fréquentes') },
 ];
-const ticker = [tt('Zéro commission'), tt('Votre site'), c.badge, tt('Votre transport'), tt('Code de livraison'), `0 DH ${c.zeroLabel}`];
 const schema = [serviceSchema(tt('Livraison sans apps de livraison'), description, abs(ROUTES.livraison[lang])), faqSchema(faq.map(([q, a]) => [tt(q), tt(a)]))].filter(Boolean) as Record<string, unknown>[];
 ---
 <Base lang={lang} page="livraison" title={title} description={description} wa={wa} schema={schema} toc={toc}>
@@ -108,38 +107,8 @@ const schema = [serviceSchema(tt('Livraison sans apps de livraison'), descriptio
     data-m-direct={c.modes.direct} data-m-whatsapp={c.modes.whatsapp} data-m-livraison={c.modes.livraison} data-m-emporter={c.modes.emporter} data-sending={c.sending} style={`--city:${first.glow}`}>
   <BssahaFx />
 
-  <!-- ============ HERO: full-screen scene. The restaurant facade (3D) is hijacked by an app and taken back; the headline sits over it ============ -->
-  <section class="bx-hero lv-hero">
-    <div class="bx-grain" aria-hidden="true"></div>
-    <div class="bx-scan" aria-hidden="true"></div>
-    <div class="lv-wrap mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pb-10 pt-8 sm:px-6 lg:py-10">
-      <div class="lv-top">
-        <p class="bx-badge rv"><span class="bx-dot"></span><span class="font-dot text-sm tracking-widest">{tt('Amplify Livraison')}</span></p>
-        <h1 class="bx-h1 lv-h1 mt-5 lg:mt-7"><span class="l1 fade-up" style="--d:120ms">{tt('Votre livraison,')}</span><span class="lv-grad block" data-scramble>{tt('sans passer par les apps de livraison.')}</span><span class="bx-under" aria-hidden="true"></span></h1>
-      </div>
-      <LivraisonFacade lang={lang} />
-      <div class="lv-bot">
-        <p class="measure rv text-base bx-mute sm:text-lg md:text-xl" style="--d:200ms">{tt('Vos clients commandent chez vous. La commande arrive dans votre caisse. Un livreur est demandé en un clic. Tout est entre vos mains, de la commande à la remise.')}</p>
-        <div class="rv mt-6 flex flex-col gap-3 sm:flex-row md:mt-8" style="--d:320ms">
-          <a href={waLink(wa)} target="_blank" rel="noopener" data-wa="livraison-hero" class="bx-btn bx-btn--go" data-mag>{tt('Parler de ma livraison')}<BxArrow /></a>
-          <a href="#parcours" class="bx-btn bx-btn--ghost" data-mag>{tt('Voir le parcours')}</a>
-        </div>
-        <div class="bx-stats rv mt-8 lg:mt-7" style="--d:440ms">
-          <div class="bx-stat"><b class="bx-led" dir="ltr">0 DH</b><span>{c.zeroLabel}</span></div>
-          <div class="bx-stat"><b class="bx-led" dir="ltr">{restos.length}</b><span>{c.restos}</span></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <div class="bx-marq lv-marq" aria-hidden="true">
-    <div class="bx-marq-track">
-      {[0, 1, 2, 3].map(() => ticker.map((t, i) => <span><b class={`display ${i % 2 ? 'out' : ''}`}>{t}</b></span>))}
-    </div>
-    <div class="bx-marq-track rev">
-      {[0, 1, 2, 3].map(() => [...ticker].reverse().map((t, i) => <span><b class={`display ${i % 2 ? '' : 'out'}`}>{t}</b></span>))}
-    </div>
-  </div>
+  <!-- ============ HERO: "La Maquette". A calm scroll-driven 3D model of a street; the green point is your order and the camera follows it ============ -->
+  <LivraisonMaquette lang={lang} wa={wa} />
 
   <!-- ============ 01 · THREE THINGS THAT STAY WITH THE RESTAURANT (light, Amplify chalk) ============ -->
   <section class="lv-light px-4 py-20 sm:px-6 md:py-32">
