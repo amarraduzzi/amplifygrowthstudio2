@@ -15,7 +15,7 @@ export const livraison5En: Record<string, string> = {
   "Le client donne son code à 4 chiffres au livreur. Exemple : 4827.": "The customer gives the driver a 4-digit code. Example: 4827.",
   "de commission sur vos commandes.": "commission on your orders.",
   "Votre client. Votre caisse. Votre livreur.": "Your customer. Your till. Your driver.",
-  "Une maquette de ville : une commande part de votre client, arrive dans votre caisse, est livrée par votre livreur et remise avec un code. Aucune commission.": "A model of a city: an order leaves your customer, arrives in your till, is delivered by your driver and handed over with a code. No commission.",
+  "Une commande part de votre client, arrive dans votre caisse, est livrée par votre livreur et remise avec un code. Aucune commission.": "An order leaves your customer, arrives in your till, is delivered by your driver and handed over with a code. No commission.",
 };
 export const livraison5Ar: Record<string, string> = {
   "Glissez pour comparer": "اسحب للمقارنة",
@@ -33,5 +33,5 @@ export const livraison5Ar: Record<string, string> = {
   "Le client donne son code à 4 chiffres au livreur. Exemple : 4827.": "يعطي الزبون السائق رمزاً من 4 أرقام. مثال: 4827.",
   "de commission sur vos commandes.": "عمولة على طلباتك.",
   "Votre client. Votre caisse. Votre livreur.": "زبونك. صندوقك. سائقك.",
-  "Une maquette de ville : une commande part de votre client, arrive dans votre caisse, est livrée par votre livreur et remise avec un code. Aucune commission.": "مجسّم لمدينة: يخرج الطلب من زبونك، يصل إلى صندوقك، يوصله سائقك ويُسلَّم برمز. بلا أي عمولة.",
+  "Une commande part de votre client, arrive dans votre caisse, est livrée par votre livreur et remise avec un code. Aucune commission.": "يخرج الطلب من زبونك، يصل إلى صندوقك، يوصله سائقك ويُسلَّم برمز. بلا أي عمولة.",
 };
