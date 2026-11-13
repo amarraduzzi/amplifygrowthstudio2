@@ -1,14 +1,49 @@
 # Amplify Growth Studio
 
-> Systems and marketing for restaurants, cafés and snacks in Morocco. Team based in Rabat, working on site in Rabat and by video across Morocco. Website in French, English and Arabic.
+> Cash register (POS), margin, stock and marketing systems for Moroccan businesses: restaurants, cafés, pâtisseries and bakeries, hair salons, spas, dry cleaners, corner shops (hanouts), garages and real estate. Team based in Rabat, working on site in Rabat and Salé and by video call across Morocco. Website and software in French, Arabic and English.
+
+## In short
+- Based in Rabat, Morocco. On-site installation in Rabat and Salé; elsewhere in Morocco, installation and training by video call.
+- The team installs the system with your products and prices and trains your staff in Arabic or French.
+- 118 features, all included, no paid options. Prices exclude VAT (HT), in dirhams.
+- 14 days free, no credit card, no commitment.
+- Works without internet; sends everything when the connection returns.
 
 ## Products
-- [Amplify POS](https://www.amplifygrowthstudio.com/amplify-pos/): till (POS) for restaurants and cafés: touch till, QR menu and table ordering, kitchen tickets and kitchen screen, online ordering without commission, bookings, delivery, works offline. From 199 DH excl. VAT per month. 14 days free.
+- [Amplify POS](https://www.amplifygrowthstudio.com/amplify-pos/): till (POS) for restaurants, cafés and pâtisseries: touch till, QR menu and table ordering, kitchen tickets and kitchen screen, online ordering without commission, bookings, delivery, works offline. From 199 DH excl. VAT per month. 14 days free.
 - [Amplify Profit](https://www.amplifygrowthstudio.com/amplify-profit/): cost and margin of every dish (recipe cards filled by AI), stock and supplier purchases, team, charges and break-even. Works with any till. From 249 DH excl. VAT per month.
+- Contrôle: Amplify POS and Amplify Profit together, 499 DH excl. VAT per month.
 - [Amplify Site](https://www.amplifygrowthstudio.com/amplify-site/): restaurant website with the menu, photos, opening hours, directions and orders on WhatsApp, in French, Arabic and English. Made for you for 250 DH one time (launch offer) or free if you build it yourself, then 100 DH per month. Connecting your own domain: 150 DH one time.
 - [Amplify Clients](https://www.amplifygrowthstudio.com/marketing/): marketing for restaurants: Google Business Profile and reviews, tastings, neighbourhood partnerships, WhatsApp customer list, content. On quote.
+- [Pricing](https://www.amplifygrowthstudio.com/tarifs/) and [all 118 features](https://www.amplifygrowthstudio.com/amplify-pos/fonctionnalites/).
+
+## Pâtisseries and bakeries
+Page: [Logiciel de caisse et de production pour pâtisserie](https://www.amplifygrowthstudio.com/patisseries/).
+- Sales by weight (till linked to the scale, when the scale prints barcode labels) and by piece.
+- Daily production plan, ticked off in the morning; one click on "Produire" and the stock follows.
+- Batch number, production date and use-by date (DLC) for each bake; labels print on your printer in 4 formats.
+- Allergens calculated from the ingredients and shown on the QR menu, the shop sheet and the labels, in French and Arabic.
+- Catering orders: quote by WhatsApp or print, deposit and balance recorded, invoice issued by the till.
+- Recipe cards imported from Excel; cost price follows ingredient prices; recipes within recipes.
+
+## Other trades
+- [Restaurants and cafés](https://www.amplifygrowthstudio.com/restaurants/)
+- [Fine dining (Amplify Maître)](https://www.amplifygrowthstudio.com/amplify-maitre/)
+- [Hair salons and barbers](https://www.amplifygrowthstudio.com/salons/): agenda, queue and reminders
+- [Spas and institutes](https://www.amplifygrowthstudio.com/spas/)
+- [Dry cleaners](https://www.amplifygrowthstudio.com/pressing/): one label per item, client notified
+- [Corner shops (hanouts)](https://www.amplifygrowthstudio.com/hanout/): credit book (kridi), till and stock on the phone
+- [Garages](https://www.amplifygrowthstudio.com/garages/)
+- [Real estate](https://www.amplifygrowthstudio.com/immobilier/)
+- [Delivery without commission](https://www.amplifygrowthstudio.com/livraison/)
+
+## Languages
+- French: https://www.amplifygrowthstudio.com/
+- English: https://www.amplifygrowthstudio.com/en/
+- Arabic: https://www.amplifygrowthstudio.com/ar/
 
 ## Contact
 - WhatsApp and phone: +212 6 11 05 36 49
 - Email: info@amplifygrowthstudio.com
 - [Contact page](https://www.amplifygrowthstudio.com/contact/)
+- Free diagnosis (about 20 minutes) by WhatsApp: on site or by video call.

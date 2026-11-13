@@ -16,8 +16,11 @@ interface Props {
   langsOnly?: Lang[];
   /** in-page index shown at the top of the phone menu */
   toc?: { id: string; label: string }[];
+  /** picture shown when the link is shared (WhatsApp, LinkedIn, Facebook); default: the till */
+  image?: string;
 }
-const { lang, page, title, description, wa, schema = [], langsOnly, toc, noindex } = Astro.props;
+const { lang, page, title, description, wa, schema = [], langsOnly, toc, noindex, image = '/img/caisse-ticket.webp' } = Astro.props;
+const ogImage = abs(image);
 const t = copy(lang);
 const canonical = abs(ROUTES[page][lang]);
 const langs = langsOnly ?? liveLanguages();
@@ -61,6 +64,11 @@ const ld = [business, ...crumbs, ...schema];
   <meta property="og:url" content={canonical} />
   <meta property="og:locale" content={LOCALE[lang].replace('-', '_')} />
   <meta property="og:site_name" content={SITE.name} />
+  <meta property="og:image" content={ogImage} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
   <meta name="theme-color" content="#001E3E" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <script type="application/ld+json" set:html={JSON.stringify(ld.length === 1 ? ld[0] : ld)} />

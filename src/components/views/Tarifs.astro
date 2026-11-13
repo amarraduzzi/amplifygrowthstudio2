@@ -16,6 +16,7 @@ import { posOf } from '../../i18n/content';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 import { faqSchema } from '../../lib/schema';
+import Resume from '../Resume.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -44,6 +45,14 @@ const faqItems = [
   ['Le matériel est-il compris ?', 'Non, le matériel est vendu à part. Écrivez-nous sur WhatsApp et nous vous disons ce qu’il vous faut.'],
   ['Comment payer ?', 'Par virement ou CashPlus. Pas de carte bancaire demandée pour l’essai.'],
 ].map(([q, a]) => [tt(q), tt(a)]);
+const tarifResume = [
+  [tt('Amplify POS'), tt('Dès {n} DH HT par mois : la caisse, le menu QR et les bons cuisine, pour restaurants, cafés et pâtisseries.').replace('{n}', price(0))],
+  [tt('Amplify Profit'), tt('Dès {n} DH HT par mois : food cost, marge par plat et stock, avec votre caisse actuelle.').replace('{n}', price(2))],
+  [tt('Contrôle (POS + Profit)'), tt('{n} DH HT par mois : la caisse et les marges ensemble.').replace('{n}', price(3))],
+  [tt('118 fonctionnalités'), tt('Toutes incluses, sans option payante. Tous les prix sont hors taxes (HT).')],
+  [tt('Essai et engagement'), tt('14 jours gratuits, sans carte bancaire. Sans engagement : vous arrêtez quand vous voulez.')],
+  [tt('Installation'), tt('À Rabat, l’installation sur place est offerte pour le moment. Partout au Maroc, l’installation guidée en vidéo est incluse.')],
+];
 const schema = [
   {
     '@context': 'https://schema.org', '@type': 'ItemList', name: 'Amplify Growth Studio',
@@ -245,6 +254,9 @@ const schema = [
 
   <!-- what a mistake costs, running across the page -->
   <LeakTicker />
+
+  <!-- SUMMARY: plain facts for visitors, Google and AI assistants -->
+  <Resume title={tt('En résumé : combien coûte Amplify ?')} lead={tt('Tarifs du logiciel de caisse et de gestion pour restaurants, cafés et pâtisseries au Maroc, en dirhams.')} items={tarifResume} />
 
   <Faq lang={lang} items={faqItems} wa={wa} />
 

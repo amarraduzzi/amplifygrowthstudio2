@@ -1,0 +1,20 @@
+---
+// "En résumé": a short block of plain facts. It answers the questions a visitor, Google or an AI assistant asks first
+// (where, what, how much, how long). The words are written by the page that uses it, already translated.
+interface Props { title: string; lead?: string; items: string[][]; id?: string }
+const { title, lead, items, id = 'resume' } = Astro.props;
+---
+<section id={id} class="px-4 pt-14 sm:px-6 md:pt-20" aria-labelledby={`${id}-title`}>
+  <div class="mx-auto max-w-6xl rounded-[2rem] bg-mint px-6 py-10 md:px-12">
+    <h2 id={`${id}-title`} class="text-3xl sm:text-4xl">{title}</h2>
+    {lead && <p class="mt-3 max-w-3xl text-lg text-navy/75">{lead}</p>}
+    <dl class="mt-7 grid gap-x-12 gap-y-5 md:grid-cols-2">
+      {items.map(([k, v]) => (
+        <div>
+          <dt class="font-bold">{k}</dt>
+          <dd class="mt-1 text-navy/75">{v}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

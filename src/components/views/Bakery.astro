@@ -336,6 +336,22 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     </section>
   )}
 
+  <!-- FEATURE LIST: the real functions, in the words bakers search for -->
+  <section id="fonctions" class="px-4 pt-14 sm:px-6 md:pt-20">
+    <div class="mx-auto max-w-6xl">
+      <h2 class="text-3xl sm:text-4xl">{tt('Fonctions du logiciel de gestion pour boulangerie et pâtisserie')}</h2>
+      <p class="mt-3 max-w-3xl text-lg text-muted">{tt('Ce que la caisse et le laboratoire d’une pâtisserie utilisent chaque jour au Maroc.')}</p>
+      <ul class="mt-8 grid gap-4 md:grid-cols-2">
+        <li class="rounded-2xl bg-paper p-5 ring-1 ring-line"><h3 class="text-lg font-bold">{tt('Vente au poids (caisse reliée à la balance) et à la pièce')}</h3><p class="mt-2 text-muted">{tt('Un produit vendu au kilo a son prix au kilo : la caisse lit le poids (étiquette de la balance ou saisie), calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.')}</p></li>
+        <li class="rounded-2xl bg-paper p-5 ring-1 ring-line"><h3 class="text-lg font-bold">{tt('Plan de production journalier')}</h3><p class="mt-2 text-muted">{tt('Le plan du soir, coché le matin : la quantité à préparer, avec les commandes traiteur du jour. Un clic sur « Produire » et le stock suit.')}</p></li>
+        <li class="rounded-2xl bg-paper p-5 ring-1 ring-line"><h3 class="text-lg font-bold">{tt('Lots et dates limites (DLC) par fournée')}</h3><p class="mt-2 text-muted">{tt('Chaque fournée a son numéro de lot, sa date de fabrication et sa date limite. L’étiquette sort sur votre imprimante, en 4 formats.')}</p></li>
+        <li class="rounded-2xl bg-paper p-5 ring-1 ring-line"><h3 class="text-lg font-bold">{tt('Allergènes calculés et étiquettes produits')}</h3><p class="mt-2 text-muted">{tt('Vous indiquez les allergènes une fois par ingrédient. Ils sont calculés pour chaque préparation et chaque produit, puis affichés sur le menu QR, la fiche de la boutique et les étiquettes, en français et en arabe.')}</p></li>
+        <li class="rounded-2xl bg-paper p-5 ring-1 ring-line"><h3 class="text-lg font-bold">{tt('Commandes traiteur, acomptes et facture')}</h3><p class="mt-2 text-muted">{tt('Le devis part sur WhatsApp ou s’imprime. L’acompte et le solde sont notés, puis la facture est émise par la caisse.')}</p></li>
+        <li class="rounded-2xl bg-paper p-5 ring-1 ring-line"><h3 class="text-lg font-bold">{tt('Fiches techniques et coût de revient')}</h3><p class="mt-2 text-muted">{tt('Vos recettes s’importent depuis Excel. Le coût de revient suit le prix du beurre et des autres ingrédients.')}</p></li>
+      </ul>
+    </div>
+  </section>
+
   <!-- recipes from Excel -->
   <section class="px-4 pt-14 sm:px-6 md:pt-20">
     <div class="mx-auto flex max-w-6xl flex-col items-start gap-6 rounded-[2rem] bg-mint px-6 py-10 md:flex-row md:items-center md:px-12">

@@ -17,6 +17,8 @@ import { copy } from '../../i18n';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema } from '../../lib/schema';
+import Resume from '../Resume.astro';
+import { posOf } from '../../i18n/content';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -31,10 +33,40 @@ const faq = [
   ['Combien ça coûte ?', 'Cela dépend de votre métier et de ce que vous utilisez. Les prix sont sur la page Tarifs et sur la page de chaque métier. Le diagnostic est gratuit.'],
   ['Je dois m’engager ?', 'Non. Vous arrêtez quand vous voulez, et vous gardez vos données.'],
 ];
+const homePlans = posOf(lang).pricing.plans;
+// what a search engine or an AI assistant should know about the product: only what the product does today
+const software = {
+  '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'Amplify POS & Profit',
+  applicationCategory: 'BusinessApplication', applicationSubCategory: 'Point of Sale', operatingSystem: 'Web',
+  url: abs(ROUTES.home[lang]), description: tt('Logiciel de caisse et de gestion pour restaurants, cafés, pâtisseries et boulangeries au Maroc : caisse, menu QR, marges, stock et production.'),
+  featureList: [
+    tt('Caisse tactile et menu QR'),
+    tt('Commande à table et au comptoir'),
+    tt('Vente au poids et à la pièce'),
+    tt('Plan de production journalier'),
+    tt('Fiches techniques, food cost et marges'),
+    tt('Gestion de stock et achats'),
+    tt('Allergènes et étiquettes de lot'),
+    tt('Commandes traiteur avec acompte'),
+    tt('Fonctionne sans internet'),
+  ],
+  offers: { '@type': 'Offer', price: homePlans[0].price, priceCurrency: 'MAD',
+    priceSpecification: { '@type': 'UnitPriceSpecification', price: homePlans[0].price, priceCurrency: 'MAD', unitText: 'MONTH', valueAddedTaxIncluded: false } },
+  publisher: { '@id': `${SITE.url}/#business` },
+};
+const homeResume = [
+  [tt('Sur place à Rabat et Salé'), tt('Nous passons sur place à Rabat et Salé. Ailleurs au Maroc, nous installons et formons votre équipe en appel vidéo.')],
+  [tt('Installation et formation en arabe ou en français'), tt('Nous installons le système avec vos produits et vos prix, puis nous formons votre équipe jusqu’à ce que chacun soit à l’aise.')],
+  [tt('Un système POS tout-en-un au Maroc'), tt('Caisse tactile, menu QR, commande à table et au comptoir, bons cuisine, vente au poids ou à la pièce. Le système continue de fonctionner sans internet.')],
+  [tt('Gestion de stock, fiches techniques et food cost'), tt('Avec Amplify Profit, chaque plat et chaque pièce a sa fiche technique : coût de revient, marge et écarts de stock.')],
+  [tt('Logiciel de gestion pour boulangerie et pâtisserie'), tt('Recettes dans les recettes, plan de production, allergènes et étiquettes de lot : tout est sur la page pâtisseries.')],
+  [tt('Prix et essai gratuit'), tt('118 fonctionnalités, toutes incluses, sans option payante. Amplify POS dès {n} DH HT par mois, Amplify Profit dès {m} DH HT par mois. 14 jours gratuits, sans carte bancaire et sans engagement.').replace('{n}', homePlans[0].price).replace('{m}', homePlans[2].price)],
+];
 const schema = [
   { '@context': 'https://schema.org', '@type': 'Organization', '@id': `${SITE.url}/#org`, name: SITE.name, url: SITE.url,
     logo: abs('/favicon.svg'), email: CONTACT.email, telephone: `+${CONTACT.whatsapp}` },
   { '@context': 'https://schema.org', '@type': 'WebSite', name: SITE.name, url: abs(ROUTES.home[lang]), inLanguage: lang },
+  software,
   faqSchema(faq.map(([q, a]) => [tt(q), tt(a)])),
 ].filter(Boolean) as Record<string, unknown>[];
 const toc = [
@@ -288,6 +320,9 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
 
   <!-- PROOF: one real installation -->
   <ZaynaProof lang={lang} />
+
+  <!-- SUMMARY: plain facts for visitors, Google and AI assistants -->
+  <Resume title={tt('En résumé : pourquoi choisir Amplify à Rabat ?')} lead={tt('Amplify est un logiciel de caisse enregistreuse pour restaurant et pâtisserie à Rabat et partout au Maroc, avec la gestion des marges et du stock. Il est fait par une équipe basée à Rabat.')} items={homeResume} />
 
   <div id="faq"><Faq lang={lang} items={faq} wa={wa} /></div>
 
