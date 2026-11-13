@@ -87,7 +87,7 @@ const method = [
 ] as const;
 const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp`;
 ---
-<Base lang={lang} page="home" title={tt('Amplify : les systèmes des commerces marocains | Amplify Growth Studio')} description={tt('Caisse, marges, kridi, agenda, dépôts, site et marketing : Amplify aide les commerces marocains à retrouver l’argent qu’ils perdent sans le voir. Restaurants, salons, pressings, hanouts et agences. Une équipe à Rabat.')} wa={wa} schema={schema} toc={toc}>
+<Base lang={lang} page="home" title={tt('Amplify : les systèmes des commerces marocains | Amplify Growth Studio')} description={tt('Caisse, marges, kridi, rendez-vous et site web pour restaurants, salons, pressings et hanouts. Équipe à Rabat, en arabe et français. Diagnostic gratuit.')} wa={wa} schema={schema} toc={toc}>
 
   <!-- HERO: the promise left; right, one scene with four trades: the till lands, three phones drop, the day plays out in chips -->
   <section class="relative">
@@ -101,7 +101,7 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
         <p class="fade-up max-lg:order-1 mt-4 max-w-xl text-base text-muted sm:mt-5 sm:text-lg md:text-xl" style="--d:350ms">Caisse, marges, kridi, rendez-vous, dépôts, site et clients : Amplify met de l’ordre dans les commerces marocains, et vous montre ce que vous gagnez vraiment. Une équipe à Rabat, en arabe et en français.</p>
         <div class="fade-up max-lg:order-1 mt-5 flex flex-wrap sm:mt-6 items-center gap-x-5 gap-y-3" style="--d:450ms">
           <WaButton id="hero-cta" text={wa} label={c.hero.diag} where="home-hero" class="px-7 text-lg" />
-          <ul class="flex items-center gap-x-4 text-[0.85rem] md:text-[0.95rem]">
+          <ul data-nosnippet class="flex items-center gap-x-4 text-[0.85rem] md:text-[0.95rem]">
             <li>
               <a href={CONTACT.googleProfileUrl} target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 hover:underline">
                 <span class="flex text-[#F5B301]" aria-hidden="true">{[0, 1, 2, 3, 4].map(() => <svg viewBox="0 0 20 20" class="size-3.5 md:size-4"><path fill="currentColor" d="M10 1.5l2.6 5.4 5.9.8-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8L1.5 7.7l5.9-.8z"/></svg>)}</span>
