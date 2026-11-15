@@ -1,8 +1,8 @@
 ---
-// One real installation, shown plainly: the till at Zayna Café (Rabat) with guests at the tables.
+// Real installations, shown plainly: the till at Zayna Café and at Dom's Café (both Rabat).
 // Sits right before the "start today" section, so the doubt "does it work in a real café?" is
-// answered just before the button. Only what the photo shows is claimed. To add the owner's own
-// words later, fill QUOTE below (it stays hidden while it is empty).
+// answered just before the button. Only what each photo shows is claimed. To add an owner's own
+// words later, fill QUOTE on that case (it stays hidden while it is empty).
 import { signupUrl } from '../config';
 import { CLIENTS } from '../lib/clients';
 import { tr, langOf } from '../i18n/t';
@@ -10,58 +10,90 @@ import type { Lang } from '../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(langOf(Astro.url));
-const zayna = CLIENTS.find(c => c.name === 'Zayna Café');
-const QUOTE: { text: string; by: string } | null = null;
-const FACTS = [
-  { h: tt('La caisse sur tablette'), p: tt('Une tablette sur son support, au comptoir.') },
-  { h: tt('Les tables d’un coup d’œil'), p: tt('Libre, occupée, en cours : chaque table a son état.') },
-  { h: tt('Le ticket au comptoir'), p: tt('Une imprimante de tickets imprime la commande.') },
+const find = (n: string) => CLIENTS.find(c => c.name === n);
+type Case = {
+  id: string; label: string; img: string; w: number; h: number; alt: string;
+  title: string; facts: { h: string; p: string }[]; url?: string; linkLabel: string;
+  quote: { text: string; by: string } | null;
+};
+const CASES: Case[] = [
+  {
+    id: 'zayna', label: 'Zayna Café, Rabat',
+    img: '/img/clients/zayna-installation', w: 1122, h: 1402,
+    alt: tt('La caisse Amplify installée au comptoir de Zayna Café, à Rabat, avec des clients attablés'),
+    title: tt('Chez Zayna Café'),
+    facts: [
+      { h: tt('La caisse sur tablette'), p: tt('Une tablette sur son support, au comptoir.') },
+      { h: tt('Les tables d’un coup d’œil'), p: tt('Libre, occupée, en cours : chaque table a son état.') },
+      { h: tt('Le ticket au comptoir'), p: tt('Une imprimante de tickets imprime la commande.') },
+    ],
+    url: find('Zayna Café')?.url, linkLabel: tt('Voir le site de Zayna Café'), quote: null,
+  },
+  {
+    id: 'doms', label: 'Dom’s Café, Agdal, Rabat',
+    img: '/img/clients/doms-installation', w: 1086, h: 1358,
+    alt: tt('La caisse Amplify au comptoir de Dom’s Café, à Rabat, avec la grande salle et les billards derrière'),
+    title: tt('Chez Dom’s Café'),
+    facts: [
+      { h: tt('Une grande salle'), p: tt('Beaucoup de tables, des billards : la caisse reste au comptoir.') },
+      { h: tt('Chaque employé a son profil'), p: tt('Chacun se connecte à la caisse avec son prénom.') },
+      { h: tt('Le pointage à l’écran'), p: tt('Le bouton pour pointer l’entrée et le départ est sur l’écran d’accueil.') },
+    ],
+    url: find('Dom’s Café')?.url, linkLabel: tt('Voir le site de Dom’s Café'), quote: null,
+  },
 ];
 ---
 <section id="zayna" class="zp mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20" aria-labelledby="zp-h">
-  <div class="grid items-center gap-8 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)] md:gap-14">
-    <figure class="relative mx-auto w-full max-w-md md:order-first md:max-w-none">
-      <img src="/img/clients/zayna-installation-1122.webp"
-        srcset="/img/clients/zayna-installation-760.webp 760w, /img/clients/zayna-installation-1122.webp 1122w"
-        sizes="(min-width: 768px) 42vw, 92vw"
-        alt={tt('La caisse Amplify installée au comptoir de Zayna Café, à Rabat, avec des clients attablés')}
-        width="1122" height="1402" loading="lazy" decoding="async"
-        class="aspect-[4/5] w-full rounded-[1.75rem] object-cover shadow-[0_30px_60px_-35px_rgb(0_30_62/0.5)] md:rounded-[2.25rem]" />
-      <figcaption class="absolute start-3 top-3 inline-flex items-center gap-2 rounded-full bg-navy/85 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur sm:start-5 sm:top-5">
-        <span class="size-2 rounded-full bg-green" aria-hidden="true"></span>Zayna Café, Rabat
-      </figcaption>
-    </figure>
+  <div class="max-w-3xl">
+    <h2 id="zp-h" class="text-[2.4rem] leading-[0.95] sm:text-5xl md:text-6xl">{tt('Déjà installé dans des cafés de Rabat')}</h2>
+    <p class="measure mt-4 text-lg text-muted">{tt('Deux vraies installations, avec la caisse au comptoir et les clients dans la salle.')}</p>
+  </div>
 
-    <div>
-      <h2 id="zp-h" class="text-[2.4rem] leading-[0.95] sm:text-5xl md:text-6xl">{tt('À quoi ça ressemble chez Zayna Café')}</h2>
-      <p class="measure mt-4 text-lg text-muted">{tt('Une tablette en caisse, une imprimante de tickets, les tables à l’écran. Installé à Rabat, pendant le service.')}</p>
+  <div class="mt-10 grid gap-12 md:mt-14 md:grid-cols-2 md:gap-8 lg:gap-12">
+    {CASES.map(c => (
+      <article id={c.id} class="flex flex-col" aria-label={c.label}>
+        <figure class="relative w-full">
+          <img src={`${c.img}-${c.w}.webp`}
+            srcset={`${c.img}-760.webp 760w, ${c.img}-${c.w}.webp ${c.w}w`}
+            sizes="(min-width: 768px) 46vw, 92vw"
+            alt={c.alt}
+            width={c.w} height={c.h} loading="lazy" decoding="async"
+            class="aspect-[4/5] w-full rounded-[1.75rem] object-cover shadow-[0_30px_60px_-35px_rgb(0_30_62/0.5)] md:rounded-[2.25rem]" />
+          <figcaption class="absolute start-3 top-3 inline-flex items-center gap-2 rounded-full bg-navy/85 px-3 py-1.5 text-sm font-semibold text-white backdrop-blur sm:start-5 sm:top-5">
+            <span class="size-2 rounded-full bg-green" aria-hidden="true"></span>{c.label}
+          </figcaption>
+        </figure>
 
-      <ul class="mt-6 grid gap-4">
-        {FACTS.map(f => (
-          <li class="flex items-start gap-3">
-            <span class="mt-2 size-2.5 shrink-0 rounded-full bg-green" aria-hidden="true"></span>
-            <p class="min-w-0 flex-1 [text-wrap:wrap]"><strong class="block font-bold leading-snug">{f.h}</strong><span class="block leading-snug text-muted">{f.p}</span></p>
-          </li>
-        ))}
-      </ul>
+        <h3 class="mt-6 text-2xl font-bold leading-tight sm:text-3xl">{c.title}</h3>
 
-      {QUOTE && (
-        <blockquote class="mt-7 border-s-4 border-green ps-4">
-          <p class="text-lg font-semibold leading-snug">{QUOTE.text}</p>
-          <footer class="mt-1 text-sm text-muted">{QUOTE.by}</footer>
-        </blockquote>
-      )}
+        <ul class="mt-4 grid gap-4">
+          {c.facts.map(f => (
+            <li class="flex items-start gap-3">
+              <span class="mt-2 size-2.5 shrink-0 rounded-full bg-green" aria-hidden="true"></span>
+              <p class="min-w-0 flex-1 [text-wrap:wrap]"><strong class="block font-bold leading-snug">{f.h}</strong><span class="block leading-snug text-muted">{f.p}</span></p>
+            </li>
+          ))}
+        </ul>
 
-      <div class="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3">
-        <a href={signupUrl(lang)} class="inline-flex min-h-14 items-center gap-3 rounded-full bg-green px-6 text-base font-bold text-navy transition-transform hover:scale-[1.03] active:scale-[.98]">
-          {tt('Créer mon restaurant')}
-          <svg viewBox="0 0 24 24" class="size-5 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-        </a>
-        {zayna?.url && (
-          <a href={zayna.url} target="_blank" rel="noopener" class="inline-flex min-h-12 items-center font-medium underline underline-offset-4 hover:text-green-deep">{tt('Voir le site de Zayna Café')}</a>
+        {c.quote && (
+          <blockquote class="mt-6 border-s-4 border-green ps-4">
+            <p class="text-lg font-semibold leading-snug">{c.quote.text}</p>
+            <footer class="mt-1 text-sm text-muted">{c.quote.by}</footer>
+          </blockquote>
         )}
-      </div>
-      <p class="mt-3 text-sm text-muted">{tt('14 jours gratuits. Sans carte bancaire. Sans engagement.')}</p>
-    </div>
+
+        {c.url && (
+          <a href={c.url} target="_blank" rel="noopener" class="mt-5 inline-flex min-h-12 items-center font-medium underline underline-offset-4 hover:text-green-deep">{c.linkLabel}</a>
+        )}
+      </article>
+    ))}
+  </div>
+
+  <div class="mt-12 flex flex-wrap items-center gap-x-5 gap-y-3">
+    <a href={signupUrl(lang)} class="inline-flex min-h-14 items-center gap-3 rounded-full bg-green px-6 text-base font-bold text-navy transition-transform hover:scale-[1.03] active:scale-[.98]">
+      {tt('Créer mon restaurant')}
+      <svg viewBox="0 0 24 24" class="size-5 rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+    </a>
+    <p class="text-sm text-muted">{tt('14 jours gratuits. Sans carte bancaire. Sans engagement.')}</p>
   </div>
 </section>
