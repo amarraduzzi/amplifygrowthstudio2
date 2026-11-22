@@ -1,0 +1,27 @@
+# Open punten (in te vullen door Amplify)
+
+Alles staat in `src/config.ts` (contact) en `src/i18n/fr.ts` (teksten). Placeholders staan in hoofdletters tussen [ ] en zijn op de site geel gemarkeerd.
+
+| Wat | Waar | Status |
+|---|---|---|
+| WhatsApp-nummer | config.ts `whatsapp` | 0611053649 (bevestigd). Zelfde nummer in de app (betaalbewijs en upgradepagina) |
+| E-mail | config.ts `email` | Voorlopig Gmail, later adres op het eigen domein |
+| Adres en postcode (zelfde als Google Bedrijfsprofiel) | config.ts `street`, `postalCode` | Open |
+| Openingstijden | config.ts `hours` | Open |
+| Link Google Maps | config.ts `mapsUrl` | Open (Bedrijfsprofiel-link staat erin) |
+| Doorlooptijd installatie | fr.ts (home stap 3, FAQ Systèmes) | Open, alleen invullen als bevestigd |
+| Cases met echte cijfers en toestemming | fr.ts `proof` (home, marketing, restaurants) | Open |
+| Analytics-ID en Search Console | Base.astro | Open (WhatsApp-klikken worden al als event klaargezet) |
+| Oprichters (Over ons) | nog te bouwen | Open |
+| TPE-koppeling live | config.ts `FEATURES.tpe` | Staat op false. Tekst is klaar (FR/EN/AR). Op true zetten zodra de koppeling getest werkt, en invullen welke terminals en banken |
+| Corne de gazelle-voorbeeld (80 DH/kg, 150 stuks per dag) | Bakery.astro | Indicatief, controleer met je leverancier. Staat als « Exemple » op de pagina |
+| Arabische en Engelse versie | `src/i18n/ar.ts`, `en.ts` | Klaar (FR/EN/AR). Nieuwe Franse tekst altijd ook in de EN- en AR-bestanden zetten |
+
+## Op de dag dat het domein live gaat
+1. `src/config.ts`: `live: true` (staat al op true).
+2. In Cloudflare Pages het domein toevoegen onder Custom domains.
+3. Search Console en Bing Webmaster Tools koppelen, sitemap insturen: `/sitemap-index.xml`.
+
+## Livraison (/livraison, /en/delivery/, /ar/livraison/)
+- `APPS.rider` in `src/config.ts` is the drivers app (amplify-driver.pages.dev). When it moves to its own domain, change it there only.
+- Restaurant price: `SECTOR.livraison` in `src/config.ts` (monthly and setup), shown on the page and on the pricing page. Drivers: "Vos 50 premières courses sont offertes" is the only number published; nothing is published for drivers after that yet.

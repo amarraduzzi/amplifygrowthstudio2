@@ -1,0 +1,319 @@
+---
+// Livraison: a restaurant can deliver without the delivery apps. One ecosystem, five steps: Bssaha (the marketing: customers find you),
+// your order site, the till, the driver, the handover with a 4-digit code. Usable all together or one module at a time.
+// Style: "Le Terminal", shared with Bssaha (src/styles/bssaha.css). Bssaha is a part of this page (BssahaDirectory) and keeps its own page.
+// No Amplify prices or percentages are written here (the only percentage is the hero's "jusqu'à 30 %", a statement about what the delivery apps charge): restaurants will pay a small fee later, so the page only says
+// "simple, transparent rates, shared before you start". Drivers: their first 50 rides are free (the only number).
+import '../../styles/bssaha.css';
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import FinalCta from '../FinalCta.astro';
+import BxArrow from '../BxArrow.astro';
+import BssahaFx from '../BssahaFx.astro';
+import BssahaDirectory from '../BssahaDirectory.astro';
+import LivraisonMaquette from '../LivraisonMaquette.astro';
+import LivraisonPv from '../LivraisonPv.astro';
+import LivraisonWin from '../LivraisonWin.astro';
+import { bssahaModel } from '../../lib/bssahaModel';
+import { APPS, SECTOR, isPlaceholder, waLink } from '../../config';
+import { tr } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const m = bssahaModel(lang);
+const { c, restos, first } = m;
+const wa = tt('Bonjour, je voudrais livrer mes commandes moi-même, sans app de livraison. Pouvez-vous m’expliquer ?');
+const waRider = tt('Bonjour, je voudrais devenir livreur Amplify.');
+const riderUrl = isPlaceholder(APPS.rider) ? waLink(waRider) : APPS.rider;
+const title = tt('Livraison sans apps de livraison pour restaurants | Amplify Growth Studio');
+const description = tt('Commandes en ligne, caisse, livreur et suivi : un restaurant livre lui-même, sans passer par les apps de livraison. Tout ensemble ou module par module.');
+
+// three things that stay with the restaurant
+const pillars = [
+  ['qr', 'Votre site et votre page de commande', 'Vos clients commandent chez vous, sous votre nom, sans place de marché au milieu.'],
+  ['wallet', 'Zéro commission', tt('Aucune commission prélevée sur vos commandes. Un prix fixe par mois, dès {n} DH HT.').replace('{n}', String(SECTOR.livraison.monthly))],
+  ['truck', 'Votre transport', 'Vos propres livreurs, ou ceux d’Amplify. Vous décidez à chaque commande.'],
+] as const;
+// the journey of one order, in detail
+const chapters = [
+  ['search', 'Bssaha : vos clients vous trouvent', 'La partie marketing de l’écosystème : un annuaire de restaurants où l’on commande sans commission.', [
+    'Votre restaurant apparaît dans l’annuaire Bssaha, par ville et par quartier.',
+    'Le client voit si vous êtes ouvert et choisit son mode : commande directe, WhatsApp, livraison ou à emporter.',
+    'Un clic l’amène sur votre page de commande ou sur votre WhatsApp, pas sur une app.',
+    'Aucune commission sur les commandes qui viennent de Bssaha.',
+  ]],
+  ['qr', 'Votre site et votre page de commande', 'Le client commande directement chez vous, sans passer par une place de marché.', [
+    'Votre propre site : votre marque, vos photos, votre menu.',
+    'Une page de commande à partager par lien ou par QR code : Instagram, Google, WhatsApp, vos tables.',
+    'Pas encore de site ? Nous pouvons le créer avec vous.',
+    'Aucune commission sur vos commandes.',
+  ]],
+  ['till', 'La caisse', 'Chaque commande arrive tout de suite dans votre système.', [
+    'Rien à retaper : la commande, l’adresse et le numéro du client sont déjà là.',
+    'Les commandes en livraison apparaissent en direct dans l’écran des commandes.',
+    'Un message WhatsApp au client en un clic, avec son code de livraison.',
+    'Vos ventes et vos chiffres restent au même endroit.',
+  ]],
+  ['truck', 'Le transport : le vôtre ou celui d’Amplify', 'Vous choisissez, commande par commande.', [
+    'Votre propre livreur : vous l’assignez depuis la caisse, comme avant.',
+    'Amplify Livreur : en un clic, un livreur est demandé et vous voyez son numéro de téléphone.',
+    'Vous pouvez mélanger : vos livreurs d’un côté, Amplify quand il vous en manque un.',
+    'Vous suivez la course : en route vers le client, puis remise faite.',
+  ]],
+  ['shield', 'Le suivi et la remise', 'Le client sait où en est sa commande, et la remise est prouvée.', [
+    'Le client suit sa commande sur une page de suivi.',
+    'Un code à 4 chiffres s’affiche chez lui : il le donne au livreur à la remise.',
+    'Le code prouve que la commande est remise à la bonne personne.',
+    'Paiement en espèces ou en ligne : les deux fonctionnent.',
+  ]],
+] as const;
+// apps vs Amplify
+const compare = [
+  ['Commission sur vos ventes', 'Une commission sur chaque commande', 'Aucune commission sur vos commandes'],
+  ['Vos clients', 'Les clients restent à l’app', 'Leur numéro arrive dans votre caisse'],
+  ['Votre marque', 'Votre restaurant est un nom dans une liste', 'Votre site, votre page, votre nom'],
+  ['Le transport', 'Le livreur de l’app, à ses conditions', 'Votre livreur, ou un livreur Amplify'],
+  ['Les commandes', 'Un autre écran, à retaper ou à synchroniser', 'Directement dans votre caisse'],
+] as const;
+const scenarios = [
+  ['J’ai déjà mes livreurs', 'Utilisez le site de commande et la caisse. Vous livrez avec votre équipe, comme avant.'],
+  ['Je n’ai pas de livreur', 'Prenez tout le parcours : les commandes arrivent en caisse et vous demandez un livreur Amplify en un clic.'],
+  ['Je veux d’abord essayer', 'Commencez par un seul module, ajoutez le reste quand vous êtes prêt.'],
+] as const;
+const modes = [c.modes.direct, c.modes.whatsapp, c.modes.livraison, c.modes.emporter];
+const modules = ['Site et commandes en ligne', 'Caisse', 'Amplify Livreur', 'Suivi et code de remise'];
+const faq = [
+  ['Dois-je quitter les apps de livraison ?', 'Non. Vous pouvez les garder. Amplify vous donne simplement la possibilité de livrer vous-même les clients qui commandent chez vous.'],
+  ['Y a-t-il une commission sur mes commandes ?', 'Non. Amplify ne prélève aucune commission sur vos commandes. Les tarifs sont simples et transparents, communiqués avant de commencer.'],
+  ['Faut-il déjà avoir un site ?', 'Non. Si vous n’en avez pas, nous pouvons le créer avec vous. Vous pouvez aussi commencer avec une simple page de commande à partager par lien ou QR code.'],
+  ['Je dois tout prendre en même temps ?', 'Non. Vous pouvez commencer par un seul module et ajouter les autres plus tard. Tout ensemble, c’est simplement plus simple.'],
+  ['Puis-je garder mes propres livreurs ?', 'Oui. Pour chaque commande, vous choisissez : votre livreur ou un livreur Amplify.'],
+  ['Comment le client paie-t-il ?', 'En espèces à la remise ou en ligne. Les deux fonctionnent.'],
+  ['Combien ça coûte ?', tt('Aucune commission. Un prix fixe par mois, dès {n} DH HT, plus {s} DH HT de mise en place. Écrivez-nous sur WhatsApp : nous vous donnons le prix exact pour votre restaurant.').replace('{n}', String(SECTOR.livraison.monthly)).replace('{s}', String(SECTOR.livraison.setup))],
+];
+const toc = [
+  { id: 'parcours', label: tt('Le parcours') },
+  { id: 'bssaha', label: 'Bssaha' },
+  { id: 'comparaison', label: tt('Apps ou Amplify') },
+  { id: 'ensemble', label: tt('Ensemble ou séparé') },
+  { id: 'livreurs', label: tt('Livreurs') },
+  { id: 'faq', label: tt('Questions fréquentes') },
+];
+const schema = [serviceSchema(tt('Livraison sans apps de livraison'), description, abs(ROUTES.livraison[lang])), faqSchema(faq.map(([q, a]) => [tt(q), tt(a)]))].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="livraison" title={title} description={description} wa={wa} schema={schema} toc={toc}>
+  <div class="bx-page" data-city={first.id} data-number="212611053649" data-one={c.countOne} data-many={c.countMany} data-list-city={c.listCity} data-first={first.id}
+    data-m-direct={c.modes.direct} data-m-whatsapp={c.modes.whatsapp} data-m-livraison={c.modes.livraison} data-m-emporter={c.modes.emporter} data-sending={c.sending} style={`--city:${first.glow}`}>
+  <BssahaFx />
+
+  <!-- ============ HERO: "La Maquette". A calm scroll-driven 3D model of a street; the green point is your order and the camera follows it ============ -->
+  <LivraisonMaquette lang={lang} wa={wa} />
+
+  <!-- ============ 01 · THREE THINGS THAT STAY WITH THE RESTAURANT (light, Amplify chalk) ============ -->
+  <section class="lv-light px-4 py-20 sm:px-6 md:py-32">
+    <div class="mx-auto max-w-7xl">
+      <div class="rv">
+        <p class="lv-lab"><b class="font-dot">01</b><span>{tt('Zéro commission')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Trois choses')}</span><span class="block lv-gr">{tt('qui restent à vous.')}</span></h2>
+      </div>
+      <ol class="lv-rows2 mt-12 md:mt-20">
+        {pillars.map(([i, h, x], k) => (
+          <li class={`lv-r2 rv ${k === 1 ? 'lv-r2--zero' : ''}`}>
+            <span class="n font-dot" aria-hidden="true">{`0${k + 1}`}</span>
+            <h3 class="display">{tt(h)}</h3>
+            <p>{tt(x)}</p>
+            <span class="ic" aria-hidden="true"><Icon name={i as 'till'} class="size-7" /></span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ 02 · THE JOURNEY: one order, five steps. Wide screens: the picture is pinned while the steps scroll past ============ -->
+  <section id="parcours" class="bx-sec bx-sec--alt lv-story scroll-mt-20 px-4 py-20 sm:px-6 md:py-32">
+    <div class="mx-auto max-w-7xl">
+      <div class="rv">
+        <p class="lv-lab"><b class="font-dot">02</b><span>{tt('Le parcours')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Un seul écosystème,')}</span><span class="block bx-hot-line">{tt('de Bssaha jusqu’à la remise.')}</span></h2>
+        <p class="measure mt-6 text-lg bx-mute">{tt('Cinq étapes, une seule ligne. Aucune place de marché au milieu : la commande va de votre client à sa porte en passant par vous.')}</p>
+      </div>
+      <div class="lv-sc mt-14 md:mt-20" id="lv-sc" data-a="0">
+        <ol class="lv-sc-list">
+          {chapters.map(([i, h, intro, pts], k) => (
+            <li class={`lv-sc-it ${k === 0 ? 'on' : ''}`} data-i={k}>
+              <span class="n font-dot" aria-hidden="true">{String(k + 1).padStart(2, '0')}</span>
+              <div class="lv-sc-tx">
+                <span class="lv-chapter-ic" aria-hidden="true"><Icon name={i as 'till'} class="size-6" /></span>
+                <h3 class="display mt-3">{tt(h)}</h3>
+                <p class="mt-3 text-lg bx-mute">{tt(intro)}</p>
+                <ul class="lv-pts">{pts.map(x => <li>{tt(x)}</li>)}</ul>
+              </div>
+              <div class="lv-sc-inl" aria-hidden="true"><LivraisonPv lang={lang} i={k} modes={modes} /></div>
+            </li>
+          ))}
+        </ol>
+        <div class="lv-sc-stage" aria-hidden="true">
+          <div class="lv-sc-frame">
+            <span class="lv-sc-bar"><i></i></span>
+            {chapters.map((_, k) => <LivraisonPv lang={lang} i={k} modes={modes} />)}
+            <p class="lv-sc-count font-dot" dir="ltr"><b id="lv-sc-n">01</b> / 05</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BSSAHA: the marketing part, live ============ -->
+  <section id="bssaha" class="bx-sec scroll-mt-20 px-4 pt-16 sm:px-6 md:pt-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="rv">
+        <p class="lv-lab"><b class="font-dot">03</b><span>{c.badge}</span><i></i></p>
+        <h2 class="bx-h2 mt-6">{tt('Bssaha, la vitrine de l’écosystème')}</h2>
+        <span class="bx-glow-line" aria-hidden="true"></span>
+        <p class="measure mt-5 text-lg bx-mute">{tt('Bssaha est la partie marketing : un annuaire où les clients trouvent les restaurants et commandent directement chez eux, sans commission.')}</p>
+      </div>
+    </div>
+  </section>
+  <BssahaDirectory m={m} how={false} />
+
+  <!-- ============ 04 · APPS OR AMPLIFY: drag to compare ============ -->
+  <section id="comparaison" class="bx-sec scroll-mt-20 px-4 py-20 sm:px-6 md:py-32">
+    <div class="mx-auto max-w-7xl">
+      <div class="rv">
+        <p class="lv-lab"><b class="font-dot">04</b><span>{tt('Apps ou Amplify')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Moins d’apps,')}</span><span class="block bx-hot-line">{tt('plus de contrôle.')}</span></h2>
+        <p class="measure mt-6 text-lg bx-mute">{tt('Ce qui change quand la commande passe par vous au lieu de passer par une app de livraison.')}</p>
+      </div>
+      <div class="lv-cmp2 rv mt-12" id="lv-cmp" style="--pos:50%">
+        <div class="lv-cl lv-cl--app">
+          <p class="lv-cl-h"><i></i>{tt('Apps de livraison')}</p>
+          <ul>{compare.map(([h, a]) => <li><small class="font-dot">{tt(h)}</small><p>{tt(a)}</p></li>)}</ul>
+        </div>
+        <div class="lv-cl lv-cl--amp">
+          <p class="lv-cl-h"><i></i>{tt('Avec Amplify')}</p>
+          <ul>{compare.map(([h, , b]) => <li><small class="font-dot">{tt(h)}</small><p>{tt(b)}</p></li>)}</ul>
+        </div>
+        <span class="lv-cmp-line" aria-hidden="true"><i><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l-6 6 6 6M15 6l6 6-6 6" /></svg></i></span>
+        <input class="lv-cmp-range" type="range" min="0" max="100" step="0.1" value="50" aria-label={tt('Glissez pour comparer')} />
+        <p class="lv-cmp-hint" aria-hidden="true">{tt('Glissez pour comparer')}</p>
+      </div>
+      <p class="rv bx-glass mt-6 px-5 py-4 text-lg">{tt('Vous pouvez garder les apps en plus : Amplify s’ajoute, il ne vous oblige à rien quitter.')}</p>
+    </div>
+  </section>
+
+  <!-- ============ TOGETHER OR MODULE BY MODULE ============ -->
+  <section id="ensemble" class="bx-sec bx-sec--alt scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
+    <div class="mx-auto max-w-6xl">
+      <div class="rv">
+        <p class="lv-lab"><b class="font-dot">05</b><span>{tt('Ensemble ou séparé')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6"><span class="l1">{tt('Tout ensemble,')}</span><span class="block bx-hot-line">{tt('ou module par module.')}</span></h2>
+        <span class="bx-glow-line" aria-hidden="true"></span>
+        <p class="measure mt-5 text-lg bx-mute">{tt('Les quatre étapes forment un seul ensemble. Mais vous n’êtes pas obligé de tout prendre d’un coup : commencez par ce dont vous avez besoin.')}</p>
+      </div>
+      <ul class="rv mt-6 flex flex-wrap gap-2">
+        {modules.map(x => <li class="bx-chip direct !px-4 !py-2 !text-sm">{tt(x)}</li>)}
+      </ul>
+      <div class="mt-8 grid gap-5 lg:grid-cols-3">
+        {scenarios.map(([h, x], k) => (
+          <div class="bx-glass lv-pillar rv" style={`--d:${k * 100}ms`}>
+            <h3 class="display !text-2xl">{tt(h)}</h3>
+            <p class="bx-mute">{tt(x)}</p>
+          </div>
+        ))}
+      </div>
+      <div class="bx-glass lv-pillar lv-pillar--zero rv mt-5">
+        <h3 class="display">{tt('Tout ensemble')}</h3>
+        <p class="text-lg">{tt('La commande arrive seule dans la caisse, le livreur est demandé depuis la même commande, et le client suit sa livraison. Rien à retaper, rien à rappeler.')}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DRIVERS ============ -->
+  <section id="livreurs" class="bx-sec scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
+    <div class="bx-glass rv mx-auto flex max-w-6xl flex-col items-start gap-8 p-7 md:flex-row md:items-center md:justify-between md:p-12">
+      <div class="max-w-xl">
+        <p class="lv-lab"><b class="font-dot">06</b><span>{tt('Livreurs')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6 !text-[clamp(2.2rem,5vw,3.6rem)]">{tt('Vous voulez livrer ?')}</h2>
+        <p class="mt-4 text-lg bx-mute">{tt('Inscrivez-vous comme livreur, recevez des courses de restaurants et livrez. Vos 50 premières courses sont offertes.')}</p>
+      </div>
+      <a href={riderUrl} target="_blank" rel="noopener" data-wa="livraison-livreur" class="bx-btn bx-btn--go shrink-0" data-mag>{tt('Devenir livreur')}<BxArrow /></a>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <LivraisonWin lang={lang} />
+
+  <section id="faq" class="bx-sec bx-sec--alt scroll-mt-20 px-4 py-16 sm:px-6 md:py-24">
+    <div class="mx-auto max-w-3xl">
+      <div class="rv">
+        <p class="lv-lab"><b class="font-dot">07</b><span>{tt('Questions fréquentes')}</span><i></i></p>
+        <h2 class="bx-h2 mt-6 !text-[clamp(2.4rem,5.5vw,4rem)]">{tt('Questions fréquentes')}</h2>
+        <span class="bx-glow-line" aria-hidden="true"></span>
+      </div>
+      <div class="lv-faq mt-10">
+        {faq.map(([q, a]) => <details><summary>{tt(q)}</summary><p>{tt(a)}</p></details>)}
+      </div>
+    </div>
+  </section>
+
+  <FinalCta lang={lang} page="livraison" h2={tt('Livrez par vous-même.')} p={tt('Dites-nous comment vous travaillez aujourd’hui. Nous vous montrons ce qui peut changer.')} wa={wa} />
+  </div>
+
+  <script>
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // rows of the "three things" light up when they pass the middle of the screen
+    const rows = document.querySelectorAll<HTMLElement>('.lv-r2');
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('on', e.isIntersecting)), { rootMargin: '-42% 0px -42% 0px' });
+      rows.forEach(r => io.observe(r));
+    }
+    // the journey: the step closest to the middle of the screen is the active one; the pinned picture follows
+    const sc = document.getElementById('lv-sc');
+    if (sc) {
+      const items = [...sc.querySelectorAll<HTMLElement>('.lv-sc-it')];
+      const num = document.getElementById('lv-sc-n');
+      let cur = -1, queued = false;
+      const upd = () => {
+        queued = false;
+        const mid = innerHeight * 0.5; let best = 0, bd = Infinity;
+        items.forEach((it, i) => { const r = it.getBoundingClientRect(); const d = Math.abs(r.top + r.height / 2 - mid); if (d < bd) { bd = d; best = i; } });
+        if (best === cur) return;
+        cur = best; sc.dataset.a = String(best); sc.style.setProperty('--a', String(best));
+        items.forEach((it, i) => it.classList.toggle('on', i === best));
+        if (num) num.textContent = '0' + (best + 1);
+      };
+      addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(upd); } }, { passive: true });
+      addEventListener('resize', upd); upd();
+    }
+    // apps or Amplify: drag the divider (an invisible range input does the work, so keyboard and touch come for free)
+    const cmp = document.getElementById('lv-cmp');
+    if (cmp) {
+      const rng = cmp.querySelector<HTMLInputElement>('.lv-cmp-range')!;
+      const set = (v: number) => { v = Math.min(100, Math.max(0, v)); rng.value = String(v); cmp.style.setProperty('--pos', v + '%'); };
+      let used = false;
+      const use = () => { if (!used) { used = true; cmp.classList.add('used'); } };
+      rng.addEventListener('input', () => { use(); set(+rng.value); });
+      rng.addEventListener('keydown', e => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault(); use();
+        const rtl = document.documentElement.dir === 'rtl';
+        set(+rng.value + ((e.key === 'ArrowRight') !== rtl ? 5 : -5));
+      });
+      if (!still && 'IntersectionObserver' in window) {
+        const io = new IntersectionObserver(es => {
+          if (!es[0].isIntersecting) return; io.disconnect();
+          const t0 = performance.now();
+          const f = (now: number) => { if (used) return; const k = (now - t0) / 2800; if (k >= 1) { set(50); return; } set(50 + Math.sin(k * Math.PI * 2) * 24 * (1 - k * 0.35)); requestAnimationFrame(f); };
+          requestAnimationFrame(f);
+        }, { threshold: 0.55 });
+        io.observe(cmp);
+      }
+    }
+  </script>
+  <script>
+    // safety net: if the reveal observer fails for any reason, nothing stays hidden
+    setTimeout(() => document.querySelectorAll('.rv').forEach(e => e.classList.add('in')), 4000);
+  </script>
+</Base>
