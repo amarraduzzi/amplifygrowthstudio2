@@ -1,77 +1,458 @@
 ---
-// The client's tracking page, played live: four status buttons on the counter side, the client's phone on the
-// other. Touch "Prêt" and the phone changes (timeline, message, a WhatsApp notification). It plays by itself
-// once in view, and stops as soon as the visitor touches a button. Demo shop, invented names.
+// The client's tracking page, played live. It copies the real page of the till app (?suivi=): the yellow tag,
+// where it is in one sentence, the timeline with times, the rail with one hanger per piece, the receipt,
+// the hours and the Call / Directions / WhatsApp bar. Nothing is invented about the layout.
+// The scene: the printed ticket (same N° 1042 and QR as the "Le dépôt" till), a phone that scans it, then the page
+// opens. The counter on the left is a small till: touch a status and a light pulse runs to the phone, which
+// changes for real (timeline, hangers, WhatsApp). The buttons on the phone work too (call, WhatsApp, directions).
+// It plays by itself once in view and stops as soon as the visitor touches something. Demo shop, invented names.
 import Icon from './Icon.astro';
 import Device from './Device.astro';
 import { tr, langOf } from '../i18n/t';
-const tt = tr(langOf(Astro.url));
-const S = ['Déposé', 'En nettoyage', 'Prêt', 'Récupéré'];
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const LOC = { fr: 'fr-FR', en: 'en-GB', ar: 'ar-MA-u-nu-latn' };
+
+// the real page's own words (apps/menu/src/pressing/TrackApp.tsx), with {x} for what changes
+const S = {
+  fr: {
+    steps: ['Déposé', 'Nettoyage', 'Prêt', 'Récupéré'], hReady: 'Votre linge est prêt.', sReady: 'Il vous attend au comptoir, vous pouvez passer.', hWait: 'Au nettoyage.', sWait: 'Prêt {d}.',
+    hDone: 'Récupéré.', sDone: 'Merci et à bientôt !', pieces: '{n} PIÈCES', rail: 'Sur le portant', railSub: '{r} sur {n} prêtes', st: ['Au nettoyage', 'Prêt', 'Récupéré'],
+    total: 'Total', rest: 'Reste à payer', allPaid: 'Tout est payé', open: 'Ouvert', route: 'Itinéraire', wa: 'WhatsApp', ticket: 'Montrez ce numéro ou votre ticket au comptoir.',
+    review: 'Satisfait ?', reviewSub: 'Un avis Google aide beaucoup votre pressing.', reviewBtn: 'Laisser un avis', pickup: 'La prochaine fois, on vient chercher votre linge.', pickupBtn: 'Demander un ramassage',
+    names: ['Chemise', 'Pantalon', 'Costume 2 pièces', 'Djellaba'],
+  },
+  en: {
+    steps: ['Dropped off', 'Cleaning', 'Ready', 'Collected'], hReady: 'Your clothes are ready.', sReady: 'They are waiting at the counter, you can come by.', hWait: 'Being cleaned.', sWait: 'Ready {d}.',
+    hDone: 'Collected.', sDone: 'Thank you, see you soon!', pieces: '{n} ITEMS', rail: 'On the rail', railSub: '{r} of {n} ready', st: ['Being cleaned', 'Ready', 'Collected'],
+    total: 'Total', rest: 'Left to pay', allPaid: 'All paid', open: 'Open', route: 'Directions', wa: 'WhatsApp', ticket: 'Show this number or your ticket at the counter.',
+    review: 'Happy?', reviewSub: 'A Google review helps your dry cleaner a lot.', reviewBtn: 'Leave a review', pickup: 'Next time, we come for your laundry.', pickupBtn: 'Ask for a pick-up',
+    names: ['Shirt', 'Trousers', '2-piece suit', 'Djellaba'],
+  },
+  ar: {
+    steps: ['تودع', 'التنقية', 'واجد', 'تسلم'], hReady: 'الحوايج ديالك واجدين.', sReady: 'كيتسناوك فالكونطوار، تقدر تجي.', hWait: 'كيتنقاو.', sWait: 'واجدين {d}.',
+    hDone: 'تسلمو.', sDone: 'شكرا ومرحبا بيك ديما!', pieces: '{n} قطعة', rail: 'فالكروشي', railSub: '{r} من {n} واجدين', st: ['كيتنقى', 'واجد', 'تسلم'],
+    total: 'المجموع', rest: 'الباقي للخلاص', allPaid: 'كلشي مخلص', open: 'محلول', route: 'الطريق', wa: 'واتساب', ticket: 'وري هاد الرقم ولا التيكي فالكونطوار.',
+    review: 'عجبك؟', reviewSub: 'رأي فـ Google كيعاون بزاف البريسينغ ديالك.', reviewBtn: 'خلي رأي', pickup: 'المرة الجاية، نجيو ناخدو الحوايج من دارك.', pickupBtn: 'طلب الجمع',
+    names: ['قميص', 'سروال', 'بدلة من قطعتين', 'جلابة'],
+  },
+};
+const P = S[lang];
+const TILL = ['Déposé', 'En nettoyage', 'Prêt', 'Récupéré'];
 const MSG = ['Votre linge est bien arrivé. Nous vous prévenons dès qu’il est prêt.', 'Votre linge est en cours de nettoyage.', 'Votre linge est prêt, vous pouvez passer le récupérer.', 'Merci, votre dépôt est remis. À bientôt !'];
+const L = Object.fromEntries(['Ouvrir', 'Appel…', 'Scanner le QR'].map((k) => [k, tt(k)]));
+const data = { S, lang, loc: LOC, msg: MSG.map((m) => tt(m)), L, wa: tt('WhatsApp envoyé à') };
+
+const qr = Array.from({ length: 49 }, (_, i) => { const r = Math.floor(i / 7), c = i % 7; const corner = (r < 3 && c < 3) || (r < 3 && c > 3) || (r > 3 && c < 3); return corner ? (r % 2 === 1 && c % 2 === 1 ? 0 : 1) : ((i * 7 + r * 3) % 5 < 2 ? 1 : 0); });
+// four simple garments for the hangers (the real page shows the article photos)
+const G = [
+  ['M20 6L12 10 5 16l4 6 5-3v25h32V19l5 3 4-6-7-6-8-4q-10 8-20 0z', '#B9CCE3'],
+  ['M16 4h28l3 42H34L30 18l-4 28H13z', '#3E4B5F'],
+  ['M22 5l-8 4-8 7 4 28h14l6-16 6 16h14l4-28-8-7-8-4-8 14z', '#2D313C'],
+  ['M24 4h12l5 7 15 13-4 6-8-6 2 28H14l2-28-8 6-4-6 15-13z', '#D8C6A0'],
+];
 ---
-<div class="pt grid items-center gap-8 md:grid-cols-[1fr_0.8fr]" data-pt data-s="0">
-  <div>
-    <slot />
-    <p class="mt-8 text-sm font-semibold text-muted">{tt('À la caisse : touchez une étape')}</p>
-    <ul class="mt-3 space-y-2">
-      {S.map((x, k) => (
-        <li><button type="button" class="pt-btn flex w-full items-center gap-3 rounded-full py-1.5 pe-5 ps-1.5 text-start text-lg ring-1 ring-line" data-go={k}>
-          <span class="pt-n grid size-8 shrink-0 place-items-center rounded-full bg-white font-bold text-muted ring-1 ring-line" dir="ltr">{k + 1}</span>{tt(x)}
-        </button></li>
-      ))}
-    </ul>
+<div class="pt relative grid gap-x-10 gap-y-8 lg:grid-cols-[0.9fr_1.1fr] lg:grid-rows-[auto_1fr] lg:items-center" data-pt data-s="0" data-ph="cam" data-d={JSON.stringify(data)}>
+  <div class="order-1 lg:col-start-1 lg:row-start-1"><slot /></div>
+
+  <!-- the counter: a small till, four statuses -->
+  <div class="pt-till order-3 lg:col-start-1 lg:row-start-2 lg:self-start" dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang}>
+    <p class="text-sm font-semibold text-muted">{tt('À la caisse : touchez une étape')}</p>
+    <div class="mt-3 overflow-hidden rounded-[1.1rem] bg-[#06162b] p-3 text-white shadow-[0_30px_60px_-30px_rgba(0,30,62,.6)] ring-1 ring-white/10 sm:p-4">
+      <div class="flex items-center justify-between gap-2 text-sm">
+        <p class="font-semibold">Pressing Démo</p>
+        <p class="flex items-center gap-2 text-white/55"><span dir="ltr" class="rounded-md bg-white/10 px-2 py-0.5 font-bold text-white">N° 1042</span><span>Nadia</span></p>
+      </div>
+      <ul class="mt-3 grid grid-cols-2 gap-2">
+        {TILL.map((x, k) => (
+          <li><button type="button" class="pt-btn flex w-full items-center gap-2.5 rounded-xl bg-white/[0.07] py-2 pe-3 ps-2 text-start font-semibold ring-1 ring-white/10" data-go={k}>
+            <span class="pt-n grid size-7 shrink-0 place-items-center rounded-full bg-white/10 text-sm font-bold text-white/60" dir="ltr">{k + 1}</span><span class="leading-tight">{tt(x)}</span>
+          </button></li>
+        ))}
+      </ul>
+      <p class="pt-note mt-3 flex min-h-8 items-center gap-2 rounded-lg px-1 text-sm text-white/60" aria-live="polite">
+        <span class="pt-note-i hidden items-center gap-2 font-semibold text-green"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white"><Icon name="message" class="size-3.5" /></span>{tt('WhatsApp envoyé à')} Nadia</span>
+        <span class="pt-note-h">{tt('Le client touche aussi son téléphone.')}</span>
+      </p>
+    </div>
   </div>
-  <div class="mx-auto w-[62%] max-w-[17rem] md:w-[78%]">
-    <div class="tf-float">
-      <Device kind="phone" w={600} h={1298} class="-rotate-[2deg]">
-        <div slot="screen" class="relative flex aspect-[600/1180] flex-col bg-[#FAF8F3] px-[7%] pb-[6%] pt-[6%] text-[#001E3E]" aria-hidden="true" style="font-size:clamp(9px,1.15vw,13px)">
-          <p class="pt-toast absolute inset-x-[5%] top-[2%] z-10 flex items-center gap-[0.6em] rounded-[1em] bg-white p-[0.7em] shadow-lg ring-1 ring-black/5"><span class="grid size-[2.2em] shrink-0 place-items-center rounded-full bg-[#25D366] text-white"><Icon name="message" class="size-[1.2em]" /></span><span class="leading-tight"><b class="block">Pressing Démo</b><span class="text-black/60">{tt(MSG[2])}</span></span></p>
-          <p class="mt-[3em] font-semibold text-black/60">Pressing Démo</p>
-          <p class="mt-[1.4em] text-[0.85em] text-black/50">{tt('Votre dépôt')}</p>
-          <p class="display text-[3.6em] leading-none" dir="ltr">N° 1043</p>
-          <ul class="mt-[1.6em] space-y-[1.1em]">
-            {S.map((x, k) => <li class="pt-step flex items-center gap-[0.8em] font-semibold" data-k={k}><span class="pt-dot grid size-[1.8em] place-items-center rounded-full ring-1 ring-black/15"><Icon name="check" class="size-[1em]" /></span>{tt(x)}</li>)}
-          </ul>
-          <div class="mt-auto rounded-[1em] bg-[#E8F2FF] p-[1em] font-semibold leading-snug text-[#0A3F7A]">
-            {MSG.map((m, k) => <span class="pt-msg" data-k={k}>{tt(m)}</span>)}
-            <span class="mt-[0.8em] flex items-end justify-between border-t border-black/10 pt-[0.6em] font-normal"><span class="text-black/55"><span class="pt-due">{tt('Reste à payer')}</span><span class="pt-paid">{tt('Payé')}</span></span><span class="display text-[1.8em] leading-none" dir="ltr">265 MAD</span></span>
+
+  <!-- the scene: the ticket on the counter, the phone that scans it -->
+  <div class="order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1">
+    <div class="pt-stage relative mx-auto flex max-w-[36rem] flex-col items-center gap-6 sm:flex-row sm:items-end sm:gap-0">
+      <div class="relative z-0 w-[68%] max-w-[15rem] shrink-0 sm:w-[45%] sm:max-w-none">
+        <div class="pt-tkw" style="filter:drop-shadow(0 18px 24px rgba(0,30,62,.25))">
+          <div class="pt-tk bg-[#FAF8F3] px-[7%] pb-[11%] pt-[7%] text-[#001E3E]" style="font-size:clamp(11px,1.25vw,14px)" dir="ltr">
+            <p class="flex items-center justify-between text-[0.8em] font-semibold text-black/55"><span>Pressing Démo</span><span>{tt('Prêt le')} <span data-k="due">—</span></span></p>
+            <p class="display mt-[0.3em] text-[2.8em] leading-none">N° 1042</p>
+            <div class="mt-[0.9em] flex items-center gap-[0.9em]">
+              <div class="pt-qrw relative shrink-0">
+                <div class="pt-qr grid size-[6.4em] grid-cols-7 gap-px rounded-[0.35em] bg-white p-[0.35em] ring-1 ring-black/10">{qr.map((v) => <i class={v ? 'd bg-[#001E3E]' : 'bg-white'}></i>)}</div>
+                <span class="pt-vf pointer-events-none absolute -inset-[0.7em]" aria-hidden="true"><b></b><b></b><b></b><b></b></span>
+                <span class="pt-sl pointer-events-none absolute inset-x-[0.35em] top-[0.35em] h-[2px]" aria-hidden="true"></span>
+              </div>
+              <p class="text-[0.85em] leading-snug text-black/60">{tt('4 pièces')}<br />{tt('Reste à payer')}<br /><b dir="ltr" class="display text-[1.5em] text-[#001E3E]">265 MAD</b></p>
+            </div>
+            <p class="mt-[0.9em] text-[0.75em] font-semibold text-black/45">{tt('Scannez pour suivre votre dépôt')}</p>
           </div>
         </div>
-      </Device>
+        <button type="button" class="pt-scan mx-auto mt-4 flex items-center gap-2 rounded-full bg-navy px-4 py-2 text-sm font-semibold text-white ring-1 ring-black/10 transition hover:bg-blue" data-scan><Icon name="qr" class="size-4 text-green" />{tt('Scanner le QR')}</button>
+      </div>
+
+      <div class="pt-phone relative z-10 mx-auto w-[74%] max-w-[17.5rem] sm:-ms-[3%] sm:w-[58%] sm:max-w-none">
+        <div class="tf-float">
+          <div class="pt-buzz">
+            <Device kind="phone" w={600} h={1298} class="-rotate-[2deg]">
+              <div slot="screen" class="pt-ph relative aspect-[600/1180] overflow-hidden bg-[#0b0f14]" aria-hidden="true" lang={lang}>
+
+                <!-- the camera, before the page opens -->
+                <div class="pt-cam absolute inset-0 text-white">
+                  <div class="pt-pill absolute inset-x-[10%] top-[7%] flex items-center justify-between gap-2 rounded-full bg-[#F5C518] px-[4%] py-[2.6%] text-[0.62em] font-bold text-[#2A2A26] shadow-lg" style="font-size:clamp(9px,3.4cqw,13px)"><span class="flex items-center gap-1.5"><Icon name="qr" class="size-[1.3em]" />Pressing Démo</span><span data-k="open">{tt('Ouvrir')}</span></div>
+                  <div class="pt-cf absolute left-1/2 top-1/2 aspect-square w-[58%] -translate-x-1/2 -translate-y-1/2"><b></b><b></b><b></b><b></b>
+                    <div class="absolute inset-[16%] grid grid-cols-7 gap-px opacity-80" style="transform:perspective(300px) rotateX(14deg) rotate(-4deg)">{qr.map((v) => <i class={v ? 'bg-white' : 'bg-white/10'}></i>)}</div>
+                  </div>
+                  <p class="absolute inset-x-0 bottom-[10%] text-center text-white/60" style="font-size:clamp(9px,3.4cqw,13px)">{tt('Scannez pour suivre votre dépôt')}</p>
+                </div>
+
+                <!-- the page of the client: a copy of the real one -->
+                <div class="pt-pgw absolute inset-0 z-10">
+                  <div class="pt-pg" data-pg dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+                    <div class="pt-in">
+                      <header class="pt-name flex items-center gap-[0.75em]">
+                        <p class="pt-sn min-w-0 flex-1 truncate">Pressing Démo</p>
+                        <div class="pt-lg flex shrink-0 gap-[0.125em]" dir="ltr">
+                          {(['fr', 'ar', 'en'] as const).map((l) => <button type="button" data-lg={l} class={lang === l ? 'on' : ''}>{l === 'ar' ? 'ع' : l.toUpperCase()}</button>)}
+                        </div>
+                      </header>
+
+                      <div class="pt-tag mx-auto mt-[1.5em] w-[88%]" dir="ltr">
+                        <div class="pt-tagi relative">
+                          <span class="pt-stp"></span>
+                          <p class="pt-mono pt-t1">PRESSING DÉMO</p>
+                          <p class="pt-mono pt-t2">1042</p>
+                          <p class="pt-mono pt-t3"><span data-k="tagday">—</span> · <span data-k="tagpc">{P.pieces.replace('{n}', '4')}</span></p>
+                        </div>
+                      </div>
+                      <p class="pt-hint pt-r1" data-k="ticket">{P.ticket}</p>
+
+                      <section class="pt-r2 mt-[2.25em]">
+                        <h1 class="pt-h1" data-k="h1">{P.hWait}</h1>
+                        <p class="pt-sub" data-k="sub">—</p>
+                        <ol class="pt-tl">
+                          <span class="pt-tl-b"></span><span class="pt-tl-f" data-k="bar"></span>
+                          {P.steps.map((x, k) => (
+                            <li data-st={k}><span class="pt-dt"></span><span class="pt-tx" data-k={`step${k}`}>{x}</span><span class="pt-tm" dir="ltr" data-k={`time${k}`}></span></li>
+                          ))}
+                        </ol>
+                      </section>
+
+                      <section class="pt-r3 mt-[2.5em]" data-rail>
+                        <div class="flex items-baseline justify-between"><h2 class="pt-h2" data-k="rail">{P.rail}</h2><span class="pt-rs" data-k="railsub">—</span></div>
+                        <div class="pt-rl">
+                          <div class="pt-bar"></div>
+                          <ul class="pt-ul">
+                            {G.map(([d, c], k) => (
+                              <li class="pt-pc p0" data-pc style={`--dl:${k * 0.16}s`}>
+                                <svg viewBox="0 0 96 34" class="pt-hg" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M48 12V8a5 5 0 1 0-5-5" /><path d="M48 12L8 30Q4 32 9 32H87Q92 32 88 30Z" /></svg>
+                                <div class="pt-card">
+                                  <svg viewBox="0 0 60 50" class="pt-gm"><path d={d} fill={c} stroke="rgba(0,0,0,.18)" stroke-width="1" stroke-linejoin="round" /></svg>
+                                  <span class="pt-cv"></span><span class="pt-sh"></span>
+                                  <span class="pt-mt pt-mono" dir="ltr">1042 {k + 1}/4</span>
+                                </div>
+                                <p class="pt-nm" data-k={`name${k}`}>{P.names[k]}</p>
+                                <p class="pt-ss" data-k={`ss${k}`}>{P.st[0]}</p>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </section>
+
+                      <section class="pt-rc pt-r4 pt-mono" data-rc>
+                        <p class="flex justify-between"><span data-k="total">{P.total}</span><span dir="ltr">265 MAD</span></p>
+                        <p class="mt-[0.75em] flex items-end justify-between"><span class="pt-rest" data-k="rest">{P.rest}</span><span class="pt-big" dir="ltr">265 MAD</span></p>
+                      </section>
+
+                      <section class="pt-done" data-done>
+                        <div class="flex justify-center gap-[0.25em] text-[#F5B301]">{[0, 1, 2, 3, 4].map(() => <Icon name="star" class="size-[1.75em] fill-current" />)}</div>
+                        <p class="pt-h2 mt-[0.75em]" data-k="review">{P.review}</p>
+                        <p class="pt-sub" data-k="reviewsub">{P.reviewSub}</p>
+                        <span class="pt-rv" data-k="reviewbtn">{P.reviewBtn}</span>
+                        <p class="pt-pk"><Icon name="truck" class="size-[1.25em] shrink-0 text-[var(--pt-b)]" /><span class="flex-1 text-[#736B60]" data-k="pickup">{P.pickup}</span><b class="shrink-0 text-[var(--pt-b)]" data-k="pickupbtn">{P.pickupBtn}</b></p>
+                      </section>
+
+                      <section class="pt-shop">
+                        <p><Icon name="clock" class="size-[1.1em] text-[#736B60]" /><i class="pt-od"></i><b data-k="open">{P.open}</b><span class="truncate text-[#736B60]" dir="ltr">08:30–19:30</span></p>
+                        <p class="mt-[0.75em]"><Icon name="pin" class="size-[1.1em] text-[#736B60]" /><span>Agdal, Rabat</span></p>
+                      </section>
+                    </div>
+                  </div>
+
+                  <!-- always at hand -->
+                  <nav class="pt-nav" dir="ltr">
+                    <button type="button" class="pt-nb pt-nb-i" data-nav="call" aria-label="Call"><svg viewBox="0 0 24 24" class="size-[1.3em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" /></svg></button>
+                    <button type="button" class="pt-nb flex-1" data-nav="map"><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 11l18-8-8 18-2-8z" /></svg><span data-k="route">{P.route}</span></button>
+                    <button type="button" class="pt-nb pt-nb-w flex-1" data-nav="wa"><Icon name="message" class="size-[1.1em]" /><span>{P.wa}</span></button>
+                  </nav>
+                </div>
+
+                <!-- the WhatsApp that reached the client -->
+                <p class="pt-toast absolute inset-x-[5%] top-[2%] z-30 flex items-center gap-[0.6em] rounded-[1em] bg-white p-[0.7em] text-[#001E3E] shadow-lg ring-1 ring-black/5" style="font-size:clamp(9px,3.5cqw,13px)"><span class="grid size-[2.2em] shrink-0 place-items-center rounded-full bg-[#25D366] text-white"><Icon name="message" class="size-[1.2em]" /></span><span class="leading-tight"><b class="block">Pressing Démo</b><span class="text-black/60" data-k="toast">{tt(MSG[2])}</span></span></p>
+
+                <!-- what the buttons of the phone do -->
+                <div class="pt-ov pt-ov-call z-40 flex-col items-center justify-center gap-[1.2em] bg-gradient-to-b from-[#26354d] to-[#0b0f14] text-white" style="font-size:clamp(10px,4cqw,15px)">
+                  <span class="pt-ring grid size-[5em] place-items-center rounded-full bg-white/15 text-[1.6em] font-bold">P</span>
+                  <p class="text-center"><b class="block text-[1.3em]">Pressing Démo</b><span class="text-white/60" data-k="calling">{tt('Appel…')}</span></p>
+                  <button type="button" class="grid size-[3.4em] place-items-center rounded-full bg-[#E5484D]" data-close aria-label="End"><svg viewBox="0 0 24 24" class="size-[1.5em] rotate-[135deg]" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" /></svg></button>
+                </div>
+                <div class="pt-ov pt-ov-wa z-40 flex-col bg-[#ECE5DD]" style="font-size:clamp(10px,3.7cqw,14px)">
+                  <div class="flex items-center gap-[0.7em] bg-[#075E54] px-[1em] py-[0.8em] text-white"><button type="button" data-close aria-label="Back" class="text-[1.4em] leading-none">‹</button><span class="grid size-[2.2em] place-items-center rounded-full bg-white/20 font-bold">P</span><b>Pressing Démo</b></div>
+                  <div class="flex flex-1 flex-col gap-[0.6em] p-[1em]" dir="ltr">
+                    <p class="pt-b1 ms-auto max-w-[70%] rounded-[0.8em] rounded-te-[0.2em] bg-[#DCF8C6] px-[0.8em] py-[0.5em] text-[#1b1b1b] shadow-sm">N° 1042</p>
+                    <p class="pt-b2 max-w-[82%] rounded-[0.8em] rounded-ts-[0.2em] bg-white px-[0.8em] py-[0.5em] text-[#1b1b1b] shadow-sm" data-k="chat">—</p>
+                  </div>
+                </div>
+                <div class="pt-ov pt-ov-map z-40 flex-col bg-[#E9EFE6]">
+                  <button type="button" data-close aria-label="Back" class="absolute start-[4%] top-[3%] z-10 grid size-[2.2rem] place-items-center rounded-full bg-white text-lg shadow">‹</button>
+                  <svg viewBox="0 0 100 130" class="absolute inset-0 size-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                    <rect width="100" height="130" fill="#E9EFE6" /><path d="M0 35h100M0 80h100M30 0v130M72 0v130" stroke="#fff" stroke-width="7" /><path d="M0 108L100 18" stroke="#fff" stroke-width="4" /><rect x="34" y="40" width="34" height="35" rx="3" fill="#CFE3CB" />
+                    <path class="pt-rt" d="M12 112V80H30V35H72" fill="none" stroke="#1A73E8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="12" cy="112" r="3.5" fill="#fff" stroke="#1A73E8" stroke-width="1.6" /><path d="M72 35m0-9a5 5 0 0 1 5 5c0 4-5 9-5 9s-5-5-5-9a5 5 0 0 1 5-5z" fill="#E5484D" /><circle cx="72" cy="31" r="1.8" fill="#fff" />
+                  </svg>
+                  <p class="absolute inset-x-[5%] bottom-[5%] rounded-[0.8rem] bg-white px-[4%] py-[3%] text-[0.7rem] font-semibold text-[#001E3E] shadow-lg">Pressing Démo · Agdal, Rabat</p>
+                </div>
+              </div>
+            </Device>
+          </div>
+        </div>
+      </div>
     </div>
+    <p class="mt-5 text-center text-xs text-muted">{tt('Exemple d’illustration')}</p>
   </div>
 </div>
 
 <style is:global>
-  .pt-btn { transition: background-color .4s, color .4s; }
-  .pt-btn:hover { background: #fff; }
-  .pt[data-s="0"] [data-go="0"], .pt[data-s="1"] [data-go="1"], .pt[data-s="2"] [data-go="2"], .pt[data-s="3"] [data-go="3"] { background: #001E3E; color: #fff; box-shadow: none; }
-  .pt[data-s="0"] [data-go="0"] .pt-n, .pt[data-s="1"] [data-go="1"] .pt-n, .pt[data-s="2"] [data-go="2"] .pt-n, .pt[data-s="3"] [data-go="3"] .pt-n { background: #05B962; color: #001E3E; }
-  .pt-step { color: rgba(0,30,62,.4); transition: color .4s; }
-  .pt-dot { background: #fff; color: transparent; transition: background-color .4s, color .4s, transform .5s cubic-bezier(.3,1.6,.5,1); }
-  .pt[data-s="0"] .pt-step[data-k="0"], .pt[data-s="1"] .pt-step[data-k="1"], .pt[data-s="2"] .pt-step[data-k="2"], .pt[data-s="3"] .pt-step[data-k="3"] { color: #001E3E; }
-  .pt[data-s="0"] .pt-step[data-k="0"] .pt-dot, .pt[data-s="1"] .pt-step:is([data-k="0"],[data-k="1"]) .pt-dot, .pt[data-s="2"] .pt-step:is([data-k="0"],[data-k="1"],[data-k="2"]) .pt-dot, .pt[data-s="3"] .pt-step .pt-dot { background: #001E3E; color: #05B962; }
-  .pt[data-s="1"] .pt-step[data-k="1"] .pt-dot, .pt[data-s="2"] .pt-step[data-k="2"] .pt-dot, .pt[data-s="3"] .pt-step[data-k="3"] .pt-dot, .pt[data-s="0"] .pt-step[data-k="0"] .pt-dot { transform: scale(1.2); }
-  .pt-msg { display: none; }
-  .pt[data-s="0"] .pt-msg[data-k="0"], .pt[data-s="1"] .pt-msg[data-k="1"], .pt[data-s="2"] .pt-msg[data-k="2"], .pt[data-s="3"] .pt-msg[data-k="3"] { display: block; animation: chat-in .45s cubic-bezier(.2,.7,.2,1) both; }
-  .pt-paid { display: none; } .pt[data-s="3"] .pt-paid { display: inline; } .pt[data-s="3"] .pt-due { display: none; }
-  .pt-toast { opacity: 0; transform: translateY(-120%); transition: opacity .4s, transform .6s cubic-bezier(.2,1.2,.4,1); }
-  .pt[data-s="2"] .pt-toast { opacity: 1; transform: none; transition-delay: .3s; }
-  @media (prefers-reduced-motion: reduce) { .pt-toast, .pt-dot { transition: none; } .pt-msg { animation: none !important; } }
+  .pt { --pt-b: #00804A; }
+  /* the counter */
+  .pt-btn { transition: background-color .4s, color .4s, box-shadow .4s; }
+  .pt-btn:hover { background: rgba(255, 255, 255, .14); }
+  .pt[data-s="0"] [data-go="0"], .pt[data-s="1"] [data-go="1"], .pt[data-s="2"] [data-go="2"], .pt[data-s="3"] [data-go="3"] { background: #05B962; color: #001E3E; box-shadow: none; }
+  .pt[data-s="0"] [data-go="0"] .pt-n, .pt[data-s="1"] [data-go="1"] .pt-n, .pt[data-s="2"] [data-go="2"] .pt-n, .pt[data-s="3"] [data-go="3"] .pt-n { background: #001E3E; color: #05B962; }
+  .pt-note-i { display: none; } .pt.sent .pt-note-i { display: flex; animation: pt-in .5s both; } .pt.sent .pt-note-h { display: none; }
+  /* the ticket */
+  .pt-tk { clip-path: polygon(0 0, 100% 0, 100% calc(100% - 7px), 95% 100%, 90% calc(100% - 7px), 85% 100%, 80% calc(100% - 7px), 75% 100%, 70% calc(100% - 7px), 65% 100%, 60% calc(100% - 7px), 55% 100%, 50% calc(100% - 7px), 45% 100%, 40% calc(100% - 7px), 35% 100%, 30% calc(100% - 7px), 25% 100%, 20% calc(100% - 7px), 15% 100%, 10% calc(100% - 7px), 5% 100%, 0 calc(100% - 7px)); transform: rotate(-3deg); transform-origin: 50% 100%; }
+  .pt-qr i { transition: background-color .3s; }
+  .pt.hit .pt-qr i.d { background: #05B962; }
+  .pt-vf { opacity: 0; transform: scale(1.35); transition: opacity .3s, transform .5s cubic-bezier(.2,1.2,.4,1); }
+  .pt-vf b, .pt-cf b { position: absolute; width: 1.1em; height: 1.1em; border: 0 solid #fff; }
+  .pt-vf b:nth-child(1), .pt-cf b:nth-child(1) { top: 0; left: 0; border-top-width: 3px; border-left-width: 3px; border-top-left-radius: .5em; }
+  .pt-vf b:nth-child(2), .pt-cf b:nth-child(2) { top: 0; right: 0; border-top-width: 3px; border-right-width: 3px; border-top-right-radius: .5em; }
+  .pt-vf b:nth-child(3), .pt-cf b:nth-child(3) { bottom: 0; left: 0; border-bottom-width: 3px; border-left-width: 3px; border-bottom-left-radius: .5em; }
+  .pt-vf b:nth-child(4), .pt-cf b:nth-child(4) { bottom: 0; right: 0; border-bottom-width: 3px; border-right-width: 3px; border-bottom-right-radius: .5em; }
+  .pt.scan .pt-vf { opacity: 1; transform: none; } .pt.scan .pt-vf b { border-color: #FFC83D; transition: border-color .2s; } .pt.hit .pt-vf b, .pt.hit .pt-cf b { border-color: #05B962; }
+  .pt-sl { opacity: 0; background: #05B962; box-shadow: 0 0 10px 2px rgba(5, 185, 98, .8); }
+  .pt.scan:not(.hit) .pt-sl { opacity: 1; animation: pt-sweep 1s ease-in-out infinite alternate; }
+  @keyframes pt-sweep { from { top: .35em; } to { top: calc(100% - .35em); } }
+  /* the camera of the phone */
+  .pt-cf b { width: 1.4em; height: 1.4em; border-width: 0; }
+  .pt-cam { background: radial-gradient(120% 80% at 50% 40%, #2b3547, #0b0f14 70%); }
+  .pt-pill { opacity: 0; transform: translateY(-1.2em) scale(.9); transition: opacity .35s, transform .5s cubic-bezier(.2,1.4,.4,1); }
+  .pt.hit .pt-pill { opacity: 1; transform: none; }
+  .pt-buzz.go { animation: pt-buzz .45s; }
+  @keyframes pt-buzz { 0%, 100% { transform: none; } 15% { transform: translate(-3px, 1px) rotate(-1deg); } 35% { transform: translate(3px, -1px) rotate(1deg); } 55% { transform: translate(-2px, 0); } 75% { transform: translate(2px, 0); } }
+  /* the page */
+  .pt-pgw { transform: translateY(102%); transition: transform .85s cubic-bezier(.2, .9, .2, 1); }
+  .pt[data-ph="open"] .pt-pgw { transform: none; }
+  .pt-ph { container-type: inline-size; }
+  .pt-pg { position: absolute; inset: 0; overflow-x: hidden; overflow-y: auto; background: #FBF8F3; color: #17140F; font-size: 4.1cqw; line-height: 1.4; scrollbar-width: none; }
+  .pt-pg::-webkit-scrollbar { display: none; }
+  .pt-in { position: relative; padding: 1.25em 1.25em 8em; }
+  .pt-sn, .pt-h1, .pt-h2 { font-family: Fraunces, 'Iowan Old Style', Georgia, serif; font-weight: 600; letter-spacing: -.015em; text-transform: none; font-stretch: 100%; }
+  [dir="rtl"] .pt-sn, [dir="rtl"] .pt-h1, [dir="rtl"] .pt-h2 { font-family: 'Readex Pro Variable', system-ui, sans-serif; font-weight: 700; letter-spacing: 0; }
+  .pt-sn { font-size: 1.125em; }
+  .pt-lg button { min-width: 2em; padding: .25em .5em; border-radius: 99px; font-size: .875em; font-weight: 700; color: #736B60; line-height: 1.3; }
+  .pt-lg button.on { background: #17140F; color: #FBF8F3; }
+  .pt-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', 'Courier New', monospace; }
+  .pt-tag { transform: rotate(-1.5deg); }
+  .pt-tagi { background: linear-gradient(180deg, #F4DD6B, #EFD35A); color: #2A2A26; padding: 1.75em 1.5em 1.75em; box-shadow: 0 18px 30px -18px rgba(60, 45, 0, .55); clip-path: polygon(0 0, 100% 0, 100% calc(100% - .5em), 95% 100%, 90% calc(100% - .5em), 85% 100%, 80% calc(100% - .5em), 75% 100%, 70% calc(100% - .5em), 65% 100%, 60% calc(100% - .5em), 55% 100%, 50% calc(100% - .5em), 45% 100%, 40% calc(100% - .5em), 35% 100%, 30% calc(100% - .5em), 25% 100%, 20% calc(100% - .5em), 15% 100%, 10% calc(100% - .5em), 5% 100%, 0 calc(100% - .5em)); }
+  .pt-stp { position: absolute; left: 1.75em; top: .6em; width: 2.25em; height: .19em; border-radius: 99px; background: linear-gradient(#C9CCD1, #7E838B); }
+  .pt-t1 { font-size: .6875em; font-weight: 700; letter-spacing: .2em; opacity: .6; }
+  .pt-t2 { margin-top: .25em; font-size: 3.4em; font-weight: 700; line-height: 1; letter-spacing: -.02em; }
+  .pt-t3 { margin-top: .5em; font-size: .9375em; font-weight: 700; letter-spacing: .04em; }
+  .pt-hint { margin-top: .75em; text-align: center; font-size: .75em; color: #736B60; }
+  .pt-h1 { font-size: 2em; line-height: 1.1; transition: color .4s; }
+  .pt[data-s="2"] .pt-h1 { color: var(--pt-b); }
+  .pt-h2 { font-size: 1.25em; line-height: 1.2; }
+  .pt-sub { margin-top: .5em; font-size: .9375em; color: #736B60; }
+  .pt-sub::first-letter { text-transform: uppercase; }
+  .pt-tl { position: relative; display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 1.5em; }
+  .pt-tl-b, .pt-tl-f { position: absolute; top: .31em; height: 2px; }
+  .pt-tl-b { inset-inline: 12.5%; background: rgba(23, 20, 15, .1); }
+  .pt-tl-f { inset-inline-start: 12.5%; width: 0; background: var(--pt-b); transition: width .7s cubic-bezier(.3, .8, .3, 1); }
+  .pt-tl li { position: relative; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .pt-dt { width: .75em; height: .75em; border-radius: 99px; background: rgba(23, 20, 15, .1); box-shadow: 0 0 0 .25em #FBF8F3; transition: background-color .4s, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .pt-tl li.on .pt-dt { background: var(--pt-b); } .pt-tl li.cur .pt-dt { animation: pt-pulse 1.6s ease-in-out infinite; transform: scale(1.25); }
+  @keyframes pt-pulse { 50% { opacity: .45; } }
+  .pt-tx { margin-top: .5em; font-size: .75em; font-weight: 600; color: #736B60; transition: color .4s; } .pt-tl li.on .pt-tx { color: #17140F; }
+  .pt-tm { margin-top: .125em; min-height: 1.2em; font-size: .6875em; color: #736B60; font-variant-numeric: tabular-nums; }
+  .pt-rs { font-size: .875em; color: #736B60; }
+  .pt-rl { position: relative; margin: 1em -1.25em 0; overflow-x: auto; padding: 0 1.25em .5em; scrollbar-width: none; }
+  .pt-rl::-webkit-scrollbar { display: none; }
+  .pt-bar { position: absolute; inset-inline: 0; top: .19em; height: .375em; border-radius: 99px; background: linear-gradient(#E4E6EA, #A9AEB6, #7C828B); box-shadow: 0 2px 3px rgba(0, 0, 0, .15); pointer-events: none; }
+  .pt-ul { position: relative; display: flex; gap: .75em; }
+  .pt-pc { width: 6.5em; flex-shrink: 0; }
+  .pt-hg { display: block; width: 100%; height: 1.875em; color: rgba(23, 20, 15, .7); transform-origin: 50% 0; transition: color .4s; }
+  .pt-card { position: relative; margin-top: -.25em; height: 7.375em; overflow: hidden; border-radius: .375em .375em 1em 1em; background: #fff; transition: background-color .4s; }
+  .pt-gm { position: absolute; inset: 1.3em .9em .9em; width: calc(100% - 1.8em); height: calc(100% - 2.2em); opacity: .4; filter: grayscale(.9); transition: opacity .5s, filter .5s; }
+  .pt-cv, .pt-sh, .pt-mt { display: none; }
+  .pt-cv { position: absolute; inset: 0; border: 1px solid rgba(255, 255, 255, .7); border-radius: inherit; background: linear-gradient(135deg, rgba(255, 255, 255, .55), rgba(255, 255, 255, .05) 55%, rgba(186, 230, 253, .45)); }
+  .pt-sh { position: absolute; left: -1em; top: 1.5em; width: 1.5em; height: 6em; transform: rotate(12deg); background: rgba(255, 255, 255, .5); filter: blur(2px); }
+  .pt-mt { position: absolute; right: .5em; bottom: .5em; padding: .125em .375em; background: #F4DD6B; color: #2A2A26; font-size: .625em; font-weight: 700; transform: rotate(-4deg); box-shadow: 0 1px 2px rgba(0, 0, 0, .2); }
+  .pt-nm { margin-top: .5em; font-size: .8125em; font-weight: 600; line-height: 1.2; }
+  .pt-ss { margin-top: .125em; font-size: .6875em; font-weight: 600; color: #736B60; }
+  .pt-pc.p1 .pt-gm { opacity: 1; filter: none; } .pt-pc.p1 .pt-cv, .pt-pc.p1 .pt-sh, .pt-pc.p1 .pt-mt { display: block; } .pt-pc.p1 .pt-ss { color: var(--pt-b); }
+  .pt-pc.p1 .pt-hg { animation: pt-sway 1.3s var(--dl) both; }
+  .pt-pc.p1 .pt-mt { animation: pt-pop .5s calc(var(--dl) + .5s) cubic-bezier(.3, 1.6, .5, 1) both; }
+  @keyframes pt-sway { 0% { transform: rotate(-16deg); } 30% { transform: rotate(10deg); } 60% { transform: rotate(-4deg); } 100% { transform: none; } }
+  .pt-pc.p2 .pt-card { background: transparent; border: 2px dashed rgba(23, 20, 15, .12); } .pt-pc.p2 .pt-gm { opacity: 0; } .pt-pc.p2 .pt-hg { color: rgba(23, 20, 15, .25); }
+  .pt-rc { margin-top: 2.25em; padding: 1em 0; border-block: 1px dashed rgba(23, 20, 15, .2); font-size: .875em; }
+  .pt-rest { font-weight: 700; text-transform: uppercase; } .pt-big { font-size: 1.7em; font-weight: 700; line-height: 1; }
+  .pt-done { display: none; margin-top: 2.25em; text-align: center; }
+  .pt-rv { display: flex; align-items: center; justify-content: center; max-width: 20em; height: 3em; margin: 1em auto 0; border-radius: 99px; background: #17140F; color: #FBF8F3; font-weight: 600; }
+  .pt-pk { display: flex; align-items: center; gap: .75em; margin-top: 1.75em; padding: 1em 0; border-block: 1px solid rgba(23, 20, 15, .1); font-size: .875em; text-align: start; }
+  .pt[data-s="3"] .pt-done { display: block; } .pt[data-s="3"] .pt-rc, .pt[data-s="3"] .pt-hint { display: none; }
+  .pt-shop { margin-top: 2.25em; font-size: .875em; } .pt-shop p { display: flex; align-items: center; gap: .6em; }
+  .pt-od { width: .5em; height: .5em; flex-shrink: 0; border-radius: 99px; background: var(--pt-b); }
+  .pt-nav { position: absolute; inset-inline: 0; bottom: 0; z-index: 5; display: flex; gap: .5em; padding: 2em .9em .8em; background: linear-gradient(to top, #FBF8F3 45%, rgba(251, 248, 243, 0)); font-size: 4.1cqw; }
+  .pt-nb { display: flex; align-items: center; justify-content: center; gap: .5em; height: 3em; border-radius: 99px; background: #fff; color: #17140F; font-weight: 600; font-size: .9375em; box-shadow: 0 6px 18px -8px rgba(60, 45, 0, .4); transition: transform .2s; }
+  .pt-nb:active { transform: scale(.95); }
+  .pt-nb-i { width: 3em; flex-shrink: 0; } .pt-nb-w { background: #25D366; color: #fff; }
+  /* build-in once the page opens */
+  .pt[data-ph="open"] .pt-name { animation: pt-rise .5s .45s both; }
+  .pt[data-ph="open"] .pt-tag { animation: pt-drop 1s .75s cubic-bezier(.2, 1.2, .4, 1) both; }
+  .pt[data-ph="open"] .pt-r1 { animation: pt-rise .6s 1.3s both; } .pt[data-ph="open"] .pt-r2 { animation: pt-rise .6s 1.5s both; } .pt[data-ph="open"] .pt-r3 { animation: pt-rise .6s 1.75s both; }
+  @keyframes pt-rise { from { opacity: 0; transform: translateY(1em); } }
+  @keyframes pt-drop { from { opacity: 0; transform: translateY(-110%) rotate(-9deg); } 60% { transform: translateY(2%) rotate(1deg); } }
+  /* the WhatsApp notification and the overlays */
+  .pt-toast { opacity: 0; transform: translateY(-140%); transition: opacity .35s, transform .6s cubic-bezier(.2, 1.2, .4, 1); pointer-events: none; }
+  .pt.toast .pt-toast { opacity: 1; transform: none; }
+  .pt-ov { position: absolute; inset: 0; display: flex; opacity: 0; visibility: hidden; transition: opacity .3s, visibility .3s; }
+  .pt[data-ov="call"] .pt-ov-call, .pt[data-ov="wa"] .pt-ov-wa, .pt[data-ov="map"] .pt-ov-map { opacity: 1; visibility: visible; }
+  .pt-ring { animation: pt-ringp 1.4s ease-out infinite; } @keyframes pt-ringp { 0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, .35); } 100% { box-shadow: 0 0 0 1.6em rgba(255, 255, 255, 0); } }
+  .pt[data-ov="wa"] .pt-b1 { animation: pt-in .4s .2s both; } .pt[data-ov="wa"] .pt-b2 { animation: pt-in .4s 1.2s both; }
+  @keyframes pt-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+  @keyframes pt-pop { from { transform: scale(.3); } }
+  .pt-rt { stroke-dasharray: 200; stroke-dashoffset: 200; } .pt[data-ov="map"] .pt-rt { animation: pt-draw 1.6s .2s ease-out forwards; } @keyframes pt-draw { to { stroke-dashoffset: 0; } }
+  /* the light that runs from one device to the other */
+  .pt-wd { position: absolute; left: 0; top: 0; z-index: 60; width: .8rem; height: .8rem; margin: -.4rem 0 0 -.4rem; border-radius: 99px; background: #05B962; box-shadow: 0 0 0 4px rgba(5, 185, 98, .25), 0 0 18px 4px rgba(5, 185, 98, .7); pointer-events: none; }
+  .pt-wl { position: absolute; z-index: 59; height: 2px; transform-origin: 0 50%; background: linear-gradient(90deg, rgba(5, 185, 98, 0), #05B962); pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .pt-pgw, .pt-toast, .pt-vf, .pt-pill, .pt-tl-f { transition: none; }
+    .pt-pc.p1 .pt-hg, .pt-pc.p1 .pt-mt, .pt[data-ph="open"] [class*="pt-"] { animation: none !important; }
+  }
 </style>
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  type Dict = Record<string, any>;
   document.querySelectorAll<HTMLElement>('[data-pt]').forEach((root) => {
-    let s = 0, timer = 0;
-    const set = (n: number) => { s = n; root.dataset.s = String(n); };
-    const stop = () => { clearInterval(timer); timer = 0; };
-    root.querySelectorAll<HTMLElement>('[data-go]').forEach((b) => b.addEventListener('click', () => { stop(); set(Number(b.dataset.go)); }));
-    if (still) { set(2); return; }
+    const D = JSON.parse(root.dataset.d || '{}') as Dict;
+    const q = <T extends HTMLElement = HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const qa = <T extends HTMLElement = HTMLElement>(s: string) => [...root.querySelectorAll<T>(s)];
+    const pg = q('[data-pg]'), phone = q('.pt-phone'), buzz = q('.pt-buzz'), qrw = q('.pt-qrw');
+    const text = (k: string, v: string) => qa(`[data-k="${k}"]`).forEach((e) => { e.textContent = v; });
+    let s = 0, pl: string = D.lang, timers: number[] = [], auto = false;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    const stop = () => { auto = false; clear(); root.classList.remove('scan'); };
+    const loc = () => D.loc[pl] as string;
+    const due = new Date(); due.setDate(due.getDate() + 2);
+    const day = (d: Date, o: Intl.DateTimeFormatOptions) => d.toLocaleDateString(loc(), o);
+    const hm = (d: Date, h: number, m: number) => { const x = new Date(d); x.setHours(h, m); return `${day(x, { weekday: 'short' })} ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`; };
+    const now = new Date();
+    const fill = (t: string, v: Record<string, string | number>) => t.replace(/\{(\w+)\}/g, (_, k) => String(v[k]));
+
+    const render = () => {
+      const P = D.S[pl], step = s, ready = s >= 2 ? 4 : 0, state = s >= 3 ? 2 : s === 2 ? 1 : 0;
+      root.dataset.s = String(s);
+      pg.dir = pl === 'ar' ? 'rtl' : 'ltr'; pg.lang = pl;
+      const head = s === 3 ? [P.hDone, P.sDone] : s === 2 ? [P.hReady, P.sReady] : [P.hWait, fill(P.sWait, { d: day(due, { weekday: 'long', day: 'numeric', month: 'long' }) })];
+      text('h1', head[0]); text('sub', head[1]);
+      text('tagday', `${day(due, { weekday: 'short' }).replace('.', '').toUpperCase()} ${String(due.getDate()).padStart(2, '0')}/${String(due.getMonth() + 1).padStart(2, '0')}`);
+      text('due', `${String(due.getDate()).padStart(2, '0')}/${String(due.getMonth() + 1).padStart(2, '0')}`);
+      text('tagpc', fill(P.pieces, { n: 4 }));
+      P.steps.forEach((x: string, k: number) => text(`step${k}`, x));
+      const times = [hm(now, 9, 12), '', hm(due, 17, 40), hm(due, 18, 5)];
+      qa('[data-st]').forEach((li, k) => { li.classList.toggle('on', k <= step); li.classList.toggle('cur', k === step && s !== 3); text(`time${k}`, k <= step ? times[k] : ''); });
+      q('[data-k="bar"]').style.width = `${(Math.min(step, 3) / 3) * 75}%`;
+      text('rail', P.rail); text('railsub', fill(P.railSub, { r: ready, n: 4 }));
+      qa('[data-pc]').forEach((li, k) => { li.className = `pt-pc p${state}`; text(`name${k}`, P.names[k]); text(`ss${k}`, P.st[state]); });
+      text('total', P.total); text('rest', s >= 3 ? P.allPaid : P.rest); text('ticket', P.ticket);
+      text('review', P.review); text('reviewsub', P.reviewSub); text('reviewbtn', P.reviewBtn); text('pickup', P.pickup); text('pickupbtn', P.pickupBtn);
+      text('open', P.open); text('route', P.route);
+      qa('[data-lg]').forEach((b) => b.classList.toggle('on', b.dataset.lg === pl));
+    };
+
+    // a light from one device to the other (also works when they are stacked on a phone)
+    const fly = (a: HTMLElement, b: HTMLElement) => {
+      if (still) return;
+      const r = root.getBoundingClientRect(), A = a.getBoundingClientRect(), B = b.getBoundingClientRect();
+      const x1 = A.left + A.width / 2 - r.left, y1 = A.top + A.height / 2 - r.top, x2 = B.left + B.width / 2 - r.left, y2 = B.top + B.height * 0.35 - r.top;
+      const len = Math.hypot(x2 - x1, y2 - y1), ang = Math.atan2(y2 - y1, x2 - x1);
+      const line = document.createElement('i'); line.className = 'pt-wl'; line.style.left = `${x1}px`; line.style.top = `${y1}px`; line.style.width = `${len}px`;
+      const dot = document.createElement('i'); dot.className = 'pt-wd';
+      root.append(line, dot);
+      const rot = `rotate(${ang}rad)`;
+      line.animate([{ transform: `${rot} scaleX(0)`, opacity: 1 }, { transform: `${rot} scaleX(1)`, opacity: 1, offset: 0.7 }, { transform: `${rot} scaleX(1)`, opacity: 0 }], { duration: 900, easing: 'ease-out' }).onfinish = () => line.remove();
+      dot.animate([{ transform: `translate(${x1}px,${y1}px) scale(.6)`, opacity: 1 }, { transform: `translate(${x2}px,${y2}px) scale(1.4)`, opacity: 1, offset: 0.85 }, { transform: `translate(${x2}px,${y2}px) scale(2.2)`, opacity: 0 }], { duration: 900, easing: 'cubic-bezier(.5,0,.2,1)' }).onfinish = () => dot.remove();
+    };
+    const shake = () => { buzz.classList.remove('go'); void buzz.offsetWidth; buzz.classList.add('go'); };
+    const toast = (msg: string) => { text('toast', msg); root.classList.add('toast'); later(3400, () => root.classList.remove('toast')); };
+    const scrollTo = (el: HTMLElement | null, extra = 0) => { if (el) pg.scrollTo({ top: Math.max(0, el.offsetTop - extra), behavior: still ? 'auto' : 'smooth' }); };
+    const ov = (name: string) => { if (name) root.dataset.ov = name; else delete root.dataset.ov; };
+
+    const open = () => { root.dataset.ph = 'open'; };
+    const setS = (n: number, from?: HTMLElement) => {
+      const changed = n !== s; s = n; render();
+      if (root.dataset.ph !== 'open') { open(); return; }
+      if (!changed) return;
+      if (from) fly(from, phone);
+      const keep = pg.scrollTop;
+      if (n === 2) { root.classList.add('sent'); later(300, () => { shake(); toast(D.msg[2]); }); later(1100, () => scrollTo(q('[data-rail]'), 14)); }
+      else if (n === 3) { root.classList.remove('sent'); later(800, () => scrollTo(q('[data-done]'), 10)); }
+      else { root.classList.remove('sent'); if (keep > 0) pg.scrollTo({ top: 0, behavior: still ? 'auto' : 'smooth' }); }
+    };
+
+    // the scan: viewfinder, scan line, buzz, the page opens
+    const scan = (then?: () => void) => {
+      clear(); ov(''); root.classList.remove('toast', 'hit'); root.dataset.ph = 'cam'; pg.scrollTop = 0; root.classList.add('scan');
+      later(1500, () => { root.classList.add('hit'); fly(qrw, phone); later(350, shake); });
+      later(2300, () => { root.classList.remove('scan'); open(); then?.(); });
+    };
+
+    // touch = your turn
+    qa('[data-go]').forEach((b) => b.addEventListener('click', () => { stop(); setS(Number(b.dataset.go), b); }));
+    q('[data-scan]').addEventListener('click', () => { stop(); root.classList.remove('hit'); scan(); });
+    qa('[data-lg]').forEach((b) => b.addEventListener('click', () => { stop(); pl = b.dataset.lg!; render(); }));
+    qa('[data-close]').forEach((b) => b.addEventListener('click', () => { stop(); ov(''); }));
+    qa('[data-nav]').forEach((b) => b.addEventListener('click', () => {
+      stop(); const k = b.dataset.nav!; ov(k);
+      if (k === 'call') later(3200, () => ov(''));
+      if (k === 'wa') text('chat', D.msg[Math.min(s, 3)]);
+    }));
+    ['wheel', 'touchstart', 'pointerdown'].forEach((e) => phone.addEventListener(e, () => { if (auto) stop(); }, { passive: true }));
+
+    render();
+    if (still) { s = 2; render(); root.dataset.ph = 'open'; root.classList.add('sent'); return; }
+
+    // it plays by itself once: scan, then the four statuses, until the visitor touches something
+    const go = (n: number) => setS(n, q(`[data-go="${n}"]`));
     new IntersectionObserver((es, io) => {
       if (!es[0].isIntersecting) return;
-      io.disconnect();
-      timer = window.setInterval(() => { if (s >= 3) { stop(); return; } set(s + 1); }, 2200);
-    }, { threshold: 0.5 }).observe(root);
+      io.disconnect(); auto = true;
+      scan(() => {
+        if (!auto) return;
+        later(2600, () => go(1)); later(5400, () => go(2)); later(10600, () => go(3));
+      });
+    }, { threshold: 0.45 }).observe(phone);
   });
 </script>

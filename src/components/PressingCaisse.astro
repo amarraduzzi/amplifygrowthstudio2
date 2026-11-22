@@ -122,7 +122,7 @@ const qr = Array.from({ length: 49 }, (_, i) => { const r = Math.floor(i / 7), c
   @keyframes ck-print { to { transform: rotate(-1.5deg); opacity: 1; } }
   .ck-tag { animation: ck-pop .45s cubic-bezier(.3,1.6,.5,1) both; }
   .ck-wa { opacity: 0; }
-  .ck.done .ck-wa { animation: chat-in .5s 1.5s both; }
+  .ck.done .ck-wa { opacity: 1; animation: chat-in .5s 1.5s both; }
   .ck-ghost.show { display: block; }
   .ck-ghost { transition: transform .8s cubic-bezier(.4,0,.2,1); }
   .ck-ghost.tap { scale: .85; }

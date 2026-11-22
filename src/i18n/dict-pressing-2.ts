@@ -73,6 +73,11 @@ export const pressing2En: Record<string, string> = {
   "Touchez un article…": "Tap an article…",
   "Reste {n} MAD": "Left {n} MAD",
   "Votre dépôt N° 1042 est enregistré.": "Your drop-off No. 1042 is saved.",
+  "Scanner le QR": "Scan the QR",
+  "Scannez pour suivre votre dépôt": "Scan to follow your drop-off",
+  "Le client touche aussi son téléphone.": "The client can tap their phone too.",
+  "Ouvrir": "Open",
+  "Appel…": "Calling…",
 };
 export const pressing2Ar: Record<string, string> = {
   "Le voyage d’une chemise": "رحلة قميص",
@@ -110,4 +115,9 @@ export const pressing2Ar: Record<string, string> = {
   "Dépôt enregistré en": "تم تسجيل الإيداع في",
   "À vous de jouer : touchez une pièce.": "دورك الآن: المسّوا قطعة.",
   "s": "ث",
+  "Scanner le QR": "مسح رمز QR",
+  "Scannez pour suivre votre dépôt": "امسحوا الرمز لتتبع إيداعكم",
+  "Le client touche aussi son téléphone.": "الزبون أيضا يلمس هاتفه.",
+  "Ouvrir": "فتح",
+  "Appel…": "اتصال…",
 };
