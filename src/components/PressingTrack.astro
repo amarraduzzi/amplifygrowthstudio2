@@ -1,0 +1,77 @@
+---
+// The client's tracking page, played live: four status buttons on the counter side, the client's phone on the
+// other. Touch "Prêt" and the phone changes (timeline, message, a WhatsApp notification). It plays by itself
+// once in view, and stops as soon as the visitor touches a button. Demo shop, invented names.
+import Icon from './Icon.astro';
+import Device from './Device.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const S = ['Déposé', 'En nettoyage', 'Prêt', 'Récupéré'];
+const MSG = ['Votre linge est bien arrivé. Nous vous prévenons dès qu’il est prêt.', 'Votre linge est en cours de nettoyage.', 'Votre linge est prêt, vous pouvez passer le récupérer.', 'Merci, votre dépôt est remis. À bientôt !'];
+---
+<div class="pt grid items-center gap-8 md:grid-cols-[1fr_0.8fr]" data-pt data-s="0">
+  <div>
+    <slot />
+    <p class="mt-8 text-sm font-semibold text-muted">{tt('À la caisse : touchez une étape')}</p>
+    <ul class="mt-3 space-y-2">
+      {S.map((x, k) => (
+        <li><button type="button" class="pt-btn flex w-full items-center gap-3 rounded-full py-1.5 pe-5 ps-1.5 text-start text-lg ring-1 ring-line" data-go={k}>
+          <span class="pt-n grid size-8 shrink-0 place-items-center rounded-full bg-white font-bold text-muted ring-1 ring-line" dir="ltr">{k + 1}</span>{tt(x)}
+        </button></li>
+      ))}
+    </ul>
+  </div>
+  <div class="mx-auto w-[62%] max-w-[17rem] md:w-[78%]">
+    <div class="tf-float">
+      <Device kind="phone" w={600} h={1298} class="-rotate-[2deg]">
+        <div slot="screen" class="relative flex aspect-[600/1180] flex-col bg-[#FAF8F3] px-[7%] pb-[6%] pt-[6%] text-[#001E3E]" aria-hidden="true" style="font-size:clamp(9px,1.15vw,13px)">
+          <p class="pt-toast absolute inset-x-[5%] top-[2%] z-10 flex items-center gap-[0.6em] rounded-[1em] bg-white p-[0.7em] shadow-lg ring-1 ring-black/5"><span class="grid size-[2.2em] shrink-0 place-items-center rounded-full bg-[#25D366] text-white"><Icon name="message" class="size-[1.2em]" /></span><span class="leading-tight"><b class="block">Pressing Démo</b><span class="text-black/60">{tt(MSG[2])}</span></span></p>
+          <p class="mt-[3em] font-semibold text-black/60">Pressing Démo</p>
+          <p class="mt-[1.4em] text-[0.85em] text-black/50">{tt('Votre dépôt')}</p>
+          <p class="display text-[3.6em] leading-none" dir="ltr">N° 1043</p>
+          <ul class="mt-[1.6em] space-y-[1.1em]">
+            {S.map((x, k) => <li class="pt-step flex items-center gap-[0.8em] font-semibold" data-k={k}><span class="pt-dot grid size-[1.8em] place-items-center rounded-full ring-1 ring-black/15"><Icon name="check" class="size-[1em]" /></span>{tt(x)}</li>)}
+          </ul>
+          <div class="mt-auto rounded-[1em] bg-[#E8F2FF] p-[1em] font-semibold leading-snug text-[#0A3F7A]">
+            {MSG.map((m, k) => <span class="pt-msg" data-k={k}>{tt(m)}</span>)}
+            <span class="mt-[0.8em] flex items-end justify-between border-t border-black/10 pt-[0.6em] font-normal"><span class="text-black/55"><span class="pt-due">{tt('Reste à payer')}</span><span class="pt-paid">{tt('Payé')}</span></span><span class="display text-[1.8em] leading-none" dir="ltr">265 MAD</span></span>
+          </div>
+        </div>
+      </Device>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .pt-btn { transition: background-color .4s, color .4s; }
+  .pt-btn:hover { background: #fff; }
+  .pt[data-s="0"] [data-go="0"], .pt[data-s="1"] [data-go="1"], .pt[data-s="2"] [data-go="2"], .pt[data-s="3"] [data-go="3"] { background: #001E3E; color: #fff; box-shadow: none; }
+  .pt[data-s="0"] [data-go="0"] .pt-n, .pt[data-s="1"] [data-go="1"] .pt-n, .pt[data-s="2"] [data-go="2"] .pt-n, .pt[data-s="3"] [data-go="3"] .pt-n { background: #05B962; color: #001E3E; }
+  .pt-step { color: rgba(0,30,62,.4); transition: color .4s; }
+  .pt-dot { background: #fff; color: transparent; transition: background-color .4s, color .4s, transform .5s cubic-bezier(.3,1.6,.5,1); }
+  .pt[data-s="0"] .pt-step[data-k="0"], .pt[data-s="1"] .pt-step[data-k="1"], .pt[data-s="2"] .pt-step[data-k="2"], .pt[data-s="3"] .pt-step[data-k="3"] { color: #001E3E; }
+  .pt[data-s="0"] .pt-step[data-k="0"] .pt-dot, .pt[data-s="1"] .pt-step:is([data-k="0"],[data-k="1"]) .pt-dot, .pt[data-s="2"] .pt-step:is([data-k="0"],[data-k="1"],[data-k="2"]) .pt-dot, .pt[data-s="3"] .pt-step .pt-dot { background: #001E3E; color: #05B962; }
+  .pt[data-s="1"] .pt-step[data-k="1"] .pt-dot, .pt[data-s="2"] .pt-step[data-k="2"] .pt-dot, .pt[data-s="3"] .pt-step[data-k="3"] .pt-dot, .pt[data-s="0"] .pt-step[data-k="0"] .pt-dot { transform: scale(1.2); }
+  .pt-msg { display: none; }
+  .pt[data-s="0"] .pt-msg[data-k="0"], .pt[data-s="1"] .pt-msg[data-k="1"], .pt[data-s="2"] .pt-msg[data-k="2"], .pt[data-s="3"] .pt-msg[data-k="3"] { display: block; animation: chat-in .45s cubic-bezier(.2,.7,.2,1) both; }
+  .pt-paid { display: none; } .pt[data-s="3"] .pt-paid { display: inline; } .pt[data-s="3"] .pt-due { display: none; }
+  .pt-toast { opacity: 0; transform: translateY(-120%); transition: opacity .4s, transform .6s cubic-bezier(.2,1.2,.4,1); }
+  .pt[data-s="2"] .pt-toast { opacity: 1; transform: none; transition-delay: .3s; }
+  @media (prefers-reduced-motion: reduce) { .pt-toast, .pt-dot { transition: none; } .pt-msg { animation: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-pt]').forEach((root) => {
+    let s = 0, timer = 0;
+    const set = (n: number) => { s = n; root.dataset.s = String(n); };
+    const stop = () => { clearInterval(timer); timer = 0; };
+    root.querySelectorAll<HTMLElement>('[data-go]').forEach((b) => b.addEventListener('click', () => { stop(); set(Number(b.dataset.go)); }));
+    if (still) { set(2); return; }
+    new IntersectionObserver((es, io) => {
+      if (!es[0].isIntersecting) return;
+      io.disconnect();
+      timer = window.setInterval(() => { if (s >= 3) { stop(); return; } set(s + 1); }, 2200);
+    }, { threshold: 0.5 }).observe(root);
+  });
+</script>
