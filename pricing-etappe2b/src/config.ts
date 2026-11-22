@@ -1,0 +1,115 @@
+// Everything that changes when the site moves to its real domain or when data arrives.
+// Placeholders are in CAPITALS between brackets and are listed in OPEN-PUNTEN.md.
+
+export const SITE = {
+  name: 'Amplify Growth Studio',
+  /** The real address. Canonical, hreflang, sitemap and schema all come from this. */
+  url: 'https://www.amplifygrowthstudio.com',
+  /**
+   * false while the site only lives on amplifygrowthstudio2.pages.dev: no indexing,
+   * so Google does not find a copy before the real domain is live. Set to true on launch day.
+   */
+  live: true,
+  /** Languages that are finished. A language goes in here only when all its pages exist. */
+  languages: ['fr', 'en', 'ar'] as const,
+  /** Live demo menu of the fictional café Dar Nour (supabase/demo/dar-nour.sql). */
+  demoMenuUrl: 'https://menu.amplifygrowthstudio.com/dar-nour',
+  /** where "Voir la démo" goes: the live demo section of the POS page on this site */
+  demoUrl: '/amplify-pos/#demo',
+};
+
+/**
+ * Features whose text is written but only shown once they really work.
+ * tpe: the card terminal link. Set to true on the day the integration is tested (OPEN-PUNTEN.md).
+ */
+export const FEATURES = { tpe: false };
+
+/**
+ * The apps (separate projects). When the domain is live these become subdomains of the same domain:
+ * app.amplifygrowthstudio.com and menu.amplifygrowthstudio.com. Change them here only.
+ */
+export const APPS = {
+  admin: 'https://app.amplifygrowthstudio.com',
+  menu: 'https://menu.amplifygrowthstudio.com',
+  /** The drivers app (Amplify Livreur). Link of the drivers app. */
+  rider: 'https://amplify-driver.pages.dev',
+};
+/** Start the free trial. product 'pos', 'profit', 'site' or 'loyalty' = that one alone; nothing = both (Contrôle). */
+export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit' | 'site' | 'loyalty') =>
+  `${APPS.admin}/?inscription=1&lang=${lang}${product ? `&produit=${product}` : ''}`;
+export const loginUrl = (lang = 'fr') => `${APPS.admin}/?lang=${lang}`;
+
+export const CONTACT = {
+  /** International format without + or spaces, for wa.me links */
+  whatsapp: '212611053649',
+  phoneDisplay: '+212 6 11 05 36 49',
+  email: 'info@amplifygrowthstudio.com',
+  street: '[ADRESSE À COMPLÉTER]',
+  city: 'Rabat',
+  postalCode: '[CODE POSTAL]',
+  country: 'MA',
+  mapsUrl: '[LIEN GOOGLE MAPS]',
+  /** Google Business Profile (share link from Amar). Rating shown only as stated: 5,0. */
+  googleProfileUrl: 'https://share.google/4xvWYbcSjUe3S8w2E',
+  googleRating: '5,0',
+  /** Link that opens the review form directly. Best: Google Business Profile > "Demander des avis" (g.page/r/.../review). Until then: the profile. */
+  reviewUrl: 'https://share.google/4xvWYbcSjUe3S8w2E',
+  hours: '[HORAIRES À COMPLÉTER]',
+};
+
+/**
+ * Pricing rules shown on the site.
+ * - Yearly: pay 10 months, get 12 ("2 mois offerts").
+ * - On-site installation in Rabat: one-off price with a monthly plan, free with a yearly plan.
+ * - Launch offer: free on-site installation for the first N venues in Rabat. Set launchFreeInstall to 0
+ *   (or false) when they are taken, and the offer disappears from the site.
+ */
+export const OFFER = {
+  yearPaidMonths: 10,
+  installRabat: 490,
+  /** On-site installation in Rabat is free for now: shown as the highlighted offer on the pricing page */
+  installFreeNow: true,
+  launchFreeInstall: 10,
+  /** Amplify Site: monthly subscription, "we make it for you" (launch offer), connecting an own domain */
+  siteMonthly: 100,
+  siteSetup: 250,
+  siteDomain: 150,
+  /** Amplify Fidélité: one-off setup, like Site. Each service has a one-off setup price; the monthly price depends on how many services (100 / 150 / 200). */
+  loyaltySetup: 250,
+  /** Amplify Site Premium (the Maison and Signature styles), one-off */
+  sitePremium: 750,
+};
+
+/**
+ * Prices per trade (Par métier). One place for every sector product, same ladder as the rest of the site:
+ * an entry plan and a full plan, monthly, HT. Setup is one-off (data migration), free with a yearly plan.
+ * Pages read these values, they never write a number by hand.
+ */
+export const SECTOR = {
+  /** Amplify Pressing */
+  pressing: { entry: 199, full: 299 },
+  /** Amplify Garage: the big product (mechanics, bodywork, cars for sale, site) */
+  garage: { entry: 299, full: 499 },
+  /** Amplify Hanout: small shops, entry matches Amplify Agent */
+  hanout: { entry: 99, full: 149 },
+  /** Amplify Agenda for salons: the Agenda plan (modules are extra, see the Salons page) */
+  salons: { entry: 199 },
+  /** Amplify Agenda for spas: the full Spa plan with the deposit */
+  spas: { full: 399 },
+  /** Amplify Agent (real estate): free up to a number of properties, then monthly */
+  immoAgent: { freeProperties: 3, monthly: 99 },
+  /** One-off setup for Pressing, Garage and Hanout (moving the client list and history) */
+  setup: 490,
+};
+
+export const isPlaceholder = (v: string) => /^\[.*\]$/.test(v.trim());
+export const waLink = (text: string) => `https://wa.me/${CONTACT.whatsapp}?text=${encodeURIComponent(text)}`;
+
+/** Real Google review, word for word in its original language. Shown only when filled in. */
+export const REVIEW = {
+  text: '[TEXTE ORIGINAL DE L’AVIS GOOGLE]',
+  author: 'B N',
+};
+
+/** Restaurant websites (site.amplifygrowthstudio.com): shown on the site once they are live. */
+export const SITES_LIVE = true;
