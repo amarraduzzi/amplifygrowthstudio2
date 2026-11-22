@@ -53,7 +53,7 @@ const examples = ['Glovo', 'WhatsApp', 'TVA', 'sans internet', 'vol', 'fidélit�
     <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-2.5 sm:px-6 lg:flex-row lg:items-center">
       <label class="relative flex shrink-0 items-center lg:w-72">
         <Icon name="search" class="pointer-events-none absolute start-3.5 size-4 text-muted" />
-        <input type="search" class="fx-q min-h-11 w-full rounded-full bg-paper ps-10 pe-4 text-[0.95rem] ring-1 ring-line placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-green" placeholder={`Chercher parmi ${total} fonctions…`} aria-label={`Chercher parmi ${total} fonctions`} />
+        <input type="search" class="fx-q min-h-11 w-full rounded-full bg-paper ps-10 pe-4 text-[0.95rem] ring-1 ring-line placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-green" placeholder={tt('Chercher parmi {n} fonctions…').replace('{n}', String(total))} aria-label={tt('Chercher parmi {n} fonctions').replace('{n}', String(total))} />
       </label>
       <div class="fx-pills snap-row flex gap-2 overflow-x-auto">
         {f.modules.map(m => <a href={`#${m.key}`} data-k={m.key} class="fx-pill flex shrink-0 items-center gap-2 rounded-full bg-paper px-3.5 py-2 text-sm font-semibold ring-1 ring-line transition-colors hover:ring-navy"><Icon name={ICON[m.key] as any} class="size-4 text-green-deep" />{m.title}<span class="fx-pc rounded-full bg-chalk px-1.5 text-xs text-muted">{m.items.length}</span></a>)}

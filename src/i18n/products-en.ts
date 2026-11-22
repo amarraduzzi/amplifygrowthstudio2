@@ -118,7 +118,7 @@ export const posEn = {
     kicker: 'FAQ',
     title: 'The questions we get asked.',
     items: [
-      ['Do I need to buy hardware?', 'No. A PC, tablet or phone with Chrome is enough. To print, a standard 58 or 80 mm receipt printer connected to the POS computer.'],
+      ['Do I need to buy hardware?', 'No. A PC, tablet or phone with Chrome is enough to sell. To print, a standard 58 or 80 mm receipt printer: on a Windows PC with our small print program (USB or network), or on an Android tablet with the Amplify Caisse app (USB, network or Bluetooth).'],
       ['What if the internet goes down?', 'The POS keeps going: orders, tickets and payments. Everything syncs automatically when the connection is back.'],
       ['Is there a commitment?', 'No. Monthly subscription, cancel anytime.'],
       ['Is my data mine?', 'Yes. You export your sales whenever you like, in a format your accountant can read.'],
@@ -226,7 +226,7 @@ export const featuresEn = {
       key: 'pos', tag: 'Amplify POS', title: 'The POS',
       text: 'A touchscreen POS built for Moroccan service: fast at peak hours, and it never stops.',
       items: [
-        ['On PC, tablet or phone', 'Nothing to install: the POS opens in Chrome. An existing PC and a standard receipt printer are enough.'],
+        ['On PC, tablet or phone', 'Nothing to install to sell: the POS opens in Chrome. To print, a small program on Windows, or the Amplify Caisse Android app. Standard receipt printers, USB, network or Bluetooth.'],
         ['Works without internet', 'Connection down? Orders, kitchen tickets and payments carry on. Everything syncs on its own when the internet is back.'],
         ['Floor plan and zones', 'Tables by zone (dining room, terrace, upstairs), time occupied, current amount. Move a table or merge two bills in one tap.'],
         ['Dine-in, takeaway, delivery, Glovo', 'Each order type has its own flow: customer name and phone, delivery address, Glovo reference.'],
@@ -272,7 +272,8 @@ export const featuresEn = {
         ['Live tracking for the customer', 'Received, in preparation, ready, served: the customer follows their order on their phone.'],
         ['“Sold out” in one click', 'A dish that runs out disappears from ordering immediately, on the POS and the QR menu.'],
         ['Your menu imported from a photo', 'A photo of your paper menu or an Excel file: dishes, prices and categories are created automatically. No retyping.'],
-        ['Print-ready table QR codes', 'Each table has its own QR code. The table number arrives with the order.'],
+        ['Print-ready table QR codes', 'One QR per table, to download or print. The table number arrives with the order.'],
+        ['One QR for the whole restaurant', 'The customer scans, picks “Dine in” and types their table number. A single model to print for all the tables, and the per-table QR codes keep working.'],
       ],
     },
     {
@@ -357,6 +358,11 @@ export const featuresEn = {
         ['Recipes imported from Excel', 'One line per ingredient: dishes, preparations and ingredients come in at once, with a preview before saving.'],
         ['Shelf life of preparations', 'Every batch of cream or dough gets its expiry date. An expired lot no longer counts in the production plan.'],
         ['Catering: still good on the day?', 'For each confirmed order, Amplify checks what will still be good on the event date. Lots that expire before it don’t count.'],
+        ['Production sheet', 'How a preparation is made: the steps, the oven, the baking time, next to what it needs. The quantities adjust to what is planned.'],
+        ['Production board', 'One line per product for the day: planned, launched, out of the oven, left to do. A line closes as soon as enough has been made, even if the batch was started outside the plan.'],
+        ['Store, workshops and shop window', 'Where the stock is: the store, the workshops (pastry, kitchen, bakery) and the shop. A release note moves stock from one to another. An option, made for pastry shops.'],
+        ['Control per workshop', 'What left the store for a workshop, what its productions used according to the recipes, the losses and the count differences, in dirhams. You see which workshop uses more than it should.'],
+        ['Several addresses, one group', 'A café that sells the products of a pastry shop of the same owner: each address keeps its ICE, its till and its Z. The café buys at cost or with a markup, and its margins and allergens stay right.'],
       ],
     },
     {
@@ -373,6 +379,8 @@ export const featuresEn = {
         ['Weekly planning', 'Who works when, with the planned cost against the expected revenue, day by day. Copy last week in one click and send it to the WhatsApp group.'],
         ['Late arrivals', 'A clock-in more than 10 minutes after the planned start is flagged.'],
         ['Tip sharing', 'The tips of a period shared by clocked hours or equally, saved once.'],
+        ['Management score', 'How well the restaurant is run this week, from what really happened and never from ticked boxes: five levels (Basics, Control, Margins, Stock, Growth), the streaks of good habits, and the money the system made visible this month.'],
+        ['Who does the management work', 'For each manager, what they did over the last 4 weeks. Visible to the owner only.'],
       ],
     },
     {
@@ -391,6 +399,8 @@ export const featuresEn = {
         ['Cash for the next 30 days', 'Expected sales, purchases, costs on their due day and supplier debts: the balance day by day, the lowest point and the first day below zero.'],
         ['What will sell tomorrow', 'Dish by dish, from the same weekday over the last 8 weeks, with catering orders on top. And what you are short of in ingredients.'],
         ['History from your old till', 'Import your sales from before Amplify (CSV or Excel) to compare this month with last year. They stay apart: never in a Z or in the accounting export.'],
+        ['Tasks of the day', 'The owner’s “Today” list, drawn from what the system already knows: how many, a few names, and the page that settles each point. Nothing is compulsory: a task can be put aside.'],
+        ['Notifications on your phone', 'Every evening at the hour you choose: the day’s revenue against the same day last week, the tasks, and the next step of the score. And right away: a new online booking. Free.'],
       ],
     },
     {

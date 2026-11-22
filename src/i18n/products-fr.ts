@@ -121,7 +121,7 @@ export const posFr = {
     kicker: 'Questions',
     title: 'Les questions qu’on nous pose.',
     items: [
-      ['Faut-il acheter du matériel ?', 'Non. Un PC, une tablette ou un téléphone avec Chrome suffit. Pour imprimer, une imprimante ticket standard de 58 ou 80 mm, reliée au PC de la caisse.'],
+      ['Faut-il acheter du matériel ?', 'Non. Un PC, une tablette ou un téléphone avec Chrome suffit pour vendre. Pour imprimer, une imprimante ticket standard de 58 ou 80 mm : sur un PC Windows avec notre petit programme d’impression (USB ou réseau), ou sur une tablette Android avec l’application Amplify Caisse (USB, réseau ou Bluetooth).'],
       ['Et si internet coupe ?', 'La caisse continue : commandes, bons et encaissements. Tout se synchronise automatiquement au retour de la connexion.'],
       ['Y a-t-il un engagement ?', 'Non. Abonnement mensuel, résiliable à tout moment.'],
       ['Mes données m’appartiennent ?', 'Oui. Vous exportez vos ventes quand vous voulez, dans un format lisible par votre comptable.'],
@@ -229,7 +229,7 @@ export const featuresFr = {
       key: 'pos', tag: 'Amplify POS', title: 'La caisse',
       text: 'Une caisse tactile pensée pour le service marocain : rapide aux heures de pointe, et qui ne s’arrête jamais.',
       items: [
-        ['Sur PC, tablette ou téléphone', 'Rien à installer : la caisse s’ouvre dans Chrome. Un PC existant et une imprimante ticket standard suffisent.'],
+        ['Sur PC, tablette ou téléphone', 'Rien à installer pour vendre : la caisse s’ouvre dans Chrome. Pour imprimer, un petit programme sous Windows, ou l’application Android Amplify Caisse. Imprimantes ticket standard, USB, réseau ou Bluetooth.'],
         ['Fonctionne sans internet', 'Coupure de connexion ? Commandes, bons cuisine et encaissements continuent. Tout se synchronise automatiquement au retour d’internet.'],
         ['Plan de salle et zones', 'Tables par zone (salle, terrasse, étage), temps d’occupation, montant en cours. Changer de table ou regrouper deux additions en un geste.'],
         ['Sur place, à emporter, livraison, Glovo', 'Chaque type de commande a son circuit : nom et téléphone du client, adresse de livraison, référence Glovo.'],
@@ -275,7 +275,8 @@ export const featuresFr = {
         ['Suivi en direct pour le client', 'Reçue, en préparation, prête, servie : le client suit sa commande sur son téléphone.'],
         ['« Épuisé » en un clic', 'Un plat en rupture n’est plus commandable, tout de suite, sur la caisse comme sur le menu QR.'],
         ['Votre carte importée en photo', 'Une photo de votre menu papier ou un fichier Excel : plats, prix et catégories sont créés automatiquement. Aucune ressaisie.'],
-        ['QR codes de table prêts à imprimer', 'Chaque table a son QR code. Le numéro de table arrive avec la commande.'],
+        ['QR codes de table prêts à imprimer', 'Un QR par table, à télécharger ou imprimer. Le numéro de table arrive avec la commande.'],
+        ['Un seul QR pour tout le restaurant', 'Le client scanne, choisit « Sur place » et tape son numéro de table. Un seul modèle à imprimer pour toutes les tables, et les QR par table continuent de fonctionner.'],
       ],
     },
     {
@@ -360,6 +361,11 @@ export const featuresFr = {
         ['Recettes importées depuis Excel', 'Une ligne par ingrédient : plats, préparations et ingrédients entrent en une fois, avec un aperçu avant d’enregistrer.'],
         ['Durée de vie des préparations', 'Chaque production de crème ou de pâte reçoit sa date limite. Un lot périmé ne compte plus dans le plan de production.'],
         ['Traiteur : encore bon le jour J ?', 'Pour chaque commande confirmée, Amplify vérifie ce qui sera encore bon à la date de l’événement. Les lots qui expirent avant ne comptent pas.'],
+        ['Fiche de fabrication', 'Comment une préparation se fait : les étapes, le four, le temps de cuisson, à côté de ce qu’il faut. Les quantités s’adaptent à ce qui est prévu.'],
+        ['Tableau de production', 'Une ligne par produit pour la journée : prévu, lancé, sorti du four, reste à faire. Une ligne se ferme dès qu’il y en a assez, même si la fournée a été lancée hors plan.'],
+        ['Économat, ateliers et vitrine', 'Où est le stock : économat, ateliers (pâtisserie, cuisine, boulangerie) et boutique. Un bon de sortie déplace le stock de l’un à l’autre. Option, pour les pâtisseries.'],
+        ['Contrôle par atelier', 'Ce qui est sorti de l’économat pour un atelier, ce que ses productions ont consommé d’après les recettes, les pertes et les écarts de comptage, en dirhams. Vous voyez quel atelier consomme plus que prévu.'],
+        ['Plusieurs adresses, un seul groupe', 'Un café qui vend les produits d’une pâtisserie du même propriétaire : chaque adresse garde son ICE, sa caisse et son Z. Le café achète au prix coûtant ou avec une marge, et ses marges et allergènes restent justes.'],
       ],
     },
     {
@@ -376,6 +382,8 @@ export const featuresFr = {
         ['Planning de la semaine', 'Qui travaille quand, avec le coût prévu face au chiffre attendu, jour par jour. Reprendre la semaine précédente en un clic et l’envoyer au groupe WhatsApp.'],
         ['Retards', 'Une arrivée pointée plus de 10 minutes après le début prévu est signalée.'],
         ['Partage des pourboires', 'Les pourboires de la période partagés selon les heures pointées ou à parts égales, enregistrés une seule fois.'],
+        ['Score de gestion', 'Comment le restaurant est tenu cette semaine, d’après ce qui s’est vraiment passé et jamais d’après des cases cochées : cinq niveaux (Bases, Contrôle, Marges, Stock, Croissance), les séries de bonnes habitudes, et l’argent que le système a rendu visible dans le mois.'],
+        ['Qui fait le travail de gestion', 'Pour chaque manager, ce qu’il a fait sur les 4 dernières semaines. Visible du propriétaire seulement.'],
       ],
     },
     {
@@ -394,6 +402,8 @@ export const featuresFr = {
         ['Trésorerie des 30 prochains jours', 'Entrées prévues, achats, charges à leur date et dettes fournisseurs : le solde jour par jour, le point le plus bas et le premier jour sous zéro.'],
         ['Ce qui se vendra demain', 'Plat par plat, d’après le même jour des 8 dernières semaines, avec les commandes traiteur en plus. Et ce qu’il vous manque en ingrédients.'],
         ['Historique de votre ancienne caisse', 'Importez vos ventes d’avant Amplify (CSV ou Excel) pour comparer ce mois à l’an dernier. Elles restent à part : jamais dans un Z ni dans l’export comptable.'],
+        ['Tâches du jour', 'La liste « Aujourd’hui » du patron, tirée de ce que le système sait déjà : combien, quelques noms, et la page qui règle chaque point. Rien d’obligatoire : on peut mettre une tâche de côté.'],
+        ['Notifications sur le téléphone', 'Chaque soir à l’heure choisie : le chiffre du jour comparé au même jour de la semaine dernière, les tâches, et la prochaine étape du score. Et tout de suite : une nouvelle réservation en ligne. Gratuit.'],
       ],
     },
     {

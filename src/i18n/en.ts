@@ -143,7 +143,7 @@ export const en: Copy = {
       self: [
         { h: 'Create your account', p: 'In 5 minutes, no credit card. Your restaurant and your POS are ready.', you: 'You: an email and a password', visual: 'signup' },
         { h: 'Photograph your menu', p: 'AI reads your dishes, prices and categories. You correct anything if needed.', you: 'You: a photo of your menu', visual: 'photo' },
-        { h: 'Print your QR codes', p: 'Each table gets its own QR code. The POS opens on a PC, a tablet or a phone.', you: 'You: print and place', visual: 'qr' },
+        { h: 'Print your QR codes', p: 'One QR per table, or a single one for the whole restaurant. The POS opens on a PC, a tablet or a phone.', you: 'You: print and place', visual: 'qr' },
         { h: '14 days to try it', p: 'Test it during real service. No commitment: you only continue if it works for you.', you: 'You: decide after 14 days', visual: 'chart' },
       ] as { h: string; p: string; you: string; visual: 'signup' | 'photo' | 'qr' | 'chart' }[],
       selfCta: 'Create my restaurant',
@@ -201,7 +201,7 @@ export const en: Copy = {
       ['How much does it cost?', 'Our systems have public prices: Amplify POS from 199 DH excl. VAT per month, Amplify Profit from 249 DH excl. VAT, with 14 days free and no commitment. For a website or marketing, ask for a quote on WhatsApp.'],
       ['Will my team find their way around?', 'The POS is in French, Arabic and English, with big buttons. We train your team, on site in Rabat or by video.'],
       ['Can I keep my current POS?', 'Yes. Margin, stock and team management also works without our POS.'],
-      ['Do you only work in Rabat?', 'Our team is in Rabat. For the rest of Morocco, message us and we’ll work out how together.'],      ['Do I need to buy hardware?', 'No. A PC, tablet or phone with Chrome is enough for the POS. To print receipts, a standard receipt printer.'],
+      ['Do you only work in Rabat?', 'Our team is in Rabat. For the rest of Morocco, message us and we’ll work out how together.'],      ['Do I need to buy hardware?', 'No. A PC, tablet or phone with Chrome is enough to sell. To print, a standard receipt printer: on a Windows PC with our small print program, or on an Android tablet with the Amplify Caisse app.'],
       ['Is my data mine?', 'Yes. You export your sales whenever you like, and the subscription has no commitment.'],
     ],
     chat: {

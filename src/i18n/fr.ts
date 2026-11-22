@@ -143,7 +143,7 @@ export const fr = {
       self: [
         { h: 'Créez votre compte', p: 'En 5 minutes, sans carte bancaire. Votre restaurant et votre caisse sont prêts.', you: 'Vous : un e-mail et un mot de passe', visual: 'signup' },
         { h: 'Photographiez votre carte', p: 'L’IA lit vos plats, vos prix et vos catégories. Vous corrigez si besoin.', you: 'Vous : une photo de votre menu', visual: 'photo' },
-        { h: 'Imprimez vos QR codes', p: 'Chaque table a son QR code. La caisse s’ouvre sur un PC, une tablette ou un téléphone.', you: 'Vous : imprimer et poser', visual: 'qr' },
+        { h: 'Imprimez vos QR codes', p: 'Un QR par table, ou un seul pour tout le restaurant. La caisse s’ouvre sur un PC, une tablette ou un téléphone.', you: 'Vous : imprimer et poser', visual: 'qr' },
         { h: '14 jours pour essayer', p: 'Vous testez pendant un vrai service. Sans engagement : vous continuez seulement si ça vous convient.', you: 'Vous : décider après 14 jours', visual: 'chart' },
       ] as { h: string; p: string; you: string; visual: 'signup' | 'photo' | 'qr' | 'chart' }[],
       selfCta: 'Créer mon restaurant',
@@ -201,7 +201,7 @@ export const fr = {
       ['Combien ça coûte ?', 'Les systèmes ont des prix publics : Amplify POS dès 199 DH HT par mois, Amplify Profit dès 249 DH HT, avec 14 jours gratuits et sans engagement. Pour un site ou le marketing, demandez un devis sur WhatsApp.'],
       ['Mon équipe va-t-elle s’y retrouver ?', 'La caisse est en français, en arabe et en anglais, avec de grands boutons. Nous formons votre équipe, sur place à Rabat ou en vidéo.'],
       ['Je garde ma caisse actuelle. C’est possible ?', 'Oui. La gestion des marges, du stock et de l’équipe fonctionne aussi sans notre caisse.'],
-      ['Vous travaillez seulement à Rabat ?', 'Notre équipe est à Rabat. Pour le reste du Maroc, écrivez-nous et nous voyons ensemble comment faire.'],      ['Faut-il acheter du matériel ?', 'Non. Un PC, une tablette ou un téléphone avec Chrome suffit pour la caisse. Pour imprimer, il faut une imprimante ticket standard.'],
+      ['Vous travaillez seulement à Rabat ?', 'Notre équipe est à Rabat. Pour le reste du Maroc, écrivez-nous et nous voyons ensemble comment faire.'],      ['Faut-il acheter du matériel ?', 'Non. Un PC, une tablette ou un téléphone avec Chrome suffit pour vendre. Pour imprimer, une imprimante ticket standard : sur un PC Windows avec notre petit programme d’impression, ou sur une tablette Android avec l’application Amplify Caisse.'],
       ['Mes données m’appartiennent ?', 'Oui. Vous exportez vos ventes quand vous voulez, et l’abonnement est sans engagement.'],
     ],
     chat: {
