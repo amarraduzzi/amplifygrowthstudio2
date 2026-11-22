@@ -1,0 +1,199 @@
+---
+// Catering ("traiteur"), from the quote to the invoice, played as one order that grows on a paper sheet over a photo.
+// Step 1 Devis: three lines slide in, the total counts up, a WhatsApp bubble flies out and comes back "Accepté".
+// Step 2 Acompte: the deposit lands, the paid bar fills, the balance drops. Step 3 Production: the day lands in the
+// production plan. Step 4 Facture: the balance goes to 0, a "PAYÉE" stamp lands, the invoice is locked.
+// Plays once when in view and goes on by itself; a tap on a step shows that step; "Recommencer" plays it again.
+// Photos: /img/photos/pat-traiteur-full.webp (background) and pat-traiteur-1..4.webp (the four steps). Until they
+// exist, warm gradients stand in, so the section never looks broken. Demo order, invented client, example figures.
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const lang = langOf(Astro.url);
+const loc = lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-MA' : 'fr-FR';
+const fmt = (n: number) => n.toLocaleString(loc).replace(/[\u202f\u00a0]/g, ' ');
+const lines: [string, number][] = [[tt('Buffet marocain · 120 personnes'), 2400], [tt('Pâtisseries et mini viennoiseries'), 660], [tt('Livraison'), 150]];
+const steps: [string, string, string, string][] = [
+  [tt('Devis'), tt('sur WhatsApp ou imprimé'), 'message', 'linear-gradient(135deg,#f0c98a,#b8741f)'],
+  [tt('Acompte'), tt('noté au fil de l’eau'), 'wallet', 'linear-gradient(135deg,#d9b48a,#6b4426)'],
+  [tt('Production'), tt('dans le plan de son jour'), 'chef', 'linear-gradient(135deg,#e8b66a,#8a4f1c)'],
+  [tt('Facture'), tt('avec l’ICE de la société'), 'book', 'linear-gradient(135deg,#c9a67a,#4a3320)'],
+];
+const pts = [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')];
+const wa = tt('Bonjour, je fais des commandes traiteur et je voudrais voir Amplify.');
+---
+<section id="traiteur" class="ct mx-auto max-w-6xl scroll-mt-24 px-4 py-14 sm:px-6 md:py-24" data-tf data-ct data-s="0" data-loc={loc}>
+  <div class="relative isolate overflow-hidden rounded-[2.2rem] text-white shadow-[0_50px_90px_-50px_rgba(0,30,62,0.8)] md:rounded-[2.75rem]">
+    <span class="ct-photo absolute inset-0 -z-20" aria-hidden="true"></span>
+    <span class="ct-shade absolute inset-0 -z-10" aria-hidden="true"></span>
+
+    <div class="grid gap-12 px-5 pb-8 pt-10 sm:px-8 md:px-12 md:pt-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-14">
+      <div>
+        <p class="tf inline-flex items-center gap-2 rounded-full bg-green px-3 py-1.5 text-sm font-bold text-navy"><Icon name="cake" class="size-4" />{tt('Traiteur')}</p>
+        <h2 class="tf mt-4 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le traiteur,')}</span><span class="block text-green">{tt('du devis à la facture.')}</span></h2>
+        <p class="tf mt-5 max-w-md text-lg text-white/80" style="--d:100ms">{tt('Mariage, séminaire, fiançailles : le devis part sur WhatsApp ou s’imprime. Le client accepte, la commande entre dans le plan de production de son jour.')}</p>
+        <ul class="mt-6 space-y-3">{pts.map((x, k) => <li class="tf flex items-start gap-3" style={`--d:${200 + k * 90}ms`}><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}</ul>
+        <div class="tf mt-7" style="--d:500ms"><WaButton text={wa} label={tt('Demander un devis traiteur')} where="bakery-catering" class="px-7 text-lg" /></div>
+      </div>
+
+      <div class="tf ct-wrap" style="--d:150ms">
+        <div class="ct-sheet" role="img" aria-label={tt('Une commande traiteur du devis à la facture : trois lignes et un total, un acompte, le plan de production, la facture payée')} data-sheet>
+          <span class="ct-wa" aria-hidden="true">
+            <span class="ct-wa1"><Icon name="message" class="size-[1.1em]" />{tt('Devis envoyé')}</span>
+            <span class="ct-wa2"><Icon name="check" class="size-[1.1em]" />{tt('Accepté')}</span>
+          </span>
+          <div class="ct-head">
+            <div><p class="ct-k">{tt('Traiteur')}</p><p class="ct-n" dir="ltr">CT-0001</p></div>
+            <p class="ct-chips"><span class="ct-st ct-st1">{tt('Devis')}</span><span class="ct-st ct-st2">{tt('Confirmée')}</span><span class="ct-st ct-st3">{tt('En production')}</span><span class="ct-st ct-st4">{tt('Facturée')}</span></p>
+          </div>
+          <p class="ct-who">Salma B. · Société Démo SARL<br /><span>{tt('Jeudi 15 octobre · 10:00 · Hay Riad, Rabat')}</span></p>
+
+          <ul class="ct-lines">
+            {lines.map(([l, a], i) => <li data-at="1" style={`--i:${i}`}><span>{l}</span><b dir="ltr">{fmt(a)}</b></li>)}
+          </ul>
+          <p class="ct-total" data-at="1" style="--i:3"><span>{tt('Total TTC')}</span><span dir="ltr"><b data-total>0</b> MAD</span></p>
+
+          <div class="ct-pay" data-at="2">
+            <p><span>{tt('Acompte')} · {tt('Virement')} · 14 {tt('oct.')}</span><b dir="ltr">1 500 MAD</b></p>
+            <span class="ct-track"><span data-fill></span></span>
+            <p class="ct-rest"><span>{tt('Reste à payer')}</span><b dir="ltr"><i data-rest>1 710</i> MAD</b></p>
+          </div>
+
+          <div class="ct-prod" data-at="3">
+            <span class="ct-cal"><b>15</b><small>{tt('OCT')}</small></span>
+            <span class="ct-pt"><b>{tt('Plan de production')}</b><small>{tt('Ajouté au plan de son jour')} · 10:00</small></span>
+            <span class="ct-ok"><Icon name="check" class="size-[1.1em]" /></span>
+          </div>
+
+          <p class="ct-lock" data-at="4"><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>{tt('Facture au nom de Société Démo SARL, avec son ICE. Elle ne se modifie plus.')}</p>
+          <div class="ct-stamp" data-at="4" aria-hidden="true"><span>{tt('PAYÉE')}</span><small>{tt('virement')}</small></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- the four steps, each with its photo -->
+    <div class="px-5 pb-8 sm:px-8 md:px-12 md:pb-10">
+      <div class="ct-rail" aria-hidden="true"><span data-rail></span></div>
+      <ol class="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+        {steps.map(([a, b, ic, fb], i) => (
+          <li>
+            <button type="button" class="ct-step" data-step={i + 1} style={`--fb:${fb};--img:url(/img/photos/pat-traiteur-${i + 1}.webp)`}>
+              <span class="ct-ph"><span class="ct-num">{i + 1}</span><span class="ct-ic"><Icon name={ic as any} class="size-[1.3em]" /></span></span>
+              <span class="ct-tx"><b>{a}</b><small>{b}</small></span>
+            </button>
+          </li>
+        ))}
+      </ol>
+      <p class="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-white/65"><span>{tt('Touchez une étape pour la revoir.')} · {tt('Exemple avec des chiffres de démonstration.')}</span><button type="button" class="ct-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button></p>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .ct-photo { background: url('/img/photos/pat-traiteur-full.webp') 60% 50% / cover no-repeat, radial-gradient(70% 80% at 80% 20%, #d9923f, transparent 70%), linear-gradient(135deg, #5a3516, #1c1208 60%, #001E3E); animation: ct-kb 18s ease-in-out infinite alternate; }
+  @keyframes ct-kb { from { transform: scale(1.03); } to { transform: scale(1.13) translate(-1.5%, -1%); } }
+  .ct-shade { background: linear-gradient(90deg, rgba(0, 20, 45, .92), rgba(0, 20, 45, .62) 55%, rgba(0, 20, 45, .5)), linear-gradient(0deg, rgba(0, 20, 45, .85), transparent 40%); }
+  @media (max-width: 1023px) { .ct-shade { background: linear-gradient(180deg, rgba(0, 20, 45, .82), rgba(0, 20, 45, .7)); } }
+
+  .ct-wrap { container-type: inline-size; padding-bottom: 1.6rem; }
+  .ct-sheet { position: relative; max-width: 29em; margin-inline: auto; font-size: clamp(10.5px, 3.1cqw, 15px); padding: 2.2em 1.9em 2.3em; border-radius: .5em; background: #FFFDF8; color: #001E3E; box-shadow: 0 5em 7em -3em rgba(0, 0, 0, .8), 0 0 0 1px rgba(0, 0, 0, .06); transform: rotate(-1.3deg); }
+  [dir="rtl"] .ct-sheet { transform: rotate(1.3deg); }
+  .ct-sheet::before { content: ""; position: absolute; inset: 0 0 auto; height: .5em; border-radius: .5em .5em 0 0; background: #05B962; }
+  .ct-k { font-size: .75em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #6B7A8C; }
+  .ct-n { margin-top: .1em; font-size: 1.7em; font-weight: 800; line-height: 1.05; }
+  .ct-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1em; }
+  .ct-chips { display: grid; } .ct-st { grid-area: 1 / 1; justify-self: end; padding: .35em .9em; border-radius: 999px; font-size: .8em; font-weight: 700; white-space: nowrap; opacity: 0; transform: translateY(.4em); transition: opacity .4s, transform .5s cubic-bezier(.3, 1.5, .5, 1); background: #E3F6EC; color: #00804A; }
+  .ct-st1 { background: #F2F4F7; color: #6B7A8C; } .ct-st3 { background: #FFF1D6; color: #9A5B00; } .ct-st4 { background: #001E3E; color: #5EE0A0; }
+  .ct[data-s="0"] .ct-st1, .ct[data-s="1"] .ct-st1, .ct[data-s="2"] .ct-st2, .ct[data-s="3"] .ct-st3, .ct[data-s="4"] .ct-st4 { opacity: 1; transform: none; }
+  .ct-who { margin-top: .9em; font-weight: 700; } .ct-who span { font-weight: 500; font-size: .85em; color: #6B7A8C; }
+
+  .ct [data-at] { opacity: 0; transform: translateY(.9em); transition: opacity .5s calc(var(--i, 0) * .25s), transform .55s calc(var(--i, 0) * .25s) cubic-bezier(.2, .8, .2, 1); }
+  .ct.s1 [data-at="1"], .ct.s2 [data-at="2"], .ct.s3 [data-at="3"], .ct.s4 [data-at="4"] { opacity: 1; transform: none; }
+  .ct-lines { margin-top: 1em; border-top: 1px dashed rgba(0, 30, 62, .22); }
+  .ct-lines li, .ct-total, .ct-pay p { display: flex; justify-content: space-between; align-items: baseline; gap: 1em; }
+  .ct-lines li { padding: .6em 0; border-bottom: 1px solid rgba(0, 30, 62, .08); font-weight: 600; } .ct-lines b { font-variant-numeric: tabular-nums; }
+  .ct-total { margin-top: .5em; padding-top: .6em; border-top: 2px solid #001E3E; font-size: 1.25em; font-weight: 700; } .ct-total b { font-size: 1.2em; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .ct-pay { margin-top: 1em; padding: .8em 1em; border-radius: .9em; background: #F2F4F7; }
+  .ct-pay p { font-size: .88em; font-weight: 700; } .ct-pay b { font-variant-numeric: tabular-nums; }
+  .ct-track { display: block; height: .6em; margin: .6em 0; border-radius: 99px; background: #D9DFE7; overflow: hidden; }
+  .ct-track span { display: block; height: 100%; width: 0; border-radius: 99px; background: #05B962; transition: width 1.3s cubic-bezier(.2, .8, .2, 1); }
+  .ct-rest b { color: #C47A00; transition: color .5s; } .ct.s4 .ct-rest b { color: #00804A; }
+  .ct-prod { display: flex; align-items: center; gap: .9em; margin-top: .8em; padding: .7em .9em; border-radius: .9em; background: #001E3E; color: #fff; }
+  .ct-cal { display: grid; place-items: center; flex: none; width: 3em; padding: .3em 0; border-radius: .6em; background: #fff; color: #001E3E; line-height: 1; } .ct-cal b { font-size: 1.4em; font-weight: 800; } .ct-cal small { font-size: .62em; font-weight: 800; letter-spacing: .1em; color: #00804A; }
+  .ct-pt { flex: 1; display: grid; line-height: 1.25; } .ct-pt small { font-size: .8em; color: rgba(255, 255, 255, .65); }
+  .ct-ok { display: grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: 50%; background: #05B962; color: #001E3E; transform: scale(0); transition: transform .5s .7s cubic-bezier(.3, 1.8, .5, 1); } .ct.s3 .ct-ok { transform: scale(1); }
+  .ct-lock { display: flex; align-items: center; gap: .6em; margin-top: .9em; font-size: .82em; font-weight: 600; color: #00804A; }
+  .ct-stamp { position: absolute; inset-inline-end: -.7em; bottom: -1.4em; display: grid; justify-items: center; padding: .35em 1em .45em; border: .2em solid #00804A; border-radius: .5em; box-shadow: inset 0 0 0 .1em #00804A, 0 .6em 1.2em -.4em rgba(0, 0, 0, .4); color: #00804A; background: #E3F6EC; pointer-events: none; z-index: 2; transform: rotate(-8deg) scale(1.9) !important; }
+  .ct.s4 .ct-stamp { transform: rotate(-8deg) !important; transition: opacity .3s .5s, transform .5s .5s cubic-bezier(.3, 1.3, .5, 1) !important; }
+  .ct-stamp span { font-size: 1.3em; font-weight: 800; letter-spacing: .1em; line-height: 1; } .ct-stamp small { font-size: .75em; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+
+  .ct-wa { position: absolute; inset-inline-end: 1em; top: -1.1em; z-index: 3; display: grid; }
+  .ct-wa span { grid-area: 1 / 1; display: inline-flex; align-items: center; gap: .45em; padding: .5em 1em; border-radius: 999px; font-size: .85em; font-weight: 800; white-space: nowrap; box-shadow: 0 .6em 1.4em -.4em rgba(0, 0, 0, .5); opacity: 0; transform: translateY(.8em) scale(.7); transition: opacity .35s, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .ct-wa1 { background: #25D366; color: #fff; } .ct-wa2 { background: #001E3E; color: #5EE0A0; }
+  .ct.s1 .ct-wa1 { opacity: 1; transform: none; transition-delay: 1.1s; }
+  .ct.s2 .ct-wa1, .ct.s3 .ct-wa1, .ct.s4 .ct-wa1 { opacity: 0; transform: translateY(-.8em) scale(.9); transition-delay: 0s; }
+  .ct.s2 .ct-wa2, .ct.s3 .ct-wa2 { opacity: 1; transform: none; } .ct.s4 .ct-wa2 { opacity: 0; transition-delay: 0s; }
+
+  .ct-rail { height: .3rem; border-radius: 99px; background: rgba(255, 255, 255, .18); overflow: hidden; }
+  .ct-rail span { display: block; height: 100%; width: 0; border-radius: 99px; background: #05B962; box-shadow: 0 0 1rem #05B962; transition: width 1.4s cubic-bezier(.4, 0, .2, 1); }
+  .ct-step { display: block; width: 100%; overflow: hidden; border-radius: 1.3rem; text-align: start; background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16); opacity: .55; transform: scale(.97); transition: opacity .5s, transform .5s cubic-bezier(.3, 1.4, .5, 1), box-shadow .4s; backdrop-filter: blur(8px); }
+  .ct-step:hover { opacity: .85; }
+  .ct-ph { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--img) center / cover no-repeat, var(--fb); }
+  .ct-ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(0, 20, 45, .65)); }
+  .ct-num { position: absolute; z-index: 1; inset-inline-start: .6rem; top: .6rem; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: #001E3E; color: #fff; font-weight: 800; transition: background .4s, color .4s; }
+  .ct-ic { position: absolute; z-index: 1; inset-inline-end: .6rem; bottom: .6rem; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: .9rem; background: rgba(255, 255, 255, .92); color: #001E3E; }
+  .ct-tx { display: block; padding: .75rem .9rem .9rem; } .ct-tx b { display: block; font-weight: 800; } .ct-tx small { display: block; margin-top: .1rem; font-size: .8rem; line-height: 1.3; color: rgba(255, 255, 255, .65); }
+  .ct.s1 .ct-step[data-step="1"], .ct.s2 .ct-step[data-step="2"], .ct.s3 .ct-step[data-step="3"], .ct.s4 .ct-step[data-step="4"] { opacity: 1; }
+  .ct[data-s="1"] .ct-step[data-step="1"], .ct[data-s="2"] .ct-step[data-step="2"], .ct[data-s="3"] .ct-step[data-step="3"], .ct[data-s="4"] .ct-step[data-step="4"] { transform: translateY(-.35rem) scale(1.02); box-shadow: inset 0 0 0 2px #05B962, 0 1.4rem 2.2rem -1.2rem rgba(5, 185, 98, .8); }
+  .ct[data-s="1"] [data-step="1"] .ct-ph, .ct[data-s="2"] [data-step="2"] .ct-ph, .ct[data-s="3"] [data-step="3"] .ct-ph, .ct[data-s="4"] [data-step="4"] .ct-ph { animation: ct-zoom 6s ease-out forwards; }
+  @keyframes ct-zoom { from { background-size: 100%, 100%; } to { background-size: 112%, 100%; } }
+  .ct.s1 [data-step="1"] .ct-num, .ct.s2 [data-step="2"] .ct-num, .ct.s3 [data-step="3"] .ct-num, .ct.s4 [data-step="4"] .ct-num { background: #05B962; color: #001E3E; }
+  .ct-redo { display: inline-flex; align-items: center; gap: .45em; padding: .5rem 1rem; border-radius: 999px; font-weight: 600; color: rgba(255, 255, 255, .85); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .3); } .ct-redo:hover { background: rgba(255, 255, 255, .12); }
+  @media (prefers-reduced-motion: reduce) { .ct-photo, .ct-ph { animation: none !important; } .ct [data-at], .ct-st, .ct-wa span, .ct-step, .ct-rail span, .ct-track span { transition: none !important; } }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-ct]');
+  if (root) {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const loc = root.dataset.loc || 'fr-FR';
+    const fmt = (n: number) => Math.round(n).toLocaleString(loc).replace(/[\u202f\u00a0]/g, ' ');
+    const total = q('[data-total]'), rest = q('[data-rest]'), fill = q('[data-fill]'), rail = q('[data-rail]');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let timers: number[] = [], cur = 0, tot = 0, rst = 3210;
+    const tween = (from: number, to: number, ms: number, fn: (v: number) => void) => {
+      const t0 = performance.now();
+      const f = (t: number) => { const k = Math.min(1, (t - t0) / ms); fn(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); };
+      requestAnimationFrame(f);
+    };
+    const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+    // the numbers each step shows: total 3 210 from step 1, balance 1 710 after the deposit, 0 once paid
+    const go = (n: number, animate: boolean) => {
+      root.dataset.s = String(n);
+      for (let k = 1; k <= 4; k++) root.classList.toggle('s' + k, k <= n);
+      rail.style.width = `${n * 25}%`;
+      const wantTot = n >= 1 ? 3210 : 0, wantRst = n >= 4 ? 0 : n >= 2 ? 1710 : 3210;
+      fill.style.width = n >= 4 ? '100%' : n >= 2 ? '47%' : '0%';
+      if (animate && !still) {
+        tween(tot, wantTot, 1200, v => { total.textContent = fmt(v); });
+        tween(rst, wantRst, 1300, v => { rest.textContent = fmt(v); });
+      } else { total.textContent = fmt(wantTot); rest.textContent = fmt(wantRst); }
+      tot = wantTot; rst = wantRst; cur = n;
+    };
+    const run = () => {
+      timers.forEach(clearTimeout); timers = [];
+      go(0, false);
+      at(700, () => go(1, true)); at(3700, () => go(2, true)); at(6700, () => go(3, true)); at(9700, () => go(4, true));
+    };
+    root.querySelectorAll<HTMLButtonElement>('[data-step]').forEach(b => b.addEventListener('click', () => {
+      timers.forEach(clearTimeout); timers = []; go(Number(b.dataset.step), true);
+    }));
+    q('[data-redo]').addEventListener('click', () => { if (still) { go(4, false); return; } run(); });
+    if (still || !('IntersectionObserver' in window)) { root.classList.add('in'); go(4, false); }
+    else {
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { root.classList.add('in'); o.disconnect(); } }, { threshold: 0.1 }).observe(root);
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); run(); } }, { threshold: 0.45 }).observe(q('[data-sheet]'));
+    }
+  }
+</script>

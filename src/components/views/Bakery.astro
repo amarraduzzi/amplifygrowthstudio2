@@ -16,6 +16,7 @@ import BakeryPlan from '../BakeryPlan.astro';
 import CakeOrders from '../CakeOrders.astro';
 import BakeryScale from '../BakeryScale.astro';
 import BakeryProduce from '../BakeryProduce.astro';
+import BakeryCatering from '../BakeryCatering.astro';
 import AllergenLabel from '../AllergenLabel.astro';
 import SupplierTrio from '../SupplierTrio.astro';
 import PhotoBand from '../PhotoBand.astro';
@@ -202,28 +203,8 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
   <!-- CAKE ORDERS: the order form that fills in, the deposit, the hand-over on one ticket -->
   <CakeOrders />
 
-  <!-- CATERING: from the quote to the invoice -->
-  <section id="traiteur" class="border-y border-line bg-paper py-14 md:py-24">
-    <div class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 sm:px-6 lg:grid-cols-2">
-      <div data-bk><Device src="/img/pat-traiteur-1200.webp" alt={tt('Commande traiteur avec acompte dans Amplify')} w={1200} h={885} class="bk-tilt" /></div>
-      <div>
-        <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{tt('Le traiteur, du devis à la facture.')}</h2>
-        <p class="mt-5 max-w-md text-lg text-muted">{tt('Mariage, séminaire, fiançailles : le devis part sur WhatsApp ou s’imprime. Le client accepte, la commande entre dans le plan de production de son jour.')}</p>
-        <ul class="mt-6 space-y-3">{catPts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}</ul>
-      </div>
-    </div>
-    <div class="mx-auto mt-12 max-w-6xl px-4 sm:px-6" data-bk>
-      <ol class="bk-steps relative grid gap-4 sm:grid-cols-4">
-        <span class="bk-rail absolute start-[12.5%] top-6 hidden h-0.5 w-[75%] origin-left rounded-full bg-green sm:block rtl:origin-right" aria-hidden="true"></span>
-        {steps.map(([a, b], i) => (
-          <li class="bk-step relative flex items-center gap-4 rounded-2xl bg-chalk p-4 ring-1 ring-line sm:flex-col sm:text-center" style={`--i:${i}`}>
-            <span class="bk-dot relative z-10 grid size-12 shrink-0 place-items-center rounded-full bg-navy text-lg font-bold text-white ring-4 ring-paper">{i + 1}</span>
-            <span><span class="block font-bold">{a}</span><span class="block text-sm text-muted">{b}</span></span>
-          </li>
-        ))}
-      </ol>
-    </div>
-  </section>
+  <!-- CATERING: one order, from the quote to the invoice, over a photo -->
+  <BakeryCatering />
 
   <!-- ALLERGENS AND LABELS: computed from the ingredients, on the QR menu and on the batch label -->
   <section id="allergenes" class="mx-auto max-w-6xl scroll-mt-24 px-4 py-14 sm:px-6 md:py-24">
