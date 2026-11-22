@@ -1,0 +1,199 @@
+---
+// "10 g de pâte d’amande en trop": the pâtisserie page's loss example, in the same build as the dry cleaners'
+// invoice and the cake orders: a dark section, a paper object on one side that fills in step by step
+// (the technical sheet says 30 g, the scale shows 40 g, the cost per piece, per day, per month, per year,
+// a stamp), and four points on the other side that light up with their step. Plays once when in view,
+// a tap on the paper (or "Recommencer") replays it. The baker sets his own pieces per day on the paper
+// and the numbers follow at once.
+// Example numbers, labelled as such: 10 g x 80 DH/kg = 0,80 DH a piece, 150 pieces a day, 30 days a month,
+// 360 days a year = 43 200 DH. The 10 g is an assumption the baker fills in himself, not a measurement.
+import Icon from './Icon.astro';
+import WaButton from './WaButton.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const lang = langOf(Astro.url);
+const loc = lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-MA' : 'fr-FR';
+const PCS = 150;
+const fmt = (n: number, d = 0) => n.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/[\u202f\u00a0]/g, ' ');
+const items = [
+  ['chef', 'La fiche technique : 30 g', 'Chaque produit a sa fiche : 30 g de pâte d’amande par corne de gazelle. Amplify en tire le coût de revient de chaque pièce.'],
+  ['tag', 'La balance : 40 g', 'À l’atelier, la main est plus généreuse que la fiche. Ici, 10 g de trop : c’est un exemple, vous mettez vos propres chiffres.'],
+  ['coins', 'Ce que ça coûte sur l’année', 'À 80 DH le kilo, 10 g de trop font 0,80 DH par pièce. Réglez vos pièces par jour : le total change tout de suite.'],
+  ['check', 'Ce qu’Amplify en fait', 'Le coût par pièce suit le prix d’achat du moment. Le comptage par atelier montre ce qu’il manque en stock, en dirhams.'],
+] as const;
+---
+<section id="perte" class="bs relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf data-bs data-loc={loc}>
+  <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+  <span class="bs-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></span>
+  <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:gap-x-16 lg:gap-y-9">
+      <div class="order-1 lg:col-start-2 lg:row-start-1 lg:self-end">
+        <p class="tf inline-flex items-center gap-2 rounded-full bg-green px-3 py-1.5 text-sm font-bold text-navy"><Icon name="chef" class="size-4" />{tt('Exemple de calcul')}</p>
+        <h2 class="tf-x mt-4 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('10 g de pâte d’amande en trop.')}</span><span class="block text-green">{tt('Sur chaque corne de gazelle.')}</span></h2>
+        <p class="tf mt-4 max-w-lg text-lg text-white/70" style="--d:100ms">{tt('La fiche technique dit 30 g, la balance en montre 40. Sur une pièce, personne ne le voit. Sur une année, ça se compte.')}</p>
+      </div>
+      <div class="order-3 lg:col-start-2 lg:row-start-2">
+        <ul class="grid gap-3">
+          {items.map(([i, h, x], k) => (
+            <li class="bs-it tf" data-it={k} style={`--d:${k * 90}ms`}>
+              <span class="bs-ico"><Icon name={i} class="size-5" /></span>
+              <div><p class="font-semibold">{tt(h)}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{tt(x)}</p></div>
+            </li>
+          ))}
+        </ul>
+        <div class="tf mt-6 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={tt('Bonjour, je voudrais calculer mes pertes de matière avec Amplify.')} label={tt('Calculer pour ma pâtisserie')} where="bakery-scale" class="px-7 text-lg" />
+        </div>
+        <p class="tf mt-4 text-sm text-white/50" style="--d:450ms">{tt('Exemple avec des prix indicatifs : pâte d’amande à 80 DH le kilo, 360 jours par an.')}</p>
+      </div>
+
+      <div class="tf order-2 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-center" style="--d:120ms">
+        <div class="bs-sheet-wrap">
+          <div class="bs-sheet" role="img" aria-label={tt('Une fiche technique à 30 g, une balance à 40 g, et ce que les 10 g de trop coûtent par pièce, par jour, par mois et par an')} data-sheet>
+            <div class="bs-head" data-at="1">
+              <div>
+                <p class="bs-k">{tt('Fiche technique')}</p>
+                <p class="bs-n">{tt('Corne de gazelle')}</p>
+              </div>
+              <p class="bs-ex">{tt('Exemple')}</p>
+            </div>
+
+            <div class="bs-cmp" data-at="1" style="--i:1">
+              <div class="bs-box">
+                <p class="bs-k">{tt('Fiche')}</p>
+                <p class="bs-big" dir="ltr">30&nbsp;g</p>
+              </div>
+              <div class="bs-box bs-dark" data-at="2">
+                <p class="bs-k bs-k-d">{tt('Balance')}</p>
+                <p class="bs-big" dir="ltr" data-read>30&nbsp;g</p>
+                <p class="bs-plus" dir="ltr" data-at="2" style="--i:2">+10 g</p>
+              </div>
+            </div>
+
+            <ul class="bs-lad">
+              <li data-at="3" style="--i:0"><span>{tt('Par pièce')}</span><span dir="ltr"><b data-piece>{fmt(0.8, 2)}</b> {tt('DH')}</span></li>
+              <li data-at="3" style="--i:1"><span>{tt('Par jour')}</span><span dir="ltr"><b data-day>{fmt(PCS * 0.8)}</b> {tt('DH')}</span></li>
+              <li data-at="3" style="--i:2"><span>{tt('Par mois')}</span><span dir="ltr"><b data-month>{fmt(PCS * 0.8 * 30)}</b> {tt('DH')}</span></li>
+              <li class="bs-year" data-at="3" style="--i:3"><span>{tt('Par an')}</span><span dir="ltr"><b data-year data-to={PCS * 288}>{fmt(PCS * 288)}</b> {tt('DH')}</span></li>
+            </ul>
+
+            <label class="bs-sl" data-at="3" style="--i:4">
+              <span class="bs-sl-t"><span>{tt('Vos pièces par jour')}</span><b dir="ltr" data-pcs-out>{PCS}</b></span>
+              <input type="range" min="30" max="500" step="10" value={PCS} data-pcs aria-label={tt('Vos pièces par jour')} />
+            </label>
+
+            <div class="bs-stamp" data-at="4" aria-hidden="true"><span>{tt('ÉCART REPÉRÉ')}</span><small>{tt('en dirhams')}</small></div>
+          </div>
+          <button type="button" class="bs-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bs-grid { background: radial-gradient(55% 60% at 22% 50%, rgba(255, 255, 255, .09), transparent 70%), repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 44px); }
+  .bs-sheet-wrap { container-type: inline-size; position: relative; }
+  .bs-sheet { position: relative; max-width: 28em; margin-inline: auto; font-size: clamp(10.5px, 3.3cqw, 15px); padding: 2.2em 2em 1.8em; border-radius: .5em; background: #FFFDF8; color: #001E3E; box-shadow: 0 5em 7em -3em rgba(0, 0, 0, .75), 0 0 0 1px rgba(0, 0, 0, .06); transform: rotate(-1.4deg); cursor: pointer; }
+  .bs-sheet::before { content: ""; position: absolute; inset: 0 0 auto; height: .5em; border-radius: .5em .5em 0 0; background: #05B962; }
+  .bs-k { font-size: .75em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #6B7A8C; }
+  .bs-k-d { color: rgba(255, 255, 255, .6); }
+  .bs-n { margin-top: .15em; font-size: 1.7em; font-weight: 800; line-height: 1.05; letter-spacing: -.01em; }
+  .bs-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1em; }
+  .bs-ex { padding: .35em .8em; border-radius: 999px; background: #E3F6EC; color: #00804A; font-size: .8em; font-weight: 700; white-space: nowrap; }
+  .bs-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: .8em; margin-top: 1.4em; padding-bottom: 1.2em; border-bottom: 1px dashed rgba(0, 30, 62, .22); }
+  .bs-box { position: relative; padding: .8em 1em 1em; border-radius: .8em; background: #F2F4F7; }
+  .bs-dark { background: #001E3E; color: #fff; }
+  .bs-big { margin-top: .2em; font-size: 2.6em; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .bs-plus { position: absolute; inset-inline-end: .7em; top: .7em; padding: .15em .6em; border-radius: 999px; background: #E5484D; color: #fff; font-size: .85em; font-weight: 800; }
+  .bs-lad { margin-top: .6em; }
+  .bs-lad li { display: flex; align-items: baseline; justify-content: space-between; gap: 1em; padding: .6em 0; border-bottom: 1px solid rgba(0, 30, 62, .08); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .bs-lad b { font-weight: 800; }
+  .bs-year { margin-top: .2em; padding-top: .8em !important; border-top: 2px solid #001E3E; border-bottom: 0 !important; font-size: 1.3em; }
+  .bs-year b { font-size: 1.25em; }
+  .bs-sl { display: block; margin-top: 1em; padding: .8em 1em; border-radius: .8em; background: #F2F4F7; }
+  .bs-sl-t { display: flex; justify-content: space-between; gap: 1em; font-size: .9em; font-weight: 700; }
+  .bs-sl-t b { color: #00804A; font-variant-numeric: tabular-nums; }
+  .bs-sl input { width: 100%; margin-top: .6em; accent-color: #05B962; height: 1.6em; cursor: pointer; }
+  .bs-stamp { position: absolute; inset-inline-end: 1.2em; top: 5.2em; display: grid; justify-items: center; padding: .35em 1em .45em; border: .2em solid #00804A; border-radius: .5em; box-shadow: inset 0 0 0 .1em #00804A; color: #00804A; background: rgba(255, 253, 248, .6); mix-blend-mode: multiply; pointer-events: none; transform: rotate(-8deg); }
+  .bs-stamp span { font-size: 1.3em; font-weight: 800; letter-spacing: .1em; line-height: 1; }
+  .bs-stamp small { font-size: .75em; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  .bs-redo { display: flex; align-items: center; gap: .5em; margin: 1.4rem auto 0; padding: .55rem 1rem; border-radius: 999px; color: rgba(255, 255, 255, .75); font-size: .9rem; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); transition: background .2s; }
+  .bs-redo:hover { background: rgba(255, 255, 255, .1); }
+
+  /* what appears at which step */
+  .bs [data-at] { opacity: 0; transform: translateY(.9em); transition: opacity .5s calc(var(--i, 0) * .22s), transform .55s calc(var(--i, 0) * .22s) cubic-bezier(.2, .8, .2, 1); }
+  .bs .bs-plus[data-at] { transform: scale(.4); transition-timing-function: cubic-bezier(.3, 1.6, .5, 1); transition-delay: .9s; }
+  .bs .bs-stamp[data-at] { transform: rotate(-8deg) scale(1.9); transition-timing-function: cubic-bezier(.3, 1.3, .5, 1); transition-delay: .5s; }
+  .bs.k1 [data-at="1"], .bs.k2 [data-at="2"], .bs.k3 [data-at="3"], .bs.k4 [data-at="4"] { opacity: 1; transform: none; }
+  .bs.k4 .bs-stamp[data-at] { transform: rotate(-8deg); }
+
+  .bs-it { display: flex; gap: 1rem; padding: 1rem 1.1rem; border-radius: 1.2rem; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); transition: background .4s, box-shadow .4s; }
+  .bs-ico { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 1rem; background: rgba(255, 255, 255, .1); color: #05B962; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15); transition: background .4s, color .4s; }
+  .bs-it.on { background: rgba(5, 185, 98, .1); box-shadow: inset 0 0 0 1px rgba(5, 185, 98, .45); }
+  .bs-it.on .bs-ico { background: #05B962; color: #001E3E; }
+  [dir="rtl"] .bs-sheet { transform: rotate(1.4deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .bs [data-at] { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-bs]');
+  if (root) {
+    const loc = root.dataset.loc || 'fr-FR';
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const items = [...root.querySelectorAll<HTMLElement>('[data-it]')];
+    const sheet = q('[data-sheet]'), redo = q('[data-redo]');
+    const read = q('[data-read]'), year = q('[data-year]');
+    const slider = q<HTMLInputElement>('[data-pcs]'), out = q('[data-pcs-out]');
+    const nb = '\u00a0';
+    const fmt = (n: number, d = 0) => n.toLocaleString(loc, { minimumFractionDigits: d, maximumFractionDigits: d }).replace(/[\u202f\u00a0]/g, ' ');
+    // 10 g x 80 DH/kg = 0,80 DH a piece; 30 days a month; 360 days a year
+    const set = (n: number) => {
+      out.textContent = String(n);
+      q('[data-day]').textContent = fmt(n * 0.8);
+      q('[data-month]').textContent = fmt(n * 0.8 * 30);
+      year.dataset.to = String(n * 288);
+      year.textContent = fmt(n * 288);
+    };
+    const tween = (from: number, to: number, ms: number, fn: (v: number) => void) => {
+      const t0 = performance.now();
+      const f = (t: number) => { const k = Math.min(1, (t - t0) / ms); fn(from + (to - from) * (1 - Math.pow(1 - k, 3))); if (k < 1) requestAnimationFrame(f); };
+      requestAnimationFrame(f);
+    };
+    // the step at which each of the four points lights up: the sheet, the scale, the cost, the stamp
+    const LIGHT = [1, 2, 3, 4];
+    let timers: number[] = [];
+    const step = (n: number) => {
+      for (let k = 1; k <= 4; k++) root.classList.toggle('k' + k, k <= n);
+      items.forEach((el, i) => el.classList.toggle('on', n >= LIGHT[i]));
+    };
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const settle = () => { read.textContent = '40' + nb + 'g'; set(Number(slider.value)); };
+    const run = () => {
+      timers.forEach(clearTimeout); timers = [];
+      step(0); read.textContent = '30' + nb + 'g'; year.textContent = fmt(0);
+      const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+      at(350, () => step(1));
+      at(1500, () => { step(2); tween(30, 40, 900, v => { read.textContent = Math.round(v) + nb + 'g'; }); });
+      at(3200, () => { step(3); tween(0, Number(year.dataset.to), 1300, v => { year.textContent = fmt(Math.round(v)); }); });
+      at(5000, () => step(4));
+    };
+    // moving the slider shows the whole result at once, so the number and the animation never fight
+    slider.closest('label')!.addEventListener('click', e => e.stopPropagation());
+    slider.addEventListener('input', () => {
+      timers.forEach(clearTimeout); timers = [];
+      step(4); settle();
+    });
+    // the section reveals as it scrolls in (the dry cleaners page does this for every [data-tf] block)
+    if (still || !('IntersectionObserver' in window)) { root.classList.add('in'); step(4); settle(); }
+    else {
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { root.classList.add('in'); o.disconnect(); } }, { threshold: 0.12 }).observe(root);
+      let done = false;
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !done) { done = true; run(); o.disconnect(); } }, { threshold: 0.35 }).observe(sheet);
+      redo.addEventListener('click', run);
+      sheet.addEventListener('click', run);
+    }
+  }
+</script>
