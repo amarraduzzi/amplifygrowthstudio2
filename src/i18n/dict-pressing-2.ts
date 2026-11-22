@@ -34,6 +34,7 @@ export const pressing2En: Record<string, string> = {
   "À vous de jouer : touchez les articles.": "Your turn: tap the articles.",
   "Recommencer": "Start over",
   "Dépôt enregistré en": "Drop-off saved in",
+  "À vous de jouer : touchez une pièce.": "Your turn: tap a piece.",
 };
 export const pressing2Ar: Record<string, string> = {
   "Le voyage d’une chemise": "رحلة قميص",
@@ -69,4 +70,5 @@ export const pressing2Ar: Record<string, string> = {
   "À vous de jouer : touchez les articles.": "دورك الآن: المسوا الأصناف.",
   "Recommencer": "إعادة",
   "Dépôt enregistré en": "تم تسجيل الإيداع في",
+  "À vous de jouer : touchez une pièce.": "دورك الآن: المسّوا قطعة.",
 };

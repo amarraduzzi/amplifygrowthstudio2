@@ -1,127 +1,262 @@
 ---
-// "Voyez le rail": the shop's rails as the owner sees them. Eight drop-offs hang on two rails: ready, in
-// the works, late, not collected for 30+ days. Filter chips dim the rest, a tap opens a drop-off, "Marquer
-// prêt" moves it to ready and "Envoyer le WhatsApp" sends it. Invented first names and figures, said as such.
+// "Voyez le rail": the "En cours" screen of the till, rebuilt in HTML with a full list of drop-offs (12), the
+// rail above it where the ready pieces hang, and the detail card (tap a piece, "Tout prêt", "Remettre").
+// Everything works: filters with counts, search, sort, WhatsApp when the last piece is ready, the total to
+// collect. A ghost cursor plays it once; touch the screen and it is your turn. Six checks tick as you use it.
+// The till stays in French, like the real product. Demo shop, invented names and amounts.
 import Icon from './Icon.astro';
 import { tr, langOf } from '../i18n/t';
 const tt = tr(langOf(Astro.url));
-type S = 'ready' | 'work' | 'late' | 'lost';
-const D: [number, string, S, number, number, string][] = [
-  [1038, 'Nadia', 'ready', 12, 265, 'Chemises, robe'], [1039, 'Karim', 'ready', 3, 90, 'Costume 2 pièces'],
-  [1045, 'Meryem', 'ready', 7, 200, 'Djellaba, caftan'], [1044, 'Sanaa', 'work', 0, 120, 'Couette'],
-  [1041, 'Anas', 'work', 0, 75, 'Pantalons'], [1031, 'Salma', 'late', 5, 140, 'Manteau'],
-  [1022, 'Youssef', 'late', 9, 60, 'Chemises'], [987, 'Imane', 'lost', 2, 380, 'Costume 3 pièces'],
-];
-const CHIP: Record<S, string> = { ready: 'Prêt', work: 'En cours', late: 'En retard', lost: 'Non récupéré' };
-const MSG: Record<S, string> = {
-  ready: 'Prêt sur son rail. Un WhatsApp, et le client vient.',
-  work: 'Encore en traitement : rien à envoyer pour l’instant.',
-  late: 'En retard : à traiter avant que le client appelle.',
-  lost: 'Non récupéré depuis plus de 30 jours : il est sur la liste à relancer.',
-};
-const FILTERS: [string, string][] = [['all', 'Tout'], ['ready', 'Prêts'], ['late', 'En retard'], ['lost', 'Non récupérés']];
-const num = (n: number) => n.toLocaleString('fr-FR');
+const feats = [
+  ['search', 'Retrouvé en une seconde', 'Par numéro, téléphone ou nom, même un dépôt remis il y a un mois.'],
+  ['door', 'Le rail ou l’étagère', 'Prêt sur « Rail 12 » : celui qui remet sait où chercher.'],
+  ['bell', 'En retard', 'Les dépôts qui auraient dû être prêts, en couleur, avant que le client appelle.'],
+  ['box', 'Non récupérés', 'Prêts depuis 30 jours ou plus : la liste à relancer, avec ce qu’il reste à encaisser.'],
+  ['box', 'Pièce par pièce', 'Chaque pièce est cochée prête à son tour : « 3/5 prêts ». Le client prend ce qui est prêt et revient pour le reste.'],
+  ['message', 'WhatsApp automatique', 'En option : avec votre propre numéro WhatsApp Business, le message « prêt » part tout seul. Sans cela, le bouton de la caisse reste là.'],
+] as const;
 ---
-<div class="rl-box rounded-[2rem] bg-navy p-5 text-white ring-1 ring-white/10 md:p-8" data-rl data-f="all" data-sel="0">
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <p class="display text-3xl leading-[0.95] sm:text-[2.6rem]">{tt('Voyez le rail.')}</p>
-    <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/70 ring-1 ring-white/15">{tt('Exemple d’illustration')}</span>
-  </div>
-  <div class="mt-5 flex flex-wrap gap-2" role="group" aria-label={tt('Filtrer')}>
-    {FILTERS.map(([k, l]) => <button type="button" class="rl-chip rounded-full px-4 py-2 text-sm font-semibold ring-1 ring-white/20" data-filter={k} aria-pressed={String(k === 'all')}>{tt(l)}</button>)}
-  </div>
-
-  <div class="mt-6 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
-    <ul class="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-4">
-      {D.map(([n, who, s, rail, due], i) => (
-        <li class="rl-card relative pt-3" data-i={i} data-state={s} data-due={due}>
-          <span class="absolute -inset-x-1.5 top-0 h-1 rounded-full bg-white/30" aria-hidden="true"></span>
-          <button type="button" class="rl-hang block w-full rounded-2xl bg-white/[0.08] p-3 text-start ring-1 ring-white/15" data-pick={i}>
-            <span class="rl-dot mb-2 block size-2.5 rounded-full"></span>
-            <span class="display block text-2xl leading-none" dir="ltr">{n}</span>
-            <span class="mt-1 block truncate text-sm font-semibold">{who}</span>
-            <span class="rl-lab mt-2 block truncate text-[0.7rem] font-semibold uppercase tracking-wide">{tt(CHIP[s])}</span>
-          </button>
-        </li>
-      ))}
-    </ul>
-
-    <div class="relative min-h-[17rem] rounded-[1.5rem] bg-white/[0.07] p-5 ring-1 ring-white/10" aria-live="polite">
-      {D.map(([n, who, s, rail, due, what], i) => (
-        <div class="rl-pan" data-pan={i} data-state={s}>
-          <p class="flex items-center justify-between gap-2"><span class="display text-3xl" dir="ltr">N° {n}</span><span class="rl-pill rounded-full px-2.5 py-1 text-xs font-bold"><span class="rl-t-ready">{tt(CHIP.ready)}</span><span class="rl-t-work">{tt(CHIP.work)}</span><span class="rl-t-late">{tt(CHIP.late)}</span><span class="rl-t-lost">{tt(CHIP.lost)}</span></span></p>
-          <p class="mt-1 font-semibold">{who}<span class="font-normal text-white/60"> · {tt(what)}</span></p>
-          <p class="mt-4 text-[0.95rem] text-white/75"><span class="rl-t-ready">{tt(MSG.ready)}</span><span class="rl-t-work">{tt(MSG.work)}</span><span class="rl-t-late">{tt(MSG.late)}</span><span class="rl-t-lost">{tt(MSG.lost)}</span></p>
-          <p class="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-white/65"><span class="rl-rail">{tt('Rail')} {rail || 4}</span><span dir="ltr">{tt('Reste à payer')} : <b class="text-white">{num(due)} DH</b></span></p>
-          <button type="button" class="rl-mark mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 font-semibold text-navy" data-mark={i}><Icon name="check" class="size-4" />{tt('Marquer prêt')}</button>
-          <button type="button" class="rl-send mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-green px-5 font-semibold text-navy" data-send={i}><Icon name="message" class="size-4" />{tt('Envoyer le WhatsApp')}</button>
-          <p class="rl-sent mt-5 inline-flex items-center gap-2 rounded-full bg-[#25D366]/20 px-4 py-2 text-sm font-semibold text-[#6BE3A0]"><Icon name="check" class="size-4" />{tt('WhatsApp envoyé à')} {who}</p>
+<div class="rv" data-rv>
+  <p class="mb-3 flex items-center gap-2 text-sm font-semibold text-green-deep"><span class="sl-live size-2 rounded-full bg-green"></span>{tt('À vous de jouer : touchez une pièce.')}</p>
+  <div class="rv-screen relative overflow-hidden rounded-[1.4rem] bg-[#04122a] text-white shadow-[0_50px_90px_-45px_rgba(0,30,62,.9)] ring-1 ring-white/15" style="font-size:clamp(10.5px,1.2vw,14px)" dir="ltr" lang="fr">
+    <!-- top bar -->
+    <div class="flex items-center justify-between gap-[1em] border-b border-white/10 px-[1em] py-[0.7em]">
+      <div class="flex min-w-0 items-center gap-[1em]">
+        <span class="grid size-[2.4em] shrink-0 place-items-center rounded-[0.7em] bg-green text-[0.8em] font-bold text-navy">PD</span>
+        <p class="hidden leading-tight sm:block"><b class="block">Pressing Démo</b><span class="text-[0.8em] text-white/50">09:41 · Sofia</span></p>
+        <div class="flex gap-[0.4em] overflow-x-auto rounded-[0.9em] bg-white/[0.05] p-[0.3em] font-semibold text-white/70">
+          <span class="whitespace-nowrap px-[0.8em] py-[0.5em]">+ Nouveau dépôt</span>
+          <span class="flex items-center gap-[0.4em] whitespace-nowrap rounded-[0.7em] bg-green px-[0.9em] py-[0.5em] text-navy"><Icon name="shirt" class="size-[1.1em]" />En cours <b class="rounded-full bg-navy/15 px-[0.5em] text-[0.85em]" data-tab-n>12</b></span>
+          <span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">Clients</span><span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">Tournées</span><span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">Caisse</span>
         </div>
-      ))}
+      </div>
+      <p class="hidden shrink-0 items-center gap-[0.5em] text-[0.85em] font-semibold text-white/60 lg:flex"><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">FR</span><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">Sans impression</span><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">Verrouiller</span></p>
     </div>
+
+    <!-- the rail -->
+    <div class="border-b border-white/10 px-[1em] pb-[0.6em] pt-[0.6em]">
+      <p class="flex items-center justify-between text-[0.8em] font-semibold uppercase tracking-wider text-white/45"><span>Sur le rail</span><span data-rail-n class="normal-case tracking-normal text-green">0</span></p>
+      <div class="rv-rail relative mt-[0.4em] h-[8.4em] overflow-x-auto overflow-y-hidden"><div class="rv-bar absolute inset-x-0 top-[0.5em] h-[0.3em] rounded-full"></div><div class="rv-hangers relative flex min-w-max gap-[0.3em] pt-[0.5em]" data-hangers></div></div>
+    </div>
+
+    <!-- filters -->
+    <div class="flex flex-wrap items-center gap-[0.5em] px-[1em] py-[0.8em]">
+      <label class="flex min-w-[10em] flex-1 items-center gap-[0.6em] rounded-[0.8em] bg-white/[0.05] px-[0.9em] py-[0.55em] ring-1 ring-white/15 focus-within:ring-green sm:max-w-[16em]"><Icon name="search" class="size-[1.1em] text-white/50" /><input type="text" data-q placeholder="N°, téléphone ou nom" class="w-full bg-transparent text-white outline-none placeholder:text-white/40" autocomplete="off" /></label>
+      <div class="flex flex-wrap gap-[0.4em] font-semibold" data-chips></div>
+      <div class="ms-auto hidden items-center gap-[0.3em] rounded-full bg-white/[0.05] p-[0.25em] text-[0.85em] font-semibold sm:flex"><span class="px-[0.6em] text-white/50">Tri</span><button type="button" class="rv-s rounded-full px-[0.8em] py-[0.3em]" data-sort="due">Échéance</button><button type="button" class="rv-s rounded-full px-[0.8em] py-[0.3em]" data-sort="dep">Date de dépôt</button></div>
+    </div>
+
+    <!-- list + detail -->
+    <div class="grid border-t border-white/10 md:grid-cols-[1.5fr_1fr]">
+      <ul class="rv-list max-h-[24em] overflow-y-auto p-[0.6em] md:max-h-[27em]" data-list></ul>
+      <div class="border-t border-white/10 p-[1em] md:border-s md:border-t-0" data-detail></div>
+    </div>
+
+    <p class="rv-toast pointer-events-none absolute end-[1em] top-[4.2em] z-20 flex max-w-[22em] items-center gap-[0.6em] rounded-[1em] bg-white p-[0.7em] text-[#001E3E] shadow-xl" data-toast aria-live="polite"><span class="grid size-[2.2em] shrink-0 place-items-center rounded-full bg-[#25D366] text-white"><Icon name="message" class="size-[1.2em]" /></span><span class="leading-tight"><b class="block" data-toast-t></b><span class="text-black/60" data-toast-x></span></span></p>
+    <span class="rv-ghost pointer-events-none absolute start-0 top-0 z-30 hidden size-[2.6em] -translate-x-1/2 -translate-y-1/4 text-white drop-shadow-lg" data-ghost aria-hidden="true"><svg viewBox="0 0 24 24" class="size-full" fill="currentColor" stroke="#001E3E" stroke-width="1.2"><path d="M5 3l14 7-6 2-2 6z" /></svg></span>
   </div>
-  <p class="mt-6 flex flex-wrap items-baseline gap-x-3"><span class="text-white/60">{tt('À encaisser sur ces dépôts')}</span><span class="display text-4xl text-green tabular-nums" dir="ltr"><span data-total>0</span> DH</span></p>
+  <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
+    <p class="text-sm text-muted">{tt('Exemple d’illustration')}</p>
+    <p class="flex items-baseline gap-3"><span class="text-muted">{tt('À encaisser sur ces dépôts')}</span><span class="display text-4xl leading-none text-green-deep tabular-nums sm:text-5xl"><span data-total>0</span> DH</span></p>
+  </div>
+  <ul class="mt-12 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    {feats.map(([i, h, x], k) => (
+      <li class="rv-f flex items-start gap-4 rounded-3xl bg-white p-4 ring-1 ring-line" data-f={k}>
+        <span class="rv-fi grid size-11 shrink-0 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i} class="size-5" /><Icon name="check" class="rv-ok size-5" /></span>
+        <span><b class="block">{tt(h)}</b><span class="mt-1 block text-[0.92rem] leading-relaxed text-muted">{tt(x)}</span></span>
+      </li>
+    ))}
+  </ul>
 </div>
 
 <style is:global>
-  .rl-chip { transition: background-color .3s, color .3s; }
-  .rl-chip[aria-pressed="true"] { background: #05B962; color: #001E3E; box-shadow: none; }
-  .rl-card { transition: opacity .4s, transform .4s; transform-origin: top center; animation: rl-sway 5s ease-in-out infinite; animation-delay: calc(var(--i, 0) * -.7s); }
-  .rl-hang { transition: transform .35s cubic-bezier(.3,1.6,.5,1), background-color .3s, box-shadow .3s; }
-  .rl-card:hover .rl-hang { transform: translateY(3px); }
-  .rl-box[data-f="ready"] .rl-card:not([data-state="ready"]), .rl-box[data-f="late"] .rl-card:not([data-state="late"]), .rl-box[data-f="lost"] .rl-card:not([data-state="lost"]) { opacity: .22; }
-  .rl-card[data-on="1"] .rl-hang { background: #fff; color: #001E3E; box-shadow: 0 0 0 3px #05B962; }
-  .rl-card[data-on="1"] .rl-lab { color: #00804A; }
-  .rl-card[data-state="ready"] .rl-dot { background: #05B962; }
-  .rl-card[data-state="work"] .rl-dot { background: #4EA3FF; }
-  .rl-card[data-state="late"] .rl-dot { background: #F5B301; animation: rl-ping 1.6s infinite; }
-  .rl-card[data-state="lost"] .rl-dot { background: #FF6B57; animation: rl-ping 1.6s infinite; }
-  .rl-card[data-state="late"] .rl-lab { color: #F5B301; } .rl-card[data-state="lost"] .rl-lab { color: #FF8F7E; } .rl-card[data-state="ready"] .rl-lab { color: #5EE0A0; } .rl-card[data-state="work"] .rl-lab { color: #8CC4FF; }
-  .rl-pan { display: none; } .rl-pan.on { display: block; animation: chat-in .45s cubic-bezier(.2,.7,.2,1) both; }
-  .rl-pan [class^="rl-t-"] { display: none; }
-  .rl-pan[data-state="ready"] .rl-t-ready, .rl-pan[data-state="work"] .rl-t-work, .rl-pan[data-state="late"] .rl-t-late, .rl-pan[data-state="lost"] .rl-t-lost { display: inline; }
-  .rl-pill { background: rgba(255,255,255,.12); }
-  .rl-pan[data-state="ready"] .rl-pill { background: #05B962; color: #001E3E; } .rl-pan[data-state="late"] .rl-pill { background: #F5B301; color: #001E3E; } .rl-pan[data-state="lost"] .rl-pill { background: #FF6B57; color: #001E3E; }
-  .rl-mark, .rl-send, .rl-sent { display: none; }
-  .rl-pan[data-state="work"] .rl-mark { display: inline-flex; }
-  .rl-pan:not([data-state="work"]):not([data-sent]) .rl-send { display: inline-flex; }
-  .rl-pan[data-sent]:not([data-state="work"]) .rl-sent { display: inline-flex; }
-  .rl-pan[data-state="work"] .rl-rail { display: none; }
-  @keyframes rl-sway { 0%, 100% { transform: rotate(-.8deg); } 50% { transform: rotate(.8deg); } }
-  @keyframes rl-ping { 0% { box-shadow: 0 0 0 0 currentColor; } 70% { box-shadow: 0 0 0 8px transparent; } }
-  .rl-card[data-state="late"] .rl-dot { color: rgba(245,179,1,.6); } .rl-card[data-state="lost"] .rl-dot { color: rgba(255,107,87,.6); }
-  @media (prefers-reduced-motion: reduce) { .rl-card, .rl-dot, .rl-pan.on { animation: none !important; } }
+  .rv-bar { background: linear-gradient(#aab6c4, #6c7a8c); }
+  .rv-ok { display: none; }
+  .rv-f { transition: background-color .4s, box-shadow .4s; }
+  .rv-f.on { background: #E9F8EF; box-shadow: inset 0 0 0 2px #05B962; }
+  .rv-f.on .rv-fi { background: #05B962; color: #001E3E; }
+  .rv-f.on .rv-fi > svg:first-child { display: none; }
+  .rv-f.on .rv-ok { display: block; animation: rv-pop .5s cubic-bezier(.3,1.6,.5,1) both; }
+  @keyframes rv-pop { from { transform: scale(.3); } }
+  .rv-chip { display: inline-flex; align-items: center; gap: .4em; border-radius: 999px; background: rgba(255,255,255,.07); padding: .45em .9em; color: rgba(255,255,255,.75); transition: background-color .25s; }
+  .rv-chip:hover { background: rgba(255,255,255,.14); }
+  .rv-chip.on { background: #05B962; color: #001E3E; }
+  .rv-chip i { font-style: normal; opacity: .6; }
+  .rv-s.on { background: #001E3E; color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
+  .rv-row { display: grid; grid-template-columns: 3.2em 1fr auto; align-items: center; gap: .8em; width: 100%; border-radius: .8em; padding: .7em .9em; text-align: start; background: rgba(255,255,255,.04); box-shadow: inset 0 0 0 1px rgba(255,255,255,.07); margin-bottom: .4em; transition: background-color .25s, box-shadow .25s, opacity .5s, transform .5s; }
+  @media (min-width: 640px) { .rv-row { grid-template-columns: 3.2em 1fr 7em 5.5em 5em; } }
+  .rv-row:hover { background: rgba(255,255,255,.09); }
+  .rv-row.sel { background: rgba(5,185,98,.14); box-shadow: inset 0 0 0 1.5px #05B962; }
+  .rv-row.leave { opacity: 0; transform: translateX(30%); }
+  .rv-row .rv-bar2 { height: .3em; border-radius: 99px; background: rgba(255,255,255,.12); overflow: hidden; margin-top: .3em; }
+  .rv-row .rv-bar2 i { display: block; height: 100%; background: #05B962; transition: width .5s; }
+  .rv-late .rv-dot, .rv-late-pulse { animation: rv-pulse 1.6s ease-in-out infinite; }
+  @keyframes rv-pulse { 50% { opacity: .35; } }
+  .rv-pc { display: flex; width: 100%; align-items: center; gap: .8em; border-radius: .8em; background: rgba(255,255,255,.06); padding: .7em .8em; text-align: start; margin-bottom: .45em; transition: background-color .25s; }
+  .rv-pc:hover { background: rgba(255,255,255,.12); }
+  .rv-pc .rv-c { display: grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: 50%; box-shadow: inset 0 0 0 2px rgba(255,255,255,.35); color: transparent; transition: background-color .3s, color .3s, box-shadow .3s; }
+  .rv-pc.r { background: rgba(5,185,98,.14); }
+  .rv-pc.r .rv-c { background: #05B962; color: #001E3E; box-shadow: none; animation: rv-pop .4s cubic-bezier(.3,1.6,.5,1); }
+  .rv-h { width: 5em; flex: none; transform-origin: 50% 0; text-align: center; animation: rv-swing 1.3s cubic-bezier(.2,.8,.3,1) both; }
+  .rv-h.still { animation: none; }
+  .rv-h.drop { animation: rv-fall .6s ease-in both; }
+  @keyframes rv-swing { 0% { transform: translateY(-120%) rotate(-24deg); opacity: 0; } 35% { opacity: 1; transform: translateY(0) rotate(14deg); } 60% { transform: rotate(-8deg); } 80% { transform: rotate(4deg); } 100% { transform: none; } }
+  @keyframes rv-fall { to { transform: translateY(160%) rotate(12deg); opacity: 0; } }
+  .rv-h svg { width: 2.2em; height: 2.2em; margin: 0 auto; display: block; color: #c5cfdb; }
+  .rv-g { margin: -.3em auto 0; width: 3.6em; height: 3em; border-radius: .4em .4em .9em .9em; border: 1.5px solid; }
+  .rv-h.ready .rv-g { background: rgba(5,185,98,.25); border-color: #05B962; }
+  .rv-h.lost .rv-g { background: rgba(255,107,87,.22); border-color: #FF6B57; }
+  .rv-h.late .rv-g { background: transparent; border: 1.5px dashed #F5B301; animation: rv-pulse 1.6s ease-in-out infinite; }
+  .rv-toast { opacity: 0; transform: translateY(-1.2em); transition: opacity .35s, transform .5s cubic-bezier(.2,1.2,.4,1); }
+  .rv-toast.show { opacity: 1; transform: none; }
+  .rv-ghost.show { display: block; }
+  .rv-ghost { transition: transform .8s cubic-bezier(.4,0,.2,1); }
+  .rv-ghost.tap { scale: .85; }
+  @media (prefers-reduced-motion: reduce) { .rv-h, .rv-ghost, .rv-row, .rv-toast { animation: none !important; transition: none !important; } }
 </style>
 
 <script>
-  document.querySelectorAll<HTMLElement>('[data-rl]').forEach((root) => {
-    const cards = [...root.querySelectorAll<HTMLElement>('.rl-card')];
-    const pans = [...root.querySelectorAll<HTMLElement>('.rl-pan')];
-    const total = root.querySelector<HTMLElement>('[data-total]')!;
-    cards.forEach((c, i) => c.style.setProperty('--i', String(i)));
-    const sum = () => {
-      const f = root.dataset.f!;
-      const n = cards.reduce((a, c) => a + (f === 'all' || c.dataset.state === f ? Number(c.dataset.due) : 0), 0);
-      total.textContent = n.toLocaleString('fr-FR');
+  type Pc = { n: string; p: number; r: boolean };
+  type Dep = { id: number; name: string; phone: string; pcs: Pc[]; due: number; ago: number; paid: number; loc: string; leaving?: boolean; fresh?: boolean };
+  type St = 'work' | 'ready' | 'late' | 'lost';
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mk = (id: number, name: string, phone: string, items: [string, number, number][], due: number, ago: number, paid: number, loc: string): Dep => ({ id, name, phone, pcs: items.map(([n, p, r]) => ({ n, p, r: !!r })), due, ago, paid, loc });
+  const seed = (): Dep[] => [
+    mk(1052, 'Nadia', '06 61 20 48 17', [['Chemise', 20, 0], ['Chemise', 20, 0], ['Robe', 50, 0]], 1, 0, 0, ''),
+    mk(1051, 'Karim', '06 62 33 90 41', [['Costume 2 pièces', 70, 1]], 0, 0, 0, 'Rail 3'),
+    mk(1050, 'Meryem', '06 70 15 62 08', [['Djellaba', 60, 1], ['Caftan', 120, 1]], 0, 0, 100, 'Rail 7'),
+    mk(1049, 'Sanaa', '06 61 84 27 53', [['Couette', 90, 0]], 2, 0, 0, ''),
+    mk(1048, 'Anas', '06 64 02 71 95', [['Pantalon', 25, 1], ['Pantalon', 25, 0], ['Chemise', 20, 0]], 1, 0, 0, ''),
+    mk(1047, 'Hind', '06 61 55 30 12', [['Manteau', 60, 0], ['Veste', 45, 0]], -1, 0, 0, ''),
+    mk(1046, 'Youssef', '06 68 41 76 20', [['Chemise', 20, 1], ['Chemise', 20, 1], ['Chemise', 20, 0], ['Chemise', 20, 0]], -2, 0, 0, ''),
+    mk(1045, 'Salma', '06 61 09 83 64', [['Costume 2 pièces', 70, 1], ['Chemise', 20, 1]], 0, 1, 50, 'Rail 12'),
+    mk(1044, 'Omar', '06 63 77 14 38', [['Rideau (m)', 30, 0], ['Rideau (m)', 30, 0]], 3, 0, 0, ''),
+    mk(1043, 'Laila', '06 61 92 05 77', [['Caftan', 120, 1]], -4, 5, 120, 'Étagère A'),
+    mk(1030, 'Imane', '06 66 28 40 91', [['Costume 2 pièces', 70, 1], ['Chemise', 20, 1]], -41, 41, 0, 'Étagère B'),
+    mk(1024, 'Mehdi', '06 61 73 58 26', [['Pantalon', 25, 1], ['Pantalon', 25, 1]], -33, 33, 0, 'Rail 9'),
+  ];
+  const LAB: Record<St, string> = { work: 'En nettoyage', ready: 'Prêt', late: 'En retard', lost: 'Non récupéré' };
+  const COL: Record<St, string> = { work: '#7CB8FF', ready: '#05B962', late: '#F5B301', lost: '#FF6B57' };
+  const status = (d: Dep): St => (d.pcs.every((p) => p.r) ? (d.ago >= 30 ? 'lost' : 'ready') : d.due < 0 ? 'late' : 'work');
+  const total = (d: Dep) => d.pcs.reduce((a, p) => a + p.p, 0);
+  const bal = (d: Dep) => Math.max(0, total(d) - d.paid);
+  const day = (n: number) => { const x = new Date(); x.setDate(x.getDate() + n); return x.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' }); };
+  const sumNames = (d: Dep) => { const m = new Map<string, number>(); d.pcs.forEach((p) => m.set(p.n, (m.get(p.n) || 0) + 1)); return [...m].map(([n, c]) => `${c} ${n}`).join(' · '); };
+  const hanger = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V7.5a2.2 2.2 0 1 0-2.2-2.2M12 9l9.5 6.2a1.3 1.3 0 0 1-.7 2.4H3.2a1.3 1.3 0 0 1-.7-2.4z"/></svg>';
+
+  document.querySelectorAll<HTMLElement>('[data-rv]').forEach((root) => {
+    const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const screen = $('.rv-screen'), ghost = $('[data-ghost]'), toast = $('[data-toast]'), list = $('[data-list]');
+    let deps = seed(), sel = 1048, filter = 'all', sort = 'due', q = '', ghosting = false, token = 0, shown = 0, built = false, toastT = 0;
+    const timers: number[] = [];
+    const feat = (k: number) => root.querySelector(`[data-f="${k}"]`)?.classList.add('on');
+    const money = (n: number) => n.toLocaleString('fr-FR');
+
+    const say = (t: string, x: string) => { $('[data-toast-t]').textContent = t; $('[data-toast-x]').textContent = x; toast.classList.add('show'); clearTimeout(toastT); toastT = window.setTimeout(() => toast.classList.remove('show'), 3800); };
+    const wa = (d: Dep) => { say(`WhatsApp → ${d.name}`, `Votre linge est prêt. Reste à payer : ${bal(d)} MAD.`); feat(5); };
+    const place = (d: Dep) => { if (!d.loc) d.loc = `Rail ${(d.id % 12) + 1}`; d.fresh = true; };
+    const afterReady = (d: Dep, was: St) => { if (was !== 'ready' && status(d) === 'ready') { place(d); wa(d); } };
+
+    const draw = () => {
+      const all = deps.filter((d) => !d.leaving || true);
+      const cnt: Record<string, number> = { all: deps.length, work: 0, ready: 0, late: 0, lost: 0 };
+      deps.forEach((d) => cnt[status(d)]++);
+      $('[data-tab-n]').textContent = String(deps.length);
+      $('[data-chips]').innerHTML = [['all', 'Tout'], ['work', 'En nettoyage'], ['ready', 'Prêt'], ['late', 'En retard'], ['lost', 'Non récupérés']].map(([k, l]) => `<button type="button" class="rv-chip ${filter === k ? 'on' : ''}" data-chip="${k}">${l} <i>${cnt[k]}</i></button>`).join('');
+      root.querySelectorAll<HTMLElement>('[data-sort]').forEach((b) => b.classList.toggle('on', b.dataset.sort === sort));
+      const term = q.trim().toLowerCase().replace(/\s/g, '');
+      const rows = all.filter((d) => (filter === 'all' || status(d) === filter) && (!term || `${d.id}${d.name}${d.phone}`.toLowerCase().replace(/\s/g, '').includes(term)))
+        .sort((a, b) => (sort === 'due' ? a.due - b.due || a.id - b.id : b.id - a.id));
+      list.innerHTML = rows.length ? rows.map((d) => {
+        const s = status(d), r = d.pcs.filter((p) => p.r).length, n = d.pcs.length;
+        return `<li><button type="button" class="rv-row ${d.id === sel ? 'sel' : ''} ${d.leaving ? 'leave' : ''}" data-row="${d.id}">
+          <span class="display text-[1.7em] leading-none tabular-nums">${d.id}</span>
+          <span class="min-w-0"><b class="block truncate">${d.name}</b><span class="block truncate text-[0.85em] text-white/50">${sumNames(d)}</span></span>
+          <span class="hidden sm:block"><span class="flex items-center gap-[0.4em] text-[0.82em] font-semibold" style="color:${COL[s]}"><i class="rv-dot size-[0.6em] rounded-full ${s === 'late' ? 'rv-late-pulse' : ''}" style="background:${COL[s]}"></i>${LAB[s]}</span><span class="rv-bar2 block"><i style="width:${(r / n) * 100}%"></i></span></span>
+          <span class="hidden text-[0.85em] text-white/60 sm:block">${day(d.due)}</span>
+          <span class="text-end font-bold tabular-nums ${bal(d) ? 'text-[#F5B301]' : 'text-white/45'}">${bal(d)} MAD</span></button></li>`;
+      }).join('') : '<li class="p-[1.5em] text-center text-white/45">Aucun dépôt.</li>';
+
+      const dp = deps.find((d) => d.id === sel);
+      const det = $('[data-detail]');
+      if (!dp) { det.innerHTML = '<p class="text-white/45">Touchez un dépôt.</p>'; }
+      else {
+        const s = status(dp), allR = dp.pcs.every((p) => p.r);
+        det.innerHTML = `<div class="flex items-start justify-between gap-[0.6em]"><div><p class="flex items-baseline gap-[0.6em]"><span class="display text-[2.2em] leading-none">${dp.id}</span><b class="text-[1.15em]">${dp.name}</b></p><p class="mt-[0.2em] text-[0.85em] text-white/50">${dp.phone}</p></div><span class="rounded-full px-[0.8em] py-[0.3em] text-[0.8em] font-bold text-navy" style="background:${COL[s]}">${LAB[s]}</span></div>
+          <p class="mt-[0.7em] flex flex-wrap gap-x-[1em] text-[0.88em] text-white/65"><span>${dp.pcs.length} pièces</span><span>${day(dp.due)}</span></p>
+          <p class="mb-[0.5em] mt-[0.9em] text-[0.8em] text-white/50">Touchez une pièce quand elle est prête</p>
+          ${dp.pcs.map((p, i) => `<button type="button" class="rv-pc ${p.r ? 'r' : ''}" data-piece="${i}"><span class="rv-c"><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l4 4 10-10"/></svg></span><span><b class="block">${p.n}</b><span class="text-[0.82em] text-white/50">${p.p} MAD</span></span></button>`).join('')}
+          <input type="text" data-loc value="${dp.loc}" placeholder="Emplacement (facultatif) : rail 12, étagère B…" class="mt-[0.3em] w-full rounded-[0.8em] bg-white/[0.05] px-[0.9em] py-[0.7em] text-[0.9em] outline-none ring-1 ring-white/15 placeholder:text-white/35 focus:ring-green" />
+          <p class="mt-[0.8em] flex justify-between text-white/60"><span>Total</span><span class="tabular-nums">${total(dp)} MAD</span></p>
+          <p class="flex justify-between font-bold"><span>Reste à payer</span><span class="tabular-nums ${bal(dp) ? 'text-[#F5B301]' : 'text-green'}">${bal(dp)} MAD</span></p>
+          <div class="mt-[0.9em] grid grid-cols-2 gap-[0.5em] font-bold"><button type="button" data-act="all" class="rounded-[0.9em] bg-[#2DD4BF] py-[0.8em] text-navy disabled:opacity-40" ${allR ? 'disabled' : ''}>Tout prêt</button><button type="button" data-act="hand" class="rounded-[0.9em] bg-white/10 py-[0.8em] ring-1 ring-white/15 disabled:opacity-35" ${allR ? '' : 'disabled'}>Remettre</button></div>`;
+      }
+      // the rail
+      const hs = deps.filter((d) => ['ready', 'lost', 'late'].includes(status(d)) || d.leaving);
+      $('[data-rail-n]').textContent = `${deps.filter((d) => ['ready', 'lost'].includes(status(d))).length} dépôts accrochés`;
+      $('[data-hangers]').innerHTML = hs.map((d) => { const s = d.leaving ? 'ready' : status(d); const cls = d.fresh ? '' : built ? 'still' : (still ? 'still' : ''); return `<div class="rv-h ${s} ${cls} ${d.leaving ? 'drop' : ''}">${hanger}<div class="rv-g"></div><p class="display mt-[0.3em] text-[1.25em] leading-none tabular-nums">${d.id}</p><p class="truncate text-[0.72em] ${s === 'late' ? 'text-[#F5B301]' : 'text-white/50'}">${s === 'late' ? 'retard' : d.loc || '—'}</p></div>`; }).join('');
+      deps.forEach((d) => (d.fresh = false));
+      built = true;
+      // total to collect
+      const tt2 = deps.reduce((a, d) => a + bal(d), 0), el = $('[data-total]'), from = shown;
+      shown = tt2;
+      if (still || from === 0) el.textContent = money(tt2);
+      else { const t0 = performance.now(); const f = (t: number) => { const k = Math.min(1, (t - t0) / 700); el.textContent = money(Math.round(from + (tt2 - from) * (1 - Math.pow(1 - k, 3)))); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
     };
-    const pick = (i: number) => {
-      cards.forEach((c, k) => { c.dataset.on = k === i ? '1' : '0'; });
-      pans.forEach((p, k) => p.classList.toggle('on', k === i));
+
+    const pick = (id: number) => { sel = id; draw(); };
+    const setChip = (k: string) => { filter = k; if (k === 'late') feat(2); if (k === 'lost') feat(3); draw(); };
+    const tap = (i: number) => { const d = deps.find((x) => x.id === sel); if (!d) return; const was = status(d); d.pcs[i].r = !d.pcs[i].r; feat(4); if (d.pcs[i].r) feat(1); if (status(d) === 'ready' || was === 'ready') d.ago = 0; afterReady(d, was); draw(); };
+    const allReady = () => { const d = deps.find((x) => x.id === sel); if (!d) return; const was = status(d); d.pcs.forEach((p) => (p.r = true)); feat(4); feat(1); d.ago = 0; afterReady(d, was); draw(); };
+    const hand = () => {
+      const d = deps.find((x) => x.id === sel); if (!d || !d.pcs.every((p) => p.r)) return;
+      const b = bal(d); d.leaving = true; draw(); say(`Remis · ${d.name}`, b ? `${b} MAD encaissés, le dépôt est fermé.` : 'Rien à encaisser, le dépôt est fermé.');
+      window.setTimeout(() => { deps = deps.filter((x) => x !== d); sel = (deps.find((x) => status(x) !== 'lost') || deps[0] || ({} as Dep)).id; draw(); }, 650);
     };
-    root.querySelectorAll<HTMLElement>('[data-filter]').forEach((b) => b.addEventListener('click', () => {
-      root.dataset.f = b.dataset.filter!;
-      root.querySelectorAll('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
-      sum();
-      const first = cards.findIndex((c) => root.dataset.f === 'all' || c.dataset.state === root.dataset.f);
-      if (first >= 0) pick(first);
-    }));
-    root.querySelectorAll<HTMLElement>('[data-pick]').forEach((b) => b.addEventListener('click', () => pick(Number(b.dataset.pick))));
-    root.querySelectorAll<HTMLElement>('[data-mark]').forEach((b) => b.addEventListener('click', () => {
-      const i = Number(b.dataset.mark); cards[i].dataset.state = 'ready'; pans[i].dataset.state = 'ready'; sum();
-    }));
-    root.querySelectorAll<HTMLElement>('[data-send]').forEach((b) => b.addEventListener('click', () => {
-      pans[Number(b.dataset.send)].dataset.sent = '1';
-    }));
-    pick(0); sum();
+    const reset = () => { token++; timers.forEach(clearTimeout); deps = seed(); sel = 1048; filter = 'all'; sort = 'due'; q = ''; shown = 0; built = false; ghosting = false; ghost.classList.remove('show'); toast.classList.remove('show'); (root.querySelector('[data-q]') as HTMLInputElement).value = ''; root.querySelectorAll('.rv-f').forEach((f) => f.classList.remove('on')); draw(); };
+
+    root.addEventListener('click', (e) => {
+      if (ghosting) return;
+      const t = (e.target as HTMLElement).closest<HTMLElement>('[data-row],[data-piece],[data-chip],[data-act],[data-sort]');
+      if (!t) return;
+      if (t.dataset.row) pick(Number(t.dataset.row));
+      else if (t.dataset.piece) tap(Number(t.dataset.piece));
+      else if (t.dataset.chip) setChip(t.dataset.chip);
+      else if (t.dataset.sort) { sort = t.dataset.sort; draw(); }
+      else if (t.dataset.act === 'all') allReady();
+      else if (t.dataset.act === 'hand') hand();
+    });
+    root.addEventListener('input', (e) => {
+      const t = e.target as HTMLInputElement;
+      if (t.matches('[data-q]')) { q = t.value; if (q.trim()) feat(0); const s = t.selectionStart; draw(); t.focus(); }
+      if (t.matches('[data-loc]')) { const d = deps.find((x) => x.id === sel); if (d) { d.loc = t.value; } }
+    });
+    root.addEventListener('change', (e) => { if ((e.target as HTMLElement).matches('[data-loc]')) { const act = document.activeElement; draw(); if (act) (act as HTMLElement).blur?.(); } });
+    screen.addEventListener('pointerdown', (e) => { if (ghosting && e.isTrusted) reset(); });
+    draw();
+    if (still) return;
+
+    const plan: [string, () => void][] = [
+      ['[data-chip="late"]', () => setChip('late')], ['[data-chip="all"]', () => setChip('all')], ['[data-row="1048"]', () => pick(1048)],
+      ['[data-piece="1"]', () => tap(1)], ['[data-piece="2"]', () => tap(2)], ['[data-act="hand"]', hand],
+    ];
+    const play = () => {
+      const my = ++token; ghosting = true; ghost.classList.add('show'); let i = 0;
+      const step = () => {
+        if (my !== token) return;
+        if (i >= plan.length) { ghosting = false; ghost.classList.remove('show'); return; }
+        const [sel0, act] = plan[i++];
+        const el = root.querySelector<HTMLElement>(sel0);
+        if (!el) { step(); return; }
+        const lst = list; if (lst.contains(el)) lst.scrollTop = Math.max(0, el.offsetTop - lst.clientHeight / 3);
+        const a = el.getBoundingClientRect(), b = screen.getBoundingClientRect();
+        ghost.style.transform = `translate(${a.left - b.left + a.width * 0.6}px, ${a.top - b.top + a.height * 0.55}px)`;
+        timers.push(window.setTimeout(() => { if (my !== token) return; ghost.classList.add('tap'); timers.push(window.setTimeout(() => { ghost.classList.remove('tap'); const wasG = ghosting; act(); ghosting = wasG; }, 140)); }, 850));
+        timers.push(window.setTimeout(step, i === plan.length ? 2300 : 1800));
+      };
+      ghost.style.transition = 'none'; ghost.style.transform = 'translate(80%, 45%)'; void ghost.offsetWidth; ghost.style.transition = '';
+      timers.push(window.setTimeout(step, 400));
+    };
+    new IntersectionObserver((es, io) => { if (es[0].isIntersecting) { io.disconnect(); play(); } }, { threshold: 0.25 }).observe(screen);
   });
 </script>

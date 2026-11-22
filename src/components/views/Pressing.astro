@@ -20,14 +20,6 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
 const wa = tt('Bonjour, je voudrais voir Amplify pour mon pressing.');
-const counter = [
-  ['search', 'Retrouvé en une seconde', 'Par numéro, téléphone ou nom, même un dépôt remis il y a un mois.'],
-  ['door', 'Le rail ou l’étagère', 'Prêt sur « Rail 12 » : celui qui remet sait où chercher.'],
-  ['bell', 'En retard', 'Les dépôts qui auraient dû être prêts, en couleur, avant que le client appelle.'],
-  ['box', 'Non récupérés', 'Prêts depuis 30 jours ou plus : la liste à relancer, avec ce qu’il reste à encaisser.'],
-  ['box', 'Pièce par pièce', 'Chaque pièce est cochée prête à son tour : « 3/5 prêts ». Le client prend ce qui est prêt et revient pour le reste.'],
-  ['message', 'WhatsApp automatique', 'En option : avec votre propre numéro WhatsApp Business, le message « prêt » part tout seul. Sans cela, le bouton de la caisse reste là.'],
-] as const;
 const rounds = [
   ['pin', 'Ramassage à domicile', 'L’adresse, le jour, l’heure et les frais. Au retour du chauffeur, le ramassage devient un dépôt en un geste.'],
   ['truck', 'Livraison', 'Un dépôt prêt livré chez le client. Les frais s’ajoutent, le chauffeur encaisse le reste.'],
@@ -134,14 +126,6 @@ const faq = [
       <p class="mt-5 max-w-xl text-lg text-muted">Le dépôt est propre : vous dites sur quel rail il attend, et le client reçoit un WhatsApp avec le reste à payer. Au retrait, la caisse encaisse et rend la monnaie.</p>
     </div>
     <div class="mt-10"><PressingRail /></div>
-    <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-      {counter.map(([i, h, x], k) => (
-        <li class="tf" style={`--d:${k * 90}ms`}>
-          <span class="grid size-11 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i} class="size-5" /></span>
-          <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
-        </li>
-      ))}
-    </ul>
   </section>
 
   <!-- the client's tracking page -->
