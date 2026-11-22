@@ -4,7 +4,7 @@ Alles staat in `src/config.ts` (contact) en `src/i18n/fr.ts` (teksten). Placehol
 
 | Wat | Waar | Status |
 |---|---|---|
-| WhatsApp-nummer | config.ts `whatsapp` | Voorlopig 0660353741, bevestigen |
+| WhatsApp-nummer | config.ts `whatsapp` | 0611053649 (bevestigd). Zelfde nummer in de app (betaalbewijs en upgradepagina) |
 | E-mail | config.ts `email` | Voorlopig Gmail, later adres op het eigen domein |
 | Adres en postcode (zelfde als Google Bedrijfsprofiel) | config.ts `street`, `postalCode` | Open |
 | Openingstijden | config.ts `hours` | Open |
@@ -15,10 +15,10 @@ Alles staat in `src/config.ts` (contact) en `src/i18n/fr.ts` (teksten). Placehol
 | Oprichters (Over ons) | nog te bouwen | Open |
 | TPE-koppeling live | config.ts `FEATURES.tpe` | Staat op false. Tekst is klaar (FR/EN/AR). Op true zetten zodra de koppeling getest werkt, en invullen welke terminals en banken |
 | Corne de gazelle-voorbeeld (80 DH/kg, 150 stuks per dag) | Bakery.astro | Indicatief, controleer met je leverancier. Staat als « Exemple » op de pagina |
-| Arabische en Engelse versie | `src/i18n/ar.ts`, `en.ts` | Na akkoord op het Frans |
+| Arabische en Engelse versie | `src/i18n/ar.ts`, `en.ts` | Klaar (FR/EN/AR). Nieuwe Franse tekst altijd ook in de EN- en AR-bestanden zetten |
 
 ## Op de dag dat het domein live gaat
-1. `src/config.ts`: `live: true`.
+1. `src/config.ts`: `live: true` (staat al op true).
 2. In Cloudflare Pages het domein toevoegen onder Custom domains.
 3. Search Console en Bing Webmaster Tools koppelen, sitemap insturen: `/sitemap-index.xml`.
 
