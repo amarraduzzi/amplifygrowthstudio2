@@ -1,0 +1,218 @@
+---
+// "Le soir, la caisse": one evening at the till. Light section, dark till on the start side.
+// Payments drop onto the day's ledger (cash and card count up), the ledger gives way to the blind count
+// (the drawer is counted, then the expected amount shows and the gap is noted), the Z report prints out,
+// and the owner gets the summary on their phone. The four points on the other side light up in turn.
+// Plays once when in view, a tap replays it. Demo shop, invented names and amounts.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+interface Props { items: readonly (readonly [string, string, string])[] }
+const { items } = Astro.props;
+// [time, deposit no., name, kind, method, amount]
+const led = [
+  ['09:40', '1031', 'Youssef', 'Retrait', 'cash', 260],
+  ['11:15', '1038', 'Salma', 'Dépôt', 'card', 150],
+  ['13:05', '1040', 'Karim', 'Retrait', 'cash', 300],
+  ['16:20', '1044', 'Nadia', 'Dépôt', 'card', 160],
+  ['18:50', '1047', 'Imane', 'Retrait', 'cash', 360],
+] as const;
+---
+<section id="caisse" class="pe mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf data-pe>
+  <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le soir, la caisse.')}</span><span class="block text-green-deep">{tt('Au dirham près.')}</span></h2>
+  <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">{tt('Ce qui est entré au dépôt, ce qui est sorti au retrait, en espèces et par carte. Le tiroir est compté avant que le montant attendu s’affiche.')}</p>
+
+  <div class="mt-12 grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+    <div class="tf pe-wrap" style="--d:150ms">
+      <div class="pe-stage" data-stage role="img" aria-label={tt('La caisse du soir : les encaissements, le comptage à l’aveugle, le rapport Z')}>
+        <div class="pe-top">
+          <p class="pe-brand"><span class="pe-logo"><Icon name="wallet" class="size-[1.1em]" /></span>Pressing Démo<span class="pe-tab">{tt('Caisse')}</span></p>
+          <p class="pe-state"><span class="pe-s0">{tt('Caisse ouverte')}</span><span class="pe-s1">{tt('Journée clôturée')}</span></p>
+        </div>
+
+        <div class="pe-body">
+          <div class="pe-drawer">
+            <!-- 1: the day's payments -->
+            <div class="pe-a">
+              <ul class="pe-led">
+                {led.map(([h, n, who, kind, m, a], i) => (
+                  <li class="pe-li" style={`--i:${i}`}>
+                    <span class="pe-h" dir="ltr">{h}</span>
+                    <span class="pe-w"><b dir="ltr">n° {n}</b> {who}<small>{tt(kind)}</small></span>
+                    <span class={`pe-m ${m}`}>{m === 'cash' ? tt('Espèces') : tt('Carte bancaire')}</span>
+                    <span class="pe-v" dir="ltr">{a}</span>
+                  </li>
+                ))}
+              </ul>
+              <div class="pe-tiles">
+                <p><span>{tt('Espèces')}</span><b dir="ltr"><i data-cash>0</i> MAD</b></p>
+                <p><span>{tt('Carte bancaire')}</span><b dir="ltr"><i data-card>0</i> MAD</b></p>
+                <p class="pe-all"><span>{tt('Encaissé')}</span><b dir="ltr"><i data-all>0</i> MAD</b></p>
+              </div>
+            </div>
+            <!-- 2: the blind count -->
+            <div class="pe-b">
+              <p class="pe-k">{tt('Comptez le tiroir')}</p>
+              <p class="pe-num" dir="ltr"><b data-cnt>0</b><small>MAD</small></p>
+              <div class="pe-bills" aria-hidden="true">{[0, 1, 2, 3, 4, 5].map((i) => <span style={`--i:${i}`}></span>)}</div>
+              <p class="pe-exp"><span>{tt('Attendu')}</span><b dir="ltr" data-exp>•••</b></p>
+              <p class="pe-gap"><span>{tt('Écart')}</span><b dir="ltr">− 5 MAD</b><em>{tt('noté')}</em></p>
+            </div>
+          </div>
+
+          <!-- 3: the Z report -->
+          <div class="pe-z">
+            <span class="pe-slot" aria-hidden="true"></span>
+            <div class="pe-paper">
+              <p class="pe-zh">{tt('Rapport Z')} <span dir="ltr">n° 0412</span></p>
+              <p><span>{tt('Dépôts')}</span><b dir="ltr">7</b></p>
+              <p><span>{tt('Remis')}</span><b dir="ltr">4</b></p>
+              <p><span>{tt('Espèces')}</span><b dir="ltr">920</b></p>
+              <p><span>{tt('Carte bancaire')}</span><b dir="ltr">310</b></p>
+              <p class="pe-zg"><span>{tt('Écart')}</span><b dir="ltr">− 5</b></p>
+              <p class="pe-zt"><span>{tt('Encaissé')}</span><b dir="ltr" class="whitespace-nowrap">1 230 MAD</b></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4: the owner's phone -->
+        <div class="pe-note">
+          <span class="pe-ni"><Icon name="chart" class="size-[1.2em]" /></span>
+          <p><b>{tt('Bilan du soir')}</b><span dir="ltr">1 230 MAD · {tt('2 prêts')} · {tt('1 en retard')}</span></p>
+        </div>
+      </div>
+      <button type="button" class="pe-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button>
+    </div>
+
+    <ul class="grid gap-3">
+      {items.map(([i, h, x], k) => (
+        <li class="pe-it tf" data-it={k} style={`--d:${k * 90}ms`}>
+          <span class="pe-ico"><Icon name={i} class="size-5" /></span>
+          <div><p class="font-semibold">{tt(h)}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{tt(x)}</p></div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .pe-wrap { container-type: inline-size; }
+  .pe-stage { position: relative; overflow: hidden; font-size: clamp(10.5px, 2.35cqw, 14.5px); padding: 1.3em; border-radius: 1.6em; color: #fff; background: radial-gradient(70% 60% at 85% 0%, rgba(5, 185, 98, .22), transparent 70%), linear-gradient(160deg, #0a2748, #001428); box-shadow: 0 4em 6em -3em rgba(0, 30, 62, .65), inset 0 0 0 1px rgba(255, 255, 255, .08); }
+  .pe-top { display: flex; align-items: center; justify-content: space-between; gap: 1em; }
+  .pe-brand { display: flex; align-items: center; gap: .6em; font-weight: 700; }
+  .pe-logo { display: grid; place-items: center; width: 1.9em; height: 1.9em; border-radius: .6em; background: #05B962; color: #001E3E; }
+  .pe-tab { margin-inline-start: .3em; padding: .2em .7em; border-radius: .5em; background: #05B962; color: #001E3E; font-size: .8em; font-weight: 800; }
+  .pe-state { position: relative; display: grid; font-size: .8em; font-weight: 700; }
+  .pe-state > span { grid-area: 1 / 1; padding: .3em .8em; border-radius: 999px; white-space: nowrap; transition: opacity .4s; }
+  .pe-s0 { background: rgba(255, 255, 255, .1); color: rgba(255, 255, 255, .8); }
+  .pe-s1 { background: rgba(5, 185, 98, .2); color: #5EE0A0; opacity: 0; }
+  .pe.k3 .pe-s0 { opacity: 0; } .pe.k3 .pe-s1 { opacity: 1; }
+
+  .pe-body { display: grid; gap: 1.1em; margin-top: 1.2em; }
+  @container (min-width: 34em) { .pe-body { grid-template-columns: 1fr 12.5em; align-items: start; } }
+  .pe-drawer { display: grid; }
+  .pe-a, .pe-b { grid-area: 1 / 1; transition: opacity .5s, transform .6s cubic-bezier(.2, .8, .2, 1); }
+  .pe-b { opacity: 0; transform: translateY(1em); pointer-events: none; }
+  .pe.k2 .pe-a { opacity: 0; transform: translateY(-1em); } .pe.k2 .pe-b { opacity: 1; transform: none; }
+
+  .pe-led { border-radius: 1em; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); padding: .3em 1em; }
+  .pe-li { display: grid; grid-template-columns: 3em 1fr auto 2.8em; align-items: center; gap: .7em; padding: .65em 0; border-bottom: 1px solid rgba(255, 255, 255, .07); opacity: 0; transform: translateY(-.9em); }
+  .pe-li:last-child { border: 0; }
+  .pe.k1 .pe-li { opacity: 1; transform: none; transition: opacity .45s calc(var(--i) * .4s), transform .55s calc(var(--i) * .4s) cubic-bezier(.3, 1.4, .5, 1); }
+  .pe-h { color: rgba(255, 255, 255, .5); font-size: .85em; font-variant-numeric: tabular-nums; }
+  .pe-w { line-height: 1.25; } .pe-w b { margin-inline-end: .35em; font-size: .9em; color: rgba(255, 255, 255, .6); font-weight: 600; }
+  .pe-w small { display: block; font-size: .78em; color: rgba(255, 255, 255, .45); }
+  .pe-m { padding: .15em .65em; border-radius: 999px; font-size: .75em; font-weight: 700; }
+  .pe-m.cash { background: rgba(5, 185, 98, .18); color: #5EE0A0; } .pe-m.card { background: rgba(120, 170, 255, .18); color: #A9C8FF; }
+  .pe-v { text-align: end; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .pe-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; margin-top: .7em; }
+  .pe-tiles p { padding: .7em .9em; border-radius: .9em; background: rgba(255, 255, 255, .07); }
+  .pe-tiles span { display: block; font-size: .78em; color: rgba(255, 255, 255, .55); }
+  .pe-tiles b { font-size: 1.25em; font-weight: 800; font-variant-numeric: tabular-nums; } .pe-tiles i { font-style: normal; }
+  .pe-all { grid-column: 1 / -1; background: #05B962 !important; color: #001E3E; } .pe-all span { color: rgba(0, 30, 62, .7) !important; } .pe-all b { font-size: 1.6em; }
+
+  .pe-b { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: .5em; padding: .6em 0; }
+  .pe-k { font-size: .8em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 255, 255, .6); }
+  .pe-num { display: flex; align-items: baseline; gap: .35em; font-size: 4em; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .pe-num small { font-size: .3em; color: rgba(255, 255, 255, .6); }
+  .pe-bills { display: flex; gap: .35em; margin: .3em 0 .5em; }
+  .pe-bills span { width: 3.4em; height: 1.8em; border-radius: .3em; background: linear-gradient(135deg, #5EE0A0, #05B962); box-shadow: 0 .4em .8em -.3em rgba(0, 0, 0, .5), inset 0 0 0 .15em rgba(0, 30, 62, .25); transform: translateY(1em) rotate(calc(var(--i) * 3deg - 7deg)); opacity: 0; }
+  .pe.k2 .pe-bills span { opacity: 1; transform: rotate(calc(var(--i) * 3deg - 7deg)); transition: opacity .3s calc(var(--i) * .2s), transform .5s calc(var(--i) * .2s) cubic-bezier(.3, 1.6, .5, 1); }
+  .pe-exp, .pe-gap { display: flex; align-items: center; gap: .7em; padding: .45em 1em; border-radius: 999px; background: rgba(255, 255, 255, .07); font-size: .95em; }
+  .pe-exp span { color: rgba(255, 255, 255, .6); } .pe-exp b { min-width: 3.5em; font-variant-numeric: tabular-nums; }
+  .pe-gap { opacity: 0; transform: scale(.85); background: rgba(245, 177, 61, .16); color: #F5B13D; font-weight: 700; transition: opacity .4s, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .pe-gap em { font-style: normal; padding: .1em .6em; border-radius: 999px; background: #F5B13D; color: #001E3E; font-size: .8em; }
+  .pe.rv .pe-gap { opacity: 1; transform: none; }
+
+  .pe-z { display: grid; justify-items: center; }
+  @container (max-width: 33.99em) { .pe-z { justify-self: center; width: 100%; max-width: 15em; } }
+  .pe-slot { width: 100%; height: .7em; border-radius: 999px; background: #000b17; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 .2em .5em rgba(0, 0, 0, .5); position: relative; z-index: 1; }
+  .pe-paper { position: relative; width: 90%; margin-top: -.3em; padding: 1.3em 1.1em 1.9em; background: #FFFDF8; color: #001E3E; font-size: .92em; font-variant-numeric: tabular-nums; clip-path: inset(0 0 100% 0); transition: clip-path 1.8s steps(18, end); filter: drop-shadow(0 1em 1em rgba(0, 0, 0, .4)); }
+  .pe.k3 .pe-paper { clip-path: inset(0 0 -1em 0); }
+  .pe-paper::after { content: ""; position: absolute; inset: auto 0 -.55em; height: .6em; background: linear-gradient(135deg, #FFFDF8 33.3%, transparent 33.3%) 0 0 / 1em 100%, linear-gradient(-135deg, #FFFDF8 33.3%, transparent 33.3%) 0 0 / 1em 100%; }
+  .pe-paper p { display: flex; justify-content: space-between; gap: 1em; padding: .22em 0; font-weight: 600; }
+  .pe-paper p b { font-weight: 800; }
+  .pe-zh { margin-bottom: .5em; padding-bottom: .6em !important; border-bottom: 1px dashed rgba(0, 30, 62, .35); font-weight: 800 !important; letter-spacing: .08em; text-transform: uppercase; font-size: .85em; }
+  .pe-zg { color: #B26B00; }
+  .pe-zt { margin-top: .5em; padding-top: .6em !important; border-top: 2px solid #001E3E; font-size: 1.1em; }
+
+  .pe-note { display: flex; align-items: center; gap: .8em; width: max-content; max-width: 100%; margin: 1.1em auto 0; padding: .7em 1.1em .7em .8em; border-radius: 1em; background: #fff; color: #001E3E; box-shadow: 0 1em 2em -.8em rgba(0, 0, 0, .6); opacity: 0; transform: translateY(1.2em) scale(.92); transition: opacity .4s, transform .6s cubic-bezier(.3, 1.6, .5, 1); }
+  .pe.k4 .pe-note { opacity: 1; transform: none; }
+  .pe-ni { display: grid; place-items: center; width: 2.2em; height: 2.2em; border-radius: .7em; background: #001E3E; color: #05B962; flex: none; }
+  .pe-note p { display: grid; line-height: 1.25; } .pe-note b { font-size: .95em; } .pe-note span { font-size: .8em; color: #5D6B7C; font-weight: 600; }
+  .pe-redo { display: flex; align-items: center; gap: .5em; margin: 1.2rem auto 0; padding: .5rem 1rem; border-radius: 999px; color: #4B5B6E; font-size: .9rem; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .2); transition: background .2s; }
+  .pe-redo:hover { background: rgba(0, 30, 62, .06); }
+
+  .pe-it { display: flex; gap: 1rem; padding: 1.1rem 1.2rem; border-radius: 1.4rem; background: var(--color-paper, #fff); box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .1); transition: box-shadow .4s, background .4s; }
+  .pe-ico { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 1rem; background: #001E3E; color: #05B962; transition: background .4s, color .4s; }
+  .pe-it.on { box-shadow: inset 0 0 0 2px #05B962, 0 1.2rem 2rem -1.4rem rgba(5, 185, 98, .6); }
+  .pe-it.on .pe-ico { background: #05B962; color: #001E3E; }
+  @media (prefers-reduced-motion: reduce) {
+    .pe-li, .pe-a, .pe-b, .pe-paper, .pe-note, .pe-gap, .pe-bills span { transition: none !important; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pe]');
+  if (root) {
+    const q = (s: string) => root.querySelector<HTMLElement>(s);
+    const cash = q('[data-cash]'), card = q('[data-card]'), all = q('[data-all]'), cnt = q('[data-cnt]'), exp = q('[data-exp]');
+    const items = [...root.querySelectorAll<HTMLElement>('[data-it]')];
+    const stage = q('[data-stage]'), redo = q('[data-redo]');
+    const fmt = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
+    let timers: number[] = [], raf: number[] = [];
+    const step = (n: number) => {
+      for (let k = 1; k <= 4; k++) root.classList.toggle('k' + k, k <= n);
+      items.forEach((el, i) => el.classList.toggle('on', i < n));
+    };
+    const count = (el: HTMLElement | null, goal: number, ms: number) => {
+      if (!el) return;
+      const t0 = performance.now();
+      const tick = (now: number) => { const p = Math.min(1, (now - t0) / ms); el.textContent = fmt(goal * (1 - Math.pow(1 - p, 3))); if (p < 1) raf.push(requestAnimationFrame(tick)); };
+      raf.push(requestAnimationFrame(tick));
+    };
+    const final = () => {
+      step(4); root.classList.add('rv');
+      if (cash) cash.textContent = '920'; if (card) card.textContent = '310'; if (all) all.textContent = fmt(1230);
+      if (cnt) cnt.textContent = '915'; if (exp) exp.textContent = '920';
+    };
+    const run = () => {
+      timers.forEach(clearTimeout); raf.forEach(cancelAnimationFrame); timers = []; raf = [];
+      step(0); root.classList.remove('rv');
+      [cash, card, all, cnt].forEach((el) => { if (el) el.textContent = '0'; }); if (exp) exp.textContent = '•••';
+      const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+      at(300, () => { step(1); count(cash, 920, 2400); count(card, 310, 2400); count(all, 1230, 2600); });
+      at(3800, () => { step(2); count(cnt, 915, 1600); });
+      at(5900, () => { root.classList.add('rv'); if (exp) exp.textContent = '920'; });
+      at(7400, () => step(3));
+      at(9800, () => step(4));
+    };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) final();
+    else {
+      let done = false;
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !done) { done = true; run(); o.disconnect(); } }, { threshold: 0.35 }).observe(stage ?? root);
+      redo?.addEventListener('click', run);
+      stage?.addEventListener('click', run);
+    }
+  }
+</script>

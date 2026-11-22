@@ -16,6 +16,7 @@ import PressingRail from '../PressingRail.astro';
 import PressingTrack from '../PressingTrack.astro';
 import PressingRounds from '../PressingRounds.astro';
 import PressingInvoice from '../PressingInvoice.astro';
+import PressingEvening from '../PressingEvening.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -154,22 +155,8 @@ const faq = [
   <!-- business clients: a month becomes one invoice -->
   <PressingInvoice items={pro} />
 
-  <!-- the evening: the till, the blind count, the owner's space -->
-  <section id="caisse" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
-    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le soir, la caisse.</span><span class="block text-green-deep">Au dirham près.</span></h2>
-    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Ce qui est entré au dépôt, ce qui est sorti au retrait, en espèces et par carte. Le tiroir est compté avant que le montant attendu s’affiche.</p>
-    <div class="mt-12 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-center">
-      <div class="tf" style="--d:150ms"><Device src="/img/pressing-caisse.webp" alt={tt('La caisse du jour : dépôts, remis, encaissé en espèces et par carte')} w={1200} h={750} /></div>
-      <ul class="grid gap-4 sm:grid-cols-2">
-        {evening.map(([i, h, x], k) => (
-          <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
-            <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
-            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <!-- the evening: the till, the blind count, the Z report, the owner's phone -->
+  <PressingEvening items={evening} />
 
   <!-- the evening report -->
   <section id="bilan" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
