@@ -164,6 +164,10 @@ export const pressing2En: Record<string, string> = {
   "sur 100": "out of 100",
   "Cent dépôts sur le rail : ceux en orange sont récupérés en retard": "One hundred orders on the rail: the orange ones are collected late",
   "Avec Amplify": "With Amplify",
+  "Le plus complet": "The most complete",
+  "14 jours gratuits": "14 days free",
+  "Sans engagement": "No commitment",
+  "Choisissez ce qu’il vous faut": "Pick what you need",
 };
 export const pressing2Ar: Record<string, string> = {
   "La tournée du chauffeur : trois arrêts, du ramassage à la caisse": "جولة السائق: ثلاث محطات، من الاستلام إلى الصندوق",
@@ -292,4 +296,8 @@ export const pressing2Ar: Record<string, string> = {
   "sur 100": "من أصل 100",
   "Cent dépôts sur le rail : ceux en orange sont récupérés en retard": "مائة إيداع على الرف: البرتقالية منها تُسترجع متأخرة",
   "Avec Amplify": "مع Amplify",
+  "Le plus complet": "الأكثر اكتمالاً",
+  "14 jours gratuits": "14 يومًا مجانًا",
+  "Sans engagement": "بدون التزام",
+  "Choisissez ce qu’il vous faut": "اختار اللي خاصك",
 };

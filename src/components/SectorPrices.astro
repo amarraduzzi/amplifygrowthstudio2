@@ -1,6 +1,9 @@
 ---
 // Price block at the bottom of a sector page: the plans of that trade, from lib/sectorPlans.ts.
+// Dark section like the other showpiece blocks: glowing blobs, glass cards, prices that count up when
+// they come into view. The fullest plan is lifted and glows. No-JS / reduced motion: final prices shown.
 import { SECTOR, signupUrl } from '../config';
+import Icon from './Icon.astro';
 import { tr } from '../i18n/t';
 import { posOf } from '../i18n/content';
 import { ROUTES, type Lang } from '../i18n/routes';
@@ -11,22 +14,85 @@ const tt = tr(lang);
 const per = posOf(lang).pricing.per;
 const m = metiers(tt).find((x) => x.key === k);
 const showSetup = ['pressing', 'garage', 'hanout'].includes(k);
+const last = m?.plans ? m.plans.length - 1 : 0;
 ---
 {m && m.plans && (
-  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="sp-h" data-tf>
-    <h2 id="sp-h" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Tarifs')}</h2>
-    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:80ms">{tt('Prix HT par mois. 14 jours gratuits, sans engagement.')}</p>
-    <div class={`mt-8 grid gap-4 ${m.plans.length === 3 ? 'lg:grid-cols-3' : 'sm:grid-cols-2'}`}>
-      {m.plans.map((pl, i) => (
-        <div class="tf flex flex-col rounded-[2rem] bg-paper p-7 ring-1 ring-line" style={`--d:${i * 110}ms`}>
-          <p class="display text-4xl">{tt(pl.name)}</p>
-          <p class="mt-4"><span class="display text-6xl" dir="ltr">{pl.n}</span> <span class="text-muted">{tt('DH HT')} {per}</span></p>
-          <p class="mt-4 flex-1 text-muted">{tt(pl.text)}</p>
-          {m.signup && pl.id && <a href={signupUrl(lang, m.signup, pl.id)} data-trial={`${k}-${pl.id}`} class="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-6 font-semibold text-navy hover:bg-[#04A859]">{tt('Essayer 14 jours gratuits')}</a>}
-        </div>
-      ))}
+  <section id="tarifs" class="sp relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" aria-labelledby="sp-h" data-tf data-sp>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+    <span class="sp-dots" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <h2 id="sp-h" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Tarifs')}.</span><span class="block text-green">{tt('Choisissez ce qu’il vous faut')}.</span></h2>
+      <p class="tf mt-4 max-w-2xl text-lg text-white/70" style="--d:80ms">{tt('Prix HT par mois. 14 jours gratuits, sans engagement.')}</p>
+
+      <div class={`mt-12 grid items-stretch gap-5 md:mt-14 ${m.plans.length === 3 ? 'lg:grid-cols-3' : m.plans.length === 2 ? 'md:grid-cols-2 lg:mx-auto lg:max-w-4xl' : ''}`}>
+        {m.plans.map((pl, i) => {
+          const hero = !!m.signup && i === last;
+          return (
+            <div class={`tf sp-card ${hero ? 'hero' : ''}`} style={`--d:${i * 120 + 120}ms`}>
+              {hero && <span class="sp-badge"><Icon name="star" class="size-[1.1em]" />{tt('Le plus complet')}</span>}
+              <p class="sp-name">{tt(pl.name)}</p>
+              <p class="sp-price" dir="ltr"><span class="display sp-n tabular-nums" data-n={pl.n}>{pl.n}</span></p>
+              <p class="sp-per">{per}</p>
+              <i class="sp-rule" aria-hidden="true"></i>
+              <p class="sp-text">{tt(pl.text)}</p>
+              {m.signup && pl.id && (
+                <a href={signupUrl(lang, m.signup, pl.id)} data-trial={`${k}-${pl.id}`} class={`sp-cta ${hero ? 'hero' : ''}`}>{tt('Essayer 14 jours gratuits')}<Icon name="check" class="size-[1.1em]" /></a>
+              )}
+            </div>
+          );
+        })}
+      </div>
+
+      <ul class="tf mt-8 flex flex-wrap gap-2.5" style="--d:400ms">
+        <li class="sp-chip"><Icon name="gift" class="size-[1.1em]" />{tt('14 jours gratuits')}</li>
+        <li class="sp-chip"><Icon name="check" class="size-[1.1em]" />{tt('Sans engagement')}</li>
+        {showSetup && <li class="sp-chip"><Icon name="box" class="size-[1.1em]" />{tt('Pressing, Garage et Hanout : mise en place {n} DH HT, offerte avec un plan annuel.').replace('{n}', String(SECTOR.setup))}</li>}
+      </ul>
+      <p class="tf mt-6" style="--d:480ms"><a href={`${ROUTES.pricing[lang]}#metiers`} class="font-semibold text-green underline underline-offset-4 hover:text-white">{tt('Voir tous les tarifs')}</a></p>
     </div>
-    {showSetup && <p class="tf mt-5 text-sm text-muted">{tt('Pressing, Garage et Hanout : mise en place {n} DH HT, offerte avec un plan annuel.').replace('{n}', String(SECTOR.setup))}</p>}
-    <p class="tf mt-4"><a href={`${ROUTES.pricing[lang]}#metiers`} class="font-medium underline underline-offset-4">{tt('Voir tous les tarifs')}</a></p>
   </section>
 )}
+
+<style>
+  .sp-dots { position: absolute; inset: 0; z-index: -10; pointer-events: none; opacity: .5; background-image: radial-gradient(rgba(255, 255, 255, .13) 1px, transparent 1.4px); background-size: 26px 26px; mask-image: radial-gradient(70% 70% at 80% 20%, #000, transparent 75%); }
+  .sp-card { position: relative; display: flex; flex-direction: column; padding: 2rem 1.8rem 1.8rem; border-radius: 2rem; background: linear-gradient(160deg, rgba(255, 255, 255, .1), rgba(255, 255, 255, .04)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); backdrop-filter: blur(6px); }
+  .sp-card.hero { background: radial-gradient(80% 60% at 100% 0%, rgba(5, 185, 98, .38), transparent 70%), linear-gradient(160deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, .05)); box-shadow: inset 0 0 0 2px #05B962, 0 2.4rem 4rem -2rem rgba(5, 185, 98, .55); }
+  @media (min-width: 1024px) { .sp-card.hero { transform: translateY(-.6rem); } }
+  .sp-badge { position: absolute; inset-block-start: -.9rem; inset-inline-start: 1.6rem; display: inline-flex; align-items: center; gap: .4rem; padding: .3rem .85rem; border-radius: 99px; background: #05B962; color: #001E3E; font-size: .75rem; font-weight: 800; box-shadow: 0 .6rem 1.4rem -.4rem rgba(5, 185, 98, .7); }
+  .sp-name { font-family: var(--font-display, inherit); font-size: 1.9rem; line-height: 1.05; font-weight: 800; }
+  .sp-price { margin-top: 1.4rem; line-height: 1; }
+  .sp-n { font-size: clamp(4rem, 9vw, 5.2rem); color: #fff; line-height: 1; }
+  .hero .sp-n { color: #05B962; text-shadow: 0 0 2.4rem rgba(5, 185, 98, .45); }
+  .sp-per { margin-top: .5rem; font-size: .85rem; font-weight: 700; letter-spacing: .02em; color: rgba(255, 255, 255, .6); }
+  .sp-rule { display: block; height: 1px; margin: 1.3rem 0; background: linear-gradient(to right, rgba(255, 255, 255, .3), transparent); }
+  .sp-text { flex: 1; line-height: 1.55; color: rgba(255, 255, 255, .82); }
+  .sp-cta { display: inline-flex; align-items: center; justify-content: center; gap: .5rem; min-height: 3rem; margin-top: 1.6rem; padding: 0 1.4rem; border-radius: 99px; font-weight: 700; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .35); transition: background .25s, color .25s, box-shadow .25s; }
+  .sp-cta:hover { background: rgba(255, 255, 255, .12); }
+  .sp-cta.hero { background: #05B962; color: #001E3E; box-shadow: 0 1rem 2rem -.8rem rgba(5, 185, 98, .8); }
+  .sp-cta.hero:hover { background: #fff; }
+  .sp-chip { display: inline-flex; align-items: center; gap: .5rem; padding: .5rem 1rem; border-radius: 99px; font-size: .88rem; font-weight: 600; color: rgba(255, 255, 255, .85); background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
+  .sp-chip :global(svg) { color: #05B962; flex: none; }
+</style>
+
+<script>
+  // prices count up the first time the block is in view
+  const roots = document.querySelectorAll<HTMLElement>('[data-sp]');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  roots.forEach((root) => {
+    const nums = [...root.querySelectorAll<HTMLElement>('[data-n]')];
+    if (still || !('IntersectionObserver' in window)) return;
+    nums.forEach((n) => (n.textContent = '0'));
+    new IntersectionObserver((es, o) => {
+      if (!es[0].isIntersecting) return;
+      o.disconnect();
+      const t0 = performance.now();
+      const tick = (now: number) => {
+        const p = Math.min(1, (now - t0) / 1100), e = 1 - Math.pow(1 - p, 3);
+        nums.forEach((n) => (n.textContent = String(Math.round(Number(n.dataset.n) * e))));
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    }, { threshold: 0.3 }).observe(root);
+  });
+</script>
