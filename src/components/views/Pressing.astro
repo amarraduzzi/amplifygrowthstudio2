@@ -11,6 +11,7 @@ import Icon from '../Icon.astro';
 import CountUp from '../CountUp.astro';
 import PressingCredit from '../PressingCredit.astro';
 import PressingJourney from '../PressingJourney.astro';
+import PressingCaisse from '../PressingCaisse.astro';
 import PressingRail from '../PressingRail.astro';
 import PressingTrack from '../PressingTrack.astro';
 import { tr } from '../../i18n/t';
@@ -19,14 +20,6 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
 const wa = tt('Bonjour, je voudrais voir Amplify pour mon pressing.');
-const drop = [
-  ['shirt', 'Votre liste de prix', 'Chemise, costume, djellaba, caftan, couette : à la pièce, ou au kilo pour le linge.'],
-  ['clock', 'Express et date prévue', 'Un supplément en pourcentage, et la date proposée toute seule.'],
-  ['camera', 'Photos au dépôt', 'Une tache, un bouton manquant : photographiés avec la tablette, gardés avec le dépôt.'],
-  ['coins', 'Acompte ou tout payé', 'Rien, un acompte ou tout : le reste à payer est sur le ticket.'],
-  ['printer', 'Ticket et étiquettes', 'Le ticket avec son QR pour le client, une étiquette par pièce pour l’atelier.'],
-  ['message', 'Ticket sur WhatsApp', 'Le client perd son ticket ? Il l’a aussi sur son téléphone.'],
-] as const;
 const counter = [
   ['search', 'Retrouvé en une seconde', 'Par numéro, téléphone ou nom, même un dépôt remis il y a un mois.'],
   ['door', 'Le rail ou l’étagère', 'Prêt sur « Rail 12 » : celui qui remet sait où chercher.'],
@@ -131,28 +124,8 @@ const faq = [
   <!-- the journey of one shirt: pinned on desktop, a loop on phones -->
   <PressingJourney />
 
-  <!-- the drop-off -->
-  <section id="depot" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
-    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
-    <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
-    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-center">
-        <div class="tf-x">
-          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le dépôt.</span><span class="block text-green">En trente secondes.</span></h2>
-          <p class="mt-5 max-w-md text-lg text-white/70">Le client au comptoir, ses vêtements sur la table. Vous touchez les articles, vous notez la tache, vous prenez la photo. Le ticket sort, les étiquettes aussi.</p>
-        </div>
-        <div class="tf" style="--d:150ms"><Device src="/img/pressing-depot.webp" alt={tt('Un dépôt en cours : deux chemises avec une tache sur le col, un costume, une djellaba, un acompte en espèces')} w={1200} h={750} /></div>
-      </div>
-      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-        {drop.map(([i, h, x], k) => (
-          <li class="tf" style={`--d:${k * 80}ms`}>
-            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
-            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <!-- the drop-off: a till you can play -->
+  <PressingCaisse />
 
   <!-- the counter: in the works, ready, late, not collected -->
   <section id="comptoir" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>

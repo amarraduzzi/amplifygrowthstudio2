@@ -31,6 +31,9 @@ export const pressing2En: Record<string, string> = {
   "Votre linge est en cours de nettoyage.": "Your laundry is being cleaned.",
   "Votre linge est prêt, vous pouvez passer le récupérer.": "Your laundry is ready, you can come and collect it.",
   "Merci, votre dépôt est remis. À bientôt !": "Thank you, your drop-off is handed back. See you soon!",
+  "À vous de jouer : touchez les articles.": "Your turn: tap the articles.",
+  "Recommencer": "Start over",
+  "Dépôt enregistré en": "Drop-off saved in",
 };
 export const pressing2Ar: Record<string, string> = {
   "Le voyage d’une chemise": "رحلة قميص",
@@ -63,4 +66,7 @@ export const pressing2Ar: Record<string, string> = {
   "Votre linge est en cours de nettoyage.": "ملابسكم قيد التنظيف.",
   "Votre linge est prêt, vous pouvez passer le récupérer.": "ملابسكم جاهزة، يمكنكم المرور لاستلامها.",
   "Merci, votre dépôt est remis. À bientôt !": "شكرا، تم تسليم إيداعكم. إلى اللقاء!",
+  "À vous de jouer : touchez les articles.": "دورك الآن: المسوا الأصناف.",
+  "Recommencer": "إعادة",
+  "Dépôt enregistré en": "تم تسجيل الإيداع في",
 };
