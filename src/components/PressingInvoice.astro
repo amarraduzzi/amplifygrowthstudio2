@@ -1,0 +1,173 @@
+---
+// "Les clients pros": a month becomes one invoice. Dark section, mirrored layout (the invoice on the start
+// side). Five deposits drop onto an A4 invoice, two of them at the group price, the fixed discount comes
+// off, the total counts up and a "PAYÉE · virement" stamp lands. Each of the four points on the other side
+// lights up when its part of the invoice appears. Plays once when in view, a tap replays it.
+// Demo shop, invented client and numbers.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+interface Props { items: readonly (readonly [string, string, string])[] }
+const { items } = Astro.props;
+// [day, deposit no., FR label, amount, group price?]
+const rows = [
+  ['03', '1031', '12 chemises', 180, false],
+  ['08', '1038', '18 draps', 324, true],
+  ['14', '1052', '9 nappes', 162, false],
+  ['21', '1067', '6 couettes', 420, true],
+  ['28', '1081', '30 serviettes', 274, true],
+] as const;
+const days = [3, 8, 14, 21, 28];
+---
+<section id="pro" class="pi relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf data-pi>
+  <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+  <span class="pi-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></span>
+  <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-[1.02fr_0.98fr] lg:gap-x-16 lg:gap-y-9">
+      <div class="tf order-2 lg:col-start-1 lg:row-span-2 lg:row-start-1 lg:self-center" style="--d:120ms">
+        <div class="pi-sheet-wrap">
+          <div class="pi-sheet" role="img" aria-label={tt('Une facture mensuelle : cinq dépôts, un tarif de groupe, une remise fixe, un total payé par virement')} data-sheet>
+            <div class="pi-head" data-at="1">
+              <div>
+                <p class="pi-k">{tt('Facture')}</p>
+                <p class="pi-n" dir="ltr">2026-11-014</p>
+              </div>
+              <p class="pi-acc"><Icon name="briefcase" class="size-[1.1em]" />{tt('Sur compte')}</p>
+            </div>
+            <div class="pi-cl" data-at="1">
+              <div><p class="pi-k">{tt('Client')}</p><p class="pi-b">Riad Dar Zahia</p><p class="pi-m" dir="ltr">ICE 002 481 530 000 27</p></div>
+              <div class="pi-r"><p class="pi-k">{tt('Novembre 2026')}</p><p class="pi-b">Pressing Démo</p><p class="pi-m" dir="ltr">ICE 001 902 664 000 41</p></div>
+            </div>
+
+            <div class="pi-cal" aria-hidden="true">
+              {Array.from({ length: 30 }, (_, d) => {
+                const i = days.indexOf(d + 1);
+                return <i class={i >= 0 ? 'on' : ''} style={i >= 0 ? `--i:${i}` : ''}></i>;
+              })}
+            </div>
+
+            <ul class="pi-rows">
+              {rows.map(([d, n, l, a, g], i) => (
+                <li class="pi-row" data-at="2" style={`--i:${i}`}>
+                  <span class="pi-d" dir="ltr">{d}/11</span>
+                  <span class="pi-l"><span dir="ltr">{tt('Dépôt n°')} {n}</span> · {tt(l)}{g && <span class="pi-chip" data-at="3" style={`--i:${i}`}>{tt('Tarif Hôtels')}</span>}</span>
+                  <span class="pi-a" dir="ltr">{a}</span>
+                </li>
+              ))}
+            </ul>
+
+            <div class="pi-sum">
+              <p data-at="2" style="--i:5"><span>{tt('Sous-total')}</span><span dir="ltr">1 360 MAD</span></p>
+              <p class="pi-disc" data-at="4"><span>{tt('Remise fixe')} 10 %</span><span dir="ltr">− 136 MAD</span></p>
+              <p class="pi-tot" data-at="5"><span>{tt('Total')}</span><span dir="ltr"><b data-total>1 224</b> MAD</span></p>
+            </div>
+            <p class="pi-lock" data-at="5"><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>{tt('Facture figée : elle ne se modifie plus.')}</p>
+            <div class="pi-stamp" data-at="5" aria-hidden="true"><span>{tt('PAYÉE')}</span><small>{tt('virement')}</small></div>
+          </div>
+          <button type="button" class="pi-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button>
+        </div>
+      </div>
+
+      <div class="order-1 lg:col-start-2 lg:row-start-1 lg:self-end">
+        <h2 class="tf-x text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Les clients pros.')}</span><span class="block text-green">{tt('Une facture par mois.')}</span></h2>
+        <p class="tf mt-4 max-w-lg text-lg text-white/70" style="--d:100ms">{tt('Hôtels, riads, restaurants : leurs dépôts partent « sur compte ». Rien à encaisser au comptoir, et en fin de mois une seule facture pour tous leurs dépôts.')}</p>
+      </div>
+      <div class="order-3 lg:col-start-2 lg:row-start-2">
+        <ul class="grid gap-3">
+          {items.map(([i, h, x], k) => (
+            <li class="pi-it tf" data-it={k} style={`--d:${k * 90}ms`}>
+              <span class="pi-ico"><Icon name={i} class="size-5" /></span>
+              <div><p class="font-semibold">{tt(h)}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{tt(x)}</p></div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pi-grid { background: radial-gradient(55% 60% at 22% 50%, rgba(255, 255, 255, .09), transparent 70%), repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 44px); }
+  .pi-sheet-wrap { container-type: inline-size; position: relative; }
+  .pi-sheet { position: relative; max-width: 30em; margin-inline: auto; font-size: clamp(10.5px, 3.3cqw, 15px); padding: 2.2em 2em 1.8em; border-radius: .5em; background: #FFFDF8; color: #001E3E; box-shadow: 0 5em 7em -3em rgba(0, 0, 0, .75), 0 0 0 1px rgba(0, 0, 0, .06); transform: rotate(-1.6deg); }
+  .pi-sheet::before { content: ""; position: absolute; inset: 0 0 auto; height: .5em; border-radius: .5em .5em 0 0; background: #05B962; }
+  .pi-k { font-size: .75em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #6B7A8C; }
+  .pi-n { margin-top: .15em; font-size: 1.9em; font-weight: 800; line-height: 1; letter-spacing: -.01em; }
+  .pi-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1em; }
+  .pi-acc { display: flex; align-items: center; gap: .45em; padding: .4em .8em; border-radius: 999px; background: #E3F6EC; color: #00804A; font-size: .85em; font-weight: 700; white-space: nowrap; }
+  .pi-cl { display: flex; justify-content: space-between; gap: 1em; margin-top: 1.4em; padding-bottom: 1.2em; border-bottom: 1px dashed rgba(0, 30, 62, .22); }
+  .pi-r { text-align: end; }
+  .pi-b { margin-top: .2em; font-size: 1.05em; font-weight: 700; }
+  .pi-m { margin-top: .1em; font-size: .78em; font-weight: 600; color: #6B7A8C; font-variant-numeric: tabular-nums; }
+  .pi-cal { display: grid; grid-template-columns: repeat(30, 1fr); gap: .2em; margin-top: 1.1em; }
+  .pi-cal i { aspect-ratio: 1; border-radius: 999px; background: rgba(0, 30, 62, .1); transition: background .3s, transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+  .pi.k2 .pi-cal i.on { background: #05B962; transform: scale(1.45); transition-delay: calc(var(--i) * .3s); }
+  .pi-rows { margin-top: 1em; }
+  .pi-row { display: grid; grid-template-columns: 3.1em 1fr auto; align-items: baseline; gap: .6em; padding: .65em 0; border-bottom: 1px solid rgba(0, 30, 62, .08); font-size: .92em; }
+  .pi-d { font-weight: 700; color: #6B7A8C; font-variant-numeric: tabular-nums; }
+  .pi-l { font-weight: 600; line-height: 1.35; }
+  .pi-a { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .pi-chip { display: inline-block; margin-inline-start: .55em; padding: .1em .6em; border-radius: 999px; background: #001E3E; color: #05B962; font-size: .78em; font-weight: 700; white-space: nowrap; }
+  .pi-sum { margin-top: 1em; display: grid; gap: .35em; font-size: .95em; }
+  .pi-sum p { display: flex; justify-content: space-between; gap: 1em; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .pi-disc { color: #00804A; }
+  .pi-tot { margin-top: .35em; padding-top: .7em; border-top: 2px solid #001E3E; font-size: 1.35em; font-weight: 800 !important; }
+  .pi-lock { display: flex; align-items: center; gap: .5em; margin-top: 1.1em; font-size: .8em; font-weight: 600; color: #6B7A8C; }
+  .pi-stamp { position: absolute; inset-inline-start: 12em; bottom: 5.6em; display: grid; justify-items: center; padding: .35em 1em .45em; border: .2em solid #00804A; border-radius: .5em; box-shadow: inset 0 0 0 .1em #00804A; color: #00804A; transform: rotate(-9deg); mix-blend-mode: multiply; }
+  .pi-stamp span { font-size: 1.7em; font-weight: 800; letter-spacing: .12em; line-height: 1; }
+  .pi-stamp small { font-size: .8em; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  .pi-redo { display: flex; align-items: center; gap: .5em; margin: 1.4rem auto 0; padding: .55rem 1rem; border-radius: 999px; color: rgba(255, 255, 255, .75); font-size: .9rem; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); transition: background .2s; }
+  .pi-redo:hover { background: rgba(255, 255, 255, .1); }
+
+  /* what appears at which step */
+  .pi [data-at] { opacity: 0; transform: translateY(.9em); transition: opacity .5s calc(var(--i, 0) * .3s), transform .55s calc(var(--i, 0) * .3s) cubic-bezier(.2, .8, .2, 1); }
+  .pi .pi-chip[data-at] { transform: scale(.6); transition-timing-function: cubic-bezier(.3, 1.6, .5, 1); }
+  .pi .pi-stamp[data-at] { transform: rotate(-9deg) scale(1.9); transition-delay: .7s; transition-timing-function: cubic-bezier(.3, 1.3, .5, 1); }
+  .pi.k1 [data-at="1"], .pi.k2 [data-at="2"], .pi.k3 [data-at="3"], .pi.k4 [data-at="4"], .pi.k5 [data-at="5"] { opacity: 1; transform: none; }
+  .pi.k5 .pi-stamp[data-at] { transform: rotate(-9deg); }
+  .pi.k3 .pi-chip[data-at] { transition-delay: calc(var(--i) * .15s); }
+
+  .pi-it { display: flex; gap: 1rem; padding: 1rem 1.1rem; border-radius: 1.2rem; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); transition: background .4s, box-shadow .4s; }
+  .pi-ico { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 1rem; background: rgba(255, 255, 255, .1); color: #05B962; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15); transition: background .4s, color .4s; }
+  .pi-it.on { background: rgba(5, 185, 98, .1); box-shadow: inset 0 0 0 1px rgba(5, 185, 98, .45); }
+  .pi-it.on .pi-ico { background: #05B962; color: #001E3E; }
+  @media (prefers-reduced-motion: reduce) {
+    .pi [data-at], .pi-cal i { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pi]');
+  if (root) {
+    const total = root.querySelector<HTMLElement>('[data-total]');
+    const items = [...root.querySelectorAll<HTMLElement>('[data-it]')];
+    const redo = root.querySelector<HTMLElement>('[data-redo]');
+    const sheet = root.querySelector<HTMLElement>('[data-sheet]');
+    const GOAL = 1224;
+    const fmt = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
+    let timers: number[] = [], raf = 0;
+    const step = (n: number) => {
+      for (let k = 1; k <= 5; k++) root.classList.toggle('k' + k, k <= n);
+      items.forEach((el, i) => el.classList.toggle('on', i < n && i < 4));
+    };
+    const run = () => {
+      timers.forEach(clearTimeout); cancelAnimationFrame(raf); timers = [];
+      step(0); if (total) total.textContent = '0';
+      [350, 1500, 3700, 5000, 6200].forEach((ms, i) => timers.push(window.setTimeout(() => {
+        step(i + 1);
+        if (i === 4 && total) {
+          const t0 = performance.now();
+          const tick = (now: number) => { const p = Math.min(1, (now - t0) / 1100); total.textContent = fmt(GOAL * (1 - Math.pow(1 - p, 3))); if (p < 1) raf = requestAnimationFrame(tick); };
+          raf = requestAnimationFrame(tick);
+        }
+      }, ms)));
+    };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { step(5); items.forEach((el) => el.classList.add('on')); }
+    else {
+      let done = false;
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !done) { done = true; run(); o.disconnect(); } }, { threshold: 0.35 }).observe(sheet ?? root);
+      redo?.addEventListener('click', run);
+      sheet?.addEventListener('click', run);
+    }
+  }
+</script>

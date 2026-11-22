@@ -14,6 +14,8 @@ import PressingJourney from '../PressingJourney.astro';
 import PressingCaisse from '../PressingCaisse.astro';
 import PressingRail from '../PressingRail.astro';
 import PressingTrack from '../PressingTrack.astro';
+import PressingRounds from '../PressingRounds.astro';
+import PressingInvoice from '../PressingInvoice.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -146,44 +148,11 @@ const faq = [
     <div class="mt-10 md:mt-12"><PressingCredit cards={credit} /></div>
   </section>
 
-  <!-- pick-ups and deliveries -->
-  <section id="tournees" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
-    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
-    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-      <div class="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-center">
-        <div class="tf-x">
-          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Ramassage et livraison.</span><span class="block text-green">Sans carnet.</span></h2>
-          <p class="mt-5 max-w-md text-lg text-white/70">Vos clients n’ont plus le temps de passer ? Le chauffeur passe pour eux. Chaque tournée a son adresse, son heure et ses frais, et finit dans la caisse.</p>
-        </div>
-        <div class="tf" style="--d:150ms"><Device src="/img/pressing-tournees.webp" alt={tt('Les tournées du jour : un ramassage à Hay Riad et une livraison à Agdal')} w={1200} h={750} /></div>
-      </div>
-      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {rounds.map(([i, h, x], k) => (
-          <li class="tf" style={`--d:${k * 90}ms`}>
-            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
-            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <!-- pick-ups and deliveries: the driver's round on a map -->
+  <PressingRounds items={rounds} />
 
-  <!-- business clients, group prices, discounts -->
-  <section id="pro" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
-    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
-    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Les clients pros.</span><span class="block text-green">Une facture par mois.</span></h2>
-      <p class="tf mt-4 max-w-2xl text-lg text-white/70" style="--d:100ms">Hôtels, riads, restaurants : leurs dépôts partent « sur compte ». Rien à encaisser au comptoir, et en fin de mois une seule facture pour tous leurs dépôts.</p>
-      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {pro.map(([i, h, x], k) => (
-          <li class="tf" style={`--d:${k * 90}ms`}>
-            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
-            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <!-- business clients: a month becomes one invoice -->
+  <PressingInvoice items={pro} />
 
   <!-- the evening: the till, the blind count, the owner's space -->
   <section id="caisse" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
