@@ -47,6 +47,8 @@ const counter = [
   ['door', 'Le rail ou l’étagère', 'Prêt sur « Rail 12 » : celui qui remet sait où chercher.'],
   ['bell', 'En retard', 'Les dépôts qui auraient dû être prêts, en couleur, avant que le client appelle.'],
   ['box', 'Non récupérés', 'Prêts depuis 30 jours ou plus : la liste à relancer, avec ce qu’il reste à encaisser.'],
+  ['box', 'Pièce par pièce', 'Chaque pièce est cochée prête à son tour : « 3/5 prêts ». Le client prend ce qui est prêt et revient pour le reste.'],
+  ['message', 'WhatsApp automatique', 'En option : avec votre propre numéro WhatsApp Business, le message « prêt » part tout seul. Sans cela, le bouton de la caisse reste là.'],
 ] as const;
 const rounds = [
   ['pin', 'Ramassage à domicile', 'L’adresse, le jour, l’heure et les frais. Au retour du chauffeur, le ramassage devient un dépôt en un geste.'],
@@ -60,14 +62,41 @@ const evening = [
   ['printer', 'Rapport Z', 'Imprimé à la clôture : le résumé de la journée, pour le gérant.'],
   ['chart', 'Espace gérant', 'Depuis votre téléphone : ce qui est au pressing, prêt, non récupéré, et ce qu’il reste à encaisser.'],
 ] as const;
+const credit = [
+  ['coins', 'Un bonus par tranche', 'Par exemple +5 % dès 200 DH, +10 % dès 500 DH, +15 % dès 1 000 DH. Vous fixez les tranches. Le bonus n’est jamais versé en argent.'],
+  ['shield', 'Code à 4 chiffres', 'Le client paie avec son code : personne d’autre ne dépense son crédit. Vous pouvez désactiver le code.'],
+  ['gift', 'Cartes cadeaux à la caisse', 'Vendues avec un code, puis ajoutées plus tard au crédit d’un client.'],
+  ['book', 'Chaque mouvement est écrit', 'Recharge, bonus, dépense, remboursement : un registre qui ne se modifie pas. Le rapport montre ce que vous devez encore à vos clients.'],
+] as const;
+const pro = [
+  ['briefcase', 'Compte professionnel', 'Rien n’est encaissé au dépôt ni au retrait. Les dépôts du mois s’accumulent sur le compte du client.'],
+  ['book', 'Facture mensuelle', 'Une facture numérotée avec les deux ICE, marquée payée au virement ou au chèque. Une facture ne se modifie jamais.'],
+  ['tag', 'Tarifs de groupe', 'Un groupe (« Hôtels », « Famille ») a ses propres prix pour certains articles. Les autres gardent le prix normal, et la caisse applique le bon prix toute seule.'],
+  ['heart', 'Remise fixe par client', 'Un pourcentage pour un habitué ou un compte pro. Seul le gérant le fixe, avec son code, et chaque changement est noté.'],
+] as const;
+const bilan = [
+  ['chart', 'La journée en chiffres', 'Espèces et carte, comparées au même jour de la semaine dernière, dépôts entrés et sortis, remises, clôture.'],
+  ['bell', 'Ce qui mérite un regard', 'Journée non clôturée, écart de caisse, dépôt payé puis annulé, pièces parties sans être payées, remises trop fortes, dépôts jamais récupérés.'],
+  ['phone', 'Il arrive tout seul', 'Dès que la journée est clôturée, ou à l’heure que vous choisissez si personne ne l’a fait. Chaque ramassage demandé en ligne aussi, tout de suite.'],
+  ['calendar', 'Les jours passés', 'Rouvrez n’importe laquelle des 400 dernières journées depuis l’espace gérant.'],
+] as const;
+const clients = [
+  ['users', 'Une fiche utile', 'Dépôts, total dépensé, dernière visite, ce qui est au pressing et ce qu’il reste à payer. Elle s’ouvre sur ce qui compte.'],
+  ['search', 'Doublons fusionnés', 'Deux fiches pour le même client ? Fusionnez : rien n’est supprimé et vous pouvez annuler. « Tout fusionner » règle les cas sûrs d’un coup.'],
+  ['message', 'Les clients qui ne viennent plus', 'Les habitués qui ont arrêté de venir, et ce qu’ils dépensaient en un an. Un WhatsApp pour les rappeler, 25 par jour au plus pour que votre numéro ne soit pas bloqué. Vous voyez ceux qui reviennent.'],
+  ['box', 'Reprise de vos données', 'Votre liste de clients et l’historique de vos dépôts, depuis un fichier CSV ou Excel de votre ancien système. Rien d’existant n’est modifié, et chaque import s’annule.'],
+] as const;
 const faq = [
   ['Mes clients doivent-ils installer une application ?', 'Non. Ils scannent le QR du ticket ou ouvrent le lien reçu sur WhatsApp. Rien à installer, rien à créer.'],
   ['Il me faut quel matériel ?', 'Une tablette ou un ordinateur, et une imprimante de tickets. Les étiquettes sortent de la même imprimante. Nous vous conseillons si vous n’avez rien.'],
   ['Et le linge au kilo ?', 'Oui. Un article au kilo : la caisse demande le poids et calcule le prix. Le sac compte comme une pièce.'],
   ['Les photos sont-elles visibles par le client ?', 'Non. Elles restent au pressing : à la caisse et dans votre espace gérant. Le client voit seulement l’état de son dépôt.'],
-  ['Je travaille avec des hôtels ou des restaurants.', 'Un client professionnel est un client comme un autre : chaque dépôt a son numéro, ses pièces et son ticket.'],
+  ['Je travaille avec des hôtels ou des restaurants.', 'Oui, avec un compte professionnel : leurs dépôts partent sur compte, avec leurs propres tarifs si vous le voulez, et vous leur faites une facture numérotée à la fin du mois.'],
   ['Mes clients restent-ils à moi ?', 'Oui. Il n’y a pas de place de marché : la page de suivi ne montre que votre pressing, jamais un concurrent.'],
   ['Qui installe tout ?', 'Nous. Votre liste de prix, votre équipe et votre imprimante, et nous montrons tout à votre équipe. C’est offert.'],
+  ['Puis-je proposer un crédit prépayé ?', 'Oui, c’est une option. Le client recharge son compte à la caisse et reçoit un bonus par tranche que vous fixez. Rien ne change tant que vous ne l’activez pas.'],
+  ['Je change de système : je perds mes clients ?', 'Non. Vous importez votre liste de clients et l’historique de vos dépôts depuis un fichier CSV ou Excel. Rien d’existant n’est modifié, et chaque import s’annule.'],
+  ['Le WhatsApp « prêt » part-il tout seul ?', 'Par défaut, vous l’envoyez en un geste depuis la caisse. En option, avec votre propre numéro WhatsApp Business, il part tout seul. Meta facture directement votre pressing.'],
   ['Et si j’arrête ?', 'Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.'],
 ];
 ---
@@ -171,7 +200,7 @@ const faq = [
         <p class="mt-5 max-w-md text-lg text-muted">Le dépôt est propre : vous dites sur quel rail il attend, et le client reçoit un WhatsApp avec le reste à payer. Au retrait, la caisse encaisse et rend la monnaie.</p>
       </div>
     </div>
-    <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+    <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
       {counter.map(([i, h, x], k) => (
         <li class="tf" style={`--d:${k * 90}ms`}>
           <span class="grid size-11 place-items-center rounded-2xl bg-green/15 text-green-deep"><Icon name={i} class="size-5" /></span>
@@ -220,6 +249,37 @@ const faq = [
     </div>
   </section>
 
+  <!-- prepaid credit -->
+  <section id="credit" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le crédit prépayé.</span><span class="block text-green-deep">Le client paie d’avance.</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Le client met de l’argent sur son compte au comptoir et reçoit un bonus selon le montant. Il paie ses dépôts avec, quand il revient. C’est une option : rien ne change tant que vous ne l’activez pas.</p>
+    <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {credit.map(([i, h, x], k) => (
+        <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
+          <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
+          <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- business clients, group prices, discounts -->
+  <section id="pro" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Les clients pros.</span><span class="block text-green">Une facture par mois.</span></h2>
+      <p class="tf mt-4 max-w-2xl text-lg text-white/70" style="--d:100ms">Hôtels, riads, restaurants : leurs dépôts partent « sur compte ». Rien à encaisser au comptoir, et en fin de mois une seule facture pour tous leurs dépôts.</p>
+      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        {pro.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 90}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
   <!-- the evening: the till, the blind count, the owner's space -->
   <section id="caisse" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
     <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le soir, la caisse.</span><span class="block text-green-deep">Au dirham près.</span></h2>
@@ -231,6 +291,37 @@ const faq = [
           <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
             <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
             <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the evening report -->
+  <section id="bilan" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le bilan du soir.</span><span class="block text-green-deep">Sur votre téléphone.</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Une page par jour, sans rien à compter. Vous voyez ce qui compte et ce qui cloche, sans être au pressing. C’est une option que le gérant active.</p>
+    <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {bilan.map(([i, h, x], k) => (
+        <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
+          <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
+          <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- the client file, win-back, moving in -->
+  <section id="clients" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Vos clients.</span><span class="block text-green">Ceux d’hier et ceux qui reviennent.</span></h2>
+      <p class="tf mt-4 max-w-2xl text-lg text-white/70" style="--d:100ms">Une fiche utile au comptoir, des doublons nettoyés, et la liste de ceux qui ne viennent plus. Si vous changez de système, vos clients viennent avec vous.</p>
+      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+        {clients.map(([i, h, x], k) => (
+          <li class="tf" style={`--d:${k * 90}ms`}>
+            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
+            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
           </li>
         ))}
       </ul>
