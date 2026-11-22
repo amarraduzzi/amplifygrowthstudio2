@@ -143,11 +143,13 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
   <BakeryScale />
 
   <!-- THE RECIPE IN THE RECIPE: the butter lights up the whole chain -->
-  <section class="border-b border-line bg-paper py-14 md:py-24">
+  <section class="relative isolate overflow-hidden bg-navy py-14 text-white md:py-24">
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+    <span class="pointer-events-none absolute inset-0 -z-10 [background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.035)_0_1px,transparent_1px_44px)]" aria-hidden="true"></span>
     <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[0.9fr_1.1fr]">
       <div>
-        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une recette')}</span><span class="block text-green-deep">{tt('dans la recette.')}</span></h2>
-        <p class="mt-5 max-w-md text-lg text-muted">{tt('La pâte feuilletée, la crème pâtissière ou la pâte sucrée sont des préparations : vous les décrivez une fois, puis vous les utilisez dans vos croissants, mille-feuilles et tartes. Quand le prix d’un ingrédient change, tout suit.')}</p>
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une recette')}</span><span class="block text-green">{tt('dans la recette.')}</span></h2>
+        <p class="mt-5 max-w-md text-lg text-white/70">{tt('La pâte feuilletée, la crème pâtissière ou la pâte sucrée sont des préparations : vous les décrivez une fois, puis vous les utilisez dans vos croissants, mille-feuilles et tartes. Quand le prix d’un ingrédient change, tout suit.')}</p>
         <ul class="mt-7 space-y-3">
           {[tt('Coût par fournée et par pièce'), tt('Prix conseillé selon votre objectif de marge'), tt('Jusqu’à six niveaux : pâte, viennoiserie, plateau'), tt('Trois listes : ingrédients, préparations, produits finis')].map(x => <li class="flex items-center gap-3 font-semibold"><span class="grid size-7 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-4" /></span>{x}</li>)}
         </ul>
@@ -159,12 +161,12 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     </div>
 
     <div class="mx-auto mt-14 max-w-6xl px-4 sm:px-6" data-bk>
-      <div class="bk-chain relative rounded-[2rem] bg-chalk p-5 ring-1 ring-line sm:p-8">
-        <p class="mb-5 text-sm font-semibold text-muted">{tt('Le prix du beurre monte : tout ce qui l’utilise suit.')}</p>
+      <div class="bk-chain relative rounded-[2rem] bg-white/[0.06] p-5 ring-1 ring-white/12 sm:p-8">
+        <p class="mb-5 text-sm font-semibold text-white/65">{tt('Le prix du beurre monte : tout ce qui l’utilise suit.')}</p>
         <ol class="flex flex-col items-stretch md:flex-row md:items-center">
           {chain.map(([k, n, v], i) => (
             <>
-              <li class="bk-node rounded-2xl bg-white p-4 shadow-sm ring-1 ring-line md:flex-1" style={`--i:${i}`}>
+              <li class="bk-node rounded-2xl bg-white p-4 text-navy shadow-sm ring-1 ring-line md:flex-1" style={`--i:${i}`}>
                 <span class="block text-xs font-semibold uppercase tracking-wide text-green-deep">{k}</span>
                 <span class="mt-1 block font-bold leading-tight">{n}</span>
                 <span class="display mt-2 block text-3xl tabular-nums" dir="ltr" style="text-transform:none">{v}</span>
@@ -173,7 +175,7 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
             </>
           ))}
         </ol>
-        <p class="mt-4 text-xs text-muted">{tt('Exemple calculé avec une recette de démonstration (TVA 10 %). Avec vos recettes, Amplify fait ce calcul pour chaque produit, à chaque nouveau prix d’achat.')}</p>
+        <p class="mt-4 text-xs text-white/50">{tt('Exemple calculé avec une recette de démonstration (TVA 10 %). Avec vos recettes, Amplify fait ce calcul pour chaque produit, à chaque nouveau prix d’achat.')}</p>
       </div>
     </div>
   </section>

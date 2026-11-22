@@ -899,6 +899,7 @@ export const dictEn: Record<string, string> = {
   "Coût par fournée et par pièce": "Cost per batch and per piece",
   "Prix conseillé selon votre objectif de marge": "Suggested price for your margin target",
   "Jusqu’à six niveaux : pâte, viennoiserie, plateau": "Up to six levels: dough, pastry, platter",
+  "Trois listes : ingrédients, préparations, produits finis": "Three lists: ingredients, preparations, finished products",
   "Marges par produit dans Amplify": "Margins per product in Amplify",
   "Fiche d’une préparation maison dans Amplify": "A house preparation card in Amplify",
   "Vos recettes sont dans Excel ?": "Your recipes are in Excel?",

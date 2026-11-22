@@ -899,6 +899,7 @@ export const dictAr: Record<string, string> = {
   "Coût par fournée et par pièce": "التكلفة للدفعة وللقطعة",
   "Prix conseillé selon votre objectif de marge": "ثمن مقترح حسب هدف الهامش",
   "Jusqu’à six niveaux : pâte, viennoiserie, plateau": "حتى ستة مستويات: عجين، معجنات، صينية",
+  "Trois listes : ingrédients, préparations, produits finis": "ثلاث قوائم: المكونات، التحضيرات، المنتجات النهائية",
   "Marges par produit dans Amplify": "الهوامش لكل منتج في Amplify",
   "Fiche d’une préparation maison dans Amplify": "بطاقة تحضير منزلي في Amplify",
   "Vos recettes sont dans Excel ?": "وصفاتك في Excel؟",
