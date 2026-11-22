@@ -1,184 +1,145 @@
 ---
-// "Le voyage d'une chemise": replaces the two text lists under the hero. Desktop: the block is pinned and the
-// scroll moves one shirt through four steps (drop-off, tag, ready, handed back). Phones and tablets: the same
-// story plays by itself in a loop while it is in view. Every step shows the old pain, struck through, and
-// what Amplify does instead. Reduced motion: no pin, no loop, the last state stays. Demo shop, invented names.
+// "Le voyage d'une chemise": no scroll tricks. A fixed 4:3 stage with four real photos that cross-fade
+// (drop-off, tag, ready, handed back), labels that animate on top of each photo, four step buttons with a
+// progress bar, and one text card that swaps. It plays by itself while in view, pauses on hover, and a tap
+// on a step jumps there. Reduced motion: no autoplay, no movement. Demo shop, invented names.
 import Icon from './Icon.astro';
-import Device from './Device.astro';
 import { tr, langOf } from '../i18n/t';
 const tt = tr(langOf(Astro.url));
 const steps = [
-  ['camera', 'Dépôt', 'Le client, ses pièces, une remarque par pièce.', 'Une tache que le client découvre au retrait, et qui était déjà là.', 'Les taches photographiées au dépôt : une preuve, pas une dispute.'],
-  ['tag', 'Étiquette', 'Une par pièce : numéro, article, jour prévu.', 'Une chemise sans nom, au fond du rail.', 'Un numéro et une étiquette pour chaque pièce.'],
-  ['check', 'Prêt', 'Sur son rail, le client prévenu sur WhatsApp.', 'Le téléphone qui sonne toute la journée : « C’est prêt ? »', 'Prêt : un WhatsApp en un geste, avec le reste à payer.'],
-  ['wallet', 'Remis', 'Le reste encaissé, le dépôt fermé.', 'Un carnet à souches, et un ticket que le client a perdu.', 'Un QR sur le ticket : le client suit son dépôt en direct.'],
+  ['camera', 'Dépôt', 'Le client, ses pièces, une remarque par pièce.', 'Une tache que le client découvre au retrait, et qui était déjà là.', 'Les taches photographiées au dépôt : une preuve, pas une dispute.', '/img/pressing-1-depot.webp'],
+  ['tag', 'Étiquette', 'Une par pièce : numéro, article, jour prévu.', 'Une chemise sans nom, au fond du rail.', 'Un numéro et une étiquette pour chaque pièce.', '/img/pressing-2-etiquette.webp'],
+  ['check', 'Prêt', 'Sur son rail, le client prévenu sur WhatsApp.', 'Le téléphone qui sonne toute la journée : « C’est prêt ? »', 'Prêt : un WhatsApp en un geste, avec le reste à payer.', '/img/pressing-3-rail.webp'],
+  ['wallet', 'Remis', 'Le reste encaissé, le dépôt fermé.', 'Un carnet à souches, et un ticket que le client a perdu.', 'Un QR sur le ticket : le client suit son dépôt en direct.', '/img/pressing-4-remis.webp'],
 ] as const;
-const tags = ['Chemise', 'Pantalon', 'Costume', 'Djellaba'];
 const qr = Array.from({ length: 49 }, (_, i) => { const r = Math.floor(i / 7), c = i % 7; const corner = (r < 3 && c < 3) || (r < 3 && c > 3) || (r > 3 && c < 3); return corner ? (r % 2 === 1 && c % 2 === 1 ? 0 : 1) : ((i * 7 + r * 3) % 5 < 2 ? 1 : 0); });
+const chip = 'pj-o absolute start-[4%] top-[4%] z-10 flex items-center gap-2 rounded-full py-1.5 pe-3.5 ps-2.5 text-[0.7rem] font-semibold shadow-lg sm:text-sm';
 ---
-<section class="pj" data-pj data-step="0" aria-label={tt('Le voyage d’une chemise')}>
-  <div class="pj-pin">
-    <div class="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-14 sm:px-6 lg:grid-cols-[0.95fr_1.1fr] lg:gap-14 lg:py-0">
-      <div>
-        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une chemise entre.')}</span><span class="block text-green-deep">{tt('Le client n’appelle pas.')}</span></h2>
-        <p class="mt-4 max-w-md text-lg text-muted">{tt('Suivez la pièce n° 1042, du comptoir à la remise. Chaque étape remplace un carnet, un ticket perdu ou un coup de téléphone.')}</p>
+<section class="pj mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-24" data-pj data-step="0" aria-label={tt('Le voyage d’une chemise')}>
+  <div class="grid gap-8 lg:grid-cols-[0.95fr_1.1fr] lg:gap-x-14 lg:gap-y-0">
+    <div class="lg:col-start-1 lg:row-start-1 lg:self-end">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une chemise entre.')}</span><span class="block text-green-deep">{tt('Le client n’appelle pas.')}</span></h2>
+      <p class="mt-4 max-w-md text-lg text-muted">{tt('Suivez la pièce n° 1042, du comptoir à la remise. Chaque étape remplace un carnet, un ticket perdu ou un coup de téléphone.')}</p>
+    </div>
 
-        <ol class="mt-7 space-y-1">
-          {steps.map(([ic, h, x, pain, gain], k) => (
-            <li class="pj-item" data-i={k}>
-              <button type="button" class="pj-btn flex w-full items-start gap-4 rounded-3xl p-3 text-start" data-go={k}>
-                <span class="pj-ic grid size-12 shrink-0 place-items-center rounded-2xl bg-white text-muted ring-1 ring-line"><Icon name={ic} class="size-6" /></span>
-                <span class="min-w-0 flex-1">
-                  <span class="flex items-baseline justify-between gap-3"><span class="pj-h block text-xl font-semibold">{tt(h)}</span><span class="display text-3xl text-line" dir="ltr">{k + 1}</span></span>
-                  <span class="pj-more"><span class="pj-in">
-                    <span class="mt-1 block text-[0.95rem] leading-relaxed text-muted">{tt(x)}</span>
-                    <span class="mt-3 flex gap-2 text-[0.92rem] leading-snug text-muted"><span class="mt-0.5 shrink-0 font-bold text-[#B5472A]" aria-hidden="true">×</span><span class="line-through decoration-[#B5472A]/60">{tt(pain)}</span></span>
-                    <span class="mt-1.5 flex gap-2 text-[0.95rem] font-semibold leading-snug text-navy"><span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span>{tt(gain)}</span></span>
-                  </span></span>
-                </span>
-              </button>
-            </li>
-          ))}
-        </ol>
-      </div>
+    <!-- the stage: four photos, labels on top -->
+    <div class="lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center">
+      <div class="pj-stage relative isolate aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-navy shadow-[0_60px_100px_-55px_rgba(0,30,62,0.9)] lg:rounded-[2.25rem]" aria-hidden="true">
+        {steps.map((s, k) => <div class={`pj-ph pj-ph${k} absolute inset-0`}><img src={s[5]} alt="" width="1200" height="896" loading={k === 0 ? 'eager' : 'lazy'} decoding="async" class="size-full object-cover" /></div>)}
+        <span class="pj-flash absolute inset-0 z-20 bg-white"></span>
 
-      <!-- the stage -->
-      <div class="relative isolate">
-        <div class="pj-stage relative isolate aspect-[5/5.2] w-full overflow-hidden rounded-[1.75rem] bg-navy shadow-[0_60px_100px_-55px_rgba(0,30,62,0.9)] sm:aspect-[5/4.6] lg:rounded-[2.25rem]" aria-hidden="true">
-          <span class="sl-scene absolute inset-0 -z-20"></span>
-          <span class="sl-blob sl-blob-a"></span><span class="sl-blob sl-blob-b"></span>
-          <span class="pj-flash absolute inset-0 z-30 bg-white"></span>
+        <p class="absolute end-[4%] top-[4%] z-10 flex items-center gap-2 rounded-full bg-navy/85 px-3.5 py-1.5 text-[0.7rem] font-semibold text-white shadow-lg backdrop-blur sm:text-sm"><Icon name="tag" class="size-4 text-green" /><span class="display text-base sm:text-lg" dir="ltr">N° 1042</span><span class="text-white/65">{tt('4 pièces')}</span></p>
 
-          <!-- the ticket number, always there -->
-          <p class="absolute end-[5%] top-[4%] z-10 flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-[0.7rem] font-semibold text-white ring-1 ring-white/20 sm:text-sm"><Icon name="tag" class="size-4 text-green" /><span class="display text-base sm:text-lg" dir="ltr">N° 1042</span><span class="text-white/60">{tt('4 pièces')}</span></p>
+        <!-- 1 drop-off: the viewfinder on the stain -->
+        <p class={`${chip} pj-o0 bg-navy text-white`}><Icon name="camera" class="size-4 text-green" />{tt('Photo : tache sur le col')}</p>
+        <span class="pj-o pj-o0 pj-view absolute z-10 rounded-xl border-2 border-green" style="left:39%;top:63%;width:17%;height:15%"><i class="absolute -start-1 -top-1 size-3 rounded-tl-lg border-s-4 border-t-4 border-green"></i><i class="absolute -end-1 -top-1 size-3 rounded-tr-lg border-e-4 border-t-4 border-green"></i><i class="absolute -bottom-1 -start-1 size-3 rounded-bl-lg border-b-4 border-s-4 border-green"></i><i class="absolute -bottom-1 -end-1 size-3 rounded-br-lg border-b-4 border-e-4 border-green"></i></span>
 
-          <!-- the rail -->
-          <div class="pj-rail absolute start-[5%] top-[19%] h-[18%] w-[58%]">
-            <span class="absolute inset-x-0 top-0 h-1 rounded-full bg-white/35"></span>
-            {[8, 19, 41, 52].map((l) => <svg viewBox="0 0 200 190" class="absolute top-[6%] w-[9%] text-white/25" style={`left:${l}%`}><use href="#pj-shirt" /></svg>)}
-            <span class="pj-slot absolute top-[4%] h-[92%] w-[10%] rounded-lg border border-dashed border-green/60" style="left:29.5%"></span>
-          </div>
-          <p class="pj-s pj-c2 absolute start-[5%] top-[4%] z-10 flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm"><span class="sl-live size-2 rounded-full bg-navy"></span>{tt('Prêt : Rail 12')}</p>
-          <p class="pj-s pj-c3 absolute start-[5%] top-[4%] z-10 flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-2 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm"><Icon name="wallet" class="size-4" />{tt('Remis : 265 MAD encaissés')}</p>
-          <p class="pj-s pj-c0 absolute start-[5%] top-[4%] z-10 flex items-center gap-2 rounded-full bg-white py-1.5 pe-3.5 ps-2 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm"><Icon name="camera" class="size-4 text-green-deep" />{tt('Photo : tache sur le col')}</p>
-          <p class="pj-s pj-c1 absolute start-[5%] top-[4%] z-10 flex items-center gap-2 rounded-full bg-white py-1.5 pe-3.5 ps-2 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm"><Icon name="tag" class="size-4 text-green-deep" />{tt('Dépôt n° 1042 : 4 étiquettes')}</p>
+        <!-- 2 tag: the number on the shirt -->
+        <p class={`${chip} pj-o1 bg-navy text-white`}><Icon name="tag" class="size-4 text-green" />{tt('Dépôt n° 1042 : 4 étiquettes')}</p>
+        <span class="pj-o pj-o1 pj-ring absolute z-10 rounded-full border-2 border-green" style="left:58.5%;top:52%;width:11%;height:14.5%"></span>
+        <p class="pj-o pj-o1 absolute z-10 flex items-center gap-1.5 rounded-xl bg-white px-2.5 py-1.5 text-[0.65rem] font-semibold text-navy shadow-lg sm:text-sm" style="left:56%;top:36%;--dl:350ms"><span class="rounded bg-navy px-1 text-green" dir="ltr">1042-1</span>{tt('Chemise')}</p>
 
-          <!-- the shirt -->
-          <span class="pj-shadow absolute start-[30%] top-[78%] h-5 w-[40%] rounded-[50%] bg-black/50 blur-xl"></span>
-          <div class="pj-shirt absolute start-[33%] top-[33%] w-[34%]">
-            <svg viewBox="0 0 200 190" class="block w-full drop-shadow-[0_18px_22px_rgba(0,0,0,0.35)]">
-              <path d="M60 10 85 22Q100 36 115 22L140 10 185 45 165 82 145 68V180H55V68L35 82 15 45Z" fill="#F4F1EA" />
-              <path d="M85 22Q100 36 115 22L112 12Q100 22 88 12Z" fill="#D9D4C7" />
-              <path d="M100 34V178" stroke="#D9D4C7" stroke-width="2" />
-              {[56, 84, 112, 140].map((y) => <circle cx="100" cy={y} r="3" fill="#B9B2A2" />)}
-              <circle class="pj-stain" cx="120" cy="40" r="9" fill="#A9552B" opacity=".85" />
-            </svg>
-            <span class="pj-cam absolute -end-[2%] top-[2%] h-[24%] w-[34%] rounded-xl border-2 border-green"><i class="absolute -start-1 -top-1 size-3 rounded-tl-lg border-s-4 border-t-4 border-green"></i><i class="absolute -end-1 -top-1 size-3 rounded-tr-lg border-e-4 border-t-4 border-green"></i><i class="absolute -bottom-1 -start-1 size-3 rounded-bl-lg border-b-4 border-s-4 border-green"></i><i class="absolute -bottom-1 -end-1 size-3 rounded-br-lg border-b-4 border-e-4 border-green"></i></span>
-          </div>
+        <!-- 3 ready: the rail, the WhatsApp -->
+        <p class={`${chip} pj-o2 bg-green text-navy`}><span class="sl-live size-2 rounded-full bg-navy"></span>{tt('Prêt : Rail 12')}</p>
+        <span class="pj-o pj-o2 pj-ring absolute z-10 rounded-full border-2 border-green" style="left:47%;top:33%;width:8%;height:11%"></span>
+        <p class="pj-o pj-o2 absolute z-10 rounded-xl bg-navy px-2.5 py-1.5 text-[0.65rem] font-semibold text-white shadow-lg sm:text-sm" style="left:57%;top:29%;--dl:350ms">{tt('Rail')} 12</p>
+        <p class="pj-o pj-o2 absolute bottom-[5%] start-[4%] z-10 flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--dl:650ms"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>{tt('WhatsApp envoyé à Nadia')}</p>
 
-          <!-- the four tags -->
-          <ul class="absolute bottom-[5%] start-[5%] grid w-[52%] grid-cols-2 gap-1.5">
-            {tags.map((n, i) => <li class="pj-s pj-g1 flex items-center gap-1.5 rounded-lg bg-white px-2 py-1 text-[0.62rem] font-semibold text-navy shadow-md sm:text-xs" style={`--dl:${i * 120}ms`}><span class="rounded bg-navy px-1 text-green" dir="ltr">1042-{i + 1}</span><span class="truncate">{tt(n)}</span></li>)}
-          </ul>
-
-          <!-- WhatsApp, then the ticket QR -->
-          <p class="pj-s pj-c2 absolute start-[5%] top-[47%] z-10 flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--dl:500ms"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>{tt('WhatsApp envoyé à Nadia')}</p>
-          <div class="pj-s pj-c3 absolute start-[5%] top-[40%] z-10 w-[24%] rounded-2xl bg-paper p-2 shadow-lg" style="--dl:300ms">
-            <div class="relative grid aspect-square grid-cols-7 gap-px overflow-hidden rounded-lg bg-white">
-              {qr.map((v) => <i class={v ? 'bg-navy' : 'bg-white'}></i>)}
-              <span class="pj-scan absolute inset-x-0 h-[14%] bg-green/40"></span>
-            </div>
-            <p class="mt-1 text-center text-[0.6rem] font-semibold text-muted sm:text-xs">{tt('QR du ticket')}</p>
-          </div>
-
-          <!-- the client's phone -->
-          <div class="pj-phone absolute bottom-[3%] end-[5%] w-[28%]"><Device kind="phone" src="/img/pressing-suivi-phone.webp" alt="" w={600} h={1298} class="rotate-[3deg]" /></div>
+        <!-- 4 handed back: the QR -->
+        <p class={`${chip} pj-o3 bg-green text-navy`}><Icon name="wallet" class="size-4" />{tt('Remis : 265 MAD encaissés')}</p>
+        <span class="pj-o pj-o3 pj-ring absolute z-10 rounded-2xl border-2 border-green" style="left:50%;top:79%;width:20%;height:13%"></span>
+        <div class="pj-o pj-o3 absolute bottom-[6%] start-[4%] z-10 w-[17%] rounded-2xl bg-paper p-1.5 shadow-lg" style="--dl:350ms">
+          <div class="relative grid aspect-square grid-cols-7 gap-px overflow-hidden rounded-lg bg-white">{qr.map((v) => <i class={v ? 'bg-navy' : 'bg-white'}></i>)}<span class="pj-scan absolute inset-x-0 h-[14%] bg-green/40"></span></div>
+          <p class="mt-1 text-center text-[0.55rem] font-semibold text-muted sm:text-[0.7rem]">{tt('QR du ticket')}</p>
         </div>
       </div>
     </div>
+
+    <!-- the steps and the text card -->
+    <div class="lg:col-start-1 lg:row-start-2 lg:self-start">
+      <div class="mt-2 grid grid-cols-4 gap-2 lg:mt-8" role="tablist" aria-label={tt('Le voyage d’une chemise')}>
+        {steps.map((s, k) => (
+          <button type="button" role="tab" class="pj-btn group relative overflow-hidden rounded-2xl bg-paper px-2 pb-3 pt-3 text-center ring-1 ring-line sm:px-3" data-go={k} aria-selected={String(k === 0)}>
+            <span class="pj-ic mx-auto grid size-9 place-items-center rounded-xl bg-chalk text-muted sm:size-10"><Icon name={s[0]} class="size-5" /></span>
+            <span class="mt-2 block text-[0.78rem] font-semibold leading-tight sm:text-base">{tt(s[1])}</span>
+            <span class="absolute inset-x-0 bottom-0 h-1 bg-line/60"><i class="pj-bar block h-full origin-left bg-green rtl:origin-right"></i></span>
+          </button>
+        ))}
+      </div>
+      <div class="pj-cards mt-3 grid" aria-live="polite">
+        {steps.map((s, k) => (
+          <div class="pj-card rounded-[1.5rem] bg-paper p-5 ring-1 ring-line sm:p-6" data-card={k} style="grid-area:1/1">
+            <p class="flex items-baseline gap-3"><span class="display text-4xl text-green-deep" dir="ltr">{k + 1}</span><span class="text-xl font-semibold">{tt(s[1])}</span></p>
+            <p class="mt-2 text-[0.98rem] leading-relaxed text-muted">{tt(s[2])}</p>
+            <p class="mt-4 flex gap-2.5 text-[0.92rem] leading-snug text-muted"><span class="mt-0.5 shrink-0 font-bold text-[#B5472A]" aria-hidden="true">×</span><span class="line-through decoration-[#B5472A]/60">{tt(s[3])}</span></p>
+            <p class="mt-2 flex gap-2.5 text-[1rem] font-semibold leading-snug"><span class="mt-0.5 grid size-5 shrink-0 place-items-center rounded-full bg-green text-navy"><Icon name="check" class="size-3.5" /></span><span>{tt(s[4])}</span></p>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
-  <svg width="0" height="0" class="absolute" aria-hidden="true"><symbol id="pj-shirt" viewBox="0 0 200 190"><path d="M60 10 85 22Q100 36 115 22L140 10 185 45 165 82 145 68V180H55V68L35 82 15 45Z" fill="currentColor" /></symbol></svg>
 </section>
 
 <style is:global>
-  .pj-item .pj-btn { transition: background-color .4s, opacity .4s; opacity: .55; }
-  .pj-item .pj-btn:hover { opacity: .9; }
-  .pj-item.is-on .pj-btn { background: #fff; opacity: 1; box-shadow: 0 0 0 1px #D3DBD6, 0 20px 40px -28px rgba(0,30,62,.5); }
-  .pj-item .pj-ic { transition: background-color .5s, color .5s, transform .5s cubic-bezier(.3,1.6,.5,1); }
-  .pj-item.is-done .pj-ic { background: #DDF7E9; color: #00804A; }
-  .pj-item.is-on .pj-ic { background: #05B962; color: #001E3E; transform: scale(1.1) rotate(-4deg); }
-  .pj-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .55s cubic-bezier(.2,.8,.2,1); }
-  .pj-in { overflow: hidden; min-height: 0; opacity: 0; transition: opacity .4s; }
-  .pj-item.is-on .pj-more { grid-template-rows: 1fr; }
-  .pj-item.is-on .pj-in { opacity: 1; transition-delay: .2s; }
-
-  /* the stage: pieces appear with the step reached (g) or only on one step (c) */
-  .pj-stage { container-type: size; }
-  .pj-s { opacity: 0; transform: translateY(12px) scale(.95); transition: opacity .5s var(--dl, 0s), transform .6s var(--dl, 0s) cubic-bezier(.2,1.2,.4,1); }
-  .pj.g1 .pj-g1, .pj.e0 .pj-c0, .pj.e1 .pj-c1, .pj.e2 .pj-c2, .pj.e3 .pj-c3 { opacity: 1; transform: none; }
-  .pj-shirt { transform: scale(1.1); transition: transform 1s cubic-bezier(.3,.9,.25,1), opacity .7s; }
-  .pj.e1 .pj-shirt { transform: scale(1); }
-  .pj.e2 .pj-shirt { transform: translate(-15.5cqw, -27cqh) scale(.3); }
-  .pj.e3 .pj-shirt { transform: translate(-15.5cqw, -44cqh) scale(.3); opacity: 0; }
-  .pj-shadow { transition: opacity .6s; }
-  .pj.g2 .pj-shadow { opacity: 0; }
-  .pj-rail, .pj-slot { transition: opacity .6s; }
-  .pj-rail { opacity: .25; }
-  .pj.g2 .pj-rail { opacity: 1; }
-  .pj-slot { opacity: 0; }
-  .pj.e2 .pj-slot { opacity: 1; }
-  .pj-cam { opacity: 0; transform: scale(1.3); transition: opacity .4s, transform .5s cubic-bezier(.2,1.4,.4,1); }
-  .pj.e0 .pj-cam { opacity: 1; transform: none; transition-delay: .4s; }
-  .pj-stain { transition: transform .5s; transform-origin: 120px 40px; }
-  .pj.e0 .pj-stain { animation: pj-pulse 1.6s .6s ease-in-out infinite; }
+  .pj-ph { opacity: 0; transition: opacity .9s ease; }
+  .pj-ph img { transform: scale(1.07); transition: transform 7s linear; }
+  .pj.e0 .pj-ph0, .pj.e1 .pj-ph1, .pj.e2 .pj-ph2, .pj.e3 .pj-ph3 { opacity: 1; }
+  .pj.e0 .pj-ph0 img, .pj.e1 .pj-ph1 img, .pj.e2 .pj-ph2 img, .pj.e3 .pj-ph3 img { transform: scale(1); }
+  .pj-o { opacity: 0; transform: translateY(10px) scale(.96); pointer-events: none; transition: opacity .45s, transform .55s cubic-bezier(.2,1.2,.4,1); }
+  .pj.e0 .pj-o0, .pj.e1 .pj-o1, .pj.e2 .pj-o2, .pj.e3 .pj-o3 { opacity: 1; transform: none; transition-delay: var(--dl, .5s); }
+  .pj-view, .pj-ring { animation: pj-pulse 1.8s ease-in-out infinite; }
+  .pj-ring { box-shadow: 0 0 0 0 rgba(5,185,98,.6); animation-name: pj-ring; }
   .pj-flash { opacity: 0; pointer-events: none; }
-  .pj.e0.go .pj-flash { animation: pj-fl .7s 1s ease-out; }
-  .pj-phone { opacity: 0; transform: translateY(40%); transition: opacity .6s, transform .9s cubic-bezier(.2,.9,.25,1); }
-  .pj.g2 .pj-phone { opacity: 1; transform: none; }
+  .pj.e0.is-run .pj-flash { animation: pj-fl .7s 1.6s ease-out; }
   .pj-scan { top: 0; animation: pj-sc 1.8s ease-in-out infinite; }
-  @keyframes pj-pulse { 50% { transform: scale(1.35); } }
-  @keyframes pj-fl { 0% { opacity: 0; } 15% { opacity: .85; } 100% { opacity: 0; } }
+  @keyframes pj-pulse { 50% { transform: scale(1.06); } }
+  @keyframes pj-ring { 0% { box-shadow: 0 0 0 0 rgba(5,185,98,.6); } 100% { box-shadow: 0 0 0 16px rgba(5,185,98,0); } }
+  @keyframes pj-fl { 0% { opacity: 0; } 15% { opacity: .8; } 100% { opacity: 0; } }
   @keyframes pj-sc { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(600%); } }
 
-  /* desktop: pinned, the scroll plays the story */
-  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-    .js .pj { height: 360vh; }
-    .js .pj-pin { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; padding-top: 4rem; }
-  }
+  .pj-btn { transition: background-color .4s, color .4s, box-shadow .4s, transform .3s; }
+  .pj-btn:hover { transform: translateY(-2px); }
+  .pj-btn .pj-ic { transition: background-color .4s, color .4s; }
+  .pj-btn.is-on { background: #001E3E; color: #fff; box-shadow: none; }
+  .pj-btn.is-on .pj-ic { background: #05B962; color: #001E3E; }
+  .pj-btn.is-done .pj-ic { background: #DDF7E9; color: #00804A; }
+  .pj-bar { transform: scaleX(0); }
+  .pj-btn.is-done .pj-bar { transform: scaleX(1); }
+  .pj-btn.is-on .pj-bar { animation: pj-bar 5.5s linear both; animation-play-state: paused; }
+  .pj.is-run .pj-btn.is-on .pj-bar { animation-play-state: running; }
+  @media (hover: hover) { .pj:hover .pj-btn.is-on .pj-bar { animation-play-state: paused; } }
+  @keyframes pj-bar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  .pj-card { opacity: 0; transform: translateY(8px); pointer-events: none; transition: opacity .4s, transform .5s cubic-bezier(.2,.8,.2,1); }
+  .pj.e0 [data-card="0"], .pj.e1 [data-card="1"], .pj.e2 [data-card="2"], .pj.e3 [data-card="3"] { opacity: 1; transform: none; pointer-events: auto; transition-delay: .15s; }
+
   @media (prefers-reduced-motion: reduce) {
-    .pj *, .pj-s, .pj-shirt, .pj-phone { transition: none !important; animation: none !important; }
+    .pj *, .pj-o, .pj-ph, .pj-ph img { transition: none !important; animation: none !important; }
+    .pj-btn.is-on .pj-bar { transform: scaleX(1); }
+    .pj-flash { display: none; }
   }
 </style>
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const wide = matchMedia('(min-width: 1024px)');
   document.querySelectorAll<HTMLElement>('[data-pj]').forEach((root) => {
-    const items = [...root.querySelectorAll<HTMLElement>('[data-i]')];
-    let cur = -1, timer = 0, vis = false;
-    const pinned = () => wide.matches && !still;
+    const btns = [...root.querySelectorAll<HTMLElement>('[data-go]')];
+    let cur = -1;
     const set = (n: number) => {
-      if (n === cur) return;
       cur = n; root.dataset.step = String(n);
-      for (let i = 0; i < 4; i++) { root.classList.toggle('g' + i, n >= i); root.classList.toggle('e' + i, n === i); }
-      root.classList.add('go');
-      items.forEach((el, k) => { el.classList.toggle('is-on', k === n); el.classList.toggle('is-done', k < n); });
+      for (let i = 0; i < 4; i++) root.classList.toggle('e' + i, n === i);
+      btns.forEach((b, k) => {
+        b.classList.toggle('is-on', k === n); b.classList.toggle('is-done', k < n);
+        b.setAttribute('aria-selected', String(k === n));
+        const bar = b.querySelector<HTMLElement>('.pj-bar')!;
+        bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = '';
+      });
     };
-    const stop = () => { clearInterval(timer); timer = 0; };
-    const play = () => { stop(); if (pinned() || still || !vis) return; timer = window.setInterval(() => set((cur + 1) % 4), 3600); };
-    const onScroll = () => {
-      if (!pinned()) return;
-      const r = root.getBoundingClientRect(), t = root.offsetHeight - innerHeight;
-      set(Math.min(3, Math.max(0, Math.floor((Math.min(1, Math.max(0, -r.top / t))) * 4))));
-    };
-    root.querySelectorAll<HTMLElement>('[data-go]').forEach((b) => b.addEventListener('click', () => {
-      const k = Number(b.dataset.go);
-      if (pinned()) { const t = root.offsetHeight - innerHeight; scrollTo({ top: root.offsetTop + ((k + 0.5) / 4) * t, behavior: 'smooth' }); }
-      else { set(k); play(); }
-    }));
-    new IntersectionObserver((es) => { vis = es[0].isIntersecting; vis ? play() : stop(); }, { threshold: 0.25 }).observe(root);
-    addEventListener('scroll', onScroll, { passive: true });
-    addEventListener('resize', () => { onScroll(); play(); });
-    set(still ? 3 : 0); onScroll();
+    btns.forEach((b, k) => {
+      b.addEventListener('click', () => set(k));
+      b.querySelector('.pj-bar')!.addEventListener('animationend', (e) => { if ((e as AnimationEvent).animationName === 'pj-bar' && !still) set((cur + 1) % 4); });
+    });
+    new IntersectionObserver((es) => root.classList.toggle('is-run', es[0].isIntersecting && !still), { threshold: 0.35 }).observe(root);
+    set(0);
   });
 </script>
