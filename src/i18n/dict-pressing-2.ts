@@ -168,6 +168,12 @@ export const pressing2En: Record<string, string> = {
   "14 jours gratuits": "14 days free",
   "Sans engagement": "No commitment",
   "Choisissez ce qu’il vous faut": "Pick what you need",
+  "Caisse et marges": "Till and margins",
+  "Agenda et rappels": "Diary and reminders",
+  "Cabines et soins": "Rooms and treatments",
+  "Dépôts et suivi": "Drop-offs and tracking",
+  "Kridi et stock": "Kridi and stock",
+  "Biens et visites": "Listings and viewings",
 };
 export const pressing2Ar: Record<string, string> = {
   "La tournée du chauffeur : trois arrêts, du ramassage à la caisse": "جولة السائق: ثلاث محطات، من الاستلام إلى الصندوق",
@@ -300,4 +306,10 @@ export const pressing2Ar: Record<string, string> = {
   "14 jours gratuits": "14 يومًا مجانًا",
   "Sans engagement": "بدون التزام",
   "Choisissez ce qu’il vous faut": "اختار اللي خاصك",
+  "Caisse et marges": "الكاشير والهوامش",
+  "Agenda et rappels": "الأجندة والتذكيرات",
+  "Cabines et soins": "الغرف والعلاجات",
+  "Dépôts et suivi": "الإيداعات والتتبع",
+  "Kridi et stock": "الكريدي والمخزون",
+  "Biens et visites": "العقارات والزيارات",
 };
