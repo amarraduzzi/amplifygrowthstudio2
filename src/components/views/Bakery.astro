@@ -99,11 +99,15 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
         </ul>
       </div>
 
-      <div class="fade-up relative isolate overflow-hidden rounded-[2rem] bg-navy p-6 text-white shadow-[0_50px_90px_-50px_rgba(0,30,62,0.8)] sm:p-8" style="--d:250ms" data-croissant>
+      <div class="cr-stage fade-up relative isolate overflow-hidden rounded-[2rem] px-4 pb-5 pt-16 shadow-[0_50px_90px_-50px_rgba(0,30,62,0.8)] sm:px-8 sm:pb-8 sm:pt-20" style="--d:250ms" data-stage>
+        <span class="cr-photo absolute inset-0 -z-20" aria-hidden="true"></span>
+        <span class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(0,30,62,.35),rgba(0,30,62,.05)_45%,rgba(0,30,62,.4))]" aria-hidden="true"></span>
+        <p class="cr-hint absolute start-4 top-4 inline-flex items-center gap-2 rounded-full bg-white py-1.5 pe-4 ps-2 text-sm font-bold text-navy shadow-lg sm:start-8 sm:top-6"><span class="grid size-7 place-items-center rounded-full bg-green text-navy"><Icon name="chef" class="size-4" /></span>{tt('Faites bouger le prix du beurre')}</p>
+      <div class="cr-card relative isolate overflow-hidden rounded-[1.5rem] bg-navy p-5 text-white shadow-[0_30px_60px_-30px_rgba(0,20,50,0.9)] sm:p-7" data-croissant>
         <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_100%_0%,rgba(5,185,98,.28),transparent_70%)]" aria-hidden="true"></span>
         <label class="block">
           <span class="flex items-baseline justify-between gap-3"><span class="font-semibold">{tt('Prix du beurre')}</span><span class="display text-3xl tabular-nums text-green" dir="ltr"><span data-v="butter">95</span> DH/kg</span></span>
-          <input type="range" min="60" max="140" step="1" value="95" class="mt-3 w-full accent-[#05B962]" data-butter aria-label={tt('Prix du beurre')} />
+          <input type="range" min="60" max="140" step="1" value="95" dir="ltr" class="cr-range mt-3 w-full" data-butter aria-label={tt('Prix du beurre')} />
         </label>
         <ol class="mt-7 space-y-3">
           <li class="cr-node flex items-center justify-between gap-3 rounded-2xl bg-white/[0.06] px-4 py-3 ring-1 ring-white/10">
@@ -122,6 +126,7 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
           </li>
         </ol>
         <p class="mt-5 text-xs text-white/50">{tt('Exemple calculé avec une recette de démonstration (TVA 10 %). Avec vos recettes, Amplify fait ce calcul pour chaque produit, à chaque nouveau prix d’achat.')}</p>
+      </div>
       </div>
     </div>
 
@@ -374,6 +379,23 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
   .js [data-bk].in .bk-tilt { transform: none; opacity: 1; transition: transform 1.2s cubic-bezier(.2,.8,.2,1), opacity .7s ease; }
   [dir="rtl"] .js [data-bk] .bk-tilt { transform: perspective(1400px) rotateY(7deg) rotateX(3deg) translateY(20px); }
 
+  /* hero stage: a photo behind the card, the butter price runs by itself once, the change flows down the card */
+  .cr-photo { background: url('/img/photos/pat-hero-1200.webp') 30% 50% / cover no-repeat, linear-gradient(160deg, #F2C98A, #D9963F 60%, #8A5A2B); animation: cr-kb 14s ease-in-out infinite alternate; }
+  @keyframes cr-kb { from { transform: scale(1.02); } to { transform: scale(1.12) translateY(-1.5%); } }
+  .cr-hint { transition: opacity .5s, transform .5s; animation: cr-bob 2.4s ease-in-out infinite; }
+  .cr-touched .cr-hint { opacity: 0; transform: translateY(-.5rem); pointer-events: none; animation: none; }
+  @keyframes cr-bob { 50% { transform: translateY(-3px); } }
+  .cr-node { transition: box-shadow .3s; }
+  .cr-pulse { animation: cr-pulse .75s ease-out; }
+  @keyframes cr-pulse { 0% { box-shadow: 0 0 0 0 rgba(5, 185, 98, .8); transform: scale(1); } 35% { transform: scale(1.02); } 100% { box-shadow: 0 0 0 .8rem rgba(5, 185, 98, 0); transform: scale(1); } }
+  .cr-range { -webkit-appearance: none; appearance: none; height: 2.25rem; background: transparent; cursor: pointer; --p: 44%; }
+  .cr-range::-webkit-slider-runnable-track { height: .55rem; border-radius: 99px; background: linear-gradient(90deg, #05B962 var(--p), rgba(255, 255, 255, .2) var(--p)); }
+  .cr-range::-moz-range-track { height: .55rem; border-radius: 99px; background: rgba(255, 255, 255, .2); }
+  .cr-range::-moz-range-progress { height: .55rem; border-radius: 99px; background: #05B962; }
+  .cr-range::-webkit-slider-thumb { -webkit-appearance: none; width: 1.9rem; height: 1.9rem; margin-top: -.67rem; border-radius: 50%; background: #fff; border: .35rem solid #05B962; box-shadow: 0 .3rem .9rem rgba(0, 0, 0, .45); }
+  .cr-range::-moz-range-thumb { width: 1.2rem; height: 1.2rem; border-radius: 50%; background: #fff; border: .35rem solid #05B962; box-shadow: 0 .3rem .9rem rgba(0, 0, 0, .45); }
+  @media (prefers-reduced-motion: reduce) { .cr-photo, .cr-hint, .cr-pulse { animation: none; } }
+
   /* the chain: the price travels from the butter to the plateau */
   .bk-node { transition: opacity .5s, transform .6s cubic-bezier(.2,.8,.2,1); transition-delay: calc(var(--i) * .55s); }
   .js .bk-chain:not(.in) .bk-node { opacity: .3; transform: scale(.94); }
@@ -430,21 +452,53 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     // the demo recipe: dough = 15,03 DH + 0,55 kg of butter; 30 croissants = dough + 2,60 DH of egg; sold 8 DH incl. 10 % VAT
     const cost = (b: number) => (15.03 + 0.55 * b + 2.6) / 30;
     const base = cost(95), ht = 8 / 1.1;
-    const run = () => {
+    const stage = root.closest<HTMLElement>('[data-stage]')!;
+    const nodes = [...root.querySelectorAll<HTMLElement>('.cr-node')];
+    const run = (ripple = true) => {
       const b = Number(input.value), dough = 15.03 + 0.55 * b, piece = cost(b), margin = ht - piece, d = piece - base;
       v('butter').textContent = String(b);
       v('dough').textContent = dec(dough);
       v('piece').textContent = dec(piece);
       v('margin').textContent = dec(margin);
       bar.style.width = `${Math.min(100, (piece / ht) * 100)}%`;
+      input.style.setProperty('--p', `${((b - 60) / 80) * 100}%`);
       delta.textContent = `${d > 0 ? '+' : '−'}${dec(Math.abs(d))} DH`;
       delta.style.opacity = Math.abs(d) < 0.005 ? '0' : '1';
-      if (!still) nums.forEach(n => restart(n, 'bk-flash'));
+      if (!still) {
+        nums.forEach(n => restart(n, 'bk-flash'));
+        // the change flows down the card: butter, then the dough, then the croissant
+        if (ripple) nodes.forEach((n, i) => setTimeout(() => restart(n, 'cr-pulse'), i * 170));
+      }
     };
-    input.addEventListener('input', run);
-    run();
+    // the visitor takes over: the demo stops and the hint goes away
+    let auto = true;
+    const touched = () => { auto = false; stage.classList.add('cr-touched'); };
+    input.addEventListener('input', () => { touched(); run(); });
+    root.addEventListener('pointerdown', touched);
+    run(false);
     delta.style.opacity = '0';
     nums.forEach(n => n.classList.remove('bk-flash'));
+    // the butter goes up by itself once, so the page shows what it does before anyone touches it
+    if (!still && 'IntersectionObserver' in window) {
+      const tween = (from: number, to: number, ms: number, done: () => void) => {
+        const t0 = performance.now();
+        let last = from;
+        const f = (t: number) => {
+          if (!auto) return;
+          const k = Math.min(1, (t - t0) / ms), e = k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+          const b = Math.round(from + (to - from) * e);
+          if (b !== last) { last = b; input.value = String(b); run(Math.abs(b - from) % 8 === 0); }
+          if (k < 1) requestAnimationFrame(f); else done();
+        };
+        requestAnimationFrame(f);
+      };
+      const io = new IntersectionObserver((es) => {
+        if (!es[0].isIntersecting) return;
+        io.disconnect();
+        setTimeout(() => { if (auto) tween(95, 125, 2400, () => setTimeout(() => { if (auto) tween(125, 95, 1800, () => { stage.classList.add('cr-touched'); }); }, 1300)); }, 1600);
+      }, { threshold: 0.4 });
+      io.observe(root);
+    }
   });
 
   // 2. count up: the facts under the hero (once, when they come into view)

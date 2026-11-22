@@ -1,6 +1,7 @@
 // Texts of the home hero stage (HeroStage.astro). French text is the key. Merged first in t.ts, so a translation
 // that already exists elsewhere wins.
 export const heroStageEn: Record<string, string> = {
+  "Faites bouger le prix du beurre": "Move the butter price",
   "Voir ce métier": "See this trade",
   "Aperçu du métier choisi": "Preview of the chosen trade",
   "Une réservation de cabine de spa sur le téléphone": "A spa cabin booking on the phone",
@@ -26,6 +27,7 @@ export const heroStageEn: Record<string, string> = {
 };
 
 export const heroStageAr: Record<string, string> = {
+  "Faites bouger le prix du beurre": "حرّك سعر الزبدة",
   "Voir ce métier": "اكتشف هذه المهنة",
   "Aperçu du métier choisi": "معاينة للمهنة المختارة",
   "Une réservation de cabine de spa sur le téléphone": "حجز كابينة سبا على الهاتف",
