@@ -1,0 +1,6 @@
+SITE ETAPPE 6 (bijgewerkt met Garage en Hanout): knop "Essayer 14 jours gratuits" bij elke formule van Salons, Spas, Pressing, Garage en Hanout
+
+Upload bovenop etappe 5. Eerst de app (etappe B en C) deployen, dan pas de site.
+Bestanden: src/config.ts, src/lib/sectorPlans.ts, src/components/SectorPrices.astro,
+src/components/views/Salons.astro, src/components/views/Spas.astro.
+- "Demander une démo" blijft staan op Salons en Spas. Op Pressing, Garage en Hanout staat de knop onder elke formule.
