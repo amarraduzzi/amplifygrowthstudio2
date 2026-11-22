@@ -1,0 +1,203 @@
+---
+// "Les gâteaux sur commande": the cake order at the pâtisserie counter. Dark section, same build as the
+// dry cleaners' monthly invoice: a paper order form on the start side that fills in step by step (the
+// client and the day, the cake and the text on it, the deposit with its stamp, the day it is due, the
+// hand-over on one ticket), and four points on the other side that light up with their step.
+// Plays once when in view, a tap on the form (or "Recommencer") replays it.
+// Demo shop, invented client and numbers. What it shows is what the pâtisserie till does today: the
+// deposit is half the total rounded to 10 DH, it has its own ticket, the hand-over is one ticket for the
+// whole cake with the deposit deducted. Taking an order needs a connection; the sales do not.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const items = [
+  ['cake', 'La commande au comptoir', 'Les produits et les tailles, le jour, l’heure, le texte sur le gâteau et le téléphone de la cliente. L’atelier la retrouve dans le plan de production.'],
+  ['wallet', 'L’acompte, sur son propre ticket', 'Proposé à la moitié du total, arrondi à 10 DH : espèces ou carte. Il a son ticket et entre dans la caisse du jour où il est pris. Un message WhatsApp de confirmation est prêt à envoyer.'],
+  ['calendar', 'La liste du jour', 'Aujourd’hui, demain, plus tard jusqu’à 30 jours. Chaque gâteau montre ce qu’il reste à payer, et un bouton WhatsApp prévient la cliente que c’est prêt.'],
+  ['check', 'Un seul ticket au retrait', 'Le gâteau entier sur un ticket, l’acompte déduit. La cliente ne paie que le reste, en espèces ou par carte.'],
+] as const;
+// [quantity, FR label, amount]
+const rows = [
+  ['1', 'Entremets chocolat-framboise, 12 parts', 450],
+  ['1', 'Plateau de petits fours, 24 pièces', 150],
+] as const;
+---
+<section id="gateaux" class="co relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf data-co>
+  <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+  <span class="co-grid pointer-events-none absolute inset-0 -z-10" aria-hidden="true"></span>
+  <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-[0.98fr_1.02fr] lg:gap-x-16 lg:gap-y-9">
+      <div class="order-1 lg:col-start-1 lg:row-start-1 lg:self-end">
+        <p class="tf inline-flex items-center gap-2 rounded-full bg-green px-3 py-1.5 text-sm font-bold text-navy"><Icon name="cake" class="size-4" />{tt('Nouveau')}</p>
+        <h2 class="tf-x mt-4 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Les gâteaux sur commande.')}</span><span class="block text-green">{tt('Un acompte, puis le retrait.')}</span></h2>
+        <p class="tf mt-4 max-w-lg text-lg text-white/70" style="--d:100ms">{tt('Une cliente commande un gâteau pour samedi : le jour, l’heure, le texte à écrire dessus. Elle laisse un acompte, et le reste se paie au retrait, sur un seul ticket.')}</p>
+      </div>
+      <div class="order-3 lg:col-start-1 lg:row-start-2">
+        <ul class="grid gap-3">
+          {items.map(([i, h, x], k) => (
+            <li class="co-it tf" data-it={k} style={`--d:${k * 90}ms`}>
+              <span class="co-ico"><Icon name={i} class="size-5" /></span>
+              <div><p class="font-semibold">{tt(h)}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{tt(x)}</p></div>
+            </li>
+          ))}
+        </ul>
+        <p class="tf mt-5 text-sm text-white/50" style="--d:400ms">{tt('Exemple avec une cliente inventée. Les commandes de gâteaux demandent une connexion ; les ventes, elles, continuent sans internet.')}</p>
+      </div>
+
+      <div class="tf order-2 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-center" style="--d:120ms">
+        <div class="co-sheet-wrap">
+          <div class="co-sheet" role="img" aria-label={tt('Une commande de gâteau : le texte sur le gâteau, l’acompte, la liste du jour, le retrait sur un seul ticket')} data-sheet>
+            <div class="co-head" data-at="1">
+              <div>
+                <p class="co-k">{tt('Commande de gâteau')}</p>
+                <p class="co-n" dir="ltr">n° 0147</p>
+              </div>
+              <p class="co-when">
+                <span class="co-w1"><Icon name="calendar" class="size-[1.1em]" /><span>{tt('Sam. 28 nov. · 16 h')}</span></span>
+                <span class="co-w2"><Icon name="bell" class="size-[1.1em]" /><span>{tt('Aujourd’hui · 16 h')}</span></span>
+              </p>
+            </div>
+            <div class="co-cl" data-at="1">
+              <div><p class="co-k">{tt('Cliente')}</p><p class="co-b">Mme Alaoui</p><p class="co-m" dir="ltr">06 12 34 56 78</p></div>
+              <div class="co-r"><p class="co-k">{tt('Retrait en boutique')}</p><p class="co-b">Pâtisserie Démo</p></div>
+            </div>
+
+            <ul class="co-rows">
+              {rows.map(([q, l, a], i) => (
+                <li class="co-row" data-at="2" style={`--i:${i}`}>
+                  <span class="co-q" dir="ltr">{q} ×</span>
+                  <span class="co-l">{tt(l)}</span>
+                  <span class="co-a" dir="ltr">{a}</span>
+                </li>
+              ))}
+            </ul>
+            <div class="co-note" data-at="2" style="--i:2">
+              <svg viewBox="0 0 48 40" class="co-cake" aria-hidden="true">
+                <ellipse cx="24" cy="37" rx="20" ry="2.5" fill="rgba(0,30,62,.12)" />
+                <rect x="5" y="22" width="38" height="14" rx="4" fill="#7A4A2B" />
+                <path d="M5 26c4 3 7 3 10 0s7-3 10 0 7 3 10 0 5 2 8 0v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4z" fill="#FBE3EC" />
+                <rect x="12" y="11" width="24" height="12" rx="3.5" fill="#9C6140" />
+                <path d="M12 16c3 2.5 5 2.5 8 0s5-2.5 8 0 5 2.5 8 0v-1.5a3.5 3.5 0 0 0-3.5-3.5h-17A3.5 3.5 0 0 0 12 14.5z" fill="#FBE3EC" />
+                <circle cx="24" cy="8" r="3" fill="#E5484D" />
+                <path d="M24 5c0-2 1-3 2.5-3.5" stroke="#00804A" stroke-width="1.4" fill="none" stroke-linecap="round" />
+              </svg>
+              <div><p class="co-k">{tt('Texte sur le gâteau')}</p><p class="co-quote">{tt('« Joyeux anniversaire Lina »')}</p></div>
+            </div>
+
+            <div class="co-sum">
+              <p data-at="2" style="--i:3"><span>{tt('Total')}</span><span dir="ltr">600 MAD</span></p>
+              <p class="co-dep" data-at="3"><span>{tt('Acompte reçu · espèces')}</span><span dir="ltr">− 300 MAD</span></p>
+              <p class="co-left" data-at="3" style="--i:1"><span class="co-lbl"><span class="co-l1">{tt('Reste à payer')}</span><span class="co-l2">{tt('Encaissé au retrait')}</span></span><span dir="ltr">300 MAD</span></p>
+            </div>
+            <p class="co-wa" data-at="3" style="--i:2"><Icon name="message" class="size-[1.1em]" />{tt('Confirmation envoyée sur WhatsApp')}</p>
+            <p class="co-list" data-at="4"><Icon name="bell" class="size-[1.1em]" />{tt('Dans la liste du jour : à remettre à 16 h')}</p>
+            <p class="co-lock" data-at="5"><Icon name="printer" class="size-[1.1em]" />{tt('Un seul ticket, l’acompte déduit.')}</p>
+
+            <div class="co-stamp co-stamp-a" data-at="3" aria-hidden="true"><span>{tt('ACOMPTE')}</span><small dir="ltr">300 MAD</small></div>
+            <div class="co-stamp co-stamp-b" data-at="5" aria-hidden="true"><span>{tt('REMIS')}</span><small>{tt('soldé')}</small></div>
+          </div>
+          <button type="button" class="co-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .co-grid { background: radial-gradient(55% 60% at 78% 50%, rgba(255, 255, 255, .09), transparent 70%), repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 44px); }
+  .co-sheet-wrap { container-type: inline-size; position: relative; }
+  .co-sheet { position: relative; max-width: 30em; margin-inline: auto; font-size: clamp(10.5px, 3.3cqw, 15px); padding: 2.2em 2em 1.8em; border-radius: .5em; background: #FFFDF8; color: #001E3E; box-shadow: 0 5em 7em -3em rgba(0, 0, 0, .75), 0 0 0 1px rgba(0, 0, 0, .06); transform: rotate(1.6deg); cursor: pointer; }
+  .co-sheet::before { content: ""; position: absolute; inset: 0 0 auto; height: .5em; border-radius: .5em .5em 0 0; background: #05B962; }
+  .co-k { font-size: .75em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #6B7A8C; }
+  .co-n { margin-top: .15em; font-size: 1.9em; font-weight: 800; line-height: 1; letter-spacing: -.01em; }
+  .co-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 1em; }
+  .co-when { display: grid; padding: .4em .8em; border-radius: 999px; background: #E3F6EC; color: #00804A; font-size: .85em; font-weight: 700; white-space: nowrap; transition: background .4s, color .4s; }
+  .co-w1, .co-w2 { grid-area: 1 / 1; display: flex; align-items: center; justify-content: center; gap: .45em; transition: opacity .4s; }
+  .co-w2 { opacity: 0; }
+  .co.k4 .co-when { background: #05B962; color: #001E3E; }
+  .co.k4 .co-w1 { opacity: 0; }
+  .co.k4 .co-w2 { opacity: 1; }
+  .co-cl { display: flex; justify-content: space-between; gap: 1em; margin-top: 1.4em; padding-bottom: 1.2em; border-bottom: 1px dashed rgba(0, 30, 62, .22); }
+  .co-r { text-align: end; }
+  .co-b { margin-top: .2em; font-size: 1.05em; font-weight: 700; }
+  .co-m { margin-top: .1em; font-size: .78em; font-weight: 600; color: #6B7A8C; font-variant-numeric: tabular-nums; }
+  .co-rows { margin-top: .6em; }
+  .co-row { display: grid; grid-template-columns: 2.4em 1fr auto; align-items: baseline; gap: .6em; padding: .65em 0; border-bottom: 1px solid rgba(0, 30, 62, .08); font-size: .92em; }
+  .co-q { font-weight: 700; color: #6B7A8C; font-variant-numeric: tabular-nums; }
+  .co-l { font-weight: 600; line-height: 1.35; }
+  .co-a { font-weight: 800; font-variant-numeric: tabular-nums; }
+  .co-note { display: flex; align-items: center; gap: .9em; margin-top: .9em; padding: .7em .9em; border-radius: .8em; background: #FBF1E4; box-shadow: inset 0 0 0 1px rgba(122, 74, 43, .14); }
+  .co-cake { flex: none; width: 3.4em; height: auto; }
+  .co-quote { margin-top: .15em; font-size: 1.02em; font-weight: 700; font-style: italic; line-height: 1.3; }
+  .co-sum { margin-top: 1em; display: grid; gap: .35em; font-size: .95em; }
+  .co-sum p { display: flex; justify-content: space-between; gap: 1em; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .co-dep { color: #00804A; }
+  .co-left { margin-top: .35em; padding-top: .7em; border-top: 2px solid #001E3E; font-size: 1.35em; font-weight: 800 !important; }
+  .co-lbl { display: grid; }
+  .co-l1, .co-l2 { grid-area: 1 / 1; transition: opacity .4s; }
+  .co-l2 { opacity: 0; color: #00804A; }
+  .co.k5 .co-l1 { opacity: 0; }
+  .co.k5 .co-l2 { opacity: 1; }
+  .co-wa, .co-list, .co-lock { display: flex; align-items: center; gap: .55em; margin-top: .9em; font-size: .82em; font-weight: 700; }
+  .co-wa { width: fit-content; padding: .4em .85em .4em .7em; border-radius: 999px; background: #E3F6EC; color: #00804A; }
+  .co-list { color: #001E3E; }
+  .co-lock { margin-top: .6em; font-weight: 600; color: #6B7A8C; }
+  .co-stamp { position: absolute; display: grid; justify-items: center; padding: .35em 1em .45em; border: .2em solid #00804A; border-radius: .5em; box-shadow: inset 0 0 0 .1em #00804A; color: #00804A; mix-blend-mode: multiply; pointer-events: none; }
+  .co-stamp span { font-size: 1.6em; font-weight: 800; letter-spacing: .12em; line-height: 1; }
+  .co-stamp small { font-size: .8em; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+  .co-stamp-a { inset-inline-end: 1.2em; bottom: 1.2em; transform: rotate(-9deg); }
+  .co-stamp-b { inset-inline-end: 1.4em; bottom: 2em; transform: rotate(-7deg); }
+  .co-redo { display: flex; align-items: center; gap: .5em; margin: 1.4rem auto 0; padding: .55rem 1rem; border-radius: 999px; color: rgba(255, 255, 255, .75); font-size: .9rem; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); transition: background .2s; }
+  .co-redo:hover { background: rgba(255, 255, 255, .1); }
+
+  /* what appears at which step */
+  .co [data-at] { opacity: 0; transform: translateY(.9em); transition: opacity .5s calc(var(--i, 0) * .3s), transform .55s calc(var(--i, 0) * .3s) cubic-bezier(.2, .8, .2, 1); }
+  .co .co-stamp[data-at] { transition-timing-function: cubic-bezier(.3, 1.3, .5, 1); transition-delay: .7s; }
+  .co .co-stamp-a[data-at] { transform: rotate(-9deg) scale(1.9); }
+  .co .co-stamp-b[data-at] { transform: rotate(-7deg) scale(1.9); }
+  .co.k1 [data-at="1"], .co.k2 [data-at="2"], .co.k3 [data-at="3"], .co.k4 [data-at="4"], .co.k5 [data-at="5"] { opacity: 1; transform: none; }
+  .co.k3 .co-stamp-a[data-at] { transform: rotate(-9deg); }
+  .co.k5 .co-stamp-b[data-at] { transform: rotate(-7deg); }
+  /* the deposit stamp gives way to the hand-over stamp */
+  .co.k5 .co-stamp-a[data-at] { opacity: 0; transform: rotate(-9deg); transition-delay: 0s; }
+
+  .co-it { display: flex; gap: 1rem; padding: 1rem 1.1rem; border-radius: 1.2rem; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); transition: background .4s, box-shadow .4s; }
+  .co-ico { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 1rem; background: rgba(255, 255, 255, .1); color: #05B962; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15); transition: background .4s, color .4s; }
+  .co-it.on { background: rgba(5, 185, 98, .1); box-shadow: inset 0 0 0 1px rgba(5, 185, 98, .45); }
+  .co-it.on .co-ico { background: #05B962; color: #001E3E; }
+  [dir="rtl"] .co-sheet { transform: rotate(-1.6deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .co [data-at], .co-when, .co-w1, .co-w2, .co-l1, .co-l2 { transition: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-co]');
+  if (root) {
+    const items = [...root.querySelectorAll<HTMLElement>('[data-it]')];
+    const redo = root.querySelector<HTMLElement>('[data-redo]');
+    const sheet = root.querySelector<HTMLElement>('[data-sheet]');
+    // the step at which each of the four points lights up: the order, the deposit, the list, the hand-over
+    const LIGHT = [1, 3, 4, 5];
+    let timers: number[] = [];
+    const step = (n: number) => {
+      for (let k = 1; k <= 5; k++) root.classList.toggle('k' + k, k <= n);
+      items.forEach((el, i) => el.classList.toggle('on', n >= LIGHT[i]));
+    };
+    const run = () => {
+      timers.forEach(clearTimeout); timers = [];
+      step(0);
+      [350, 1500, 3200, 4800, 6400].forEach((ms, i) => timers.push(window.setTimeout(() => step(i + 1), ms)));
+    };
+    // the section reveals as it scrolls in (the dry cleaners page does this for every [data-tf] block)
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (still || !('IntersectionObserver' in window)) { root.classList.add('in'); step(5); }
+    else {
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { root.classList.add('in'); o.disconnect(); } }, { threshold: 0.12 }).observe(root);
+      let done = false;
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !done) { done = true; run(); o.disconnect(); } }, { threshold: 0.35 }).observe(sheet ?? root);
+      redo?.addEventListener('click', run);
+      sheet?.addEventListener('click', run);
+    }
+  }
+</script>

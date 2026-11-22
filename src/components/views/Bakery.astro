@@ -2,7 +2,8 @@
 // Pâtisseries, boulangeries and traiteurs. Same language as the home page: an opening moment (the cost of a
 // croissant computed live from the price of butter), a count-up facts band, the "10 g too much" scale that
 // lands and climbs, a chain that lights up from the butter to the plateau, the real screens in device frames,
-// a "Produire" button that moves the stock, a catering timeline, a weighing ticket you can try, the FAQ as a
+// a "Produire" button that moves the stock, the cake orders (a paper form that fills in, built like the dry
+// cleaners' monthly invoice), a catering timeline, a weighing ticket you can try, the FAQ as a
 // WhatsApp conversation and a closing card with a light that follows the mouse.
 // Only what exists today; every number that comes from the demo pâtisserie is labelled as an example.
 import Base from '../../layouts/Base.astro';
@@ -12,6 +13,7 @@ import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import OfflineDemo from '../OfflineDemo.astro';
 import BakeryPlan from '../BakeryPlan.astro';
+import CakeOrders from '../CakeOrders.astro';
 import AllergenLabel from '../AllergenLabel.astro';
 import SupplierTrio from '../SupplierTrio.astro';
 import PhotoBand from '../PhotoBand.astro';
@@ -26,7 +28,7 @@ const tt = tr(langOf(Astro.url));
 const all = copy(lang);
 const loc = lang === 'en' ? 'en-US' : lang === 'ar' ? 'ar-MA' : 'fr-FR';
 const title = tt('Logiciel de caisse et de production pour pâtisserie au Maroc | Amplify');
-const description = tt('Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, planning de production coché le matin, allergènes et étiquettes de lot, fournisseurs et bons de commande, traiteur, vente au poids et scanner. Pour pâtisseries, boulangeries et traiteurs au Maroc.');
+const description = tt('Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, planning de production coché le matin, commandes de gâteaux avec acompte, allergènes et étiquettes de lot, fournisseurs et bons de commande, traiteur, vente au poids et scanner. Pour pâtisseries, boulangeries et traiteurs au Maroc.');
 // TPE (bank card terminal) link: set to true on the day the integration works and is tested.
 // While false, neither the TPE section nor its FAQ answer is rendered.
 const tpeLive = false;
@@ -36,6 +38,7 @@ const faq = [
   [tt('Je vends à la pièce et au kilo. Ça marche ?'), tt('Oui. Un produit vendu au poids a un prix au kilo : la caisse demande le poids lu sur la balance, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.')],
   [tt('Les commandes traiteur passent-elles dans la comptabilité ?'), tt('Oui. Quand la commande est payée, la facture est émise par le système de la caisse : numérotée, avec l’ICE de votre client si c’est une société, et comptée dans le Z du jour.')],
   [tt('J’ai un laboratoire et plusieurs boutiques.'), tt('Oui, avec des établissements reliés. Chaque boutique du même propriétaire garde son ICE, sa caisse et son Z, achète au laboratoire au prix coûtant ou avec une marge, et ses marges et allergènes restent justes. Dans le laboratoire, le stock se répartit entre économat, ateliers et vitrine. Parlons de votre organisation avant de commencer.')],
+  [tt('Puis-je prendre des commandes de gâteaux avec un acompte ?'), tt('Oui. Au comptoir, vous notez les produits et les tailles, le jour, l’heure, le texte sur le gâteau et le téléphone de la cliente. L’acompte, proposé à la moitié du total, a son propre ticket. Au retrait, un seul ticket pour le gâteau entier, l’acompte déduit. Les commandes de gâteaux demandent une connexion ; les ventes continuent sans internet.')],
   [tt('La caisse est-elle reliée à la balance ?'), tt('Oui, si votre balance imprime des étiquettes à code-barres : la caisse scanne l’étiquette et lit le poids (ou le prix). Sans scanner, la vendeuse tape le poids affiché. L’option scanner s’active dans les réglages.')],
   [tt('Comment sont gérés les allergènes ?'), tt('Vous les indiquez une fois par ingrédient. Ils sont calculés pour chaque préparation et chaque produit, même une recette dans une recette, et suivent chaque changement. Ils apparaissent sur le menu QR, sur la fiche à afficher en boutique et sur les étiquettes de production. Un produit pas encore vérifié n’est jamais affiché comme « sans allergène ».')],
   [tt('Puis-je imprimer des étiquettes pour mes produits ?'), tt('Oui. Chaque fournée a son numéro de lot, sa date de fabrication et sa date limite. L’étiquette sort sur votre imprimante, en 4 formats, avec les allergènes en français et en arabe.')],
@@ -247,6 +250,9 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
       <BakeryPlan />
     </div>
   </section>
+
+  <!-- CAKE ORDERS: the order form that fills in, the deposit, the hand-over on one ticket -->
+  <CakeOrders />
 
   <!-- CATERING: from the quote to the invoice -->
   <section id="traiteur" class="border-y border-line bg-paper py-14 md:py-24">
