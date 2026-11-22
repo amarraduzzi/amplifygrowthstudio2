@@ -1,0 +1,112 @@
+---
+// Home: the delivery banner. One dark card, the six night photographs of the delivery page crossfading slowly
+// behind the text (public/img/livraison/1..6.webp), and an "order, end to end" panel whose four steps light up
+// in step with the pictures: the customer orders, the till gets it, the driver sets off, delivered and paid.
+// A step can be tapped to jump to its picture. Reduced motion / no JS: one still picture, all steps shown.
+import Icon from './Icon.astro';
+import { tr } from '../i18n/t';
+import { ROUTES, type Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+// picture n -> the step it belongs to (0..3)
+const at = [0, 0, 1, 1, 2, 3];
+const steps = [
+  ['phone', 'Le client commande', 'Sur votre page de commande'],
+  ['till', 'La caisse reçoit le bon', 'Ticket cuisine, sans ressaisie'],
+  ['truck', 'Le livreur part', 'Le client suit sa commande'],
+  ['check', 'Livré et encaissé', 'Sans commission'],
+] as const;
+---
+<section id="livraison" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+  <div class="db tf relative isolate overflow-hidden rounded-[2rem] bg-navy text-white md:rounded-[2.4rem]" data-db>
+    <div class="db-pics" aria-hidden="true">
+      {[1, 2, 3, 4, 5, 6].map((n, i) => (
+        <img class={`db-i ${i === 1 ? 'on' : ''}`} data-i={i} src={`/img/livraison/${n}.webp`} srcset={`/img/livraison/${n}-760.webp 760w, /img/livraison/${n}.webp 1376w`} sizes="(min-width: 1152px) 1152px, 100vw" width="1376" height="768" alt="" loading="lazy" decoding="async" />
+      ))}
+    </div>
+    <span class="db-ov" aria-hidden="true"></span>
+    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+
+    <div class="relative grid gap-8 p-7 sm:p-10 md:min-h-[30rem] md:grid-cols-[1.05fr_.95fr] md:items-center md:gap-10 md:p-14">
+      <div class="max-w-xl">
+        <span class="grid size-14 place-items-center rounded-2xl bg-green text-navy shadow-[0_0_2.4rem_-.4rem_rgba(5,185,98,.8)]"><Icon name="truck" class="size-7" /></span>
+        <h2 class="display mt-5 text-[2.4rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Votre livraison,')}</span><span class="block text-green">{tt('vos clients.')}</span></h2>
+        <p class="mt-5 text-lg text-white/80">{tt('Commande en ligne, caisse, livreur et suivi : tout est relié, et chaque partie marche aussi seule.')}</p>
+        <a href={ROUTES.livraison[lang]} class="db-cta mt-7 inline-flex min-h-12 items-center gap-2 rounded-full bg-green px-7 font-semibold text-navy transition-colors hover:bg-white">{tt('Découvrir la livraison')}<span aria-hidden="true" class="rtl:rotate-180">→</span></a>
+      </div>
+
+      <div class="db-panel" role="list" aria-label={tt('Une commande, de bout en bout')}>
+        <p class="db-ph">{tt('Une commande, de bout en bout')}</p>
+        {steps.map(([ic, h, x], k) => (
+          <button type="button" class={`db-s ${k === 0 ? 'on' : ''}`} data-s={k} role="listitem">
+            <span class="db-sico"><Icon name={ic} class="size-5" /></span>
+            <span class="db-st"><b>{tt(h)}</b><i>{tt(x)}</i></span>
+            <svg viewBox="0 0 24 24" class="db-ck" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+            <i class="db-bar" aria-hidden="true"></i>
+          </button>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .db-pics { position: absolute; inset: 0; z-index: -20; background: #001E3E; }
+  .db-i { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease; }
+  .db-i.on { opacity: 1; animation: db-kb 9s ease-out forwards; }
+  @keyframes db-kb { from { transform: scale(1.02); } to { transform: scale(1.12) translate(-1.2%, -.8%); } }
+  .db-ov { position: absolute; inset: 0; z-index: -10; background: linear-gradient(90deg, rgba(0, 30, 62, .93) 0%, rgba(0, 30, 62, .66) 40%, rgba(0, 30, 62, .12) 100%), linear-gradient(0deg, rgba(0, 30, 62, .7), transparent 40%); }
+  [dir="rtl"] .db-ov { background: linear-gradient(270deg, rgba(0, 30, 62, .93) 0%, rgba(0, 30, 62, .66) 40%, rgba(0, 30, 62, .12) 100%), linear-gradient(0deg, rgba(0, 30, 62, .7), transparent 40%); }
+  @media (max-width: 767px) { .db-ov { background: linear-gradient(0deg, rgba(0, 30, 62, .97) 30%, rgba(0, 30, 62, .6) 100%); } }
+
+  .db-panel { display: grid; gap: .6rem; padding: 1.2rem; border-radius: 1.8rem; background: rgba(0, 20, 44, .55); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .16), 0 2rem 3rem -1.6rem rgba(0, 0, 0, .6); }
+  .db-ph { padding: .1rem .4rem .4rem; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #05B962; }
+  [dir="rtl"] .db-ph { letter-spacing: 0; text-transform: none; font-size: .85rem; }
+  .db-s { position: relative; overflow: hidden; display: flex; align-items: center; gap: .9rem; width: 100%; padding: .8rem .9rem; border-radius: 1.2rem; text-align: start; color: inherit; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); opacity: .6; transition: opacity .4s, background .4s, box-shadow .4s, transform .4s; cursor: pointer; }
+  .db-sico { display: grid; place-items: center; flex: none; width: 2.7rem; height: 2.7rem; border-radius: .95rem; background: rgba(255, 255, 255, .12); color: #fff; transition: background .4s, color .4s; }
+  .db-st { display: grid; gap: .1rem; min-width: 0; }
+  .db-st b { font-size: 1rem; font-weight: 700; line-height: 1.2; }
+  .db-st i { font-style: normal; font-size: .82rem; line-height: 1.3; color: rgba(255, 255, 255, .7); }
+  .db-ck { flex: none; width: 1.3rem; height: 1.3rem; margin-inline-start: auto; padding: .2rem; border-radius: 99px; background: #05B962; color: #001E3E; opacity: 0; transform: scale(.4); transition: opacity .3s, transform .4s cubic-bezier(.3, 1.8, .5, 1); box-sizing: content-box; }
+  .db-s.done { opacity: .85; } .db-s.done .db-ck { opacity: 1; transform: none; }
+  .db-s.on { opacity: 1; background: rgba(5, 185, 98, .18); box-shadow: inset 0 0 0 1.5px #05B962, 0 1rem 2rem -1rem rgba(5, 185, 98, .7); transform: translateX(.3rem); }
+  [dir="rtl"] .db-s.on { transform: translateX(-.3rem); }
+  .db-s.on .db-sico { background: #05B962; color: #001E3E; }
+  .db-bar { position: absolute; inset-inline: 0; bottom: 0; height: .2rem; background: #05B962; transform: scaleX(0); transform-origin: left; }
+  [dir="rtl"] .db-bar { transform-origin: right; }
+  .db.run .db-s.on .db-bar { animation: db-fill var(--dur, 4.4s) linear forwards; }
+  @keyframes db-fill { to { transform: scaleX(1); } }
+  .db-cta:focus-visible, .db-s:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) { .db-i, .db-i.on { animation: none; transition: none; } .db-s, .db-ck { transition: none; } .db.run .db-s.on .db-bar { animation: none; } }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-db]');
+  if (root) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pics = [...root.querySelectorAll<HTMLElement>('[data-i]')];
+    const steps = [...root.querySelectorAll<HTMLElement>('[data-s]')];
+    const at = [0, 0, 1, 1, 2, 3];
+    const DUR = 4400;
+    root.style.setProperty('--dur', DUR + 'ms');
+    let cur = 1, timer = 0, hold = false;
+    const show = (i: number) => {
+      cur = (i + pics.length) % pics.length;
+      pics.forEach((p, k) => { p.classList.remove('on'); if (k === cur) { void p.offsetWidth; p.classList.add('on'); } });
+      const s = at[cur];
+      steps.forEach((el, k) => { el.classList.toggle('on', k === s); el.classList.toggle('done', k < s); });
+      root.classList.remove('run'); void root.offsetWidth; root.classList.add('run');
+    };
+    if (still) {
+      steps.forEach((el) => el.classList.add('done'));
+    } else {
+      const stop = () => { clearInterval(timer); root.classList.remove('run'); };
+      const go = () => { stop(); if (hold) return; root.classList.add('run'); timer = window.setInterval(() => { if (document.visibilityState === 'visible') show(cur + 1); }, DUR); };
+      steps.forEach((el, k) => el.addEventListener('click', () => { show(at.indexOf(k)); go(); }));
+      root.addEventListener('pointerenter', () => { hold = true; stop(); });
+      root.addEventListener('pointerleave', () => { hold = false; go(); });
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect(); show(0); go(); } }, { threshold: 0.35 }).observe(root);
+    }
+  }
+</script>
