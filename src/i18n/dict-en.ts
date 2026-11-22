@@ -1003,6 +1003,7 @@ export const dictEn: Record<string, string> = {
   "Salon de thé et brunch": "Tea room and brunch",
   "Rabat, depuis 1957": "Rabat, since 1957",
   "Restaurant italien, Hay Riad": "Italian restaurant, Hay Riad",
+  "Restaurant italien, Témara": "Italian restaurant, Témara",
   "Salon de thé, Rabat": "Tea room, Rabat",
   "Ils travaillent déjà avec nous": "Already working with us",
   "restaurants et cafés à Rabat": "restaurants and cafés in Rabat",

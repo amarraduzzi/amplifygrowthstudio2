@@ -16,6 +16,7 @@ export interface Client {
 /** kind is the French text: it goes through tt() where it is shown */
 export const CLIENTS: Client[] = [
   { name: 'Gaston Gali', logo: 'gaston-gali', accent: '#c9a45c', bg: '#241e20', kind: 'Pâtisserie, café et traiteur', svc: ['qr'], url: 'https://gastongali.com', shot: { src: '/img/clients/shots/gaston-gali.webp', w: 540, h: 1002 } },
+  { name: 'La Como a Cucina', logo: 'la-como-cucina', accent: '#b5532f', bg: '#fcf6e6', fit: 'contain', kind: 'Restaurant italien, Témara', svc: ['site'], url: 'https://site.amplifygrowthstudio.com/la-como-cucina' },
   { name: 'Dom’s Café', logo: 'doms', accent: '#c98a4a', bg: '#0a0404', fit: 'contain', kind: 'Café et pizzeria, Agdal', svc: ['pos', 'site'], url: 'https://domscafeagdal.pages.dev', shot: { src: '/img/clients/shots/doms.webp', w: 540, h: 1002 } },
   { name: 'Indian Flavors', logo: 'indian-flavors', accent: '#d6a53a', bg: '#1b1b1b', kind: 'Restaurant indien, Agdal', svc: ['online', 'site'], url: 'https://indianflavors.pages.dev', shot: { src: '/img/clients/shots/indian-flavors.webp', w: 540, h: 1002 } },
   { name: 'Relais Marin', logo: 'relais-marin', accent: '#d9b25b', bg: '#051935', kind: 'Rabat', svc: ['orders', 'site'], url: 'https://site.amplifygrowthstudio.com/relais-marin', shot: { src: '/img/clients/shots/relais-marin.webp', w: 540, h: 1002 } },
