@@ -8,6 +8,7 @@ import Faq from '../Faq.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import CountUp from '../CountUp.astro';
+import PressingCredit from '../PressingCredit.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -227,6 +228,13 @@ const faq = [
     </div>
   </section>
 
+  <!-- prepaid credit: right after the client's tracking page; played live (top-up, bonus, code payment, ledger) -->
+  <section id="credit" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le crédit prépayé.</span><span class="block text-green-deep">Le client paie d’avance.</span></h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Le client met de l’argent sur son compte au comptoir et reçoit un bonus selon le montant. Il paie ses dépôts avec, quand il revient. C’est une option : rien ne change tant que vous ne l’activez pas.</p>
+    <div class="mt-10 md:mt-12"><PressingCredit cards={credit} /></div>
+  </section>
+
   <!-- pick-ups and deliveries -->
   <section id="tournees" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
     <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
@@ -247,20 +255,6 @@ const faq = [
         ))}
       </ul>
     </div>
-  </section>
-
-  <!-- prepaid credit -->
-  <section id="credit" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
-    <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Le crédit prépayé.</span><span class="block text-green-deep">Le client paie d’avance.</span></h2>
-    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Le client met de l’argent sur son compte au comptoir et reçoit un bonus selon le montant. Il paie ses dépôts avec, quand il revient. C’est une option : rien ne change tant que vous ne l’activez pas.</p>
-    <ul class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {credit.map(([i, h, x], k) => (
-        <li class="tf rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${k * 80}ms`}>
-          <span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={i} class="size-5" /></span>
-          <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{x}</p>
-        </li>
-      ))}
-    </ul>
   </section>
 
   <!-- business clients, group prices, discounts -->
