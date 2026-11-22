@@ -1,0 +1,116 @@
+---
+// The home hero's stage: one trade at a time, big and bright, right under the call to action. A real photo of
+// the trade, the Amplify screen in front of it, and a small paper that plays the same moment in every trade:
+// the money that leaks (red) turns into what Amplify shows (green). It is driven by the trade cards below
+// (hover, focus, tap, or the slow tour in Home.astro) and by its own dots. Example figures, labelled as such.
+import Device from './Device.astro';
+import Icon from './Icon.astro';
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp`;
+// key, icon, name, line, photo, position, [srcset], device, leak, amount, found
+const S = [
+  { k: 'restaurants', ic: 'cup', n: 'Restaurants', l: 'Caisse et marges', src: '/img/photos/metier-restaurant-800.webp', set: '/img/photos/metier-restaurant-800.webp 800w, /img/photos/metier-restaurant-1600.webp 1600w', pos: '50% 55%',
+    d: { kind: 'tablet', src: '/img/caisse-ticket.webp', w: 1200, h: 878, alt: 'La caisse d’un restaurant : une table ouverte avec ses articles et le total' },
+    leak: 'Fromage en trop sur chaque pizza', amt: '−1 125 DH par mois', found: 'Fiche au gramme près : l’écart se voit' },
+  { k: 'salons', ic: 'scissors', n: 'Coiffeurs', l: 'Agenda et rappels', src: '/img/photos/salon-barbier-800.webp', pos: '62% 45%',
+    d: { kind: 'phone', src: '/img/salon-rdv-phone.webp', w: 600, h: 1298, alt: 'Un rendez-vous de salon pris depuis le téléphone' },
+    leak: 'Rendez-vous oublié', amt: '−300 DH', found: 'Rappel WhatsApp envoyé, rendez-vous confirmé' },
+  { k: 'spas', ic: 'leaf', n: 'Spas', l: 'Cabines et soins', src: '/img/photos/spa-cabine-800.webp', pos: '55% 50%',
+    d: { kind: 'phone', src: '/img/spa-rdv-phone.webp', w: 600, h: 1298, alt: 'Une réservation de cabine de spa sur le téléphone' },
+    leak: 'Cabine vide un mardi', amt: '−450 DH', found: 'Acompte demandé, cabine réservée' },
+  { k: 'pressing', ic: 'shirt', n: 'Pressings', l: 'Dépôts et suivi', src: '/img/nav-pressing.webp', pos: '55% 45%',
+    d: { kind: 'phone', src: '/img/pressing-suivi-phone.webp', w: 600, h: 1298, alt: 'Le suivi d’un dépôt de pressing sur le téléphone du client' },
+    leak: 'Costume jamais récupéré', amt: '−600 DH', found: 'Client prévenu, costume remis' },
+  { k: 'hanout', ic: 'store', n: 'Hanouts', l: 'Kridi et stock', src: '/img/photos/hanout-comptoir-800.webp', set: '/img/photos/hanout-comptoir-800.webp 800w, /img/photos/hanout-comptoir-1200.webp 1200w', pos: '62% 45%',
+    d: { kind: 'phone', src: img('today'), w: 600, h: 1298, alt: 'Le téléphone d’un hanout : les ventes du jour, le stock et le kridi', bg: '#EDF1F6' },
+    leak: 'Kridi qui ne rentre pas', amt: '−200 DH', found: 'Rappel envoyé, 200 DH rentrés' },
+  { k: 'immobilier', ic: 'briefcase', n: 'Immobilier', l: 'Biens et visites', src: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%',
+    d: { kind: 'tablet', src: '/img/immo/p-agent-700.webp', w: 700, h: 523, alt: 'Le logiciel Amplify pour une agence immobilière' },
+    leak: 'Loyer en retard', amt: '−6 000 DH', found: 'Rappel envoyé, loyer encaissé' },
+] as const;
+---
+<div data-hs class="hs hst relative isolate order-2 mt-7 aspect-[4/4.7] overflow-hidden rounded-[1.75rem] shadow-[0_40px_80px_-40px_rgba(0,30,62,.7)] sm:mt-8 sm:aspect-[4/3.6] lg:order-none lg:mt-3 lg:aspect-[5/4.6] lg:rounded-[2.25rem]" role="group" aria-label={tt('Aperçu du métier choisi')}>
+  {S.map((s, i) => (
+    <div class={`hst-s${i === 0 ? ' on' : ''}`} data-s={s.k} aria-hidden={i === 0 ? 'false' : 'true'} style={`--pos:${s.pos}`}>
+      <img class="hst-ph" src={s.src} srcset={'set' in s ? s.set : undefined} sizes="(min-width:1024px) 560px, 92vw" alt="" width="800" height="500" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
+      <span class="hst-sc" aria-hidden="true"></span>
+      <div class="hst-tk"><div class="tk">
+        <p class="tk-t"><span>{tt('Exemple')}</span><b>{tt(s.n)}</b></p>
+        <div class="tk-m">
+          <div class="tk-a"><span class="tk-i tk-r" aria-hidden="true">−</span><div><p class="tk-l">{tt(s.leak)}</p><p class="tk-v" dir="ltr">{tt(s.amt)}</p></div></div>
+          <div class="tk-b"><span class="tk-i tk-g" aria-hidden="true"><Icon name="check" class="size-[1.1em]" /></span><div><p class="tk-l">{tt(s.found)}</p></div></div>
+        </div>
+      </div></div>
+      <div class={`hst-dev ${s.d.kind === 'phone' ? 'hst-phone' : 'hst-tab'}`}>
+        <Device kind={s.d.kind} src={s.d.src} alt={tt(s.d.alt)} w={s.d.w} h={s.d.h} eager={i === 0} screenBg={'bg' in s.d ? s.d.bg : undefined} />
+      </div>
+      <div class={`hst-lb${s.d.kind === 'tablet' ? ' hst-lb-n' : ''}`}><span class="hst-ic"><Icon name={s.ic} class="size-5" /></span><div><p class="hst-n">{tt(s.n)}</p><p class="hst-l">{tt(s.l)}</p></div></div>
+    </div>
+  ))}
+  <div class="hst-dots">{S.map((s, i) => <button type="button" class={`hst-d${i === 0 ? ' on' : ''}`} data-d={s.k} aria-label={tt(s.n)}><i></i></button>)}</div>
+</div>
+
+<style is:global>
+  .hst { container-type: inline-size; font-size: clamp(12px, 3.9cqw, 17px); background: linear-gradient(160deg, #0A3F7A, #05B962 130%); }
+  .hst-s { position: absolute; inset: 0; opacity: 0; visibility: hidden; transform: scale(1.03); transition: opacity .6s, transform .8s cubic-bezier(.2, .8, .2, 1), visibility 0s .6s; }
+  .hst-s.on { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+  .hst-ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); }
+  .hst-s.on .hst-ph { animation: hst-kb 7s ease-out both; }
+  @keyframes hst-kb { from { transform: scale(1); } to { transform: scale(1.09); } }
+  .hst-sc { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0, 30, 62, .12) 0%, rgba(0, 30, 62, 0) 38%, rgba(0, 30, 62, .82) 100%); }
+
+  .hst-tk { position: absolute; inset-inline-start: 4.5%; top: 4.5%; width: 68%; max-width: 21em; }
+  .hst-s.on .hst-tk { animation: hst-pop .6s .15s both cubic-bezier(.3, 1.4, .5, 1); }
+  @keyframes hst-pop { from { opacity: 0; transform: translateY(-.8em) scale(.92); } to { opacity: 1; transform: none; } }
+  .tk { padding: .8em .95em .9em; border-radius: 1em; background: #FFFDF8; color: #001E3E; box-shadow: 0 1.4em 2.4em -1em rgba(0, 20, 50, .6), 0 0 0 1px rgba(0, 0, 0, .05); }
+  .hst-s.on .tk { animation: hst-ok .5s 2.1s both; }
+  @keyframes hst-ok { to { box-shadow: 0 1.4em 2.4em -1em rgba(0, 20, 50, .6), 0 0 0 .2em #05B962; } }
+  .tk-t { display: flex; align-items: center; justify-content: space-between; gap: .6em; font-size: .72em; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #6B7A8C; }
+  .tk-t b { color: #00804A; font-weight: 800; }
+  .tk-m { display: grid; margin-top: .55em; }
+  .tk-a, .tk-b { grid-area: 1 / 1; display: flex; align-items: center; gap: .7em; }
+  .tk-i { display: grid; place-items: center; flex: none; width: 2em; height: 2em; border-radius: 50%; font-size: 1em; font-weight: 800; line-height: 1; }
+  .tk-r { background: #FDE7E8; color: #E5484D; font-size: 1.3em; }
+  .tk-g { background: #05B962; color: #001E3E; }
+  .tk-l { font-size: .95em; font-weight: 700; line-height: 1.25; }
+  .tk-v { margin-top: .15em; font-size: 1.25em; font-weight: 800; line-height: 1.1; color: #E5484D; font-variant-numeric: tabular-nums; }
+  .tk-b { opacity: 0; transform: translateY(.5em); }
+  .tk-b .tk-l { color: #00804A; }
+  .hst-s.on .tk-a { animation: hst-out .35s 1.9s both; }
+  .hst-s.on .tk-b { animation: hst-in .5s 2.1s both cubic-bezier(.3, 1.4, .5, 1); }
+  @keyframes hst-out { to { opacity: 0; transform: translateY(-.5em); } }
+  @keyframes hst-in { to { opacity: 1; transform: none; } }
+
+  .hst-dev { position: absolute; z-index: 2; --r: 0deg; }
+  .hst-phone { width: 27%; inset-inline-end: 6%; bottom: -9%; --r: 4deg; }
+  .hst-tab { width: 58%; inset-inline-end: -3%; bottom: 9%; --r: -3deg; }
+  .hst-s.on .hst-dev { animation: hst-rise .75s .35s both cubic-bezier(.2, .9, .3, 1.1); }
+  @keyframes hst-rise { from { opacity: 0; transform: translateY(2.5em) rotate(var(--r)); } to { opacity: 1; transform: rotate(var(--r)); } }
+  [dir="rtl"] .hst-phone { --r: -4deg; }
+  [dir="rtl"] .hst-tab { --r: 3deg; }
+
+  .hst-lb { position: absolute; z-index: 3; inset-inline-start: 4.5%; bottom: 3.4em; display: flex; align-items: center; gap: .7em; max-width: 56%; color: #fff; }
+  .hst-lb-n { max-width: 40%; }
+  .hst-s.on .hst-lb { animation: hst-rise2 .6s .2s both ease-out; }
+  @keyframes hst-rise2 { from { opacity: 0; transform: translateY(.8em); } to { opacity: 1; transform: none; } }
+  .hst-ic { display: grid; place-items: center; flex: none; width: 2.7em; height: 2.7em; border-radius: .95em; background: #05B962; color: #001E3E; }
+  .hst-n { font-size: 1.3em; font-weight: 800; line-height: 1.1; }
+  .hst-l { margin-top: .15em; font-size: .9em; font-weight: 600; line-height: 1.2; color: rgba(255, 255, 255, .85); }
+
+  .hst-dots { position: absolute; z-index: 5; inset-inline: 0; bottom: 0; display: flex; justify-content: center; }
+  .hst-d { display: grid; place-items: center; min-width: 2.9em; min-height: 2.9em; }
+  .hst-d i { display: block; width: .6em; height: .6em; border-radius: 99px; background: rgba(255, 255, 255, .55); transition: width .35s, background .35s; }
+  .hst-d.on i { width: 1.8em; background: #05B962; }
+  @media (prefers-reduced-motion: reduce) {
+    .hst-s, .hst-d i { transition: none; }
+    .hst-s.on .hst-ph, .hst-s.on .hst-tk, .hst-s.on .tk, .hst-s.on .hst-dev, .hst-s.on .hst-lb { animation: none; }
+    .hst-s.on .tk-a { display: none; }
+    .hst-s.on .tk-b { animation: none; opacity: 1; transform: none; }
+    .hst-s.on .tk { box-shadow: 0 1.4em 2.4em -1em rgba(0, 20, 50, .6), 0 0 0 .2em #05B962; }
+    .hst-dev { transform: rotate(var(--r)); }
+  }
+</style>

@@ -6,6 +6,7 @@
 import Base from '../../layouts/Base.astro';
 import WaButton from '../WaButton.astro';
 import Device from '../Device.astro';
+import HeroStage from '../HeroStage.astro';
 import Icon from '../Icon.astro';
 import Faq from '../Faq.astro';
 import LogoBand from '../LogoBand.astro';
@@ -155,21 +156,7 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
         </div>
       </div>
 
-      <div data-hs class="hs relative isolate order-2 mt-7 aspect-[4/3.6] overflow-hidden rounded-[1.75rem] bg-navy shadow-[0_40px_80px_-40px_rgba(0,30,62,.7)] sm:mt-8 lg:order-none lg:mt-3 lg:aspect-[5/4.6] lg:rounded-[2.25rem]">
-        <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
-        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
-        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
-        <span class="shadow-in absolute start-[10%] top-[66%] h-6 w-[64%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
-        <div class="land o-resto absolute start-[5%] top-[17%] w-[72%]" style="--d:250ms"><div class="dv dv-resto"><Device src="/img/caisse-ticket.webp" alt={tt('La caisse d’un restaurant : une table ouverte avec ses articles et le total')} w={1200} h={878} eager /></div></div>
-        <div class="drop o-pressing absolute bottom-[4%] start-[44%] w-[19%]" style="--d:650ms"><div class="dv dv-pressing"><Device kind="phone" src="/img/pressing-suivi-phone.webp" alt={tt('Le suivi d’un dépôt de pressing sur le téléphone du client')} w={600} h={1298} eager class="-rotate-[4deg]" /></div></div>
-        <div class="drop o-salon absolute bottom-[6%] start-[63%] w-[19%]" style="--d:850ms"><div class="dv dv-salon"><Device kind="phone" src="/img/salon-rdv-phone.webp" alt={tt('Un rendez-vous de salon pris depuis le téléphone')} w={600} h={1298} eager class="rotate-[2deg]" /></div></div>
-        <div class="drop o-hanout absolute end-[3%] top-[30%] w-[22%]" style="--d:1050ms"><div class="dv dv-hanout"><Device kind="phone" src={img('today')} alt={tt('Le téléphone d’un hanout : les ventes du jour, le stock et le kridi')} w={600} h={1298} eager screenBg="#EDF1F6" class="rotate-[5deg]" /></div></div>
-        <ul class="pointer-events-none text-[0.68rem] font-semibold sm:text-sm" aria-hidden="true">
-          {[['chart', 'Restaurant : marge calculée', 'top-[4%] start-[4%]', 'bg-paper text-navy', 'resto'], ['book', 'Hanout : +200 DH rentrés', 'top-[19%] end-[3%] max-sm:hidden', 'bg-green text-navy', 'hanout'], ['message', 'Pressing : client prévenu', 'bottom-[30%] start-[3%] max-sm:hidden', 'bg-paper text-navy', 'pressing'], ['calendar', 'Salon : rendez-vous confirmé', 'bottom-[3%] start-[3%]', 'bg-paper text-navy', 'salon']].map(([i, l, p, col, b], k) => (
-            <li class={`hs-b absolute z-10 ${p}`} data-b={b}><div class="tf-float" style={`--d:${k * 900}ms`}><p class={`chat-in flex items-center gap-2 rounded-full py-1.5 pe-3.5 ps-1.5 shadow-lg ${col}`} style={`--d:${1800 + k * 700}ms`}><span class="grid size-6 place-items-center rounded-full bg-navy text-green sm:size-7"><Icon name={i as 'chart'} class="size-3.5 sm:size-4" /></span>{l}</p></div></li>
-          ))}
-        </ul>
-      </div>
+      <HeroStage lang={lang} />
       <div class="tp-dock fade-up order-3 mt-7 sm:mt-8 lg:col-span-2 lg:mt-10" style="--d:550ms" data-tp-wrap>
         <div class="tp-head">
           <p class="text-sm font-semibold text-muted lg:text-[0.95rem]">{tt('Votre métier')}</p>
@@ -383,19 +370,10 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   .tp-card:hover .tp-ico, .tp-card:focus-visible .tp-ico, .tp-card.on .tp-ico { background: #05B962; color: #001E3E; transform: rotate(-6deg) scale(1.06); }
   .tp-card:hover .tp-l, .tp-card:focus-visible .tp-l, .tp-card.on .tp-l { color: rgba(255, 255, 255, .78); }
   .tp-card:hover .tp-ar, .tp-card:focus-visible .tp-ar, .tp-card.on .tp-ar { opacity: 1; transform: none; color: #05B962; }
-  .cyc .tp-card.on .tp-bar { animation: tp-fill 3.4s linear forwards; }
+  .cyc .tp-card.on .tp-bar { animation: tp-fill 4.4s linear forwards; }
   @keyframes tp-fill { to { transform: scaleX(1); } }
 
-  /* hero scene: the picked trade comes forward, the others step back */
-  .hs .dv { transition: transform .55s cubic-bezier(.2, .9, .3, 1.1), opacity .45s, filter .45s; transform-origin: 50% 60%; }
-  .hs[data-f] .dv { opacity: .45; filter: saturate(.55) brightness(.85); transform: scale(.97); }
-  .hs[data-f="resto"] .dv-resto, .hs[data-f="salon"] .dv-salon, .hs[data-f="pressing"] .dv-pressing, .hs[data-f="hanout"] .dv-hanout { opacity: 1; filter: drop-shadow(0 0 1.6rem rgba(5, 185, 98, .5)); transform: scale(1.07) translateY(-2%); }
-  .hs[data-f="resto"] .o-resto, .hs[data-f="salon"] .o-salon, .hs[data-f="pressing"] .o-pressing, .hs[data-f="hanout"] .o-hanout { z-index: 15; }
-  .hs .hs-b { transition: opacity .4s, transform .5s cubic-bezier(.2, .9, .3, 1.3); }
-  .hs[data-f] .hs-b { opacity: .4; }
-  .hs[data-f="resto"] [data-b="resto"], .hs[data-f="salon"] [data-b="salon"], .hs[data-f="pressing"] [data-b="pressing"], .hs[data-f="hanout"] [data-b="hanout"] { opacity: 1; transform: scale(1.12); z-index: 20; }
-  .hs[data-f="resto"] [data-b="resto"] p, .hs[data-f="salon"] [data-b="salon"] p, .hs[data-f="pressing"] [data-b="pressing"] p, .hs[data-f="hanout"] [data-b="hanout"] p { box-shadow: 0 0 0 2.5px #05B962, 0 0 1.8rem rgba(5, 185, 98, .65); }
-  @media (prefers-reduced-motion: reduce) { .hero-live { animation: none; } .tp-card, .tp-ico, .tp-bg, .hs .dv, .hs .hs-b { transition: none; } .cyc .tp-card.on .tp-bar { animation: none; transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .hero-live { animation: none; } .tp-card, .tp-ico, .tp-bg { transition: none; } .cyc .tp-card.on .tp-bar { animation: none; transform: scaleX(1); } }
 </style>
 
 <style>
@@ -474,29 +452,35 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
     requestAnimationFrame(step);
   }), { threshold: 0.6 });
   document.querySelectorAll('[data-count]').forEach(n => cio.observe(n));
-  // hero: the trade picker previews each trade in the scene; a slow tour runs until the visitor takes over
+  // hero: the trade cards and the dots choose the trade on the stage; a slow tour runs until the visitor takes over
   {
     const hs = document.querySelector<HTMLElement>('[data-hs]');
     const wrap = document.querySelector<HTMLElement>('[data-tp-wrap]');
     if (hs && wrap) {
       const cards = [...wrap.querySelectorAll<HTMLElement>('[data-tp]')];
-      const focus: Record<string, string> = { restaurants: 'resto', salons: 'salon', spas: 'salon', pressing: 'pressing', hanout: 'hanout', immobilier: '' };
-      const tour = ['restaurants', 'salons', 'pressing', 'hanout'];
-      let i = -1, timer = 0, hold = false;
+      const slides = [...hs.querySelectorAll<HTMLElement>('[data-s]')];
+      const dots = [...hs.querySelectorAll<HTMLElement>('[data-d]')];
+      const tour = slides.map((x) => x.dataset.s!);
+      let i = 0, timer = 0, hold = false;
       const set = (k: string) => {
-        if (focus[k]) hs.dataset.f = focus[k]; else delete hs.dataset.f;
+        slides.forEach((x) => { const on = x.dataset.s === k; x.classList.toggle('on', on); x.setAttribute('aria-hidden', String(!on)); });
+        dots.forEach((d) => d.classList.toggle('on', d.dataset.d === k));
         cards.forEach((c) => c.classList.toggle('on', c.dataset.tp === k));
       };
       const stop = () => { clearInterval(timer); wrap.classList.remove('cyc'); };
-      const go = () => { stop(); if (still || hold) return; wrap.classList.add('cyc'); timer = window.setInterval(next, 3400); };
       const next = () => { if (document.visibilityState !== 'visible') return; i = (i + 1) % tour.length; wrap.classList.remove('cyc'); void wrap.offsetWidth; wrap.classList.add('cyc'); set(tour[i]); };
+      const go = () => { stop(); if (still || hold) return; wrap.classList.add('cyc'); timer = window.setInterval(next, 4400); };
+      const pick = (k: string) => { i = Math.max(0, tour.indexOf(k)); set(k); };
       cards.forEach((c) => {
-        const on = () => { hold = true; stop(); set(c.dataset.tp!); };
+        const on = () => { hold = true; stop(); pick(c.dataset.tp!); };
         c.addEventListener('pointerenter', on); c.addEventListener('focus', on);
       });
+      // a tap on a dot takes the tour over for good
+      dots.forEach((d) => d.addEventListener('click', () => { hold = true; stop(); pick(d.dataset.d!); }));
       wrap.addEventListener('pointerleave', () => { hold = false; go(); });
       wrap.addEventListener('focusout', (e) => { if (!wrap.contains(e.relatedTarget as Node)) { hold = false; go(); } });
-      if (!still) setTimeout(() => { if (!hold) { next(); go(); } }, 2800);
+      set(tour[0]);
+      go();
     }
   }
 </script>
