@@ -6,7 +6,11 @@
 // The till stays in French, like the real product. Demo shop, invented names and amounts.
 import Icon from './Icon.astro';
 import { tr, langOf } from '../i18n/t';
-const tt = tr(langOf(Astro.url));
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const LOC = lang === 'ar' ? 'ar-MA-u-nu-latn' : lang === 'en' ? 'en-GB' : 'fr-FR';
+const KEYS = ['Tout', 'En nettoyage', 'Prêt', 'En retard', 'Non récupérés', 'Non récupéré', 'Aucun dépôt.', 'Touchez un dépôt.', '{n} pièces', 'Touchez une pièce quand elle est prête', 'Emplacement (facultatif) : rail 12, étagère B…', 'Total', 'Reste à payer', 'Tout prêt', 'Remettre', 'retard', '{n} dépôts accrochés', 'WhatsApp → {n}', 'Votre linge est prêt. Reste à payer : {b} MAD.', 'Remis · {n}', '{b} MAD encaissés, le dépôt est fermé.', 'Rien à encaisser, le dépôt est fermé.', 'Chemise', 'Pantalon', 'Costume 2 pièces', 'Veste', 'Djellaba', 'Caftan', 'Couette', 'Manteau', 'Robe', 'Rideau (m)', 'Rail', 'Étagère'];
+const L = Object.fromEntries(KEYS.map((k) => [k, tt(k)]));
 const feats = [
   ['search', 'Retrouvé en une seconde', 'Par numéro, téléphone ou nom, même un dépôt remis il y a un mois.'],
   ['door', 'Le rail ou l’étagère', 'Prêt sur « Rail 12 » : celui qui remet sait où chercher.'],
@@ -16,34 +20,34 @@ const feats = [
   ['message', 'WhatsApp automatique', 'En option : avec votre propre numéro WhatsApp Business, le message « prêt » part tout seul. Sans cela, le bouton de la caisse reste là.'],
 ] as const;
 ---
-<div class="rv" data-rv>
+<div class="rv" data-rv data-l={JSON.stringify(L)} data-loc={LOC}>
   <p class="mb-3 flex items-center gap-2 text-sm font-semibold text-green-deep"><span class="sl-live size-2 rounded-full bg-green"></span>{tt('À vous de jouer : touchez une pièce.')}</p>
-  <div class="rv-screen relative overflow-hidden rounded-[1.4rem] bg-[#04122a] text-white shadow-[0_50px_90px_-45px_rgba(0,30,62,.9)] ring-1 ring-white/15" style="font-size:clamp(10.5px,1.2vw,14px)" dir="ltr" lang="fr">
+  <div class="rv-screen relative overflow-hidden rounded-[1.4rem] bg-[#04122a] text-white shadow-[0_50px_90px_-45px_rgba(0,30,62,.9)] ring-1 ring-white/15" style="font-size:clamp(10.5px,1.2vw,14px)" dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang}>
     <!-- top bar -->
     <div class="flex items-center justify-between gap-[1em] border-b border-white/10 px-[1em] py-[0.7em]">
       <div class="flex min-w-0 items-center gap-[1em]">
         <span class="grid size-[2.4em] shrink-0 place-items-center rounded-[0.7em] bg-green text-[0.8em] font-bold text-navy">PD</span>
         <p class="hidden leading-tight sm:block"><b class="block">Pressing Démo</b><span class="text-[0.8em] text-white/50">09:41 · Sofia</span></p>
         <div class="flex gap-[0.4em] overflow-x-auto rounded-[0.9em] bg-white/[0.05] p-[0.3em] font-semibold text-white/70">
-          <span class="whitespace-nowrap px-[0.8em] py-[0.5em]">+ Nouveau dépôt</span>
-          <span class="flex items-center gap-[0.4em] whitespace-nowrap rounded-[0.7em] bg-green px-[0.9em] py-[0.5em] text-navy"><Icon name="shirt" class="size-[1.1em]" />En cours <b class="rounded-full bg-navy/15 px-[0.5em] text-[0.85em]" data-tab-n>12</b></span>
-          <span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">Clients</span><span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">Tournées</span><span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">Caisse</span>
+          <span class="whitespace-nowrap px-[0.8em] py-[0.5em]">+ {tt('Nouveau dépôt')}</span>
+          <span class="flex items-center gap-[0.4em] whitespace-nowrap rounded-[0.7em] bg-green px-[0.9em] py-[0.5em] text-navy"><Icon name="shirt" class="size-[1.1em]" />{tt('En cours')} <b class="rounded-full bg-navy/15 px-[0.5em] text-[0.85em]" data-tab-n>12</b></span>
+          <span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">{tt('Clients')}</span><span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">{tt('Tournées')}</span><span class="hidden whitespace-nowrap px-[0.8em] py-[0.5em] md:block">{tt('Caisse')}</span>
         </div>
       </div>
-      <p class="hidden shrink-0 items-center gap-[0.5em] text-[0.85em] font-semibold text-white/60 lg:flex"><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">FR</span><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">Sans impression</span><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">Verrouiller</span></p>
+      <p class="hidden shrink-0 items-center gap-[0.5em] text-[0.85em] font-semibold text-white/60 lg:flex"><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">{lang.toUpperCase()}</span><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">{tt('Sans impression')}</span><span class="rounded-[0.6em] bg-white/[0.07] px-[0.8em] py-[0.5em]">{tt('Verrouiller')}</span></p>
     </div>
 
     <!-- the rail -->
     <div class="border-b border-white/10 px-[1em] pb-[0.6em] pt-[0.6em]">
-      <p class="flex items-center justify-between text-[0.8em] font-semibold uppercase tracking-wider text-white/45"><span>Sur le rail</span><span data-rail-n class="normal-case tracking-normal text-green">0</span></p>
+      <p class="flex items-center justify-between text-[0.8em] font-semibold uppercase tracking-wider text-white/45"><span>{tt('Sur le rail')}</span><span data-rail-n class="normal-case tracking-normal text-green">0</span></p>
       <div class="rv-rail relative mt-[0.4em] h-[8.4em] overflow-x-auto overflow-y-hidden"><div class="rv-bar absolute inset-x-0 top-[0.5em] h-[0.3em] rounded-full"></div><div class="rv-hangers relative flex min-w-max gap-[0.3em] pt-[0.5em]" data-hangers></div></div>
     </div>
 
     <!-- filters -->
     <div class="flex flex-wrap items-center gap-[0.5em] px-[1em] py-[0.8em]">
-      <label class="flex min-w-[10em] flex-1 items-center gap-[0.6em] rounded-[0.8em] bg-white/[0.05] px-[0.9em] py-[0.55em] ring-1 ring-white/15 focus-within:ring-green sm:max-w-[16em]"><Icon name="search" class="size-[1.1em] text-white/50" /><input type="text" data-q placeholder="N°, téléphone ou nom" class="w-full bg-transparent text-white outline-none placeholder:text-white/40" autocomplete="off" /></label>
+      <label class="flex min-w-[10em] flex-1 items-center gap-[0.6em] rounded-[0.8em] bg-white/[0.05] px-[0.9em] py-[0.55em] ring-1 ring-white/15 focus-within:ring-green sm:max-w-[16em]"><Icon name="search" class="size-[1.1em] text-white/50" /><input type="text" data-q placeholder={tt('N°, téléphone ou nom')} class="w-full bg-transparent text-white outline-none placeholder:text-white/40" autocomplete="off" /></label>
       <div class="flex flex-wrap gap-[0.4em] font-semibold" data-chips></div>
-      <div class="ms-auto hidden items-center gap-[0.3em] rounded-full bg-white/[0.05] p-[0.25em] text-[0.85em] font-semibold sm:flex"><span class="px-[0.6em] text-white/50">Tri</span><button type="button" class="rv-s rounded-full px-[0.8em] py-[0.3em]" data-sort="due">Échéance</button><button type="button" class="rv-s rounded-full px-[0.8em] py-[0.3em]" data-sort="dep">Date de dépôt</button></div>
+      <div class="ms-auto hidden items-center gap-[0.3em] rounded-full bg-white/[0.05] p-[0.25em] text-[0.85em] font-semibold sm:flex"><span class="px-[0.6em] text-white/50">{tt('Tri')}</span><button type="button" class="rv-s rounded-full px-[0.8em] py-[0.3em]" data-sort="due">{tt('Échéance')}</button><button type="button" class="rv-s rounded-full px-[0.8em] py-[0.3em]" data-sort="dep">{tt('Date de dépôt')}</button></div>
     </div>
 
     <!-- list + detail -->
@@ -53,7 +57,7 @@ const feats = [
     </div>
 
     <p class="rv-toast pointer-events-none absolute end-[1em] top-[4.2em] z-20 flex max-w-[22em] items-center gap-[0.6em] rounded-[1em] bg-white p-[0.7em] text-[#001E3E] shadow-xl" data-toast aria-live="polite"><span class="grid size-[2.2em] shrink-0 place-items-center rounded-full bg-[#25D366] text-white"><Icon name="message" class="size-[1.2em]" /></span><span class="leading-tight"><b class="block" data-toast-t></b><span class="text-black/60" data-toast-x></span></span></p>
-    <span class="rv-ghost pointer-events-none absolute start-0 top-0 z-30 hidden size-[2.6em] -translate-x-1/2 -translate-y-1/4 text-white drop-shadow-lg" data-ghost aria-hidden="true"><svg viewBox="0 0 24 24" class="size-full" fill="currentColor" stroke="#001E3E" stroke-width="1.2"><path d="M5 3l14 7-6 2-2 6z" /></svg></span>
+    <span class="rv-ghost pointer-events-none absolute left-0 top-0 z-30 hidden size-[2.6em] -translate-x-1/2 -translate-y-1/4 text-white drop-shadow-lg" data-ghost aria-hidden="true"><svg viewBox="0 0 24 24" class="size-full" fill="currentColor" stroke="#001E3E" stroke-width="1.2"><path d="M5 3l14 7-6 2-2 6z" /></svg></span>
   </div>
   <div class="mt-4 flex flex-wrap items-center justify-between gap-3">
     <p class="text-sm text-muted">{tt('Exemple d’illustration')}</p>
@@ -70,6 +74,9 @@ const feats = [
 </div>
 
 <style is:global>
+  .rv-list { scrollbar-width: thin; scrollbar-color: #2b3d58 transparent; }
+  .rv-list::-webkit-scrollbar { width: 8px; } .rv-list::-webkit-scrollbar-thumb { background: #2b3d58; border-radius: 8px; } .rv-list::-webkit-scrollbar-track { background: transparent; }
+  .rv-rail { scrollbar-width: thin; scrollbar-color: #2b3d58 transparent; }
   .rv-bar { background: linear-gradient(#aab6c4, #6c7a8c); }
   .rv-ok { display: none; }
   .rv-f { transition: background-color .4s, box-shadow .4s; }
@@ -120,6 +127,10 @@ const feats = [
   type Dep = { id: number; name: string; phone: string; pcs: Pc[]; due: number; ago: number; paid: number; loc: string; leaving?: boolean; fresh?: boolean };
   type St = 'work' | 'ready' | 'late' | 'lost';
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let L: Record<string, string> = {}, LOCALE = 'fr-FR';
+  const t = (k: string) => L[k] ?? k;
+  const tf = (k: string, v: Record<string, string | number>) => t(k).replace(/\{(\w+)\}/g, (_, x) => String(v[x]));
+  const locLabel = (s: string) => s.replace(/^Rail/, t('Rail')).replace(/^Étagère/, t('Étagère'));
   const mk = (id: number, name: string, phone: string, items: [string, number, number][], due: number, ago: number, paid: number, loc: string): Dep => ({ id, name, phone, pcs: items.map(([n, p, r]) => ({ n, p, r: !!r })), due, ago, paid, loc });
   const seed = (): Dep[] => [
     mk(1052, 'Nadia', '06 61 20 48 17', [['Chemise', 20, 0], ['Chemise', 20, 0], ['Robe', 50, 0]], 1, 0, 0, ''),
@@ -140,11 +151,12 @@ const feats = [
   const status = (d: Dep): St => (d.pcs.every((p) => p.r) ? (d.ago >= 30 ? 'lost' : 'ready') : d.due < 0 ? 'late' : 'work');
   const total = (d: Dep) => d.pcs.reduce((a, p) => a + p.p, 0);
   const bal = (d: Dep) => Math.max(0, total(d) - d.paid);
-  const day = (n: number) => { const x = new Date(); x.setDate(x.getDate() + n); return x.toLocaleDateString('fr-FR', { weekday: 'short', day: 'numeric', month: 'short' }); };
-  const sumNames = (d: Dep) => { const m = new Map<string, number>(); d.pcs.forEach((p) => m.set(p.n, (m.get(p.n) || 0) + 1)); return [...m].map(([n, c]) => `${c} ${n}`).join(' · '); };
+  const day = (n: number) => { const x = new Date(); x.setDate(x.getDate() + n); return x.toLocaleDateString(LOCALE, { weekday: 'short', day: 'numeric', month: 'short' }); };
+  const sumNames = (d: Dep) => { const m = new Map<string, number>(); d.pcs.forEach((p) => m.set(p.n, (m.get(p.n) || 0) + 1)); return [...m].map(([n, c]) => `${c} ${t(n)}`).join(' · '); };
   const hanger = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9V7.5a2.2 2.2 0 1 0-2.2-2.2M12 9l9.5 6.2a1.3 1.3 0 0 1-.7 2.4H3.2a1.3 1.3 0 0 1-.7-2.4z"/></svg>';
 
   document.querySelectorAll<HTMLElement>('[data-rv]').forEach((root) => {
+    L = JSON.parse(root.dataset.l || '{}'); LOCALE = root.dataset.loc || 'fr-FR';
     const $ = (s: string) => root.querySelector<HTMLElement>(s)!;
     const screen = $('.rv-screen'), ghost = $('[data-ghost]'), toast = $('[data-toast]'), list = $('[data-list]');
     let deps = seed(), sel = 1048, filter = 'all', sort = 'due', q = '', ghosting = false, token = 0, shown = 0, built = false, toastT = 0;
@@ -153,7 +165,7 @@ const feats = [
     const money = (n: number) => n.toLocaleString('fr-FR');
 
     const say = (t: string, x: string) => { $('[data-toast-t]').textContent = t; $('[data-toast-x]').textContent = x; toast.classList.add('show'); clearTimeout(toastT); toastT = window.setTimeout(() => toast.classList.remove('show'), 3800); };
-    const wa = (d: Dep) => { say(`WhatsApp → ${d.name}`, `Votre linge est prêt. Reste à payer : ${bal(d)} MAD.`); feat(5); };
+    const wa = (d: Dep) => { say(tf('WhatsApp → {n}', { n: d.name }), tf('Votre linge est prêt. Reste à payer : {b} MAD.', { b: bal(d) })); feat(5); };
     const place = (d: Dep) => { if (!d.loc) d.loc = `Rail ${(d.id % 12) + 1}`; d.fresh = true; };
     const afterReady = (d: Dep, was: St) => { if (was !== 'ready' && status(d) === 'ready') { place(d); wa(d); } };
 
@@ -162,7 +174,7 @@ const feats = [
       const cnt: Record<string, number> = { all: deps.length, work: 0, ready: 0, late: 0, lost: 0 };
       deps.forEach((d) => cnt[status(d)]++);
       $('[data-tab-n]').textContent = String(deps.length);
-      $('[data-chips]').innerHTML = [['all', 'Tout'], ['work', 'En nettoyage'], ['ready', 'Prêt'], ['late', 'En retard'], ['lost', 'Non récupérés']].map(([k, l]) => `<button type="button" class="rv-chip ${filter === k ? 'on' : ''}" data-chip="${k}">${l} <i>${cnt[k]}</i></button>`).join('');
+      $('[data-chips]').innerHTML = [['all', 'Tout'], ['work', 'En nettoyage'], ['ready', 'Prêt'], ['late', 'En retard'], ['lost', 'Non récupérés']].map(([k, l]) => `<button type="button" class="rv-chip ${filter === k ? 'on' : ''}" data-chip="${k}">${t(l)} <i>${cnt[k]}</i></button>`).join('');
       root.querySelectorAll<HTMLElement>('[data-sort]').forEach((b) => b.classList.toggle('on', b.dataset.sort === sort));
       const term = q.trim().toLowerCase().replace(/\s/g, '');
       const rows = all.filter((d) => (filter === 'all' || status(d) === filter) && (!term || `${d.id}${d.name}${d.phone}`.toLowerCase().replace(/\s/g, '').includes(term)))
@@ -172,29 +184,29 @@ const feats = [
         return `<li><button type="button" class="rv-row ${d.id === sel ? 'sel' : ''} ${d.leaving ? 'leave' : ''}" data-row="${d.id}">
           <span class="display text-[1.7em] leading-none tabular-nums">${d.id}</span>
           <span class="min-w-0"><b class="block truncate">${d.name}</b><span class="block truncate text-[0.85em] text-white/50">${sumNames(d)}</span></span>
-          <span class="hidden sm:block"><span class="flex items-center gap-[0.4em] text-[0.82em] font-semibold" style="color:${COL[s]}"><i class="rv-dot size-[0.6em] rounded-full ${s === 'late' ? 'rv-late-pulse' : ''}" style="background:${COL[s]}"></i>${LAB[s]}</span><span class="rv-bar2 block"><i style="width:${(r / n) * 100}%"></i></span></span>
+          <span class="hidden sm:block"><span class="flex items-center gap-[0.4em] text-[0.82em] font-semibold" style="color:${COL[s]}"><i class="rv-dot size-[0.6em] rounded-full ${s === 'late' ? 'rv-late-pulse' : ''}" style="background:${COL[s]}"></i>${t(LAB[s])}</span><span class="rv-bar2 block"><i style="width:${(r / n) * 100}%"></i></span></span>
           <span class="hidden text-[0.85em] text-white/60 sm:block">${day(d.due)}</span>
-          <span class="text-end font-bold tabular-nums ${bal(d) ? 'text-[#F5B301]' : 'text-white/45'}">${bal(d)} MAD</span></button></li>`;
-      }).join('') : '<li class="p-[1.5em] text-center text-white/45">Aucun dépôt.</li>';
+          <span dir="ltr" class="text-end font-bold tabular-nums ${bal(d) ? 'text-[#F5B301]' : 'text-white/45'}">${bal(d)} MAD</span></button></li>`;
+      }).join('') : `<li class="p-[1.5em] text-center text-white/45">${t('Aucun dépôt.')}</li>`;
 
       const dp = deps.find((d) => d.id === sel);
       const det = $('[data-detail]');
-      if (!dp) { det.innerHTML = '<p class="text-white/45">Touchez un dépôt.</p>'; }
+      if (!dp) { det.innerHTML = `<p class="text-white/45">${t('Touchez un dépôt.')}</p>`; }
       else {
         const s = status(dp), allR = dp.pcs.every((p) => p.r);
-        det.innerHTML = `<div class="flex items-start justify-between gap-[0.6em]"><div><p class="flex items-baseline gap-[0.6em]"><span class="display text-[2.2em] leading-none">${dp.id}</span><b class="text-[1.15em]">${dp.name}</b></p><p class="mt-[0.2em] text-[0.85em] text-white/50">${dp.phone}</p></div><span class="rounded-full px-[0.8em] py-[0.3em] text-[0.8em] font-bold text-navy" style="background:${COL[s]}">${LAB[s]}</span></div>
-          <p class="mt-[0.7em] flex flex-wrap gap-x-[1em] text-[0.88em] text-white/65"><span>${dp.pcs.length} pièces</span><span>${day(dp.due)}</span></p>
-          <p class="mb-[0.5em] mt-[0.9em] text-[0.8em] text-white/50">Touchez une pièce quand elle est prête</p>
-          ${dp.pcs.map((p, i) => `<button type="button" class="rv-pc ${p.r ? 'r' : ''}" data-piece="${i}"><span class="rv-c"><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l4 4 10-10"/></svg></span><span><b class="block">${p.n}</b><span class="text-[0.82em] text-white/50">${p.p} MAD</span></span></button>`).join('')}
-          <input type="text" data-loc value="${dp.loc}" placeholder="Emplacement (facultatif) : rail 12, étagère B…" class="mt-[0.3em] w-full rounded-[0.8em] bg-white/[0.05] px-[0.9em] py-[0.7em] text-[0.9em] outline-none ring-1 ring-white/15 placeholder:text-white/35 focus:ring-green" />
-          <p class="mt-[0.8em] flex justify-between text-white/60"><span>Total</span><span class="tabular-nums">${total(dp)} MAD</span></p>
-          <p class="flex justify-between font-bold"><span>Reste à payer</span><span class="tabular-nums ${bal(dp) ? 'text-[#F5B301]' : 'text-green'}">${bal(dp)} MAD</span></p>
-          <div class="mt-[0.9em] grid grid-cols-2 gap-[0.5em] font-bold"><button type="button" data-act="all" class="rounded-[0.9em] bg-[#2DD4BF] py-[0.8em] text-navy disabled:opacity-40" ${allR ? 'disabled' : ''}>Tout prêt</button><button type="button" data-act="hand" class="rounded-[0.9em] bg-white/10 py-[0.8em] ring-1 ring-white/15 disabled:opacity-35" ${allR ? '' : 'disabled'}>Remettre</button></div>`;
+        det.innerHTML = `<div class="flex items-start justify-between gap-[0.6em]"><div><p class="flex items-baseline gap-[0.6em]"><span class="display text-[2.2em] leading-none">${dp.id}</span><b class="text-[1.15em]">${dp.name}</b></p><p class="mt-[0.2em] text-[0.85em] text-white/50"><span dir="ltr">${dp.phone}</span></p></div><span class="rounded-full px-[0.8em] py-[0.3em] text-[0.8em] font-bold text-navy" style="background:${COL[s]}">${t(LAB[s])}</span></div>
+          <p class="mt-[0.7em] flex flex-wrap gap-x-[1em] text-[0.88em] text-white/65"><span>${tf('{n} pièces', { n: dp.pcs.length })}</span><span>${day(dp.due)}</span></p>
+          <p class="mb-[0.5em] mt-[0.9em] text-[0.8em] text-white/50">${t('Touchez une pièce quand elle est prête')}</p>
+          ${dp.pcs.map((p, i) => `<button type="button" class="rv-pc ${p.r ? 'r' : ''}" data-piece="${i}"><span class="rv-c"><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M5 12l4 4 10-10"/></svg></span><span><b class="block">${t(p.n)}</b><span dir="ltr" class="text-[0.82em] text-white/50">${p.p} MAD</span></span></button>`).join('')}
+          <input type="text" data-loc value="${locLabel(dp.loc)}" placeholder="${t('Emplacement (facultatif) : rail 12, étagère B…')}" class="mt-[0.3em] w-full rounded-[0.8em] bg-white/[0.05] px-[0.9em] py-[0.7em] text-[0.9em] outline-none ring-1 ring-white/15 placeholder:text-white/35 focus:ring-green" />
+          <p class="mt-[0.8em] flex justify-between text-white/60"><span>${t('Total')}</span><span dir="ltr" class="tabular-nums">${total(dp)} MAD</span></p>
+          <p class="flex justify-between font-bold"><span>${t('Reste à payer')}</span><span dir="ltr" class="tabular-nums ${bal(dp) ? 'text-[#F5B301]' : 'text-green'}">${bal(dp)} MAD</span></p>
+          <div class="mt-[0.9em] grid grid-cols-2 gap-[0.5em] font-bold"><button type="button" data-act="all" class="rounded-[0.9em] bg-[#2DD4BF] py-[0.8em] text-navy disabled:opacity-40" ${allR ? 'disabled' : ''}>${t('Tout prêt')}</button><button type="button" data-act="hand" class="rounded-[0.9em] bg-white/10 py-[0.8em] ring-1 ring-white/15 disabled:opacity-35" ${allR ? '' : 'disabled'}>${t('Remettre')}</button></div>`;
       }
       // the rail
       const hs = deps.filter((d) => ['ready', 'lost', 'late'].includes(status(d)) || d.leaving);
-      $('[data-rail-n]').textContent = `${deps.filter((d) => ['ready', 'lost'].includes(status(d))).length} dépôts accrochés`;
-      $('[data-hangers]').innerHTML = hs.map((d) => { const s = d.leaving ? 'ready' : status(d); const cls = d.fresh ? '' : built ? 'still' : (still ? 'still' : ''); return `<div class="rv-h ${s} ${cls} ${d.leaving ? 'drop' : ''}">${hanger}<div class="rv-g"></div><p class="display mt-[0.3em] text-[1.25em] leading-none tabular-nums">${d.id}</p><p class="truncate text-[0.72em] ${s === 'late' ? 'text-[#F5B301]' : 'text-white/50'}">${s === 'late' ? 'retard' : d.loc || '—'}</p></div>`; }).join('');
+      $('[data-rail-n]').textContent = tf('{n} dépôts accrochés', { n: deps.filter((d) => ['ready', 'lost'].includes(status(d))).length });
+      $('[data-hangers]').innerHTML = hs.map((d) => { const s = d.leaving ? 'ready' : status(d); const cls = d.fresh ? '' : built ? 'still' : (still ? 'still' : ''); return `<div class="rv-h ${s} ${cls} ${d.leaving ? 'drop' : ''}">${hanger}<div class="rv-g"></div><p class="display mt-[0.3em] text-[1.25em] leading-none tabular-nums">${d.id}</p><p class="truncate text-[0.72em] ${s === 'late' ? 'text-[#F5B301]' : 'text-white/50'}">${s === 'late' ? t('retard') : d.loc ? locLabel(d.loc) : '—'}</p></div>`; }).join('');
       deps.forEach((d) => (d.fresh = false));
       built = true;
       // total to collect
@@ -210,7 +222,7 @@ const feats = [
     const allReady = () => { const d = deps.find((x) => x.id === sel); if (!d) return; const was = status(d); d.pcs.forEach((p) => (p.r = true)); feat(4); feat(1); d.ago = 0; afterReady(d, was); draw(); };
     const hand = () => {
       const d = deps.find((x) => x.id === sel); if (!d || !d.pcs.every((p) => p.r)) return;
-      const b = bal(d); d.leaving = true; draw(); say(`Remis · ${d.name}`, b ? `${b} MAD encaissés, le dépôt est fermé.` : 'Rien à encaisser, le dépôt est fermé.');
+      const b = bal(d); d.leaving = true; draw(); say(tf('Remis · {n}', { n: d.name }), b ? tf('{b} MAD encaissés, le dépôt est fermé.', { b }) : t('Rien à encaisser, le dépôt est fermé.'));
       window.setTimeout(() => { deps = deps.filter((x) => x !== d); sel = (deps.find((x) => status(x) !== 'lost') || deps[0] || ({} as Dep)).id; draw(); }, 650);
     };
     const reset = () => { token++; timers.forEach(clearTimeout); deps = seed(); sel = 1048; filter = 'all'; sort = 'due'; q = ''; shown = 0; built = false; ghosting = false; ghost.classList.remove('show'); toast.classList.remove('show'); (root.querySelector('[data-q]') as HTMLInputElement).value = ''; root.querySelectorAll('.rv-f').forEach((f) => f.classList.remove('on')); draw(); };
