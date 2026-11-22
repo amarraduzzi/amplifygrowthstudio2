@@ -1,7 +1,9 @@
 ---
-// The evening plan, ticked off in the morning: pick a day (a weekday makes icing and cinnamon rolls, Saturday
-// pancakes and waffles), then "Fait" takes the ingredients out of the stock and "Pas fait" keeps the reason.
-// Nothing leaves the stock before "Fait". Plays itself once when it comes into view; every button works.
+// The evening plan, ticked off in the morning, played as a night turning into a morning.
+// 20:00: the plan is written line by line on a night sky. The clock runs through the night, the moon becomes
+// the sun, the stage turns to dawn. 06:00: the team ticks the lines. Each "Fait" sends the ingredients flying
+// to the stock, which goes down; "Pas fait" keeps the reason and nothing moves; at the end a small burst.
+// Plays itself once when it comes into view; every button works; "Recommencer" plays it again.
 // Illustration with demo figures: the real screen does the same with your recipes.
 import Icon from './Icon.astro';
 import { tr, langOf } from '../i18n/t';
@@ -18,116 +20,237 @@ const days = {
     [tt('Croissants'), '120', 4.0],
   ],
 } as const;
+const stars = [[8, 22, 0], [17, 62, 1.1], [29, 18, .5], [41, 70, 1.7], [55, 24, .9], [66, 58, .3], [78, 20, 1.4], [92, 52, .7]];
 ---
-<div class="bp relative isolate overflow-hidden rounded-[2rem] bg-navy p-5 text-white shadow-[0_50px_90px_-50px_rgba(0,30,62,0.8)] sm:p-7" data-plan>
-  <span class="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(60%_60%_at_100%_0%,rgba(5,185,98,.22),transparent_70%)]" aria-hidden="true"></span>
-  <div class="flex flex-wrap items-center justify-between gap-3">
-    <p class="font-semibold"><span class="text-white/60">{tt('Planning du')}</span> <span data-dayname>{tt('mardi')}</span></p>
-    <div class="flex rounded-full bg-white/10 p-1 text-sm font-bold" role="group" aria-label={tt('Jour')}>
-      <button type="button" class="bp-day is-on rounded-full px-4 py-1.5" data-day="tue" data-label={tt('mardi')}>{tt('Mardi')}</button>
-      <button type="button" class="bp-day rounded-full px-4 py-1.5" data-day="sat" data-label={tt('samedi')}>{tt('Samedi')}</button>
+<div class="pn-wrap">
+  <div class="pn" data-plan>
+    <div class="pn-head">
+      <p class="pn-title"><span class="pn-dim">{tt('Planning du')}</span> <b data-dayname>{tt('mardi')}</b></p>
+      <div class="pn-tog" role="group" aria-label={tt('Jour')}>
+        <button type="button" class="pn-day is-on" data-day="tue" data-label={tt('mardi')}>{tt('Mardi')}</button>
+        <button type="button" class="pn-day" data-day="sat" data-label={tt('samedi')}>{tt('Samedi')}</button>
+      </div>
     </div>
-  </div>
-  <div class="mt-4 h-2 overflow-hidden rounded-full bg-white/10" aria-hidden="true"><span class="block h-full w-0 rounded-full bg-green transition-[width] duration-500" data-bar></span></div>
-  <p class="mt-2 text-sm text-white/60"><span data-done dir="ltr">0 / 3</span> {tt('faits')}</p>
 
-  {Object.entries(days).map(([k, rows]) => (
-    <ul class={`mt-4 space-y-2.5 ${k === 'tue' ? '' : 'hidden'}`} data-list={k}>
-      {rows.map(([name, qty, flour]) => (
-        <li class="bp-row rounded-2xl bg-white/[0.07] p-3 ring-1 ring-white/10 transition-colors duration-300" data-flour={flour}>
-          <div class="flex flex-wrap items-center gap-3">
-            <span class="bp-tick grid size-8 shrink-0 place-items-center rounded-full border-2 border-white/25 transition-all duration-300"><Icon name="check" class="size-4 opacity-0 transition-opacity" /></span>
-            <span class="min-w-0 flex-1"><span class="block font-semibold">{name}</span><span class="bp-sub block text-xs text-white/55">{tt('prévu')} <span dir="ltr">{qty}</span></span></span>
-            <button type="button" class="bp-ok min-h-10 rounded-full bg-green px-4 text-sm font-bold text-navy transition-transform active:scale-95">{tt('Fait')}</button>
-            <button type="button" class="bp-no min-h-10 rounded-full px-3 text-sm font-semibold text-white/70 ring-1 ring-white/20 hover:text-white">{tt('Pas fait')}</button>
-          </div>
-        </li>
-      ))}
-    </ul>
-  ))}
-
-  <div class="mt-5 grid grid-cols-2 gap-3">
-    <div class="rounded-2xl bg-white px-4 py-3 text-navy">
-      <span class="block text-xs font-semibold text-muted">{tt('Farine en stock')}</span>
-      <span class="display whitespace-nowrap text-2xl tabular-nums sm:text-3xl" dir="ltr"><span data-flour-out>25,0</span> kg</span>
+    <div class="pn-sky" aria-hidden="true">
+      <span class="pn-night"></span><span class="pn-dawn"></span>
+      {stars.map(([x, y, d]) => <i class="pn-star" style={`--x:${x}%;--y:${y}%;--d:${d}s`}></i>)}
+      <span class="pn-orb"><i class="pn-moon"></i><i class="pn-sun"></i></span>
+      <p class="pn-clock" dir="ltr" data-clock>20:00</p>
     </div>
-    <div class="flex items-center rounded-2xl bg-white/[0.07] px-4 py-3 text-sm leading-snug text-white/75 ring-1 ring-white/10" data-note>{tt('Rien ne sort du stock avant « Fait ».')}</div>
+    <p class="pn-phase" aria-live="polite"><span class="pn-dot"></span><span data-phase>{tt('Le soir : vous écrivez le plan')}</span></p>
+
+    <div class="pn-bar" aria-hidden="true"><span data-bar></span></div>
+    <p class="pn-count"><span data-done dir="ltr">0 / 3</span> {tt('faits')}</p>
+
+    {Object.entries(days).map(([k, rows]) => (
+      <ul class={`pn-list ${k === 'tue' ? '' : 'hidden'}`} data-list={k}>
+        {rows.map(([name, qty, flour], i) => (
+          <li class="pn-row" data-flour={flour} style={`--i:${i}`}>
+            <span class="pn-tick"><b>{i + 1}</b><Icon name="check" class="size-4" /></span>
+            <span class="pn-info"><span class="pn-name">{name}</span><span class="pn-sub">{tt('prévu')} <span dir="ltr">{qty}</span></span></span>
+            <button type="button" class="pn-ok">{tt('Fait')}</button>
+            <button type="button" class="pn-no">{tt('Pas fait')}</button>
+          </li>
+        ))}
+      </ul>
+    ))}
+
+    <div class="pn-foot">
+      <div class="pn-stock" data-stock>
+        <span class="pn-sl">{tt('Farine en stock')}</span>
+        <span class="pn-sn" dir="ltr"><span data-flour-out>25,0</span> kg</span>
+        <span class="pn-st"><span data-sfill></span></span>
+      </div>
+      <div class="pn-note" data-note>{tt('Rien ne sort du stock avant « Fait ».')}</div>
+    </div>
+    <div class="pn-bottom">
+      <p>{tt('Exemple avec des chiffres de démonstration.')}</p>
+      <button type="button" class="pn-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button>
+    </div>
+    <span hidden data-t-night>{tt('Le soir : vous écrivez le plan')}</span>
+    <span hidden data-t-morning>{tt('Le matin : l’équipe coche sur la tablette')}</span>
+    <span hidden data-t-skip>{tt('Pas fait : pas eu le temps')}</span>
+    <span hidden data-t-out>{tt('Les ingrédients sortent du stock maintenant.')}</span>
+    <span hidden data-t-end>{tt('Planning terminé. Rien d’autre n’a bougé.')}</span>
+    <span hidden data-t-flour>{tt('farine')}</span>
   </div>
-  <p class="mt-4 text-xs text-white/45">{tt('Exemple avec des chiffres de démonstration.')}</p>
-  <span hidden data-t-skip>{tt('Pas fait : pas eu le temps')}</span>
-  <span hidden data-t-out>{tt('Les ingrédients sortent du stock maintenant.')}</span>
-  <span hidden data-t-end>{tt('Planning terminé. Rien d’autre n’a bougé.')}</span>
 </div>
 
 <style is:global>
-  .bp-day { color: rgb(255 255 255 / .7); transition: background-color .25s, color .25s; }
-  .bp-day.is-on { background: var(--color-green); color: var(--color-navy); }
-  .bp-row.is-done { background: rgb(5 185 98 / .16); }
-  .bp-row.is-done .bp-tick { background: var(--color-green); border-color: var(--color-green); color: var(--color-navy); transform: scale(1.08); }
-  .bp-row.is-done .bp-tick svg { opacity: 1; }
-  .bp-row.is-skip { opacity: .55; }
-  .bp-row.is-skip .bp-tick { border-style: dashed; }
-  .bp-row.is-done .bp-ok, .bp-row.is-done .bp-no, .bp-row.is-skip .bp-ok, .bp-row.is-skip .bp-no { display: none; }
-  .bp-pulse { animation: bp-pulse .6s ease-out; }
-  @keyframes bp-pulse { 0% { box-shadow: 0 0 0 0 rgb(5 185 98 / .6); } 100% { box-shadow: 0 0 0 14px rgb(5 185 98 / 0); } }
-  .bp-flash { animation: bp-flash .7s ease-out; }
-  @keyframes bp-flash { 0% { color: #E5484D; transform: translateY(-2px); } }
-  @media (prefers-reduced-motion: reduce) { .bp-pulse, .bp-flash { animation: none; } }
+  .pn-wrap { container-type: inline-size; }
+  .pn { position: relative; overflow: hidden; isolation: isolate; font-size: clamp(11px, 2.5cqw, 15px); padding: 1.5em; border-radius: 1.9em; color: #fff; background: radial-gradient(60% 50% at 100% 0%, rgba(5, 185, 98, .22), transparent 70%), linear-gradient(160deg, #0a2748, #001428); box-shadow: 0 4em 6em -3em rgba(0, 30, 62, .65); transition: box-shadow 1s; }
+  .pn.done { box-shadow: 0 4em 6em -3em rgba(0, 30, 62, .65), 0 0 0 .18em rgba(5, 185, 98, .8), 0 0 4em -.5em rgba(5, 185, 98, .55); }
+  .pn-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .8em; }
+  .pn-title { font-weight: 600; font-size: 1.05em; } .pn-dim { color: rgba(255, 255, 255, .6); }
+  .pn-tog { display: flex; padding: .25em; border-radius: 999px; background: rgba(255, 255, 255, .1); font-size: .9em; font-weight: 700; }
+  .pn-day { padding: .45em 1.1em; border-radius: 999px; color: rgba(255, 255, 255, .7); transition: background-color .25s, color .25s; }
+  .pn-day.is-on { background: #05B962; color: #001E3E; }
+
+  /* the sky: night to dawn */
+  .pn-sky { position: relative; overflow: hidden; height: 5.2em; margin-top: 1.1em; border-radius: 1.1em; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); }
+  .pn-night, .pn-dawn { position: absolute; inset: 0; }
+  .pn-night { background: linear-gradient(180deg, #050f26, #17356e); }
+  .pn-dawn { background: linear-gradient(180deg, #31528f 0%, #e98f55 72%, #ffd79a 100%); opacity: 0; transition: opacity 2.4s ease-in-out; }
+  .pn.day .pn-dawn { opacity: 1; }
+  .pn-star { position: absolute; left: var(--x); top: var(--y); width: .28em; height: .28em; border-radius: 50%; background: #fff; animation: pn-tw 2.4s var(--d) ease-in-out infinite; transition: opacity 1.4s; }
+  .pn.day .pn-star { opacity: 0 !important; animation: none; }
+  @keyframes pn-tw { 50% { opacity: .25; transform: scale(.6); } }
+  .pn-orb { position: absolute; left: 4%; top: 58%; width: 2.2em; height: 2.2em; }
+  .pn.day .pn-orb { animation: pn-arc 2.5s ease-in-out forwards; }
+  @keyframes pn-arc { 0% { left: 4%; top: 58%; } 50% { top: 8%; } 100% { left: 86%; top: 40%; } }
+  [dir="rtl"] .pn-orb { left: auto; right: 4%; } [dir="rtl"] .pn.day .pn-orb { animation-name: pn-arc-r; } @keyframes pn-arc-r { 0% { right: 4%; top: 58%; } 50% { top: 8%; } 100% { right: 86%; top: 40%; } }
+  .pn-orb i { position: absolute; inset: 0; border-radius: 50%; }
+  .pn-moon { background: radial-gradient(circle at 35% 35%, #fff, #cfd8ee 70%); box-shadow: 0 0 1.6em rgba(207, 216, 238, .6); transition: opacity 1.2s .6s; }
+  .pn-sun { background: radial-gradient(circle at 40% 40%, #fff6cf, #ffc24a 70%); box-shadow: 0 0 2.4em .5em rgba(255, 190, 70, .75); opacity: 0; transition: opacity 1.4s 1s; }
+  .pn.day .pn-moon { opacity: 0; } .pn.day .pn-sun { opacity: 1; animation: pn-glow 2.4s 2.6s ease-in-out infinite; }
+  @keyframes pn-glow { 50% { box-shadow: 0 0 3.4em .9em rgba(255, 190, 70, .85); } }
+  .pn-clock { position: absolute; inset: 0; display: grid; place-items: center; font-size: 2em; font-weight: 800; letter-spacing: .03em; font-variant-numeric: tabular-nums; text-shadow: 0 .06em .5em rgba(0, 0, 0, .45); }
+  .pn-phase { display: flex; align-items: center; gap: .6em; margin-top: .8em; font-size: .9em; font-weight: 700; color: rgba(255, 255, 255, .85); }
+  .pn-dot { width: .6em; height: .6em; border-radius: 50%; background: #9db8ff; box-shadow: 0 0 .8em #9db8ff; transition: background .6s, box-shadow .6s; }
+  .pn.am .pn-dot { background: #05B962; box-shadow: 0 0 .8em #05B962; }
+
+  .pn-bar { height: .55em; margin-top: 1em; border-radius: 99px; background: rgba(255, 255, 255, .12); overflow: hidden; }
+  .pn-bar span { display: block; height: 100%; width: 0; border-radius: 99px; background: linear-gradient(90deg, #05B962, #5EE0A0); transition: width .7s cubic-bezier(.2, .8, .2, 1); }
+  .pn-count { margin-top: .5em; font-size: .85em; color: rgba(255, 255, 255, .6); }
+
+  .pn-list { display: grid; gap: .6em; margin-top: .9em; }
+  .pn-row { position: relative; overflow: hidden; display: flex; flex-wrap: wrap; align-items: center; gap: .8em; padding: .7em .8em; border-radius: 1.1em; background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); transition: background .4s, opacity .4s, transform .6s cubic-bezier(.2, .8, .2, 1); }
+  .js .pn:not(.w) .pn-row { opacity: 0; transform: translateX(-1.6em); }
+  .pn.w .pn-row { transition-delay: calc(var(--i) * .5s), calc(var(--i) * .5s), calc(var(--i) * .5s); }
+  .pn.w.live .pn-row { transition-delay: 0s; }
+  .pn-tick { position: relative; display: grid; place-items: center; flex: none; width: 2.2em; height: 2.2em; border-radius: 50%; border: .13em solid rgba(255, 255, 255, .28); font-size: .95em; font-weight: 800; color: rgba(255, 255, 255, .7); transition: background .3s, border-color .3s, transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+  .pn-tick svg { position: absolute; opacity: 0; transform: scale(.3); transition: opacity .2s, transform .4s cubic-bezier(.3, 1.8, .5, 1); }
+  .pn-info { min-width: 0; flex: 1; line-height: 1.25; }
+  .pn-name { display: block; font-weight: 700; }
+  .pn-sub { display: block; font-size: .8em; color: rgba(255, 255, 255, .55); }
+  .pn-ok, .pn-no { min-height: 2.5em; border-radius: 999px; font-size: .9em; font-weight: 700; transition: transform .15s, opacity .4s, visibility .4s; }
+  .pn-ok { padding: 0 1.2em; background: #05B962; color: #001E3E; }
+  .pn-no { padding: 0 .9em; color: rgba(255, 255, 255, .75); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); }
+  .pn-ok:active { transform: scale(.94); }
+  .pn:not(.am) .pn-ok, .pn:not(.am) .pn-no { opacity: 0; visibility: hidden; }
+  .pn-row.is-done { background: rgba(5, 185, 98, .17); }
+  .pn-row.is-done::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(94, 224, 160, .35) 50%, transparent 70%); transform: translateX(-120%); animation: pn-sweep .9s ease-out forwards; pointer-events: none; }
+  @keyframes pn-sweep { to { transform: translateX(120%); } }
+  .pn-row.is-done .pn-tick { background: #05B962; border-color: #05B962; color: #001E3E; transform: scale(1.12); }
+  .pn-row.is-done .pn-tick b { opacity: 0; } .pn-row.is-done .pn-tick svg { opacity: 1; transform: none; }
+  .pn-row.is-skip { opacity: .6; } .pn-row.is-skip .pn-tick { border-style: dashed; }
+  .pn-row.is-done .pn-ok, .pn-row.is-done .pn-no, .pn-row.is-skip .pn-ok, .pn-row.is-skip .pn-no { display: none; }
+  .pn-ok.pn-hint { animation: pn-hint 1.4s ease-out infinite; }
+  @keyframes pn-hint { 0% { box-shadow: 0 0 0 0 rgba(5, 185, 98, .8); } 70%, 100% { box-shadow: 0 0 0 .9em rgba(5, 185, 98, 0); } }
+  .pn-pulse { animation: pn-pulse .7s ease-out; }
+  @keyframes pn-pulse { 0% { box-shadow: 0 0 0 0 rgba(5, 185, 98, .8); } 100% { box-shadow: 0 0 0 1.2em rgba(5, 185, 98, 0); } }
+
+  .pn-foot { display: grid; grid-template-columns: 1fr 1fr; gap: .7em; margin-top: 1em; }
+  .pn-stock { padding: .8em 1em; border-radius: 1.1em; background: #fff; color: #001E3E; }
+  .pn-sl { display: block; font-size: .78em; font-weight: 700; color: #6B7A8C; }
+  .pn-sn { display: block; font-size: 2em; font-weight: 800; line-height: 1.1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pn-st { display: block; height: .5em; margin-top: .4em; border-radius: 99px; background: #E6EAF0; overflow: hidden; }
+  .pn-st span { display: block; height: 100%; width: 100%; border-radius: 99px; background: #05B962; transition: width .8s cubic-bezier(.2, .8, .2, 1); }
+  .pn-stock.hit { animation: pn-hit .6s ease-out; } @keyframes pn-hit { 30% { transform: scale(1.05); box-shadow: 0 0 0 .5em rgba(229, 72, 77, .35); } }
+  .pn-note { display: flex; align-items: center; padding: .8em 1em; border-radius: 1.1em; background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); font-size: .9em; line-height: 1.35; color: rgba(255, 255, 255, .8); }
+  .pn.done .pn-note { background: rgba(5, 185, 98, .2); color: #fff; }
+  .pn-bottom { display: flex; align-items: center; justify-content: space-between; gap: 1em; margin-top: 1em; }
+  .pn-bottom p { font-size: .75em; color: rgba(255, 255, 255, .5); }
+  .pn-redo { display: inline-flex; align-items: center; gap: .45em; padding: .45em .9em; border-radius: 999px; font-size: .8em; font-weight: 600; color: rgba(255, 255, 255, .8); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); }
+  .pn-redo:hover { background: rgba(255, 255, 255, .1); }
+  .pn-fly, .pn-spark { position: absolute; z-index: 5; pointer-events: none; }
+  .pn-fly { padding: .25em .8em; border-radius: 999px; background: #F5C04A; color: #001E3E; font-size: .85em; font-weight: 800; white-space: nowrap; box-shadow: 0 .5em 1.2em rgba(0, 0, 0, .35); }
+  .pn-spark { width: .6em; height: .6em; border-radius: 50%; }
+  @media (prefers-reduced-motion: reduce) {
+    .pn-star, .pn-sun, .pn-ok.pn-hint, .pn-row.is-done::after { animation: none !important; }
+    .pn-dawn, .pn-row, .pn-bar span { transition: none !important; }
+  }
 </style>
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const comma = document.documentElement.lang !== 'en';
   document.querySelectorAll<HTMLElement>('[data-plan]').forEach((root) => {
-    const txt = (s: string) => root.querySelector<HTMLElement>(s)!.textContent ?? '';
-    const bar = root.querySelector<HTMLElement>('[data-bar]')!;
-    const done = root.querySelector<HTMLElement>('[data-done]')!;
-    const flourOut = root.querySelector<HTMLElement>('[data-flour-out]')!;
-    const note = root.querySelector<HTMLElement>('[data-note]')!;
-    const name = root.querySelector<HTMLElement>('[data-dayname]')!;
-    const first = note.textContent;
-    let flour = 25, day = 'tue', touched = false;
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const txt = (s: string) => q(s).textContent ?? '';
+    const bar = q('[data-bar]'), done = q('[data-done]'), flourOut = q('[data-flour-out]'), sfill = q('[data-sfill]');
+    const note = q('[data-note]'), name = q('[data-dayname]'), clock = q('[data-clock]'), phase = q('[data-phase]'), stock = q('[data-stock]');
+    const first = note.textContent ?? '';
+    const subs = new Map<HTMLElement, string>();
+    root.querySelectorAll<HTMLElement>('.pn-row').forEach(r => subs.set(r, r.querySelector('.pn-sub')!.innerHTML));
+    let flour = 25, day = 'tue', touched = false, timers: number[] = [];
     const show = (x: number) => x.toFixed(1).replace('.', comma ? ',' : '.');
-    const rows = () => [...root.querySelectorAll<HTMLElement>(`[data-list="${day}"] .bp-row`)];
+    const rows = () => [...root.querySelectorAll<HTMLElement>(`[data-list="${day}"] .pn-row`)];
+    const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+    const tween = (from: number, to: number, ms: number, fn: (v: number) => void) => {
+      const t0 = performance.now();
+      const f = (t: number) => { const k = Math.min(1, (t - t0) / ms); fn(from + (to - from) * (k < .5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2)); if (k < 1) requestAnimationFrame(f); };
+      requestAnimationFrame(f);
+    };
+    const setFlour = (v: number) => { flour = v; flourOut.textContent = show(v); sfill.style.width = `${(v / 25) * 100}%`; };
+    const setClock = (m: number) => { const t = Math.round(m) % 1440; clock.textContent = `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}`; };
+    const rel = (el: HTMLElement) => { const a = el.getBoundingClientRect(), b = root.getBoundingClientRect(); return { x: a.left - b.left + a.width / 2, y: a.top - b.top + a.height / 2 }; };
+    const spark = (from: { x: number; y: number }) => {
+      if (still) return;
+      ['#05B962', '#5EE0A0', '#F5C04A', '#fff'].forEach((c, ci) => { for (let i = 0; i < 4; i++) {
+        const s = document.createElement('span'); s.className = 'pn-spark'; s.style.background = c; s.style.left = `${from.x}px`; s.style.top = `${from.y}px`; root.appendChild(s);
+        const ang = ((ci * 4 + i) / 16) * Math.PI * 2, d = 50 + Math.random() * 50;
+        s.animate([{ transform: 'translate(0,0) scale(1)', opacity: 1 }, { transform: `translate(${Math.cos(ang) * d}px,${Math.sin(ang) * d - 20}px) scale(.3)`, opacity: 0 }], { duration: 900 + Math.random() * 300, easing: 'cubic-bezier(.2,.8,.2,1)' }).onfinish = () => s.remove();
+      } });
+    };
     const count = () => {
-      const r = rows(), d = r.filter(x => x.classList.contains('is-done') || x.classList.contains('is-skip')).length;
+      const r = rows(), dn = r.filter(x => x.classList.contains('is-done') || x.classList.contains('is-skip')).length;
       done.textContent = `${r.filter(x => x.classList.contains('is-done')).length} / ${r.length}`;
-      bar.style.width = `${(d / r.length) * 100}%`;
-      if (d === r.length) note.textContent = txt('[data-t-end]');
+      bar.style.width = `${(dn / r.length) * 100}%`;
+      if (dn === r.length) { note.textContent = txt('[data-t-end]'); root.classList.add('done'); const b = bar.getBoundingClientRect(), p = root.getBoundingClientRect(); spark({ x: b.right - p.left, y: b.top - p.top }); }
+      else root.classList.remove('done');
     };
     const make = (row: HTMLElement) => {
-      row.classList.add('is-done'); row.querySelector('.bp-tick')!.classList.add('bp-pulse');
+      row.classList.add('is-done'); row.querySelector('.pn-tick')!.classList.add('pn-pulse');
+      row.querySelector('.pn-ok')!.classList.remove('pn-hint');
       const f = Number(row.dataset.flour);
-      if (f > 0) { flour = Math.max(0, flour - f); flourOut.textContent = show(flour); flourOut.classList.remove('bp-flash'); void flourOut.offsetWidth; flourOut.classList.add('bp-flash'); }
+      if (f > 0) {
+        const from = rel(row.querySelector<HTMLElement>('.pn-tick')!), to = rel(stock);
+        if (!still) {
+          const chip = document.createElement('span'); chip.className = 'pn-fly'; chip.textContent = `−${show(f)} kg ${txt('[data-t-flour]')}`; chip.style.left = `${from.x}px`; chip.style.top = `${from.y}px`; root.appendChild(chip);
+          chip.animate([{ transform: 'translate(-50%,-50%) scale(.6)', opacity: 0 }, { transform: 'translate(-50%,-50%) scale(1)', opacity: 1, offset: .2 }, { transform: `translate(calc(-50% + ${to.x - from.x}px), calc(-50% + ${to.y - from.y}px)) scale(.7)`, opacity: .9 }], { duration: 1000, easing: 'cubic-bezier(.5,0,.2,1)' }).onfinish = () => { chip.remove(); stock.classList.remove('hit'); void stock.offsetWidth; stock.classList.add('hit'); tween(flour, Math.max(0, flour - f), 700, setFlour); };
+        } else setFlour(Math.max(0, flour - f));
+      }
       note.textContent = txt('[data-t-out]');
       count();
     };
     const skip = (row: HTMLElement) => {
-      row.classList.add('is-skip');
-      row.querySelector('.bp-sub')!.textContent = txt('[data-t-skip]');
+      row.classList.add('is-skip'); row.querySelector('.pn-ok')!.classList.remove('pn-hint');
+      row.querySelector('.pn-sub')!.textContent = txt('[data-t-skip]');
       note.textContent = first; count();
     };
-    root.querySelectorAll<HTMLElement>('.bp-row').forEach((row) => {
-      row.querySelector('.bp-ok')!.addEventListener('click', () => { touched = true; make(row); });
-      row.querySelector('.bp-no')!.addEventListener('click', () => { touched = true; skip(row); });
+    const resetRows = () => root.querySelectorAll<HTMLElement>('.pn-row').forEach(r => { r.classList.remove('is-done', 'is-skip'); r.querySelector('.pn-sub')!.innerHTML = subs.get(r)!; r.querySelector('.pn-ok')!.classList.remove('pn-hint'); r.querySelector('.pn-tick')!.classList.remove('pn-pulse'); });
+    const settle = () => { // the morning state, straight away
+      timers.forEach(clearTimeout); timers = [];
+      root.classList.add('w', 'day', 'am', 'live'); setClock(1800); phase.textContent = txt('[data-t-morning]');
+    };
+    const run = () => {
+      timers.forEach(clearTimeout); timers = []; touched = false;
+      root.classList.remove('w', 'day', 'am', 'done', 'live'); resetRows(); setFlour(25); count(); root.classList.remove('done');
+      note.textContent = first; setClock(1200); phase.textContent = txt('[data-t-night]');
+      at(500, () => root.classList.add('w'));
+      at(2500, () => { root.classList.add('day'); tween(1200, 1800, 2500, setClock); });
+      at(5200, () => { root.classList.add('am'); phase.textContent = txt('[data-t-morning]'); });
+      at(5900, () => { root.classList.add('live'); make(rows()[0]); });
+      at(7600, () => skip(rows()[1]));
+      at(8600, () => rows()[2].querySelector('.pn-ok')!.classList.add('pn-hint'));
+    };
+    const takeOver = () => { if (!touched) { touched = true; settle(); } };
+    root.querySelectorAll<HTMLElement>('.pn-row').forEach((row) => {
+      row.querySelector('.pn-ok')!.addEventListener('click', () => { takeOver(); make(row); });
+      row.querySelector('.pn-no')!.addEventListener('click', () => { takeOver(); skip(row); });
     });
-    root.querySelectorAll<HTMLButtonElement>('.bp-day').forEach((b) => b.addEventListener('click', () => {
-      touched = true; day = b.dataset.day!;
-      root.querySelectorAll('.bp-day').forEach(x => x.classList.toggle('is-on', x === b));
+    root.querySelectorAll<HTMLButtonElement>('.pn-day').forEach((b) => b.addEventListener('click', () => {
+      takeOver(); day = b.dataset.day!;
+      root.querySelectorAll('.pn-day').forEach(x => x.classList.toggle('is-on', x === b));
       root.querySelectorAll<HTMLElement>('[data-list]').forEach(l => l.classList.toggle('hidden', l.dataset.list !== day));
       name.textContent = b.dataset.label ?? '';
-      flour = 25; flourOut.textContent = show(flour); note.textContent = first; count();
+      resetRows(); setFlour(25); note.textContent = first; count();
     }));
+    q('[data-redo]').addEventListener('click', () => { if (still) { settle(); return; } run(); });
     count();
-    // plays once: the first line is made, the second is not
-    if (!still && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver(([e]) => {
-        if (!e.isIntersecting) return; io.disconnect();
-        const r = rows();
-        setTimeout(() => { if (!touched) make(r[0]); }, 1200);
-        setTimeout(() => { if (!touched) skip(r[1]); }, 2600);
-      }, { threshold: 0.5 });
-      io.observe(root);
-    }
+    if (still || !('IntersectionObserver' in window)) { settle(); }
+    else new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); run(); } }, { threshold: 0.5 }).observe(root);
   });
 </script>
