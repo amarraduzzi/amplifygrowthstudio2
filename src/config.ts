@@ -105,7 +105,7 @@ export const SECTOR = {
   /** Amplify Immobilier (agences, syndics, promoteurs): monthly price and what is included, by size */
   immobilier: { agency: 299, agencyMembers: 5, agencyProperties: 100, syndic: 199, syndicLots: 150, promoter: 399, promoterProjects: 2 },
   /** Amplify Livraison: monthly, same ladder as the services à la carte. Drivers: nothing published yet. */
-  livraison: { monthly: 100, setup: 250 },
+  livraison: { monthly: 100, setup: 250, perDelivery: 4 },
   /** One-off setup for Pressing, Garage and Hanout (moving the client list and history) */
   setup: 490,
 };
