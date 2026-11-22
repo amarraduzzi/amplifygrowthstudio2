@@ -15,6 +15,7 @@ import OfflineDemo from '../OfflineDemo.astro';
 import BakeryPlan from '../BakeryPlan.astro';
 import CakeOrders from '../CakeOrders.astro';
 import BakeryScale from '../BakeryScale.astro';
+import BakeryProduce from '../BakeryProduce.astro';
 import AllergenLabel from '../AllergenLabel.astro';
 import SupplierTrio from '../SupplierTrio.astro';
 import PhotoBand from '../PhotoBand.astro';
@@ -68,7 +69,6 @@ const steps: [string, string][] = [
   [tt('Production'), tt('dans le plan de son jour')],
   [tt('Facture'), tt('avec l’ICE de la société')],
 ];
-const prodPts = [tt('Un clic sur « Produire » : la farine et le beurre sortent du stock, les croissants y entrent'), tt('Les pièces faites à l’avance et les préparations faites à la minute'), tt('Un bouton « 1 fournée » remplit la quantité d’une fournée entière'), tt('La prévision apparaît après une semaine de ventes en caisse, ou tout de suite avec votre historique de ventes importé')];
 const catPts = [tt('Prix traiteur différents de la boutique'), tt('Acomptes et solde notés au fil de l’eau'), tt('Facture au nom de la société, avec son ICE')];
 const kgPts = [tt('Prix au kilo dans le menu'), tt('250 g, 500 g, 1 kg en un geste'), tt('Le ticket affiche « 0,450 kg »'), tt('Option : le scanner lit l’étiquette de la balance et les codes-barres')];
 const planPts = [tt('Chaque préparation a ses jours : icing en semaine, pancakes le week-end'), tt('« Pas fait » garde la raison, le stock ne bouge pas'), tt('Ce qui manque devient un bon de commande, un par fournisseur'), tt('Le soir, ce qui reste : gardé pour demain ou jeté, en dirhams')];
@@ -180,26 +180,8 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
     </div>
   </section>
 
-  <!-- PRODUCTION: the real screen, and a "Produire" you can press -->
-  <section id="production" class="mx-auto grid max-w-6xl scroll-mt-24 items-center gap-12 px-4 py-14 sm:px-6 md:py-24 lg:grid-cols-[0.9fr_1.1fr]">
-    <div>
-      <h2 class="text-[2.4rem] leading-[0.95] sm:text-5xl sm:leading-[0.92]">{tt('Combien en préparer demain ?')}</h2>
-      <p class="mt-5 max-w-md text-lg text-muted">{tt('Chaque matin, la liste de ce qu’il faut produire : les ventes du même jour de la semaine, plus les commandes traiteur, moins ce qui est déjà en vitrine.')}</p>
-      <ul class="mt-6 space-y-3">{prodPts.map(x => <li class="flex items-start gap-3"><span class="mt-0.5 grid size-6 shrink-0 place-items-center rounded-full bg-green/15 text-green-deep"><Icon name="check" class="size-3.5" /></span><span class="font-semibold">{x}</span></li>)}</ul>
-    </div>
-    <div class="relative pb-24 sm:pb-14" data-bk>
-      <Device src="/img/pat-production-1200.webp" alt={tt('Plan de production du lendemain dans Amplify')} w={1200} h={491} class="bk-tilt" />
-      <!-- stock moves when you produce (demo figures, taken from the recipe above: 0,55 kg of butter and 30 croissants per batch) -->
-      <div class="bk-r absolute -bottom-2 start-3 w-[17.5rem] rounded-2xl bg-white p-4 text-navy shadow-[0_30px_60px_-25px_rgba(0,30,62,0.6)] ring-1 ring-line sm:-bottom-6 sm:start-6" style="--d:500ms" data-produce>
-        <div class="flex items-center justify-between"><span class="text-sm font-bold">{tt('Croissants')} · {tt('1 fournée')}</span><span class="rounded-full bg-mint px-2 py-0.5 text-[0.7rem] font-bold text-green-deep">{tt('Exemple')}</span></div>
-        <dl class="mt-3 space-y-2 text-sm">
-          <div class="flex items-center justify-between"><dt class="text-muted">{tt('Beurre en stock')}</dt><dd class="bk-num font-bold tabular-nums" dir="ltr"><span data-p="butter">8,00</span> kg</dd></div>
-          <div class="flex items-center justify-between"><dt class="text-muted">{tt('Croissants en vitrine')}</dt><dd class="bk-num font-bold tabular-nums text-green-deep" dir="ltr" data-p="pieces">0</dd></div>
-        </dl>
-        <button type="button" class="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-green font-bold text-navy transition-transform hover:bg-[#04A859] active:scale-95" data-p="btn"><Icon name="chef" class="size-4" />{tt('Produire')}</button>
-      </div>
-    </div>
-  </section>
+  <!-- PRODUCTION: the forecast drawn as it happens (sales + catering - display = what to make, then "Produire") -->
+  <BakeryProduce />
 
   <PhotoBand name="pat-matin" big="full" w={1376} h={768} pos="72% 50%" class="pt-14 md:pt-24" alt={tt('Six heures du matin dans une boulangerie : un boulanger coche le plan sur une tablette pendant que les croissants entrent au four')} kicker="06:00" title={tt('Le plan est prêt avant le four.')} />
 
@@ -535,26 +517,6 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
   document.querySelectorAll('[data-bk]').forEach(n => reveal.observe(n));
 
   if (!('IntersectionObserver' in window)) document.querySelectorAll('[data-bk], .bk-chain, .bk-steps').forEach(n => n.classList.add('in'));
-
-  // 4. "Produire": each press takes one batch of butter out of the stock and puts 30 croissants in the display
-  document.querySelectorAll<HTMLElement>('[data-produce]').forEach((root) => {
-    const p = (k: string) => root.querySelector<HTMLElement>(`[data-p="${k}"]`)!;
-    const btn = p('btn') as HTMLButtonElement;
-    let butter = 8, pieces = 0;
-    const press = () => {
-      if (butter < 0.55) return;
-      butter -= 0.55; pieces += 30;
-      p('butter').textContent = dec(butter);
-      p('pieces').textContent = String(pieces);
-      if (!still) [p('butter'), p('pieces')].forEach(n => restart(n.closest('.bk-num') ?? n, 'bk-pop'));
-      if (butter < 0.55) { btn.disabled = true; btn.classList.add('opacity-50'); }
-    };
-    btn.addEventListener('click', press);
-    if (!still && 'IntersectionObserver' in window) {
-      const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { io.disconnect(); setTimeout(press, 1400); } }, { threshold: 0.6 });
-      io.observe(root);
-    }
-  });
 
   // 5. weighing: the ticket prints again for each weight (example price: 120 DH/kg)
   document.querySelectorAll<HTMLElement>('[data-weigh]').forEach((root) => {
