@@ -1,5 +1,5 @@
 ---
-// Real installations, shown plainly: the till at Zayna Café and at Dom's Café (both Rabat).
+// Real installations, shown plainly: the till at Zayna Café, Dom's Café and L’Atelier by Sam.
 // Sits right before the "start today" section, so the doubt "does it work in a real café?" is
 // answered just before the button. Only what each photo shows is claimed. To add an owner's own
 // words later, fill QUOTE on that case (it stays hidden while it is empty).
@@ -41,21 +41,33 @@ const CASES: Case[] = [
     ],
     url: find('Dom’s Café')?.url, linkLabel: tt('Voir le site de Dom’s Café'), quote: null,
   },
+  {
+    id: 'atelier-sam', label: 'L’Atelier by Sam',
+    img: '/img/clients/atelier-sam-installation', w: 1087, h: 1447,
+    alt: tt('La caisse Amplify au comptoir de L’Atelier by Sam, avec la salle claire et ses fauteuils verts derrière'),
+    title: tt('Chez L’Atelier by Sam'),
+    facts: [
+      { h: tt('Les tables sur l’écran d’accueil'), p: tt('Les tables 1 à 16 sont là, un toucher suffit pour ouvrir l’une d’elles.') },
+      { h: tt('Un poste complet au comptoir'), p: tt('La tablette, le clavier, l’imprimante de tickets et le tiroir-caisse au même endroit.') },
+      { h: tt('Toute la salle en vue'), p: tt('Depuis le comptoir, on voit les tables que la caisse gère.') },
+    ],
+    url: find('L’Atelier by Sam')?.url, linkLabel: tt('Voir le site de L’Atelier by Sam'), quote: null,
+  },
 ];
 ---
 <section id="zayna" class="zp mx-auto max-w-6xl px-4 py-14 sm:px-6 md:py-20" aria-labelledby="zp-h">
   <div class="max-w-3xl">
     <h2 id="zp-h" class="text-[2.4rem] leading-[0.95] sm:text-5xl md:text-6xl">{tt('Déjà installé dans des cafés de Rabat')}</h2>
-    <p class="measure mt-4 text-lg text-muted">{tt('Deux vraies installations, avec la caisse au comptoir et les clients dans la salle.')}</p>
+    <p class="measure mt-4 text-lg text-muted">{tt('Trois vraies installations, avec la caisse au comptoir et les clients dans la salle.')}</p>
   </div>
 
-  <div class="mt-10 grid gap-12 md:mt-14 md:grid-cols-2 md:gap-8 lg:gap-12">
-    {CASES.map(c => (
-      <article id={c.id} class="flex flex-col" aria-label={c.label}>
+  <div class="mt-10 grid gap-12 md:mt-14 md:grid-cols-2 md:gap-8 lg:grid-cols-3 lg:gap-10">
+    {CASES.map((c, i) => (
+      <article id={c.id} class={`flex flex-col ${i === 2 ? 'md:col-span-2 md:w-1/2 md:justify-self-center lg:col-span-1 lg:w-full' : ''}`} aria-label={c.label}>
         <figure class="relative w-full">
           <img src={`${c.img}-${c.w}.webp`}
             srcset={`${c.img}-760.webp 760w, ${c.img}-${c.w}.webp ${c.w}w`}
-            sizes="(min-width: 768px) 46vw, 92vw"
+            sizes="(min-width: 1024px) 31vw, (min-width: 768px) 46vw, 92vw"
             alt={c.alt}
             width={c.w} height={c.h} loading="lazy" decoding="async"
             class="aspect-[4/5] w-full rounded-[1.75rem] object-cover shadow-[0_30px_60px_-35px_rgb(0_30_62/0.5)] md:rounded-[2.25rem]" />
