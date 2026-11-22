@@ -19,6 +19,7 @@ import PressingInvoice from '../PressingInvoice.astro';
 import PressingEvening from '../PressingEvening.astro';
 import PressingBilan from '../PressingBilan.astro';
 import PressingClients from '../PressingClients.astro';
+import PressingSleep from '../PressingSleep.astro';
 import PressingHeroPhone from '../PressingHeroPhone.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
@@ -167,29 +168,8 @@ const faq = [
   <!-- the client file, duplicates merged, win-back, moving in: one dark window, four scenes -->
   <PressingClients items={clients} />
 
-  <!-- what sleeps on the rails, with the shop's own numbers -->
-  <section id="calcul" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-rails data-tf>
-    <div class="tf-x mx-auto grid max-w-6xl gap-10 rounded-[2.5rem] bg-paper p-6 ring-1 ring-line md:p-12 lg:grid-cols-[1fr_1fr] lg:items-center">
-      <div>
-        <h2 class="text-[2.2rem] leading-[0.95] sm:text-[2.8rem]"><span class="block">Combien dort</span><span class="block text-green-deep">sur vos rails ?</span></h2>
-        <p class="mt-4 text-muted">Faites le calcul avec vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.</p>
-        <div class="mt-8 space-y-6">
-          <label class="block"><span class="flex justify-between font-semibold"><span>Dépôts par semaine</span><span class="rl-v tabular-nums" data-for="dep">60</span></span>
-            <input type="range" min="10" max="400" step="10" value="60" data-k="dep" class="rl-r mt-2 w-full accent-[#05B962]" /></label>
-          <label class="block"><span class="flex justify-between font-semibold"><span>Prix moyen d’un dépôt (DH)</span><span class="rl-v tabular-nums" data-for="prix">120</span></span>
-            <input type="range" min="30" max="600" step="10" value="120" data-k="prix" class="rl-r mt-2 w-full accent-[#05B962]" /></label>
-          <label class="block"><span class="flex justify-between font-semibold"><span>Dépôts récupérés en retard sur 100</span><span class="rl-v tabular-nums" data-for="taux">8</span></span>
-            <input type="range" min="0" max="40" step="1" value="8" data-k="taux" class="rl-r mt-2 w-full accent-[#05B962]" /></label>
-        </div>
-      </div>
-      <div class="rounded-[2rem] bg-navy p-8 text-white">
-        <p class="text-white/60">Chaque mois, l’argent qui attend sur vos rails au lieu d’être dans votre caisse</p>
-        <p class="mt-2"><span class="rl-out display text-6xl text-green tabular-nums" dir="ltr">2 477</span> <span class="text-2xl font-semibold">DH</span></p>
-        <p class="mt-6 rounded-2xl bg-white/[0.07] p-4 text-white/80">Avec Amplify, ces dépôts sont listés dès qu’ils traînent, avec le numéro du client et un WhatsApp prêt à envoyer.</p>
-        <p class="mt-4 text-sm text-white/50">Calcul : dépôts par semaine × 4,3 semaines × dépôts en retard × prix moyen. Combien de ces clients reviennent plus vite après un message dépend d’eux : nous ne promettons pas de chiffre.</p>
-      </div>
-    </div>
-  </section>
+  <!-- what sleeps on the rails: a living rail of 100 drop-offs, the shop's own numbers -->
+  <PressingSleep />
 
   <SectorPrices lang={lang} k="pressing" />
 
@@ -213,18 +193,6 @@ const faq = [
 </Base>
 
 <script>
-  // the calculator: the shop's own numbers, nothing is sent
-  document.querySelectorAll<HTMLElement>('[data-rails]').forEach((root) => {
-    const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);
-    const out = root.querySelector<HTMLElement>('.rl-out')!;
-    const fmt = (n: number) => Math.round(n).toLocaleString('fr-FR').replace(/ | /g, ' ');
-    const run = () => {
-      root.querySelectorAll<HTMLElement>('.rl-v').forEach(v => { v.textContent = String(val(v.dataset.for!)); });
-      out.textContent = fmt(val('dep') * 4.3 * (val('taux') / 100) * val('prix'));
-    };
-    root.querySelectorAll('.rl-r').forEach(r => r.addEventListener('input', run));
-    run();
-  });
   // sections reveal as they scroll in
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];

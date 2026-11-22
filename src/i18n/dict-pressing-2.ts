@@ -158,6 +158,12 @@ export const pressing2En: Record<string, string> = {
   "Chaque import s’annule": "Every import can be undone",
   "Annuler l’import": "Undo the import",
   "Déposez votre fichier CSV ou Excel": "Drop your CSV or Excel file",
+  "dépôts en retard par mois": "late orders per month",
+  "récupérés en retard": "collected late",
+  "récupérés à temps": "collected on time",
+  "sur 100": "out of 100",
+  "Cent dépôts sur le rail : ceux en orange sont récupérés en retard": "One hundred orders on the rail: the orange ones are collected late",
+  "Avec Amplify": "With Amplify",
 };
 export const pressing2Ar: Record<string, string> = {
   "La tournée du chauffeur : trois arrêts, du ramassage à la caisse": "جولة السائق: ثلاث محطات، من الاستلام إلى الصندوق",
@@ -280,4 +286,10 @@ export const pressing2Ar: Record<string, string> = {
   "Chaque import s’annule": "كل نقل يمكن التراجع عنه",
   "Annuler l’import": "إلغاء النقل",
   "Déposez votre fichier CSV ou Excel": "حط ملف CSV ولا Excel ديالك",
+  "dépôts en retard par mois": "إيداعات متأخرة في الشهر",
+  "récupérés en retard": "تُسترجع متأخرة",
+  "récupérés à temps": "تُسترجع فالوقت",
+  "sur 100": "من أصل 100",
+  "Cent dépôts sur le rail : ceux en orange sont récupérés en retard": "مائة إيداع على الرف: البرتقالية منها تُسترجع متأخرة",
+  "Avec Amplify": "مع Amplify",
 };

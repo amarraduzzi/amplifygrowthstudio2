@@ -113,7 +113,7 @@ const bars = [28, 40, 34, 52, 46, 64, 58, 44, 70, 62, 82, 74, 92, 100];
 
 <style>
   .pcl { --pg: #05B962; --amber: #F5B13D; --dir: 1; }
-  [dir="rtl"] .pcl { --dir: -1; }
+  :global([dir="rtl"]) .pcl { --dir: -1; }
   .pcl-dots { position: absolute; inset: 0; z-index: -10; pointer-events: none; background-image: radial-gradient(rgb(255 255 255 / .09) 1px, transparent 1.5px); background-size: 24px 24px; -webkit-mask-image: radial-gradient(70% 70% at 80% 40%, #000, transparent 80%); mask-image: radial-gradient(70% 70% at 80% 40%, #000, transparent 80%); }
 
   .pcl-panel { container-type: inline-size; position: relative; padding: 1.6rem 1.1rem; border-radius: 2.2rem; background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, .02)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); perspective: 1400px; }
@@ -142,6 +142,7 @@ const bars = [28, 40, 34, 52, 46, 64, 58, 44, 70, 62, 82, 74, 92, 100];
   .pcl-tiles span { display: block; font-size: .66em; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: rgba(255, 255, 255, .5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pcl-tiles b { display: block; margin-top: .15em; font-size: 1.4em; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.15; white-space: nowrap; }
   .pcl-tiles b small { font-size: .5em; color: rgba(255, 255, 255, .55); } .pcl-tiles b i { font-style: normal; } .pcl-tiles b.sm { font-size: 1em; line-height: 1.6; }
+  :global([dir="rtl"]) .pcl-tiles span, :global([dir="rtl"]) .pcl-cnt span { letter-spacing: 0; text-transform: none; }
   .pcl-spark { display: flex; align-items: flex-end; gap: .35em; height: 3.2em; padding: 0 .2em; }
   .pcl-spark i { flex: 1; height: var(--h); border-radius: .3em .3em .1em .1em; background: linear-gradient(180deg, var(--pg), rgba(5, 185, 98, .25)); transform: scaleY(0); transform-origin: bottom; transition: transform .7s calc(var(--i) * 45ms + .2s) cubic-bezier(.3, 1.4, .5, 1); }
   .pcl.t1 .s1 .pcl-spark i { transform: none; }
@@ -204,7 +205,7 @@ const bars = [28, 40, 34, 52, 46, 64, 58, 44, 70, 62, 82, 74, 92, 100];
   .pcl-il .a { color: rgba(255, 255, 255, .75); opacity: 0; } .pcl-il .b { color: #5be3a4; opacity: 0; }
   .pcl.t2 .s4 .pcl-il .a { opacity: 1; } .pcl.t3 .s4 .pcl-il .a { opacity: 0; } .pcl.t3 .s4 .pcl-il .b { opacity: 1; }
   .pcl-pb { display: block; height: .6em; margin-top: .4em; border-radius: 99px; background: rgba(255, 255, 255, .1); overflow: hidden; } .pcl-pb u { display: block; height: 100%; width: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--pg), #5be3a4); transform: scaleX(0); transform-origin: left; transition: transform 1.8s cubic-bezier(.4, 0, .2, 1); }
-  [dir="rtl"] .pcl-pb u { transform-origin: right; }
+  :global([dir="rtl"]) .pcl-pb u { transform-origin: right; }
   .pcl.t2 .s4 .pcl-pb u, .pcl.t3 .s4 .pcl-pb u { transform: none; }
   .pcl-cnt { display: grid; grid-template-columns: 1fr 1fr; gap: .55em; }
   .pcl-cnt p { padding: .65em .9em; border-radius: .9em; background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); } .pcl-cnt span { display: block; font-size: .68em; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: rgba(255, 255, 255, .5); } .pcl-cnt b { font-size: 1.6em; font-weight: 800; font-variant-numeric: tabular-nums; line-height: 1.2; }
@@ -221,7 +222,7 @@ const bars = [28, 40, 34, 52, 46, 64, 58, 44, 70, 62, 82, 74, 92, 100];
   .pcl-ico { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 1rem; background: rgba(255, 255, 255, .1); color: var(--pg); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15); transition: background .4s, color .4s; }
   .pcl-it.on { background: rgba(5, 185, 98, .1); box-shadow: inset 0 0 0 2px var(--pg), 0 1.4rem 2.4rem -1.6rem rgba(5, 185, 98, .8); }
   .pcl-it.on .pcl-ico { background: var(--pg); color: #001E3E; }
-  .pcl-prog { position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: var(--pg); transform: scaleX(0); transform-origin: left; } [dir="rtl"] .pcl-prog { transform-origin: right; }
+  .pcl-prog { position: absolute; inset-inline: 0; bottom: 0; height: 3px; background: var(--pg); transform: scaleX(0); transform-origin: left; } :global([dir="rtl"]) .pcl-prog { transform-origin: right; }
   .pcl.run .pcl-it.on .pcl-prog { animation: pcl-fill var(--dur, 8s) linear forwards; }
   @keyframes pcl-fill { to { transform: scaleX(1); } }
 

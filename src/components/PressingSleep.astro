@@ -1,0 +1,161 @@
+---
+// "Combien dort sur vos rails ?": the calculator as a living rail. Light section, sliders on the start
+// side, a dark stage on the end side. The rail holds 100 drop-offs; the ones collected late turn amber
+// and sway as you move the slider, and the money counts up live. Nothing is sent: it all stays in the page.
+// Formula unchanged: drop-offs per week x 4.3 x late share x average price.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const sliders = [
+  ['dep', 'Dépôts par semaine', 10, 400, 10, 60, 'calendar'],
+  ['prix', 'Prix moyen d’un dépôt (DH)', 30, 600, 10, 120, 'coins'],
+  ['taux', 'Dépôts récupérés en retard sur 100', 0, 40, 1, 8, 'clock'],
+] as const;
+---
+<section id="calcul" class="pz mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf data-pz>
+  <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Combien dort')}</span><span class="block text-green-deep">{tt('sur vos rails ?')}</span></h2>
+  <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">{tt('Faites le calcul avec vos propres chiffres. Rien n’est envoyé, tout reste sur votre téléphone.')}</p>
+
+  <div class="mt-10 grid gap-6 md:mt-12 lg:grid-cols-[.85fr_1.15fr] lg:items-stretch lg:gap-8">
+    <div class="grid content-start gap-3 lg:sticky lg:top-24 lg:self-start">
+      {sliders.map(([k, label, min, max, step, val, ic], i) => (
+        <label class="pz-card tf" style={`--d:${i * 90 + 100}ms`}>
+          <span class="pz-lh"><span class="pz-ico"><Icon name={ic} class="size-5" /></span><span class="pz-lt">{tt(label)}</span><b class="pz-v tabular-nums" data-for={k} dir="ltr">{val}</b></span>
+          <input type="range" class="pz-r" min={min} max={max} step={step} value={val} data-k={k} />
+        </label>
+      ))}
+    </div>
+
+    <div class="pz-stage tf" style="--d:200ms">
+      <span class="pz-glow" aria-hidden="true"></span>
+      <p class="pz-lab">{tt('Chaque mois, l’argent qui attend sur vos rails au lieu d’être dans votre caisse')}</p>
+      <p class="pz-big" dir="ltr"><span class="display pz-out tabular-nums" data-out>2 477</span><small>DH</small></p>
+      <p class="pz-sub">
+        <span><b dir="ltr" data-late>21</b> {tt('dépôts en retard par mois')}</span>
+        <span><b dir="ltr" data-year>29 724</b> DH {tt('par an')}</span>
+      </p>
+
+      <div class="pz-rail" role="img" aria-label={tt('Cent dépôts sur le rail : ceux en orange sont récupérés en retard')}>
+        <i class="pz-rod" aria-hidden="true"></i>
+        <div class="pz-grid" dir="ltr" aria-hidden="true">{Array.from({ length: 100 }, (_, i) => <i class="pz-t" data-t style={`--i:${i}`}></i>)}</div>
+        <span class="pz-z z1" aria-hidden="true">z</span><span class="pz-z z2" aria-hidden="true">z</span><span class="pz-z z3" aria-hidden="true">Z</span>
+      </div>
+      <p class="pz-leg"><span><i class="d late"></i><b dir="ltr" data-n>8</b> {tt('sur 100')} {tt('récupérés en retard')}</span><span><i class="d ok"></i>{tt('récupérés à temps')}</span></p>
+
+      <div class="pz-am">
+        <p class="pz-amh">{tt('Avec Amplify')}</p>
+        <p class="pz-amt">{tt('Avec Amplify, ces dépôts sont listés dès qu’ils traînent, avec le numéro du client et un WhatsApp prêt à envoyer.')}</p>
+        <div class="pz-rows">
+          <p><span class="n">{tt('Dépôt n°')} <bdi dir="ltr">0987</bdi></span><span class="d" dir="ltr">34 j</span><span class="b"><Icon name="message" class="size-[1.1em]" />{tt('Envoyer le WhatsApp')}</span></p>
+          <p><span class="n">{tt('Dépôt n°')} <bdi dir="ltr">1019</bdi></span><span class="d" dir="ltr">21 j</span><span class="b"><Icon name="message" class="size-[1.1em]" />{tt('Envoyer le WhatsApp')}</span></p>
+        </div>
+      </div>
+      <p class="pz-fn">{tt('Calcul : dépôts par semaine × 4,3 semaines × dépôts en retard × prix moyen. Combien de ces clients reviennent plus vite après un message dépend d’eux : nous ne promettons pas de chiffre.')}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pz { --amber: #F5B13D; --pg: #05B962; }
+  .pz-card { display: grid; gap: 1.1rem; padding: 1.2rem 1.3rem 1.4rem; border-radius: 1.6rem; background: var(--color-paper, #fff); box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .1); transition: box-shadow .3s; }
+  .pz-card:focus-within { box-shadow: inset 0 0 0 2px var(--pg), 0 1.2rem 2rem -1.4rem rgba(5, 185, 98, .6); }
+  .pz-lh { display: flex; align-items: center; gap: .9rem; }
+  .pz-ico { display: grid; place-items: center; flex: none; width: 2.6rem; height: 2.6rem; border-radius: .95rem; background: #001E3E; color: var(--pg); }
+  .pz-lt { font-weight: 600; line-height: 1.3; }
+  .pz-v { margin-inline-start: auto; min-width: 3.2rem; padding: .25rem .8rem; border-radius: 99px; background: #001E3E; color: #fff; text-align: center; font-weight: 800; font-size: 1.05rem; }
+  .pz-v.bump { animation: pz-bump .35s cubic-bezier(.3, 1.8, .5, 1); }
+  @keyframes pz-bump { 40% { transform: scale(1.18); background: var(--pg); color: #001E3E; } }
+
+  .pz-r { direction: ltr; --p: 20%; -webkit-appearance: none; appearance: none; width: 100%; height: .6rem; border-radius: 99px; background: linear-gradient(to right, var(--pg) var(--p), rgba(0, 30, 62, .13) var(--p)); outline: none; cursor: pointer; }
+  .pz-r::-webkit-slider-thumb { -webkit-appearance: none; width: 1.7rem; height: 1.7rem; border-radius: 99px; background: #fff; border: .4rem solid var(--pg); box-shadow: 0 .4rem 1rem rgba(0, 30, 62, .3); transition: transform .2s; }
+  .pz-r::-moz-range-thumb { width: 1.7rem; height: 1.7rem; border-radius: 99px; background: #fff; border: .4rem solid var(--pg); box-shadow: 0 .4rem 1rem rgba(0, 30, 62, .3); box-sizing: border-box; }
+  .pz-r:active::-webkit-slider-thumb { transform: scale(1.2); }
+  .pz-r:focus-visible::-webkit-slider-thumb { outline: 2px solid #001E3E; outline-offset: 2px; }
+
+  .pz-stage { container-type: inline-size; position: relative; isolation: isolate; overflow: hidden; padding: 1.6rem 1.4rem; border-radius: 2.2rem; color: #fff; background: radial-gradient(70% 50% at 100% 0%, rgba(5, 185, 98, .35), transparent 70%), linear-gradient(165deg, #00356A, #001E3E 60%); box-shadow: 0 3rem 4rem -2.4rem rgba(0, 30, 62, .6); }
+  @media (min-width: 640px) { .pz-stage { padding: 2.2rem 2.2rem; } }
+  .pz-glow { position: absolute; z-index: -1; inset-block-start: -30%; inset-inline-end: -12%; width: 60%; aspect-ratio: 1; border-radius: 99px; background: #05B962; filter: blur(70px); opacity: .28; animation: pz-breathe 8s ease-in-out infinite alternate; pointer-events: none; }
+  @keyframes pz-breathe { to { opacity: .45; transform: scale(1.12); } }
+  .pz-lab { max-width: 30rem; color: rgba(255, 255, 255, .65); line-height: 1.45; }
+  .pz-big { display: flex; align-items: baseline; gap: .6rem; margin-top: .4rem; }
+  .pz-out { font-size: clamp(3.8rem, 13cqw, 6.2rem); line-height: 1; color: var(--pg); text-shadow: 0 0 2.5rem rgba(5, 185, 98, .35); }
+  .pz-big small { font-size: 1.7rem; font-weight: 700; }
+  .pz-sub { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .9rem; font-size: .85rem; font-weight: 600; color: rgba(255, 255, 255, .75); }
+  .pz-sub span { padding: .35rem .85rem; border-radius: 99px; background: rgba(255, 255, 255, .09); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); }
+  .pz-sub b { color: #fff; font-variant-numeric: tabular-nums; }
+
+  .pz-rail { position: relative; margin-top: 1.8rem; padding: 0 .3rem; }
+  .pz-rod { display: block; height: .45rem; margin-bottom: .1rem; border-radius: 99px; background: linear-gradient(180deg, #d8e0e8, #8493a3); box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .35); }
+  .pz-grid { display: grid; grid-template-columns: repeat(20, 1fr); gap: .3rem .22rem; padding-top: .35rem; }
+  .pz-t { position: relative; display: block; aspect-ratio: 1 / 1.2; border-radius: .22rem .22rem .12rem .12rem; background: rgba(255, 255, 255, .16); transform-origin: 50% -.4rem; transition: background .5s calc(var(--w, 0) * 1ms), box-shadow .5s calc(var(--w, 0) * 1ms), opacity .5s; opacity: 0; }
+  .pz-t::before { content: ""; position: absolute; inset-inline: 38%; top: -.28rem; height: .3rem; border-radius: 99px 99px 0 0; background: rgba(255, 255, 255, .45); }
+  .pz.in .pz-t { opacity: 1; transition-delay: calc(var(--i) * 9ms); }
+  .pz-t.late { background: var(--amber); box-shadow: 0 0 .9rem rgba(245, 177, 61, .75); animation: pz-sway 2.6s ease-in-out infinite alternate; animation-delay: calc(var(--i) * -170ms); }
+  .pz-t.late::before { background: #ffd58a; }
+  @keyframes pz-sway { from { transform: rotate(-7deg); } to { transform: rotate(7deg); } }
+  .pz-z { position: absolute; font-weight: 800; color: var(--amber); opacity: 0; pointer-events: none; }
+  .pz-z.z1 { inset-inline-start: 18%; top: 55%; font-size: 1rem; animation: pz-zz 3.4s 0s infinite; } .pz-z.z2 { inset-inline-start: 46%; top: 40%; font-size: 1.3rem; animation: pz-zz 3.4s 1.1s infinite; } .pz-z.z3 { inset-inline-start: 74%; top: 55%; font-size: 1.6rem; animation: pz-zz 3.4s 2.2s infinite; }
+  @keyframes pz-zz { 0% { opacity: 0; transform: translateY(.8rem); } 25% { opacity: .9; } 100% { opacity: 0; transform: translateY(-2.6rem) rotate(12deg); } }
+  .pz.none .pz-z { display: none; }
+  .pz-leg { display: flex; flex-wrap: wrap; gap: .4rem 1.2rem; margin-top: 1rem; font-size: .8rem; font-weight: 600; color: rgba(255, 255, 255, .7); }
+  .pz-leg span { display: inline-flex; align-items: center; gap: .45rem; } .pz-leg b { color: #fff; font-variant-numeric: tabular-nums; }
+  .pz-leg .d { width: .7rem; height: .7rem; border-radius: .2rem; } .pz-leg .late { background: var(--amber); box-shadow: 0 0 .6rem rgba(245, 177, 61, .8); } .pz-leg .ok { background: rgba(255, 255, 255, .3); }
+
+  .pz-am { margin-top: 1.5rem; padding: 1.1rem 1.2rem; border-radius: 1.5rem; background: rgba(255, 255, 255, .07); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); }
+  :global([dir="rtl"]) .pz-amh { letter-spacing: 0; text-transform: none; font-size: .85rem; }
+  .pz-amh { font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--pg); }
+  .pz-amt { margin-top: .4rem; line-height: 1.5; color: rgba(255, 255, 255, .85); }
+  .pz-rows { display: grid; gap: .5rem; margin-top: .9rem; }
+  .pz-rows p { display: flex; align-items: center; gap: .8rem; padding: .6rem .8rem; border-radius: 1rem; background: rgba(245, 177, 61, .13); box-shadow: inset 0 0 0 1px rgba(245, 177, 61, .45); font-size: .88rem; font-weight: 700; }
+  .pz-rows .d { padding: .1rem .55rem; border-radius: 99px; background: var(--amber); color: #001E3E; font-size: .75rem; font-weight: 800; }
+  .pz-rows .b { display: inline-flex; align-items: center; gap: .4rem; margin-inline-start: auto; padding: .35rem .8rem; border-radius: 99px; background: #25D366; color: #fff; font-size: .78rem; white-space: nowrap; }
+  .pz-fn { margin-top: 1.2rem; font-size: .78rem; line-height: 1.5; color: rgba(255, 255, 255, .5); }
+  @media (prefers-reduced-motion: reduce) { .pz-t, .pz-t.late, .pz-z, .pz-glow, .pz-v.bump { animation: none !important; transition: none !important; } .pz-t { opacity: 1; } }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pz]');
+  if (root) {
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const q = (s: string) => root.querySelector<HTMLElement>(s)!;
+    const inputs = [...root.querySelectorAll<HTMLInputElement>('[data-k]')];
+    const tags = [...root.querySelectorAll<HTMLElement>('[data-t]')];
+    const out = q('[data-out]'), late = q('[data-late]'), year = q('[data-year]'), nOut = q('[data-n]');
+    const fmt = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
+    const val = (k: string) => Number(root.querySelector<HTMLInputElement>(`[data-k="${k}"]`)!.value);
+    // a fixed shuffle, so the same drop-offs stay amber as the slider moves
+    let seed = 7; const rank = tags.map((_, i) => i);
+    for (let i = rank.length - 1; i > 0; i--) { seed = (seed * 9301 + 49297) % 233280; const j = Math.floor((seed / 233280) * (i + 1)); [rank[i], rank[j]] = [rank[j], rank[i]]; }
+    let shown = 0, target = 0, raf = 0, started = false;
+    const paint = (v: number) => { out.textContent = fmt(v); year.textContent = fmt(v * 12); };
+    const tween = () => {
+      cancelAnimationFrame(raf);
+      if (still || !started) { shown = target; paint(shown); return; }
+      const from = shown, t0 = performance.now();
+      const tick = (now: number) => { const p = Math.min(1, (now - t0) / 650); shown = from + (target - from) * (1 - Math.pow(1 - p, 3)); paint(shown); if (p < 1) raf = requestAnimationFrame(tick); };
+      raf = requestAnimationFrame(tick);
+    };
+    const run = (bump?: HTMLInputElement) => {
+      const dep = val('dep'), prix = val('prix'), taux = val('taux');
+      inputs.forEach((r) => {
+        r.style.setProperty('--p', ((Number(r.value) - Number(r.min)) / (Number(r.max) - Number(r.min))) * 100 + '%');
+        q(`[data-for="${r.dataset.k}"]`).textContent = r.value;
+      });
+      tags.forEach((t, i) => { t.classList.toggle('late', rank[i] < taux); t.style.setProperty('--w', String(Math.abs(rank[i] - taux) * 14)); });
+      root.classList.toggle('none', taux === 0);
+      nOut.textContent = String(taux);
+      const per = dep * 4.3 * (taux / 100);
+      late.textContent = fmt(per);
+      target = per * prix; tween();
+      if (bump) { const v = q(`[data-for="${bump.dataset.k}"]`); v.classList.remove('bump'); void v.offsetWidth; v.classList.add('bump'); }
+    };
+    inputs.forEach((r) => r.addEventListener('input', () => run(r)));
+    run();
+    if (still) { started = true; }
+    else {
+      // the rail fills and the money counts up the first time it is in view
+      shown = 0; paint(0);
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { started = true; shown = 0; tween(); o.disconnect(); } }, { threshold: 0.3 }).observe(q('.pz-stage'));
+    }
+  }
+</script>
