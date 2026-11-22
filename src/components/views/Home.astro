@@ -157,24 +157,20 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
       </div>
 
       <HeroStage lang={lang} />
-      <div class="tp-dock fade-up order-3 mt-7 sm:mt-8 lg:col-span-2 lg:mt-10" style="--d:550ms" data-tp-wrap>
+      <div class="tp-dock fade-up order-3 mt-5 sm:mt-6 lg:col-span-2 lg:mt-7" style="--d:550ms" data-tp-wrap>
         <div class="tp-head">
           <p class="text-sm font-semibold text-muted lg:text-[0.95rem]">{tt('Votre métier')}</p>
-          <a href="#metiers" class="inline-flex min-h-10 items-center text-[0.95rem] font-semibold text-green-deep underline underline-offset-4 max-lg:hidden">{tt('Tous les métiers')}</a>
+          <a href="#metiers" class="inline-flex min-h-10 items-center text-[0.95rem] font-semibold text-green-deep underline underline-offset-4">{tt('Tous les métiers')}</a>
         </div>
-        <ul class="tp-grid mt-3 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:mt-0 lg:grid-cols-6">
-            {picker.map(([k, ic, l, line, bg, bgPos]) => (
-              <li><a href={ROUTES[k][lang]} class="tp-card" data-tp={k} style={`--tp-img:url(${bg});--tp-pos:${bgPos}`}>
-                <i class="tp-bg" aria-hidden="true"></i>
-                <span class="tp-ico"><Icon name={ic} class="size-5" /></span>
-                <b class="tp-n">{tt(l)}</b>
-                <span class="tp-l">{tt(line)}</span>
-                <svg viewBox="0 0 24 24" class="tp-ar rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                <i class="tp-bar" aria-hidden="true"></i>
-              </a></li>
-            ))}
+        <ul class="tp-row" data-tp-row>
+          {picker.map(([k, ic, l]) => (
+            <li><button type="button" class="tp-chip" data-tp={k} aria-pressed="false">
+              <span class="tp-ico"><Icon name={ic} class="size-5" /></span>
+              <span>{tt(l)}</span>
+              <i class="tp-bar" aria-hidden="true"></i>
+            </button></li>
+          ))}
         </ul>
-        <p class="mt-3 lg:hidden"><a href="#metiers" class="inline-flex min-h-10 items-center text-[0.95rem] font-semibold text-green-deep underline underline-offset-4">{tt('Tous les métiers')}</a></p>
       </div>
     </div>
 
@@ -347,33 +343,25 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   .hero-live { box-shadow: 0 0 0 0 rgba(5, 185, 98, .6); animation: hero-ping 2.2s ease-out infinite; }
   @keyframes hero-ping { to { box-shadow: 0 0 0 .55rem rgba(5, 185, 98, 0); } }
 
-  /* hero trade picker */
+  /* hero trade chips: one row that chooses the trade on the stage; the active chip fills while the tour waits */
   .tp-dock { position: relative; }
-  @media (min-width: 1024px) {
-    .tp-dock { padding: 1rem 1.1rem 1.1rem; border-radius: 2rem; background: rgba(255, 255, 255, .62); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .1), 0 2rem 3rem -2rem rgba(0, 30, 62, .45); }
-    .tp-head { display: flex; align-items: center; justify-content: space-between; padding: 0 .3rem .7rem; }
-    .tp-card { min-height: 6.6rem; }
-  }
-  .tp-card { position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: flex-start; gap: .2rem; overflow: hidden; padding: .95rem 1rem 1.05rem; min-height: 7.4rem; border-radius: 1.4rem; background: #fff; box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .11), 0 .7rem 1.4rem -1.1rem rgba(0, 30, 62, .45); transition: transform .3s cubic-bezier(.2, .9, .3, 1.2), background .3s, color .3s, box-shadow .3s; }
-  .tp-bg { position: absolute; inset: 0; z-index: -1; background: var(--tp-img) var(--tp-pos, 50% 50%) / cover no-repeat; transition: transform .6s cubic-bezier(.2, .9, .3, 1); }
-  .tp-bg::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(255, 255, 255, .96) 22%, rgba(255, 255, 255, .72) 62%, rgba(255, 255, 255, .5)); transition: background .3s; }
-  .tp-card:hover .tp-bg, .tp-card:focus-visible .tp-bg, .tp-card.on .tp-bg { transform: scale(1.06); }
-  .tp-card:hover .tp-bg::after, .tp-card:focus-visible .tp-bg::after, .tp-card.on .tp-bg::after { background: linear-gradient(to top, rgba(0, 30, 62, .94) 24%, rgba(0, 30, 62, .72) 62%, rgba(0, 30, 62, .5)); }
-  .tp-ico { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; margin-bottom: .55rem; border-radius: .9rem; background: #001E3E; color: #05B962; transition: background .3s, color .3s, transform .3s; }
-  .tp-n { font-size: 1rem; font-weight: 800; line-height: 1.15; }
-  .tp-l { font-size: .8rem; line-height: 1.25; color: rgba(0, 30, 62, .62); transition: color .3s; }
-  .tp-ar { position: absolute; inset-block-start: .7rem; inset-inline-end: .75rem; width: .95rem; height: .95rem; opacity: 0; transform: translateX(-.3rem); transition: opacity .3s, transform .3s; }
-  [dir="rtl"] .tp-ar { transform: translateX(.3rem); }
-  .tp-bar { position: absolute; inset-inline: 0; bottom: 0; height: .22rem; background: #05B962; transform: scaleX(0); transform-origin: left; }
+  .tp-head { display: flex; align-items: center; justify-content: space-between; padding: 0 .2rem; }
+  .tp-row { display: flex; gap: .6rem; overflow-x: auto; scroll-snap-type: x proximity; margin-inline: -1rem; padding: .7rem 1rem 1rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tp-row::-webkit-scrollbar { display: none; }
+  .tp-row > li { flex: none; scroll-snap-align: center; }
+  @media (min-width: 640px) { .tp-row { margin-inline: -1.5rem; padding-inline: 1.5rem; } }
+  @media (min-width: 1024px) { .tp-row { margin-inline: 0; padding-inline: .2rem; overflow: visible; } .tp-row > li { flex: 1; } }
+  .tp-chip { position: relative; isolation: isolate; display: flex; align-items: center; gap: .6rem; width: 100%; min-height: 3.4rem; padding: .4rem 1.15rem .4rem .45rem; overflow: hidden; border-radius: 999px; background: #fff; color: #001E3E; font-size: 1rem; font-weight: 800; white-space: nowrap; box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .12), 0 .7rem 1.3rem -1rem rgba(0, 30, 62, .5); transition: transform .3s cubic-bezier(.2, .9, .3, 1.2), background .3s, color .3s, box-shadow .3s; }
+  .tp-ico { display: grid; place-items: center; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: #001E3E; color: #05B962; transition: background .3s, color .3s, transform .3s; }
+  .tp-chip:hover, .tp-chip:focus-visible { box-shadow: inset 0 0 0 1.5px #05B962, 0 .7rem 1.3rem -1rem rgba(0, 30, 62, .5); outline: none; }
+  .tp-chip.on { transform: translateY(-3px); background: #001E3E; color: #fff; box-shadow: inset 0 0 0 1.5px #05B962, 0 1.1rem 1.8rem -1rem rgba(5, 185, 98, .8); }
+  .tp-chip.on .tp-ico { background: #05B962; color: #001E3E; transform: rotate(-8deg) scale(1.06); }
+  .tp-bar { position: absolute; inset-inline: 0; bottom: 0; z-index: -1; height: .24rem; background: #05B962; transform: scaleX(0); transform-origin: left; }
   [dir="rtl"] .tp-bar { transform-origin: right; }
-  .tp-card:hover, .tp-card:focus-visible, .tp-card.on { transform: translateY(-3px); background: #001E3E; color: #fff; box-shadow: inset 0 0 0 1.5px #05B962, 0 1.2rem 2rem -1rem rgba(5, 185, 98, .65); outline: none; }
-  .tp-card:hover .tp-ico, .tp-card:focus-visible .tp-ico, .tp-card.on .tp-ico { background: #05B962; color: #001E3E; transform: rotate(-6deg) scale(1.06); }
-  .tp-card:hover .tp-l, .tp-card:focus-visible .tp-l, .tp-card.on .tp-l { color: rgba(255, 255, 255, .78); }
-  .tp-card:hover .tp-ar, .tp-card:focus-visible .tp-ar, .tp-card.on .tp-ar { opacity: 1; transform: none; color: #05B962; }
-  .cyc .tp-card.on .tp-bar { animation: tp-fill 4.4s linear forwards; }
+  .cyc .tp-chip.on .tp-bar { animation: tp-fill 4.4s linear forwards; }
   @keyframes tp-fill { to { transform: scaleX(1); } }
 
-  @media (prefers-reduced-motion: reduce) { .hero-live { animation: none; } .tp-card, .tp-ico, .tp-bg { transition: none; } .cyc .tp-card.on .tp-bar { animation: none; transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .hero-live { animation: none; } .tp-chip, .tp-ico { transition: none; } .cyc .tp-chip.on .tp-bar { animation: none; transform: scaleX(1); } }
 </style>
 
 <style>
@@ -452,33 +440,37 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
     requestAnimationFrame(step);
   }), { threshold: 0.6 });
   document.querySelectorAll('[data-count]').forEach(n => cio.observe(n));
-  // hero: the trade cards and the dots choose the trade on the stage; a slow tour runs until the visitor takes over
+  // hero: the trade chips choose the trade on the stage; a slow tour runs until the visitor takes over
   {
     const hs = document.querySelector<HTMLElement>('[data-hs]');
     const wrap = document.querySelector<HTMLElement>('[data-tp-wrap]');
-    if (hs && wrap) {
-      const cards = [...wrap.querySelectorAll<HTMLElement>('[data-tp]')];
+    const row = document.querySelector<HTMLElement>('[data-tp-row]');
+    if (hs && wrap && row) {
+      const chips = [...wrap.querySelectorAll<HTMLElement>('[data-tp]')];
       const slides = [...hs.querySelectorAll<HTMLElement>('[data-s]')];
-      const dots = [...hs.querySelectorAll<HTMLElement>('[data-d]')];
       const tour = slides.map((x) => x.dataset.s!);
-      let i = 0, timer = 0, hold = false;
+      let i = 0, timer = 0, resume = 0, hold = false;
       const set = (k: string) => {
         slides.forEach((x) => { const on = x.dataset.s === k; x.classList.toggle('on', on); x.setAttribute('aria-hidden', String(!on)); });
-        dots.forEach((d) => d.classList.toggle('on', d.dataset.d === k));
-        cards.forEach((c) => c.classList.toggle('on', c.dataset.tp === k));
+        chips.forEach((c) => { const on = c.dataset.tp === k; c.classList.toggle('on', on); c.setAttribute('aria-pressed', String(on)); });
+        // keep the active chip in view inside the row (never scrolls the page)
+        const c = chips.find((x) => x.dataset.tp === k);
+        if (c && row.scrollWidth > row.clientWidth + 2) {
+          const a = c.getBoundingClientRect(), b = row.getBoundingClientRect();
+          row.scrollBy({ left: a.left + a.width / 2 - (b.left + b.width / 2), behavior: still ? 'auto' : 'smooth' });
+        }
       };
       const stop = () => { clearInterval(timer); wrap.classList.remove('cyc'); };
       const next = () => { if (document.visibilityState !== 'visible') return; i = (i + 1) % tour.length; wrap.classList.remove('cyc'); void wrap.offsetWidth; wrap.classList.add('cyc'); set(tour[i]); };
       const go = () => { stop(); if (still || hold) return; wrap.classList.add('cyc'); timer = window.setInterval(next, 4400); };
       const pick = (k: string) => { i = Math.max(0, tour.indexOf(k)); set(k); };
-      cards.forEach((c) => {
-        const on = () => { hold = true; stop(); pick(c.dataset.tp!); };
-        c.addEventListener('pointerenter', on); c.addEventListener('focus', on);
+      // a visitor choice holds the tour for a while, then it carries on
+      const take = () => { hold = true; stop(); clearTimeout(resume); resume = window.setTimeout(() => { hold = false; go(); }, 12000); };
+      chips.forEach((c) => {
+        c.addEventListener('click', () => { take(); pick(c.dataset.tp!); });
+        c.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') { take(); pick(c.dataset.tp!); } });
       });
-      // a tap on a dot takes the tour over for good
-      dots.forEach((d) => d.addEventListener('click', () => { hold = true; stop(); pick(d.dataset.d!); }));
-      wrap.addEventListener('pointerleave', () => { hold = false; go(); });
-      wrap.addEventListener('focusout', (e) => { if (!wrap.contains(e.relatedTarget as Node)) { hold = false; go(); } });
+      hs.addEventListener('pointerdown', take);
       set(tour[0]);
       go();
     }

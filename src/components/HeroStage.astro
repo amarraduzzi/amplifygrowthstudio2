@@ -6,7 +6,7 @@
 import Device from './Device.astro';
 import Icon from './Icon.astro';
 import { tr } from '../i18n/t';
-import type { Lang } from '../i18n/routes';
+import { ROUTES, type Lang } from '../i18n/routes';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -48,10 +48,9 @@ const S = [
       <div class={`hst-dev ${s.d.kind === 'phone' ? 'hst-phone' : 'hst-tab'}`}>
         <Device kind={s.d.kind} src={s.d.src} alt={tt(s.d.alt)} w={s.d.w} h={s.d.h} eager={i === 0} screenBg={'bg' in s.d ? s.d.bg : undefined} />
       </div>
-      <div class={`hst-lb${s.d.kind === 'tablet' ? ' hst-lb-n' : ''}`}><span class="hst-ic"><Icon name={s.ic} class="size-5" /></span><div><p class="hst-n">{tt(s.n)}</p><p class="hst-l">{tt(s.l)}</p></div></div>
+      <div class={`hst-lb${s.d.kind === 'tablet' ? ' hst-lb-n' : ''}`}><span class="hst-ic"><Icon name={s.ic} class="size-5" /></span><div><p class="hst-n">{tt(s.n)}</p><p class="hst-l">{tt(s.l)}</p><a href={ROUTES[s.k][lang]} class="hst-go">{tt('Voir ce métier')}<svg viewBox="0 0 24 24" class="size-[1.1em] rtl:-scale-x-100" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></div></div>
     </div>
   ))}
-  <div class="hst-dots">{S.map((s, i) => <button type="button" class={`hst-d${i === 0 ? ' on' : ''}`} data-d={s.k} aria-label={tt(s.n)}><i></i></button>)}</div>
 </div>
 
 <style is:global>
@@ -93,7 +92,7 @@ const S = [
   [dir="rtl"] .hst-phone { --r: -4deg; }
   [dir="rtl"] .hst-tab { --r: 3deg; }
 
-  .hst-lb { position: absolute; z-index: 3; inset-inline-start: 4.5%; bottom: 3.4em; display: flex; align-items: center; gap: .7em; max-width: 56%; color: #fff; }
+  .hst-lb { position: absolute; z-index: 3; inset-inline-start: 4.5%; bottom: 1.6em; display: flex; align-items: center; gap: .7em; max-width: 56%; color: #fff; }
   .hst-lb-n { max-width: 40%; }
   .hst-s.on .hst-lb { animation: hst-rise2 .6s .2s both ease-out; }
   @keyframes hst-rise2 { from { opacity: 0; transform: translateY(.8em); } to { opacity: 1; transform: none; } }
@@ -101,12 +100,10 @@ const S = [
   .hst-n { font-size: 1.3em; font-weight: 800; line-height: 1.1; }
   .hst-l { margin-top: .15em; font-size: .9em; font-weight: 600; line-height: 1.2; color: rgba(255, 255, 255, .85); }
 
-  .hst-dots { position: absolute; z-index: 5; inset-inline: 0; bottom: 0; display: flex; justify-content: center; }
-  .hst-d { display: grid; place-items: center; min-width: 2.9em; min-height: 2.9em; }
-  .hst-d i { display: block; width: .6em; height: .6em; border-radius: 99px; background: rgba(255, 255, 255, .55); transition: width .35s, background .35s; }
-  .hst-d.on i { width: 1.8em; background: #05B962; }
+  .hst-go { position: relative; display: inline-flex; align-items: center; gap: .4em; margin-top: .7em; padding: .5em .95em; border-radius: 999px; background: #fff; color: #001E3E; font-size: .9em; font-weight: 800; box-shadow: 0 .6em 1.2em -.6em rgba(0, 0, 0, .6); }
+  .hst-go::after { content: ""; position: absolute; inset: -.55em -.3em; }
   @media (prefers-reduced-motion: reduce) {
-    .hst-s, .hst-d i { transition: none; }
+    .hst-s { transition: none; }
     .hst-s.on .hst-ph, .hst-s.on .hst-tk, .hst-s.on .tk, .hst-s.on .hst-dev, .hst-s.on .hst-lb { animation: none; }
     .hst-s.on .tk-a { display: none; }
     .hst-s.on .tk-b { animation: none; opacity: 1; transform: none; }
