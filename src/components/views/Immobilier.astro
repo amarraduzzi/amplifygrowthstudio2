@@ -3,6 +3,7 @@
 // Hero: the question "vous êtes…" with four photo cards that open the right tab; then one apartment followed
 // from the mandate to the commission (ImmoParcours); then the tabs per profession, the law, WhatsApp.
 import Base from '../../layouts/Base.astro';
+import SectorPrices from '../SectorPrices.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import ImmoMetiers from '../ImmoMetiers.astro';
@@ -162,6 +163,8 @@ const uses = [
       </div>
     </div>
   </section>
+
+  <SectorPrices lang={lang} k="immobilier" />
 
   <!-- final -->
   <section id="demo" class="scroll-mt-20 px-4 pb-14 pt-10 sm:px-6 md:pb-24 md:pt-16">

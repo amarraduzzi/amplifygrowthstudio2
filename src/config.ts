@@ -34,9 +34,13 @@ export const APPS = {
   /** The drivers app (Amplify Livreur). Link of the drivers app. */
   rider: 'https://amplify-driver.pages.dev',
 };
-/** Start the free trial. product 'pos', 'profit', 'site' or 'loyalty' = that one alone; nothing = both (Contrôle). */
-export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit' | 'site' | 'loyalty') =>
-  `${APPS.admin}/?inscription=1&lang=${lang}${product ? `&produit=${product}` : ''}`;
+/**
+ * Start the free trial. product 'pos', 'profit', 'site' or 'loyalty' = that one alone; nothing = both (Contrôle).
+ * 'salon' (also for a spa), 'pressing', 'garage' and 'hanout' create that trade's account; plan = the plan chosen on the page
+ * (nouba, agenda, salon, spa_agenda, spa_agenda_till, spa_full, depots, complet, atelier, atelier_rappels, kridi, kridi_caisse, boutique). The app checks it again.
+ */
+export const signupUrl = (lang = 'fr', product?: 'pos' | 'profit' | 'site' | 'loyalty' | 'salon' | 'pressing' | 'garage' | 'hanout', plan?: string) =>
+  `${APPS.admin}/?inscription=1&lang=${lang}${product ? `&produit=${product}` : ''}${plan ? `&formule=${plan}` : ''}`;
 export const loginUrl = (lang = 'fr') => `${APPS.admin}/?lang=${lang}`;
 
 export const CONTACT = {
@@ -78,6 +82,32 @@ export const OFFER = {
   loyaltySetup: 250,
   /** Amplify Site Premium (the Maison and Signature styles), one-off */
   sitePremium: 750,
+};
+
+/**
+ * Prices per trade (Par métier). One place for every sector product, same ladder as the rest of the site:
+ * an entry plan and a full plan, monthly, HT. Setup is one-off (data migration), free with a yearly plan.
+ * Pages read these values, they never write a number by hand.
+ */
+export const SECTOR = {
+  /** Amplify Pressing: Dépôts (entry) and Complet (pickup and delivery, client credit, business accounts, manager report) */
+  pressing: { entry: 199, full: 299 },
+  /** Amplify Garage: Atelier and Atelier + rappels. A third plan (about 499) waits until selling cars and the garage site exist. */
+  garage: { entry: 299, full: 399 },
+  /** Amplify Hanout: the three levels of the Hanout page. kridi only, kridi and till, the whole shop */
+  hanout: { kridi: 99, till: 149, shop: 199 },
+  /** Salons page: Nouba (queue), Agenda (appointments), Salon (both). Modules are extra, see the Salons page. */
+  salons: { nouba: 149, agenda: 199, salon: 299 },
+  /** Spas page: Agenda, Agenda et caisse, Spa complet (with the deposit) */
+  spas: { agenda: 199, agendaTill: 348, full: 399 },
+  /** Amplify Agent (real estate): free up to a number of properties, then monthly */
+  immoAgent: { freeProperties: 3, monthly: 99 },
+  /** Amplify Immobilier (agences, syndics, promoteurs): monthly price and what is included, by size */
+  immobilier: { agency: 299, agencyMembers: 5, agencyProperties: 100, syndic: 199, syndicLots: 150, promoter: 399, promoterProjects: 2 },
+  /** Amplify Livraison: monthly, same ladder as the services à la carte. Drivers: nothing published yet. */
+  livraison: { monthly: 100, setup: 250 },
+  /** One-off setup for Pressing, Garage and Hanout (moving the client list and history) */
+  setup: 490,
 };
 
 export const isPlaceholder = (v: string) => /^\[.*\]$/.test(v.trim());

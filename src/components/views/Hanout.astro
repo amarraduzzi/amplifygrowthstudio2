@@ -1,10 +1,11 @@
 ---
 // Hanout page (corner shops, épiceries): linked from the products menu and the footer.
 // Same look as the pressing and salons pages. Real screenshots of the demo shop ("Hanout Fatima", invented
-// names), in Arabic on the Arabic page. No clients, results or prices are claimed: the price is given on request.
+// names), in Arabic on the Arabic page. No clients or results are claimed. Prices come from SECTOR in config.ts.
 import Base from '../../layouts/Base.astro';
 import Device from '../Device.astro';
 import Faq from '../Faq.astro';
+import SectorPrices from '../SectorPrices.astro';
 import WaButton from '../WaButton.astro';
 import Icon from '../Icon.astro';
 import CountUp from '../CountUp.astro';
@@ -348,6 +349,8 @@ const faq = [
       ))}
     </div>
   </section>
+
+  <SectorPrices lang={lang} k="hanout" />
 
   <Faq lang={lang} items={faq} wa={wa} />
 

@@ -1,0 +1,32 @@
+---
+// Price block at the bottom of a sector page: the plans of that trade, from lib/sectorPlans.ts.
+import { SECTOR, signupUrl } from '../config';
+import { tr } from '../i18n/t';
+import { posOf } from '../i18n/content';
+import { ROUTES, type Lang } from '../i18n/routes';
+import { metiers } from '../lib/sectorPlans';
+interface Props { lang: Lang; k: string }
+const { lang, k } = Astro.props;
+const tt = tr(lang);
+const per = posOf(lang).pricing.per;
+const m = metiers(tt).find((x) => x.key === k);
+const showSetup = ['pressing', 'garage', 'hanout'].includes(k);
+---
+{m && m.plans && (
+  <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="sp-h" data-tf>
+    <h2 id="sp-h" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Tarifs')}</h2>
+    <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:80ms">{tt('Prix HT par mois. 14 jours gratuits, sans engagement.')}</p>
+    <div class={`mt-8 grid gap-4 ${m.plans.length === 3 ? 'lg:grid-cols-3' : 'sm:grid-cols-2'}`}>
+      {m.plans.map((pl, i) => (
+        <div class="tf flex flex-col rounded-[2rem] bg-paper p-7 ring-1 ring-line" style={`--d:${i * 110}ms`}>
+          <p class="display text-4xl">{tt(pl.name)}</p>
+          <p class="mt-4"><span class="display text-6xl" dir="ltr">{pl.n}</span> <span class="text-muted">{tt('DH HT')} {per}</span></p>
+          <p class="mt-4 flex-1 text-muted">{tt(pl.text)}</p>
+          {m.signup && pl.id && <a href={signupUrl(lang, m.signup, pl.id)} data-trial={`${k}-${pl.id}`} class="mt-6 inline-flex min-h-12 items-center justify-center rounded-full bg-green px-6 font-semibold text-navy hover:bg-[#04A859]">{tt('Essayer 14 jours gratuits')}</a>}
+        </div>
+      ))}
+    </div>
+    {showSetup && <p class="tf mt-5 text-sm text-muted">{tt('Pressing, Garage et Hanout : mise en place {n} DH HT, offerte avec un plan annuel.').replace('{n}', String(SECTOR.setup))}</p>}
+    <p class="tf mt-4"><a href={`${ROUTES.pricing[lang]}#metiers`} class="font-medium underline underline-offset-4">{tt('Voir tous les tarifs')}</a></p>
+  </section>
+)}

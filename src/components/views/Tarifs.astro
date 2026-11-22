@@ -10,7 +10,8 @@ import CountUp from '../CountUp.astro';
 import LeakTicker from '../LeakTicker.astro';
 import PhotoBand from '../PhotoBand.astro';
 import ProductFinal from '../ProductFinal.astro';
-import { OFFER, signupUrl, waLink } from '../../config';
+import { OFFER, SECTOR, signupUrl, waLink } from '../../config';
+import { metiers as metiersList } from '../../lib/sectorPlans';
 import { copy } from '../../i18n';
 import { posOf } from '../../i18n/content';
 import { tr } from '../../i18n/t';
@@ -36,6 +37,8 @@ const situations = [
   { h: tt('Je veux tout'), t: tt('Contrôle : la caisse et les marges, ensemble.'), plan: from(price(3)), icon: 'check', to: 2 },
   { h: tt('Seulement le digital'), t: tt('Amplify Site, Commandes et Fidélité : seulement ce dont vous avez besoin, sans caisse.'), plan: from('100'), icon: 'check', to: -1 },
 ] as const;
+// "Par métier": every trade with its own page and its own price (lib/sectorPlans.ts, SECTOR in config.ts).
+const metiers = metiersList(tt);
 const faqItems = [
   ['Les prix sont-ils avec ou sans TVA ?', 'Tous les prix sont hors taxes (HT). La TVA s’ajoute sur la facture.'],
   ['Y a-t-il un engagement ?', 'Non. 14 jours gratuits sans carte bancaire, puis vous payez chaque mois et vous pouvez arrêter quand vous voulez. En annuel, vous payez 10 mois et profitez de 12.'],
@@ -219,6 +222,35 @@ const schema = [
       ))}
     </ul>
     <p class="tf mt-6 flex items-center gap-2 font-semibold text-green-deep"><Icon name="check" class="size-5" />{tt('Dès 3 services, regardez Restaurant : toute la caisse pour {n} DH de plus ({p} DH HT par mois).').replace('{n}', String(Number(price(1)) - 200)).replace('{p}', price(1))}</p>
+  </section>
+
+  <!-- par métier: Pressing, Garage, Hanout -->
+  <section id="metiers" class="mx-auto max-w-6xl scroll-mt-24 px-4 pb-14 sm:px-6 md:pb-24" aria-labelledby="metiers-h" data-tf>
+    <h2 id="metiers-h" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]">{tt('Par métier')}</h2>
+    <p class="tf mt-4 max-w-2xl text-muted" style="--d:80ms">{tt('Un système pensé pour votre métier, avec son propre prix.')}</p>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {metiers.map((m, i) => (
+        <a href={ROUTES[m.key][lang]} class="tf group flex flex-col rounded-[1.75rem] bg-paper p-6 ring-1 ring-line" style={`--d:${i * 110}ms`}>
+          <span class="tf-icon grid size-11 place-items-center rounded-xl bg-mint text-green-deep ring-1 ring-green/30"><Icon name={m.icon} class="size-5" /></span>
+          <h3 class="display mt-4 text-3xl">{m.name}</h3>
+          <p class="mt-2 flex-1 text-muted">{tt(m.text)}</p>
+          {m.plans ? (
+            <ul class="mt-4 grid gap-2">
+              {m.plans.map((pl) => (
+                <li class="rounded-xl bg-chalk px-3.5 py-2.5 ring-1 ring-line">
+                  <p class="flex items-baseline justify-between gap-3"><span class="font-semibold">{tt(pl.name)}</span><span class="font-semibold text-green-deep"><span dir="ltr">{pl.n}</span> <span class="text-xs font-normal text-muted">{tt('DH HT')} {p.pricing.per}</span></span></p>
+                  <p class="mt-0.5 text-sm text-muted">{tt(pl.text)}</p>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="mt-4 font-semibold text-green-deep"><span dir="ltr">{m.price}</span></p>
+          )}
+          <p class="mt-1 text-sm font-medium">{tt('Voir la page')} <span aria-hidden="true" class="inline-block transition-transform group-hover:translate-x-1 rtl:rotate-180 rtl:group-hover:-translate-x-1">→</span></p>
+        </a>
+      ))}
+    </div>
+    <p class="tf mt-5 text-sm text-muted">{tt('Pressing, Garage et Hanout : mise en place {n} DH HT, offerte avec un plan annuel.').replace('{n}', String(SECTOR.setup))} {tt('Livraison : mise en place {n} DH HT.').replace('{n}', String(SECTOR.livraison.setup))}</p>
   </section>
 
   <PhotoBand name="pf-soir" alt={tt('Le service du soir dans un restaurant')} kicker={tt('Tarifs')} title={tt('Pas de surprise sur la facture.')} w={1600} h={686} pos="50% 55%" />

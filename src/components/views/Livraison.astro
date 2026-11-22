@@ -15,7 +15,7 @@ import LivraisonMaquette from '../LivraisonMaquette.astro';
 import LivraisonPv from '../LivraisonPv.astro';
 import LivraisonWin from '../LivraisonWin.astro';
 import { bssahaModel } from '../../lib/bssahaModel';
-import { APPS, isPlaceholder, waLink } from '../../config';
+import { APPS, SECTOR, isPlaceholder, waLink } from '../../config';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -33,7 +33,7 @@ const description = tt('Commandes en ligne, caisse, livreur et suivi : un restau
 // three things that stay with the restaurant
 const pillars = [
   ['qr', 'Votre site et votre page de commande', 'Vos clients commandent chez vous, sous votre nom, sans place de marché au milieu.'],
-  ['wallet', 'Zéro commission', 'Aucune commission prélevée sur vos commandes. Des tarifs simples et transparents, communiqués avant de commencer.'],
+  ['wallet', 'Zéro commission', tt('Aucune commission prélevée sur vos commandes. Un prix fixe par mois, dès {n} DH HT.').replace('{n}', String(SECTOR.livraison.monthly))],
   ['truck', 'Votre transport', 'Vos propres livreurs, ou ceux d’Amplify. Vous décidez à chaque commande.'],
 ] as const;
 // the journey of one order, in detail
@@ -91,7 +91,7 @@ const faq = [
   ['Je dois tout prendre en même temps ?', 'Non. Vous pouvez commencer par un seul module et ajouter les autres plus tard. Tout ensemble, c’est simplement plus simple.'],
   ['Puis-je garder mes propres livreurs ?', 'Oui. Pour chaque commande, vous choisissez : votre livreur ou un livreur Amplify.'],
   ['Comment le client paie-t-il ?', 'En espèces à la remise ou en ligne. Les deux fonctionnent.'],
-  ['Combien ça coûte ?', 'Des tarifs simples et transparents, communiqués avant de commencer. Écrivez-nous sur WhatsApp : nous vous les donnons pour votre restaurant.'],
+  ['Combien ça coûte ?', tt('Aucune commission. Un prix fixe par mois, dès {n} DH HT, plus {s} DH HT de mise en place. Écrivez-nous sur WhatsApp : nous vous donnons le prix exact pour votre restaurant.').replace('{n}', String(SECTOR.livraison.monthly)).replace('{s}', String(SECTOR.livraison.setup))],
 ];
 const toc = [
   { id: 'parcours', label: tt('Le parcours') },

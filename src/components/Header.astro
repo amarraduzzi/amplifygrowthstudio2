@@ -32,28 +32,13 @@ const GROUPS = [
 const groups = GROUPS.map(g => ({ ...g, label: tt(g.label), modules: g.keys.map(k => fx.modules.find(m => m.key === k)).filter((m): m is (typeof fx.modules)[number] => !!m) }));
 const fxLeft = fx.modules.filter(m => !GROUPS.some(g => (g.keys as readonly string[]).includes(m.key)));   // a module added later still shows up
 if (fxLeft.length) groups[groups.length - 1].modules.push(...fxLeft);
-// Other trades: one photo card each under the four products (desktop), a row to swipe on the phone.
-const SECTORS = [
-  { k: 'maitre', name: 'Fine dining', short: 'Le service à table', img: '/img/nav-dining.webp', pos: '62% 55%' },
-  { k: 'bakery', name: 'Pâtisseries', short: 'La production du jour', img: '/img/photos/pat-matin-800.webp', pos: '72% 50%' },
-  { k: 'salons', name: 'Coiffeurs et barbiers', short: 'Agenda et file d’attente', img: '/img/photos/salon-barbier-800.webp', pos: '62% 45%' },
-  { k: 'spas', name: 'Spas et instituts', short: 'Cabines et soins', img: '/img/photos/spa-cabine-800.webp', pos: '55% 50%' },
-  { k: 'pressing', name: 'Pressings', short: 'Une étiquette par pièce', img: '/img/nav-pressing.webp', pos: '55% 45%' },
-  { k: 'garage', name: 'Garages', short: 'Devis, OR et rappels', img: '/img/nav-garage.webp', pos: '50% 50%' },
-  { k: 'hanout', name: 'Hanouts', short: 'Kridi, caisse et stock', img: '/img/photos/hanout-comptoir-800.webp', pos: '62% 45%' },
-  { k: 'immobilier', name: 'Immobilier', short: 'Biens, visites et loyers', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%' },
-] as const;
-const sectors = SECTORS.map(x => ({ ...x, href: ROUTES[x.k][lang] }));
 const products = PRODUCTS.map(p => ({ ...p, label: t.nav[p.k], href: ROUTES[p.k][lang] }));
-const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems', 'maitre', 'bakery', 'salons', 'spas', 'pressing', 'garage', 'hanout', 'immobilier', 'immoAgent', 'immoStay'];
+const productPages = ['pos', 'profit', 'site', 'marketing', 'restaurants', 'systems'];
 const links = [
   { k: 'pricing', label: tt('Tarifs'), href: ROUTES.pricing[lang] },
   ...(lang === 'fr' ? [{ k: 'blog', label: 'Blog', href: ROUTES.blog[lang] }] : []),
   { k: 'contact', label: t.nav.contact, href: ROUTES.contact[lang] },
 ];
-// Phone and tablet menu: Tarifs, Blog, Contact. The blog is French only, so other languages get a small FR label.
-const menuLinks = links.filter(l => l.k !== 'blog') as { k: string; label: string; href: string; frOnly?: boolean }[];
-menuLinks.splice(1, 0, { k: 'blog', label: tt('Blog'), href: ROUTES.blog[lang], frOnly: lang !== 'fr' });
 const activeProducts = productPages.includes(page);
 const activeFeatures = page === 'features';
 const active = (k: string) => k === page;
@@ -61,20 +46,16 @@ const langs = langsProp ?? liveLanguages();
 const LABEL: Record<Lang, string> = { fr: 'FR', ar: 'عربي', en: 'EN' };
 const SHORT: Record<Lang, string> = { fr: 'FR', ar: 'ع', en: 'EN' };
 const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 'English' };
-// salons cannot sign up alone yet: the button goes to the demo request
-// real estate: no trial is promised, the button asks for a demo
-const immo = page === 'immobilier' || page === 'immoAgent' || page === 'immoStay';
-const trialLabel = immo ? tt('Demander une démo') : t.nav.trial;
-const trial = page === 'salons' || page === 'spas' || page === 'pressing' || page === 'garage' || page === 'hanout' || immo ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
+const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
 ---
-<header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/95 backdrop-blur">
+<header class="sticky top-0 z-40 border-b border-line/70 bg-chalk/90 backdrop-blur">
   <div class="mx-auto flex h-16 max-w-6xl items-center gap-2 px-4 md:gap-4 sm:px-6 2xl:max-w-7xl">
     <a href={ROUTES.home[lang]} aria-label="Amplify Growth Studio" class="me-auto"><Logo /></a>
     <nav class="hidden items-center gap-1 text-[0.95rem] xl:flex" aria-label="Navigation">
       <!-- Products panel -->
       <div class="group">
-        <button type="button" aria-haspopup="true" aria-expanded="false" data-panel-btn class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep group-data-[open=true]:text-green-deep ${activeProducts ? 'font-semibold text-green-deep' : 'text-navy'}`}>{tt('Produits')}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180 group-data-[open=true]:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-data-[open=true]:visible group-data-[open=true]:opacity-100 group-hover:visible group-hover:opacity-100">
+        <button type="button" aria-haspopup="true" class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep ${activeProducts ? 'font-semibold text-green-deep' : 'text-navy'}`}>{tt('Produits')}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
           <div class="mx-auto grid max-w-6xl gap-3 px-6 py-6 lg:grid-cols-4 2xl:max-w-7xl">
             {products.map(p => (
               <a href={p.href} class="group/c relative isolate flex h-56 flex-col justify-end overflow-hidden rounded-[1.4rem] bg-navy p-5 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5">
@@ -87,28 +68,16 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
               </a>
             ))}
           </div>
-          <div class="mx-auto max-w-6xl border-t border-line px-6 pb-6 pt-4 2xl:max-w-7xl">
-            <div class="mb-3 flex items-center justify-between gap-4 text-sm">
-              <span class="text-muted">{tt('Pas un restaurant ? Amplify existe aussi pour votre métier.')}</span>
-              <a href={ROUTES.restaurants[lang]} class="whitespace-nowrap font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} <span aria-hidden="true" class="inline-block rtl:-scale-x-100">→</span></a>
-            </div>
-            <div class="grid grid-cols-8 gap-2.5">
-              {sectors.map(x => (
-                <a href={x.href} class={`group/s relative isolate flex h-36 flex-col justify-end overflow-hidden rounded-[1.1rem] bg-navy p-3 text-white shadow-[0_14px_30px_-22px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5 ${page === x.k ? 'ring-2 ring-green' : ''}`}>
-                  <img src={x.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover/s:scale-105" style={`object-position:${x.pos}`} />
-                  <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/45 to-navy/5" aria-hidden="true"></span>
-                  <span class="display text-[1.15rem] leading-[0.95]">{tt(x.name)}</span>
-                  <span class="mt-1 text-[0.72rem] leading-tight text-white/80">{tt(x.short)}</span>
-                </a>
-              ))}
-            </div>
+          <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 border-t border-line px-6 py-3 text-sm 2xl:max-w-7xl">
+            <span class="text-muted">{tt('Deux systèmes qui se parlent, et un marketing qui remplit la salle.')}</span>
+            <a href={ROUTES.restaurants[lang]} class="font-semibold text-green-deep underline underline-offset-4">{t.nav.restaurants} →</a>
           </div>
         </div>
       </div>
       <!-- Features panel -->
       <div class="group">
-        <button type="button" aria-haspopup="true" aria-expanded="false" data-panel-btn class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep group-data-[open=true]:text-green-deep ${activeFeatures ? 'font-semibold text-green-deep' : 'text-navy'}`}>{t.nav.features}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180 group-data-[open=true]:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-data-[open=true]:visible group-data-[open=true]:opacity-100 group-hover:visible group-hover:opacity-100">
+        <button type="button" aria-haspopup="true" class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep ${activeFeatures ? 'font-semibold text-green-deep' : 'text-navy'}`}>{t.nav.features}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
           <div class="mx-auto grid max-w-6xl gap-6 px-6 py-6 lg:grid-cols-[15rem_1fr] 2xl:max-w-7xl">
             <a href={ROUTES.features[lang]} class="group/all relative isolate flex min-h-80 flex-col justify-between overflow-hidden rounded-[1.4rem] bg-navy p-6 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5">
               <img src="/img/nav-features.webp" alt="" width="540" height="720" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover object-[50%_40%] transition-transform duration-700 ease-out group-hover/all:scale-105" />
@@ -159,7 +128,7 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
       </details>
     )}
     <a href={loginUrl(lang)} class="hidden whitespace-nowrap text-[0.95rem] text-muted hover:text-navy md:block xl:hidden 2xl:block">{t.nav.login}</a>
-    <a href={trial} class="hidden min-h-11 items-center whitespace-nowrap rounded-full bg-navy px-5 text-[0.95rem] font-medium text-white hover:bg-blue md:inline-flex">{trialLabel}</a>
+    <a href={trial} class="hidden min-h-11 items-center whitespace-nowrap rounded-full bg-navy px-5 text-[0.95rem] font-medium text-white hover:bg-blue md:inline-flex">{t.nav.trial}</a>
     <span class="hidden md:block"><WaButton text={wa} label="" where={`${page}-header`} class="min-h-11! size-11 px-0!" /></span>
     <details class="group xl:hidden">
       <summary class="flex size-11 cursor-pointer list-none items-center justify-center rounded-full border border-line" aria-label={t.ui.menu}>
@@ -167,9 +136,9 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
         <svg viewBox="0 0 24 24" class="hidden size-5 group-open:block" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </summary>
       <nav class="absolute inset-x-0 top-16 max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain bg-chalk px-4 pb-6 pt-2 shadow-2xl sm:px-6" aria-label="Navigation">
-        <div class="mx-auto max-w-6xl">
+        <div class="mx-auto max-w-5xl">
         <details class="group/m border-b border-line" open>
-          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl md:py-5 md:text-[1.9rem] [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{tt('Produits')}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
           <div class="grid grid-cols-2 gap-2.5 pb-4 md:grid-cols-4 md:gap-3">
             {products.map(p => (
               <a href={p.href} class="relative isolate flex aspect-[4/5] flex-col justify-end overflow-hidden rounded-[1.25rem] bg-navy p-3.5 text-white active:scale-[0.98] md:aspect-auto md:h-48 md:p-4">
@@ -181,21 +150,10 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
               </a>
             ))}
           </div>
-          <a href={ROUTES.restaurants[lang]} class="mb-2 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:mt-1 md:px-6">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
-          <p class="mt-3 text-sm font-semibold text-muted">{tt('Pour votre métier')}</p>
-          <div class="-mx-4 mb-4 mt-2 flex snap-x scroll-px-4 gap-2.5 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6 [scrollbar-width:none]">
-            {sectors.map(x => (
-              <a href={x.href} class="relative isolate flex aspect-[4/5] w-[9.5rem] shrink-0 snap-start flex-col justify-end overflow-hidden rounded-[1.25rem] bg-navy p-3 text-white active:scale-[0.98] md:w-44">
-                <img src={x.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover" style={`object-position:${x.pos}`} />
-                <span class="absolute inset-0 -z-10 bg-linear-to-t from-navy/95 via-navy/35 to-transparent" aria-hidden="true"></span>
-                <span class="display text-[1.2rem] leading-[0.95]">{tt(x.name)}</span>
-                <span class="mt-1 text-[0.75rem] leading-tight text-white/85">{tt(x.short)}</span>
-              </a>
-            ))}
-          </div>
+          <a href={ROUTES.restaurants[lang]} class="mb-4 flex min-h-12 items-center justify-between rounded-full bg-paper px-5 font-semibold ring-1 ring-line md:max-w-sm">{t.nav.restaurants}<span class="text-green-deep" aria-hidden="true">→</span></a>
         </details>
         <details class="group/m border-b border-line">
-          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl md:py-5 md:text-[1.9rem] [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
+          <summary class="display flex cursor-pointer list-none items-center justify-between py-4 text-3xl [&::-webkit-details-marker]:hidden">{t.nav.features}<svg viewBox="0 0 24 24" class="size-5 transition-transform group-open/m:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary>
           <div class="space-y-4 pb-3 md:grid md:grid-cols-3 md:gap-5 md:space-y-0">
             {groups.map(g => (
               <div>
@@ -211,27 +169,22 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
               </div>
             ))}
           </div>
-          <a href={ROUTES.features[lang]} class="mb-4 mt-2 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy md:mt-5">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
+          <a href={ROUTES.features[lang]} class="mb-4 mt-2 grid min-h-12 place-items-center rounded-full bg-green px-5 font-semibold text-navy md:mt-4 md:max-w-sm">{tt('Voir les {n} fonctionnalités').replace('{n}', String(fxTotal))} →</a>
         </details>
-        <div class="grid gap-2.5 py-4 md:grid-cols-3 md:gap-3 md:border-b md:border-line md:py-5">
-          {menuLinks.map(n => (
-            <a href={n.href} class="display flex min-h-14 items-center justify-between gap-3 rounded-2xl border border-line bg-paper px-5 text-[1.5rem] active:bg-mint md:px-6">
-              <span class="flex items-center gap-2.5">{n.label}{n.frOnly && <span lang="fr" class="rounded-full bg-chalk px-2 py-0.5 font-sans text-[0.7rem] font-bold tracking-wide text-muted ring-1 ring-line">FR</span>}</span>
-              <span class="text-base text-green-deep rtl:-scale-x-100" aria-hidden="true">→</span>
-            </a>
-          ))}
+        <div class="md:flex md:gap-10 md:border-b md:border-line">
+          {links.map(n => <a href={n.href} class="display block border-b border-line py-4 text-3xl md:border-b-0 md:text-[1.7rem]">{n.label}</a>)}
         </div>
         {toc && toc.length > 0 && (
-          <div class="border-t border-line pt-4 md:border-t-0 md:pt-5">
+          <div class="mt-6 border-t border-line pt-4">
             <p class="text-xs font-bold uppercase tracking-wide text-muted">{tt('Sur cette page')}</p>
-            <div class="mt-2.5 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-2.5">
-              {toc.map(i => <a href={`#${i.id}`} data-toc class="inline-flex min-h-11 items-center justify-center rounded-2xl bg-paper px-3 text-center text-[0.9rem] font-semibold leading-tight ring-1 ring-line active:bg-mint md:rounded-full">{i.label}</a>)}
+            <div class="mt-2.5 flex flex-wrap gap-2">
+              {toc.map(i => <a href={`#${i.id}`} data-toc class="inline-flex min-h-10 items-center rounded-full bg-paper px-4 text-[0.95rem] font-semibold ring-1 ring-line active:bg-mint">{i.label}</a>)}
             </div>
           </div>
         )}
         <div class="mt-5 grid grid-cols-2 gap-2 md:hidden">
           <a href={loginUrl(lang)} class="grid min-h-12 place-items-center rounded-full border border-navy/25 font-medium">{t.nav.login}</a>
-          <a href={trial} class="grid min-h-12 place-items-center rounded-full bg-navy font-medium text-white">{trialLabel}</a>
+          <a href={trial} class="grid min-h-12 place-items-center rounded-full bg-navy font-medium text-white">{t.nav.trial}</a>
         </div>
         </div>
       </nav>
@@ -239,24 +192,6 @@ const trial = page === 'salons' || page === 'spas' || page === 'pressing' || pag
   </div>
 </header>
 <script>
-  // desktop panels (Produits, Fonctionnalités): open on tap or click. Hover alone does not work on a touch screen
-  // (an iPad has no hover) and Safari does not focus a button when it is tapped, so the panel never opened there.
-  const panels = Array.from(document.querySelectorAll<HTMLElement>('header nav .group')).filter((g) => g.querySelector('[data-panel-btn]'));
-  const setPanel = (g: HTMLElement, open: boolean) => {
-    g.dataset.open = open ? 'true' : 'false';
-    g.querySelector('[data-panel-btn]')?.setAttribute('aria-expanded', String(open));
-  };
-  panels.forEach((g) => {
-    g.querySelector('[data-panel-btn]')?.addEventListener('click', () => {
-      const open = g.dataset.open !== 'true';
-      panels.forEach((o) => setPanel(o, false));
-      setPanel(g, open);
-    });
-    // a link inside the panel closes it (same-page links do not reload)
-    g.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setPanel(g, false)));
-  });
-  document.addEventListener('click', (e) => { panels.forEach((g) => { if (g.dataset.open === 'true' && !g.contains(e.target as Node)) setPanel(g, false); }); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') panels.forEach((g) => setPanel(g, false)); });
   // the in-page index closes the menu, then the page scrolls to the section
   document.querySelectorAll<HTMLAnchorElement>('[data-toc]').forEach((a) => a.addEventListener('click', () => { const d = a.closest('details'); if (d) d.open = false; }));
   // language menu: closes on outside click and on Escape
