@@ -125,6 +125,13 @@ export const pressing2En: Record<string, string> = {
   "jours en arrière": "days back",
   "maintenant": "now",
   "Le bilan du soir sur le téléphone du gérant : il arrive, les chiffres, ce qui mérite un regard, les jours passés": "The evening report on the manager’s phone: it arrives, the figures, what deserves a look, past days",
+  "pièces": "items",
+  "Déposé.": "Dropped off.",
+  "Au nettoyage.": "Being cleaned.",
+  "Prêt !": "Ready!",
+  "Prêt mardi 24 novembre.": "Ready Tuesday 24 November.",
+  "Sur le portant": "On the rail",
+  "Montrez ce numéro ou votre ticket au comptoir.": "Show this number or your ticket at the counter.",
 };
 export const pressing2Ar: Record<string, string> = {
   "La tournée du chauffeur : trois arrêts, du ramassage à la caisse": "جولة السائق: ثلاث محطات، من الاستلام إلى الصندوق",
@@ -214,4 +221,11 @@ export const pressing2Ar: Record<string, string> = {
   "jours en arrière": "يوما إلى الوراء",
   "maintenant": "الآن",
   "Le bilan du soir sur le téléphone du gérant : il arrive, les chiffres, ce qui mérite un regard, les jours passés": "حصيلة المساء على هاتف المسيّر: تصل، الأرقام، ما يستحق النظر، الأيام الماضية",
+  "pièces": "قطع",
+  "Déposé.": "تم الإيداع.",
+  "Au nettoyage.": "كيتنقى.",
+  "Prêt !": "واجد!",
+  "Prêt mardi 24 novembre.": "واجد نهار الثلاثاء 24 نونبر.",
+  "Sur le portant": "فالكروشي",
+  "Montrez ce numéro ou votre ticket au comptoir.": "ورّيو هاد الرقم ولا التيكي فالكونتوار.",
 };

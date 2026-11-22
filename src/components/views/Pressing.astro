@@ -18,6 +18,7 @@ import PressingRounds from '../PressingRounds.astro';
 import PressingInvoice from '../PressingInvoice.astro';
 import PressingEvening from '../PressingEvening.astro';
 import PressingBilan from '../PressingBilan.astro';
+import PressingHeroPhone from '../PressingHeroPhone.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 interface Props { lang: Lang }
@@ -96,11 +97,11 @@ const faq = [
         <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
         <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
         <span class="shadow-in absolute start-[8%] top-[72%] h-6 w-[66%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
-        <div class="land absolute start-[4%] top-[20%] w-[76%]" style="--d:300ms">
+        <div class="land absolute start-[3%] top-[18%] w-[70%]" style="--d:300ms">
           <Device src="/img/pressing-depot.webp" alt={tt('La caisse du pressing : la liste de prix à gauche, le dépôt du client à droite')} w={1200} h={750} eager />
         </div>
         <span class="shadow-in absolute bottom-[3%] end-[6%] h-4 w-[22%] rounded-[50%] bg-black/55 blur-lg" style="--d:900ms" aria-hidden="true"></span>
-        <div class="drop absolute bottom-[4%] end-[5%] w-[25%]" style="--d:650ms"><Device kind="phone" src="/img/pressing-suivi-phone.webp" alt={tt('La page de suivi du client : son dépôt est prêt')} w={600} h={1298} eager class="rotate-[3deg]" /></div>
+        <div class="drop absolute bottom-[3%] end-[4%] w-[32%]" style="--d:650ms"><Device kind="phone" w={600} h={1298} class="rotate-[3deg]"><PressingHeroPhone slot="screen" /></Device></div>
         <div class="absolute start-[5%] top-[4%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-green text-navy sm:size-7"><Icon name="tag" class="size-3.5 sm:size-4" /></span>Dépôt n° 1042 : 4 étiquettes</p></div></div>
         <div class="absolute end-[4%] top-[14%] z-10 sm:top-[6%]"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:3300ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>Prêt : Rail 12</p></div></div>
         <div class="absolute bottom-[6%] start-[5%] z-10"><div class="tf-float" style="--d:2400ms"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4300ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>WhatsApp envoyé à Nadia</p></div></div>
