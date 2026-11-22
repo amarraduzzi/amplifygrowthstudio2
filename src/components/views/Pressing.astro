@@ -18,6 +18,7 @@ import PressingRounds from '../PressingRounds.astro';
 import PressingInvoice from '../PressingInvoice.astro';
 import PressingEvening from '../PressingEvening.astro';
 import PressingBilan from '../PressingBilan.astro';
+import PressingClients from '../PressingClients.astro';
 import PressingHeroPhone from '../PressingHeroPhone.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
@@ -163,22 +164,8 @@ const faq = [
   <!-- the evening report: the owner's phone -->
   <PressingBilan items={bilan} />
 
-  <!-- the client file, win-back, moving in -->
-  <section id="clients" class="relative isolate scroll-mt-20 overflow-hidden bg-navy text-white" data-tf>
-    <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
-    <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
-      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Vos clients.</span><span class="block text-green">Ceux d’hier et ceux qui reviennent.</span></h2>
-      <p class="tf mt-4 max-w-2xl text-lg text-white/70" style="--d:100ms">Une fiche utile au comptoir, des doublons nettoyés, et la liste de ceux qui ne viennent plus. Si vous changez de système, vos clients viennent avec vous.</p>
-      <ul class="mt-16 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-        {clients.map(([i, h, x], k) => (
-          <li class="tf" style={`--d:${k * 90}ms`}>
-            <span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green ring-1 ring-white/15"><Icon name={i} class="size-5" /></span>
-            <p class="mt-4 font-semibold">{h}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-white/65">{x}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <!-- the client file, duplicates merged, win-back, moving in: one dark window, four scenes -->
+  <PressingClients items={clients} />
 
   <!-- what sleeps on the rails, with the shop's own numbers -->
   <section id="calcul" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-rails data-tf>
