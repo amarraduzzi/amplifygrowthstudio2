@@ -33,7 +33,7 @@ const S = [
     leak: 'Loyer en retard', amt: '−6 000 DH', found: 'Rappel envoyé, loyer encaissé' },
 ] as const;
 ---
-<div data-hs class="hs hst relative isolate order-2 mt-7 aspect-[4/4.7] overflow-hidden rounded-[1.75rem] shadow-[0_40px_80px_-40px_rgba(0,30,62,.7)] sm:mt-8 sm:aspect-[4/3.6] lg:order-none lg:mt-3 lg:aspect-[5/4.6] lg:rounded-[2.25rem]" role="group" aria-label={tt('Aperçu du métier choisi')}>
+<div data-hs class="hs hst relative isolate order-2 min-w-0 max-w-full mt-7 aspect-[4/4.7] overflow-hidden rounded-[1.75rem] shadow-[0_40px_80px_-40px_rgba(0,30,62,.7)] sm:mt-8 sm:aspect-[4/3.6] lg:order-none lg:mt-3 lg:aspect-[5/4.6] lg:rounded-[2.25rem]" role="group" aria-label={tt('Aperçu du métier choisi')}>
   {S.map((s, i) => (
     <div class={`hst-s${i === 0 ? ' on' : ''}`} data-s={s.k} aria-hidden={i === 0 ? 'false' : 'true'} style={`--pos:${s.pos}`}>
       <img class="hst-ph" src={s.src} srcset={'set' in s ? s.set : undefined} sizes="(min-width:1024px) 560px, 92vw" alt="" width="800" height="500" loading={i === 0 ? 'eager' : 'lazy'} fetchpriority={i === 0 ? 'high' : undefined} decoding="async" />
