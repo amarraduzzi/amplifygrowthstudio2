@@ -1,0 +1,194 @@
+---
+// "Le bilan du soir": the owner's phone. Light section, a big phone on a soft green panel (end side).
+// 1 the report arrives on the lock screen, 2 the day in figures (total counts up, against last week),
+// 3 the report scrolls to "what deserves a look" (three amber rows), 4 a sheet opens the past days and
+// scrubs back through them. The four points on the other side light up in turn.
+// Plays once when in view, a tap replays it. Demo shop, invented numbers.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+interface Props { items: readonly (readonly [string, string, string])[] }
+const { items } = Astro.props;
+const flags = [
+  ['Écart de caisse', '− 5 MAD'],
+  ['Dépôt n° 1019 payé puis annulé', ''],
+  ['Dépôt n° 0987 jamais récupéré', '34 j'],
+] as const;
+---
+<section id="bilan" class="pb mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf data-pb>
+  <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le bilan du soir.')}</span><span class="block text-green-deep">{tt('Sur votre téléphone.')}</span></h2>
+  <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">{tt('Une page par jour, sans rien à compter. Vous voyez ce qui compte et ce qui cloche, sans être au pressing. C’est une option que le gérant active.')}</p>
+
+  <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_1.05fr] lg:items-center lg:gap-14">
+    <ul class="order-2 grid gap-3 lg:order-1">
+      {items.map(([i, h, x], k) => (
+        <li class="pb-it tf" data-it={k} style={`--d:${k * 90}ms`}>
+          <span class="pb-ico"><Icon name={i} class="size-5" /></span>
+          <div><p class="font-semibold">{tt(h)}</p><p class="mt-1 text-[0.95rem] leading-relaxed text-muted">{tt(x)}</p></div>
+        </li>
+      ))}
+    </ul>
+
+    <div class="tf order-1 lg:order-2" style="--d:150ms">
+      <div class="pb-panel" data-stage>
+        <span class="pb-sun" aria-hidden="true"></span>
+        <div class="pb-phone" role="img" aria-label={tt('Le bilan du soir sur le téléphone du gérant : il arrive, les chiffres, ce qui mérite un regard, les jours passés')}>
+          <span class="pb-notch" aria-hidden="true"></span>
+          <div class="pb-screen">
+
+            <!-- the report -->
+            <div class="pb-rep" data-rep>
+              <div class="pb-rh"><p><b>{tt('Bilan du soir')}</b><span>Pressing Démo · <i dir="ltr">22/11</i></span></p><span class="pb-ok"><Icon name="check" class="size-[1em]" />{tt('Journée clôturée')}</span></div>
+              <div class="pb-big">
+                <p class="pb-k">{tt('Encaissé')}</p>
+                <p class="pb-n" dir="ltr"><b data-total>0</b><small>MAD</small></p>
+                <p class="pb-up" dir="ltr">{tt('+12 % vs la semaine dernière')}</p>
+              </div>
+              <div class="pb-bars">
+                <p><span>{tt('Aujourd’hui')}</span><i class="pb-bar t"><u></u></i><b dir="ltr">1 230</b></p>
+                <p><span>{tt('Même jour, semaine dernière')}</span><i class="pb-bar w"><u></u></i><b dir="ltr">1 098</b></p>
+              </div>
+              <div class="pb-tiles">
+                <p><span>{tt('Espèces')}</span><b dir="ltr">920</b></p>
+                <p><span>{tt('Carte bancaire')}</span><b dir="ltr">310</b></p>
+                <p><span>{tt('Dépôts')}</span><b dir="ltr">7</b></p>
+                <p><span>{tt('Remis')}</span><b dir="ltr">4</b></p>
+              </div>
+              <div class="pb-fl">
+                <p class="pb-fh"><Icon name="bell" class="size-[1.1em]" />{tt('Ce qui mérite un regard')}</p>
+                {flags.map(([t, v], i) => (
+                  <p class="pb-f" style={`--i:${i}`}><span>{tt(t)}</span>{v && <b dir="ltr">{v}</b>}</p>
+                ))}
+              </div>
+            </div>
+
+            <!-- past days -->
+            <div class="pb-sheet">
+              <p class="pb-sh">{tt('Les jours passés')}<span dir="ltr">400</span></p>
+              <div class="pb-days" aria-hidden="true">{Array.from({ length: 21 }, (_, d) => <i data-d={d}></i>)}</div>
+              <p class="pb-back" dir="ltr"><b data-back>0</b> {tt('jours en arrière')}</p>
+            </div>
+
+            <!-- the lock screen -->
+            <div class="pb-lock">
+              <p class="pb-clock" dir="ltr">20:00</p>
+              <p class="pb-cap">{tt('Journée clôturée')}</p>
+              <div class="pb-push">
+                <span class="pb-pi"><Icon name="chart" class="size-[1.2em]" /></span>
+                <p><span class="pb-an">Amplify · {tt('maintenant')}</span><b>{tt('Bilan du soir')}</b><span class="pb-ab" dir="ltr">1 230 MAD · {tt('3 points à regarder')}</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="pb-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .pb-panel { container-type: inline-size; position: relative; overflow: hidden; display: grid; place-items: center; padding: 2.2rem 1rem 2.2rem; min-height: 30rem; border-radius: 2.2rem; background: radial-gradient(80% 60% at 50% 0%, #c9f0dc, transparent 70%), linear-gradient(180deg, #e3f6ec, #f4f7f2); box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .08); }
+  .pb-sun { position: absolute; top: -9rem; inset-inline-start: 50%; width: 22rem; height: 22rem; margin-inline-start: -11rem; border-radius: 999px; background: radial-gradient(circle, rgba(5, 185, 98, .28), transparent 65%); pointer-events: none; }
+  .pb-phone { position: relative; font-size: clamp(10px, 3.4cqw, 15px); width: 21em; max-width: 100%; padding: .75em; border-radius: 3.1em; background: #0b1624; box-shadow: 0 0 0 .12em #2a3a50, 0 4em 5em -2em rgba(0, 30, 62, .55); }
+  .pb-notch { position: absolute; top: 1.2em; inset-inline: 0; margin-inline: auto; width: 6em; height: 1.5em; border-radius: 99px; background: #000; z-index: 5; }
+  .pb-screen { position: relative; overflow: hidden; height: 34em; border-radius: 2.4em; background: #FAF7F0; color: #001E3E; display: grid; grid-template-rows: minmax(0, 1fr); }
+  .pb-screen > * { grid-area: 1 / 1; }
+  .pb-screen::before { content: ""; position: absolute; inset: 0 0 auto; height: 3.4em; background: linear-gradient(#FAF7F0 70%, rgba(250, 247, 240, 0)); z-index: 2; pointer-events: none; }
+
+  .pb-rep { padding: 3.8em 1.3em 1em; display: grid; align-content: start; gap: 1em; transition: transform 1.1s cubic-bezier(.5, 0, .2, 1); }
+  .pb-rh { display: flex; align-items: flex-start; justify-content: space-between; gap: .6em; }
+  .pb-rh b { display: block; font-size: 1.15em; } .pb-rh span { font-size: .75em; color: #6B7A8C; font-weight: 600; } .pb-rh i { font-style: normal; }
+  .pb-rh .pb-ok { display: flex; align-items: center; gap: .3em; padding: .25em .6em; border-radius: 99px; background: #E3F6EC; color: #00804A; font-weight: 700; white-space: nowrap; }
+  .pb-k { font-size: .72em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #6B7A8C; }
+  .pb-n { display: flex; align-items: baseline; gap: .3em; font-size: 3.1em; line-height: 1; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .pb-n small { font-size: .32em; color: #6B7A8C; }
+  .pb-up { display: inline-block; margin-top: .5em; padding: .2em .7em; border-radius: 99px; background: #05B962; color: #001E3E; font-size: .78em; font-weight: 800; opacity: 0; transform: scale(.8); transition: opacity .4s .9s, transform .5s .9s cubic-bezier(.3, 1.6, .5, 1); }
+  .pb.k2 .pb-up { opacity: 1; transform: none; }
+  .pb-bars { display: grid; gap: .55em; font-size: .8em; }
+  .pb-bars p { display: grid; grid-template-columns: 7.4em 1fr 3em; align-items: center; gap: .6em; font-weight: 600; color: #4B5B6E; } .pb-bars b { text-align: end; color: #001E3E; font-variant-numeric: tabular-nums; }
+  .pb-bar { display: block; height: .7em; border-radius: 99px; background: rgba(0, 30, 62, .08); overflow: hidden; }
+  .pb-bar u { display: block; height: 100%; width: 100%; border-radius: inherit; transform: scaleX(0); transform-origin: left; transition: transform 1.2s cubic-bezier(.2, .8, .2, 1) .3s; }
+  [dir="rtl"] .pb-bar u { transform-origin: right; }
+  .pb-bar.t u { background: #05B962; } .pb-bar.w u { background: #9AA6B4; width: 89%; }
+  .pb.k2 .pb-bar u { transform: none; }
+  .pb-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: .5em; }
+  .pb-tiles p { padding: .55em .8em; border-radius: .8em; background: #fff; box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .08); }
+  .pb-tiles span { display: block; font-size: .7em; font-weight: 600; color: #6B7A8C; } .pb-tiles b { font-size: 1.15em; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .pb-fl { display: grid; gap: .45em; padding-top: .4em; }
+  .pb-fh { display: flex; align-items: center; gap: .5em; font-size: .85em; font-weight: 800; color: #B26B00; }
+  .pb-f { display: flex; align-items: center; justify-content: space-between; gap: .8em; padding: .65em .8em; border-radius: .8em; background: #FFF3DC; box-shadow: inset 0 0 0 1px rgba(245, 177, 61, .5); font-size: .8em; font-weight: 600; opacity: 0; transform: translateX(1.4em); }
+  .pb-f b { color: #B26B00; white-space: nowrap; }
+  .pb.k3 .pb-f { opacity: 1; transform: none; transition: opacity .4s calc(var(--i) * .5s + .5s), transform .55s calc(var(--i) * .5s + .5s) cubic-bezier(.3, 1.4, .5, 1); }
+  .pb.k3 .pb-rep { transform: translateY(-17em); }
+
+  .pb-sheet { align-self: end; z-index: 3; padding: 1.1em 1.3em 1.6em; border-radius: 1.6em; margin: 0 .6em .6em; background: #001E3E; color: #fff; box-shadow: 0 -1em 2em rgba(0, 0, 0, .25); transform: translateY(115%); transition: transform .7s cubic-bezier(.2, .8, .2, 1); }
+  .pb.k4 .pb-sheet { transform: none; }
+  .pb-sh { display: flex; justify-content: space-between; align-items: center; font-weight: 800; } .pb-sh span { padding: .1em .7em; border-radius: 99px; background: #05B962; color: #001E3E; font-size: .8em; }
+  .pb-days { display: grid; grid-template-columns: repeat(7, 1fr); gap: .45em; margin: 1em 0; }
+  .pb-days i { aspect-ratio: 1; border-radius: .35em; background: rgba(255, 255, 255, .12); transition: background .15s, transform .15s; }
+  .pb-days i.on { background: #05B962; transform: scale(1.15); } .pb-days i.vis { background: rgba(5, 185, 98, .35); }
+  .pb-back { font-size: .9em; color: rgba(255, 255, 255, .75); } .pb-back b { font-size: 1.5em; color: #fff; font-variant-numeric: tabular-nums; }
+
+  .pb-lock { z-index: 4; padding: 5.2em 1.3em 1.4em; display: grid; align-content: start; justify-items: center; gap: .3em; background: radial-gradient(90% 50% at 50% 0%, rgba(5, 185, 98, .45), transparent 70%), linear-gradient(180deg, #123a5e, #07182c 75%); color: #fff; transition: transform .8s cubic-bezier(.6, 0, .3, 1), opacity .6s; }
+  .pb.k2 .pb-lock { transform: translateY(-105%); opacity: 0; }
+  .pb-clock { font-size: 4.6em; font-weight: 700; line-height: 1; letter-spacing: -.02em; } .pb-cap { font-size: .85em; opacity: .75; font-weight: 600; }
+  .pb-push { display: flex; gap: .8em; align-items: flex-start; width: 100%; margin-top: 2.2em; padding: .9em 1em; border-radius: 1.3em; background: rgba(255, 255, 255, .92); color: #001E3E; box-shadow: 0 1.2em 2em -.8em rgba(0, 0, 0, .6); opacity: 0; transform: translateY(-2.5em) scale(.95); transition: opacity .4s, transform .7s cubic-bezier(.3, 1.5, .5, 1); }
+  .pb.k1 .pb-push { opacity: 1; transform: none; }
+  .pb-pi { display: grid; place-items: center; flex: none; width: 2.4em; height: 2.4em; border-radius: .7em; background: #001E3E; color: #05B962; }
+  .pb-push p { display: grid; line-height: 1.3; font-size: .88em; } .pb-an { font-size: .78em; color: #6B7A8C; font-weight: 600; } .pb-ab { color: #4B5B6E; font-weight: 600; }
+
+  .pb-redo { display: flex; align-items: center; gap: .5em; margin: 1.2rem auto 0; padding: .5rem 1rem; border-radius: 999px; color: #4B5B6E; font-size: .9rem; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .2); transition: background .2s; }
+  .pb-redo:hover { background: rgba(0, 30, 62, .06); }
+
+  .pb-it { display: flex; gap: 1rem; padding: 1.1rem 1.2rem; border-radius: 1.4rem; background: var(--color-paper, #fff); box-shadow: inset 0 0 0 1px rgba(0, 30, 62, .1); transition: box-shadow .4s; }
+  .pb-ico { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 1rem; background: #001E3E; color: #05B962; transition: background .4s, color .4s; }
+  .pb-it.on { box-shadow: inset 0 0 0 2px #05B962, 0 1.2rem 2rem -1.4rem rgba(5, 185, 98, .6); }
+  .pb-it.on .pb-ico { background: #05B962; color: #001E3E; }
+  @media (prefers-reduced-motion: reduce) {
+    .pb-rep, .pb-sheet, .pb-lock, .pb-push, .pb-f, .pb-bar u, .pb-up { transition: none !important; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-pb]');
+  if (root) {
+    const q = (s: string) => root.querySelector<HTMLElement>(s);
+    const total = q('[data-total]'), back = q('[data-back]'), stage = q('[data-stage]'), redo = q('[data-redo]');
+    const days = [...root.querySelectorAll<HTMLElement>('[data-d]')];
+    const items = [...root.querySelectorAll<HTMLElement>('[data-it]')];
+    const fmt = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00A0');
+    let timers: number[] = [], raf: number[] = [];
+    const step = (n: number) => {
+      for (let k = 1; k <= 4; k++) root.classList.toggle('k' + k, k <= n);
+      items.forEach((el, i) => el.classList.toggle('on', i < n));
+    };
+    const anim = (ms: number, fn: (p: number) => void) => {
+      const t0 = performance.now();
+      const tick = (now: number) => { const p = Math.min(1, (now - t0) / ms); fn(1 - Math.pow(1 - p, 3)); if (p < 1) raf.push(requestAnimationFrame(tick)); };
+      raf.push(requestAnimationFrame(tick));
+    };
+    const scrub = (p: number) => {
+      const at = Math.round(p * (days.length - 1));
+      days.forEach((d, i) => { d.classList.toggle('on', i === at); d.classList.toggle('vis', i < at); });
+      if (back) back.textContent = String(Math.round(p * 212));
+    };
+    const reset = () => { if (total) total.textContent = '0'; scrub(0); days.forEach((d) => d.classList.remove('on')); };
+    const final = () => { step(4); if (total) total.textContent = fmt(1230); scrub(1); };
+    const run = () => {
+      timers.forEach(clearTimeout); raf.forEach(cancelAnimationFrame); timers = []; raf = [];
+      step(0); reset();
+      const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+      at(400, () => step(1));
+      at(3000, () => { step(2); anim(1600, (p) => { if (total) total.textContent = fmt(1230 * p); }); });
+      at(6600, () => step(3));
+      at(10200, () => { step(4); anim(2200, scrub); });
+    };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) final();
+    else {
+      let done = false;
+      new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !done) { done = true; run(); o.disconnect(); } }, { threshold: 0.4 }).observe(stage ?? root);
+      redo?.addEventListener('click', run);
+      stage?.addEventListener('click', run);
+    }
+  }
+</script>
