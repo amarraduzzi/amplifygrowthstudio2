@@ -57,6 +57,7 @@ const rows = [
                 <span class="co-w2"><Icon name="bell" class="size-[1.1em]" /><span>{tt('Aujourd’hui · 16 h')}</span></span>
               </p>
             </div>
+            <div class="co-days" data-at="1" style="--i:1" aria-hidden="true"><span class="co-day" data-day><small>{tt('Lun.')}</small><b dir="ltr">23</b></span><span class="co-day" data-day><small>{tt('Mar.')}</small><b dir="ltr">24</b></span><span class="co-day" data-day><small>{tt('Mer.')}</small><b dir="ltr">25</b></span><span class="co-day" data-day><small>{tt('Jeu.')}</small><b dir="ltr">26</b></span><span class="co-day" data-day><small>{tt('Ven.')}</small><b dir="ltr">27</b></span><span class="co-day co-due" data-day><small>{tt('Sam.')}</small><b dir="ltr">28</b><span class="co-dc"><Icon name="cake" class="size-full" /></span></span></div>
             <div class="co-cl" data-at="1">
               <div><p class="co-k">{tt('Cliente')}</p><p class="co-b">Mme Alaoui</p><p class="co-m" dir="ltr">06 12 34 56 78</p></div>
               <div class="co-r"><p class="co-k">{tt('Retrait en boutique')}</p><p class="co-b">Pâtisserie Démo</p></div>
@@ -95,6 +96,16 @@ const rows = [
 
             <div class="co-stamp co-stamp-a" data-at="3" aria-hidden="true"><span>{tt('ACOMPTE')}</span><small dir="ltr">300 MAD</small></div>
             <div class="co-stamp co-stamp-b" data-at="5" aria-hidden="true"><span>{tt('REMIS')}</span><small>{tt('soldé')}</small></div>
+          </div>
+          <div class="co-print" aria-hidden="true">
+            <div class="co-tk">
+              <p class="co-tk-h">Pâtisserie Démo</p>
+              <p class="co-tk-n" dir="ltr">n° 0147</p>
+              <p class="co-tk-r"><span>{tt('Total')}</span><span dir="ltr">600 MAD</span></p>
+              <p class="co-tk-r co-tk-d"><span>{tt('Acompte reçu · espèces')}</span><span dir="ltr">− 300 MAD</span></p>
+              <p class="co-tk-r co-tk-t"><span>{tt('Encaissé au retrait')}</span><span dir="ltr">300 MAD</span></p>
+              <span class="co-tk-bar"></span>
+            </div>
           </div>
           <button type="button" class="co-redo" data-redo><svg viewBox="0 0 24 24" class="size-[1.1em]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 1 0 3-6.2M4 4v4h4" /></svg>{tt('Recommencer')}</button>
         </div>
@@ -150,6 +161,30 @@ const rows = [
   .co-redo { display: flex; align-items: center; gap: .5em; margin: 1.4rem auto 0; padding: .55rem 1rem; border-radius: 999px; color: rgba(255, 255, 255, .75); font-size: .9rem; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); transition: background .2s; }
   .co-redo:hover { background: rgba(255, 255, 255, .1); }
 
+
+  /* the days go by until the day of the pick-up */
+  .co-days { display: grid; grid-template-columns: repeat(6, 1fr); gap: .35em; margin-top: 1.2em; }
+  .co-day { position: relative; display: grid; justify-items: center; gap: .1em; padding: .45em 0 .5em; border-radius: .7em; background: #F1EEE6; color: #6B7A8C; transition: background .3s, color .3s, opacity .3s, transform .3s; }
+  .co-day small { font-size: .72em; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .co-day b { font-size: 1em; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .co-due { box-shadow: inset 0 0 0 .14em #05B962; }
+  .co-dc { position: absolute; top: -.7em; inset-inline-end: -.35em; display: grid; place-items: center; width: 1.5em; height: 1.5em; padding: .28em; border-radius: 50%; background: #05B962; color: #001E3E; }
+  .co-day.past { opacity: .45; }
+  .co-day.now { background: #001E3E; color: #fff; transform: translateY(-.15em); }
+  .co-due.now { background: #05B962; color: #001E3E; }
+  /* the one ticket slides out of the printer under the form */
+  .co-print { position: relative; z-index: 0; height: 14em; margin-top: -1em; padding-top: 1em; overflow: hidden; pointer-events: none; font-size: clamp(10.5px, 3.3cqw, 15px); -webkit-mask-image: linear-gradient(#000 70%, transparent 100%); mask-image: linear-gradient(#000 70%, transparent 100%); }
+  .co-tk { width: 22em; max-width: 94%; margin-inline: auto; padding: 1.3em 1em 3em; background: #FFFDF8; color: #001E3E; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: .74em; box-shadow: 0 0 0 1px rgba(0, 0, 0, .06); transform: translateY(-105%) rotate(-1deg); transition: transform 0s; }
+  .co.k5 .co-tk { transform: rotate(-1deg); transition: transform 1.7s .6s steps(16, end); }
+  .co-tk p { display: flex; justify-content: space-between; gap: .8em; white-space: nowrap; margin-top: .5em; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .co-tk-h { justify-content: center !important; margin-top: 0 !important; font-size: 1.1em; font-weight: 800 !important; letter-spacing: .04em; }
+  .co-tk-n { justify-content: center !important; padding-bottom: .7em; border-bottom: 1px dashed rgba(0, 30, 62, .35); color: #6B7A8C; }
+  .co-tk-d { color: #00804A; }
+  .co-tk-t { margin-top: .8em !important; padding-top: .6em; border-top: 1px dashed rgba(0, 30, 62, .35); font-size: 1.15em; font-weight: 800 !important; }
+  .co-tk-bar { display: block; height: 2.4em; margin-top: 1em; background: repeating-linear-gradient(90deg, #001E3E 0 2px, transparent 2px 4px, #001E3E 4px 5px, transparent 5px 8px, #001E3E 8px 11px, transparent 11px 12px); opacity: .8; }
+  [dir="rtl"] .co-tk { transform: translateY(-105%) rotate(1deg); }
+  [dir="rtl"] .co.k5 .co-tk { transform: rotate(1deg); }
+
   /* what appears at which step */
   .co [data-at] { opacity: 0; transform: translateY(.9em); transition: opacity .5s calc(var(--i, 0) * .3s), transform .55s calc(var(--i, 0) * .3s) cubic-bezier(.2, .8, .2, 1); }
   .co .co-stamp[data-at] { transition-timing-function: cubic-bezier(.3, 1.3, .5, 1); transition-delay: .35s; }
@@ -193,7 +228,7 @@ const rows = [
   .co-ico { position: relative; z-index: 1; background: #12385A; }
   .co-it.on .co-ico { background: #05B962; }
   @media (prefers-reduced-motion: reduce) {
-    .co [data-at], .co-when, .co-w1, .co-w2, .co-l1, .co-l2, .co-rail::after { transition: none; }
+    .co [data-at], .co-when, .co-w1, .co-w2, .co-l1, .co-l2, .co-rail::after, .co-day, .co.k5 .co-tk { transition: none; }
     .co-sheet.hit, .co-cake.wig, .co.k3 .co-wa::after { animation: none; }
   }
 </style>
@@ -208,6 +243,7 @@ const rows = [
     const quote = root.querySelector<HTMLElement>('[data-quote]');
     const cake = root.querySelector<HTMLElement>('.co-cake');
     const nums = [...root.querySelectorAll<HTMLElement>('[data-n]')];
+    const days = [...root.querySelectorAll<HTMLElement>('[data-day]')];
     const full = quote?.textContent ?? '';
     // the step at which each of the four points lights up: the order, the deposit, the list, the hand-over
     const LIGHT = [1, 3, 4, 5];
@@ -255,6 +291,7 @@ const rows = [
       };
       tick();
     };
+    const setDay = (d: number) => days.forEach((el, i) => { el.classList.toggle('now', i === d); el.classList.toggle('past', i < d); });
     const knock = () => { if (!sheet) return; sheet.classList.remove('hit'); void sheet.offsetWidth; sheet.classList.add('hit'); };
     const step = (n: number) => {
       for (let k = 1; k <= 5; k++) root.classList.toggle('k' + k, k <= n);
@@ -266,7 +303,7 @@ const rows = [
       sheet?.classList.remove('hit'); cake?.classList.remove('wig'); quote?.classList.remove('typing');
       if (quote) quote.textContent = '';
       nums.forEach((el) => { el.textContent = '0'; });
-      step(0);
+      step(0); setDay(0);
       [350, 1500, 3200, 5100, 6800].forEach((ms, i) => {
         timers.push(window.setTimeout(() => {
           step(i + 1);
@@ -274,12 +311,14 @@ const rows = [
         }, ms));
       });
       timers.push(window.setTimeout(write, 2500));
+      // the days go by, from Monday (the order) to Saturday (the pick-up), while the deposit stamp sits on the form
+      [3750, 4050, 4350, 4650, 4950].forEach((ms, i) => timers.push(window.setTimeout(() => setDay(i + 1), ms)));
       // the two stamps land a moment after their step starts
       timers.push(window.setTimeout(knock, 3200 + 450), window.setTimeout(knock, 6800 + 450));
     };
     // the section reveals as it scrolls in (the dry cleaners page does this for every [data-tf] block)
     addEventListener('resize', () => railPos(root.className.match(/k(\d)/g)?.length ?? 0));
-    if (still || !('IntersectionObserver' in window)) { root.classList.add('in'); step(5); }
+    if (still || !('IntersectionObserver' in window)) { root.classList.add('in'); step(5); setDay(5); }
     else {
       new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { root.classList.add('in'); o.disconnect(); } }, { threshold: 0.12 }).observe(root);
       let done = false;

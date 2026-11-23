@@ -2,6 +2,12 @@
 // (the FAQ answer, the page description). French text is the key. Merged first in t.ts, so a translation
 // that already exists elsewhere wins.
 export const bakeryCakesEn: Record<string, string> = {
+  "Lun.": "Mon",
+  "Mar.": "Tue",
+  "Mer.": "Wed",
+  "Jeu.": "Thu",
+  "Ven.": "Fri",
+  "Sam.": "Sat",
   "Les gâteaux sur commande.": "Cakes to order.",
   "Un acompte, puis le retrait.": "A deposit, then the pick-up.",
   "Une cliente commande un gâteau pour samedi : le jour, l’heure, le texte à écrire dessus. Elle laisse un acompte, et le reste se paie au retrait, sur un seul ticket.": "A customer orders a cake for Saturday: the day, the time, the text to write on it. She leaves a deposit, and the rest is paid at pick-up, on a single ticket.",
@@ -38,6 +44,12 @@ export const bakeryCakesEn: Record<string, string> = {
   "Fiches techniques avec préparations maison, coût de revient qui suit le prix du beurre, planning de production coché le matin, commandes de gâteaux avec acompte, allergènes et étiquettes de lot, fournisseurs et bons de commande, traiteur, vente au poids et scanner. Pour pâtisseries, boulangeries et traiteurs au Maroc.": "Recipe cards with house preparations, a cost price that follows the price of butter, a production plan ticked off in the morning, cake orders with deposit, allergens and batch labels, suppliers and purchase orders, catering, selling by weight and scanner. For pastry shops, bakeries and caterers in Morocco.",
 };
 export const bakeryCakesAr: Record<string, string> = {
+  "Lun.": "اثنين",
+  "Mar.": "ثلاثاء",
+  "Mer.": "أربعاء",
+  "Jeu.": "خميس",
+  "Ven.": "جمعة",
+  "Sam.": "سبت",
   "Les gâteaux sur commande.": "الكعك حسب الطلب.",
   "Un acompte, puis le retrait.": "عربون، ثم التسلّم.",
   "Une cliente commande un gâteau pour samedi : le jour, l’heure, le texte à écrire dessus. Elle laisse un acompte, et le reste se paie au retrait, sur un seul ticket.": "تطلب زبونة كعكة ليوم السبت: اليوم والساعة والنص المكتوب عليها. تترك عربونًا، ويُؤدّى الباقي عند التسلّم، في تذكرة واحدة.",
