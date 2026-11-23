@@ -111,6 +111,20 @@ const rows = [
         </div>
       </div>
     </div>
+    <div class="co-ph-band">
+      <figure class="co-ph co-ph1 tf" style="--d:0ms">
+        <img src="/img/photos/gateau-1.webp" alt="" width="1200" height="896" loading="lazy" decoding="async" />
+        <figcaption>{tt('Texte sur le gâteau')}</figcaption>
+      </figure>
+      <figure class="co-ph co-ph2 tf" style="--d:120ms">
+        <img src="/img/photos/gateau-full.webp" alt="" width="1376" height="768" loading="lazy" decoding="async" />
+        <figcaption>{tt('La liste du jour')}</figcaption>
+      </figure>
+      <figure class="co-ph co-ph3 tf" style="--d:240ms">
+        <img src="/img/photos/gateau-2.webp" alt="" width="1200" height="896" loading="lazy" decoding="async" />
+        <figcaption>{tt('Un seul ticket au retrait')}</figcaption>
+      </figure>
+    </div>
   </div>
 </section>
 
@@ -185,6 +199,20 @@ const rows = [
   [dir="rtl"] .co-tk { transform: translateY(-105%) rotate(1deg); }
   [dir="rtl"] .co.k5 .co-tk { transform: rotate(1deg); }
 
+  /* three photos that light up with their step: the writing, the cake that is ready, the hand-over */
+  .co-ph-band { display: grid; gap: 1rem; margin-top: 3.5rem; grid-template-columns: minmax(0, 1fr); }
+  @media (min-width: 640px) { .co-ph-band { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  .co-ph { position: relative; margin: 0; overflow: hidden; border-radius: 1.2rem; aspect-ratio: 16 / 10; background: #0A2A4A; box-shadow: 0 0 0 1px rgba(255, 255, 255, .08); transition: box-shadow .6s; }
+  @media (min-width: 640px) { .co-ph { aspect-ratio: 4 / 3; } }
+  .co-ph img { display: block; width: 100%; height: 100%; object-fit: cover; filter: brightness(.28) saturate(.3); transform: scale(1.12); transition: filter 1.2s ease, transform 3.2s cubic-bezier(.2, .7, .2, 1); }
+  .co-ph2 img { object-position: 72% 50%; }
+  .co-ph figcaption { position: absolute; inset: auto 0 0; padding: 2.6rem 1.1rem .95rem; background: linear-gradient(to top, rgba(0, 20, 40, .88), transparent); color: #fff; font-size: .95rem; font-weight: 700; opacity: .55; transition: opacity .6s .3s; }
+  .co-ph figcaption::before { content: ""; display: inline-block; width: .55rem; height: .55rem; margin-inline-end: .55rem; border-radius: 50%; background: rgba(255, 255, 255, .4); transition: background .4s; }
+  .co.k2 .co-ph1, .co.k4 .co-ph2, .co.k5 .co-ph3 { box-shadow: 0 0 0 1px rgba(5, 185, 98, .5); }
+  .co.k2 .co-ph1 img, .co.k4 .co-ph2 img, .co.k5 .co-ph3 img { filter: none; transform: none; }
+  .co.k2 .co-ph1 figcaption, .co.k4 .co-ph2 figcaption, .co.k5 .co-ph3 figcaption { opacity: 1; }
+  .co.k2 .co-ph1 figcaption::before, .co.k4 .co-ph2 figcaption::before, .co.k5 .co-ph3 figcaption::before { background: #05B962; }
+
   /* what appears at which step */
   .co [data-at] { opacity: 0; transform: translateY(.9em); transition: opacity .5s calc(var(--i, 0) * .3s), transform .55s calc(var(--i, 0) * .3s) cubic-bezier(.2, .8, .2, 1); }
   .co .co-stamp[data-at] { transition-timing-function: cubic-bezier(.3, 1.3, .5, 1); transition-delay: .35s; }
@@ -228,7 +256,7 @@ const rows = [
   .co-ico { position: relative; z-index: 1; background: #12385A; }
   .co-it.on .co-ico { background: #05B962; }
   @media (prefers-reduced-motion: reduce) {
-    .co [data-at], .co-when, .co-w1, .co-w2, .co-l1, .co-l2, .co-rail::after, .co-day, .co.k5 .co-tk { transition: none; }
+    .co [data-at], .co-when, .co-w1, .co-w2, .co-l1, .co-l2, .co-rail::after, .co-day, .co.k5 .co-tk, .co-ph, .co-ph img, .co-ph figcaption { transition: none; }
     .co-sheet.hit, .co-cake.wig, .co.k3 .co-wa::after { animation: none; }
   }
 </style>
