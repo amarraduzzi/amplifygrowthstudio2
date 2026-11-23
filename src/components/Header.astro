@@ -53,9 +53,9 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
     <a href={ROUTES.home[lang]} aria-label="Amplify Growth Studio" class="me-auto"><Logo /></a>
     <nav class="hidden items-center gap-1 text-[0.95rem] xl:flex" aria-label="Navigation">
       <!-- Products panel -->
-      <div class="group">
-        <button type="button" aria-haspopup="true" class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep ${activeProducts ? 'font-semibold text-green-deep' : 'text-navy'}`}>{tt('Produits')}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+      <div class="group" data-nav-panel>
+        <button type="button" aria-haspopup="true" aria-expanded="false" data-nav-btn class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep group-data-[open]:text-green-deep ${activeProducts ? 'font-semibold text-green-deep' : 'text-navy'}`}>{tt('Produits')}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180 group-data-[open]:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-data-[open]:visible group-data-[open]:opacity-100 group-hover:visible group-hover:opacity-100">
           <div class="mx-auto grid max-w-6xl gap-3 px-6 py-6 lg:grid-cols-4 2xl:max-w-7xl">
             {products.map(p => (
               <a href={p.href} class="group/c relative isolate flex h-56 flex-col justify-end overflow-hidden rounded-[1.4rem] bg-navy p-5 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5">
@@ -75,9 +75,9 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
         </div>
       </div>
       <!-- Features panel -->
-      <div class="group">
-        <button type="button" aria-haspopup="true" class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep ${activeFeatures ? 'font-semibold text-green-deep' : 'text-navy'}`}>{t.nav.features}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
-        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100">
+      <div class="group" data-nav-panel>
+        <button type="button" aria-haspopup="true" aria-expanded="false" data-nav-btn class={`flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-full px-3.5 transition-colors hover:text-green-deep group-focus-within:text-green-deep group-data-[open]:text-green-deep ${activeFeatures ? 'font-semibold text-green-deep' : 'text-navy'}`}>{t.nav.features}<svg viewBox="0 0 24 24" class="size-3.5 transition-transform group-hover:rotate-180 group-focus-within:rotate-180 group-data-[open]:rotate-180" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button>
+        <div class="invisible absolute inset-x-0 top-full border-b border-line bg-chalk opacity-0 shadow-[0_30px_60px_-30px_rgba(0,30,62,0.35)] transition-[opacity,visibility] duration-150 group-focus-within:visible group-focus-within:opacity-100 group-data-[open]:visible group-data-[open]:opacity-100 group-hover:visible group-hover:opacity-100">
           <div class="mx-auto grid max-w-6xl gap-6 px-6 py-6 lg:grid-cols-[15rem_1fr] 2xl:max-w-7xl">
             <a href={ROUTES.features[lang]} class="group/all relative isolate flex min-h-80 flex-col justify-between overflow-hidden rounded-[1.4rem] bg-navy p-6 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] transition-transform duration-300 hover:-translate-y-0.5">
               <img src="/img/nav-features.webp" alt="" width="540" height="720" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover object-[50%_40%] transition-transform duration-700 ease-out group-hover/all:scale-105" />
@@ -191,6 +191,30 @@ const trial = signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? '
     </details>
   </div>
 </header>
+<script>
+  // desktop menu panels (Produits / Fonctionnalités): tap or click toggles, so touch screens (iPad) work without hover
+  const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-nav-panel]'));
+  const setOpen = (p: HTMLElement, open: boolean) => {
+    if (open) p.setAttribute('data-open', ''); else p.removeAttribute('data-open');
+    p.querySelector('[data-nav-btn]')?.setAttribute('aria-expanded', String(open));
+  };
+  const closeAll = (except?: HTMLElement) => panels.forEach((p) => { if (p !== except) setOpen(p, false); });
+  panels.forEach((p) => {
+    const btn = p.querySelector<HTMLElement>('[data-nav-btn]');
+    btn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const open = !p.hasAttribute('data-open');
+      closeAll(p);
+      setOpen(p, open);
+    });
+    // a mouse that leaves the panel closes it again (hover keeps working for desktop)
+    p.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') setOpen(p, false); });
+    // following a link inside the panel closes it
+    p.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(p, false)));
+  });
+  document.addEventListener('click', (e) => { if (!panels.some((p) => p.contains(e.target as Node))) closeAll(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+</script>
 <script>
   // the in-page index closes the menu, then the page scrolls to the section
   document.querySelectorAll<HTMLAnchorElement>('[data-toc]').forEach((a) => a.addEventListener('click', () => { const d = a.closest('details'); if (d) d.open = false; }));
