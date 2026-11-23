@@ -33,7 +33,7 @@ const rows = [
         <p class="tf mt-4 max-w-lg text-lg text-white/70" style="--d:100ms">{tt('Une cliente commande un gâteau pour samedi : le jour, l’heure, le texte à écrire dessus. Elle laisse un acompte, et le reste se paie au retrait, sur un seul ticket.')}</p>
       </div>
       <div class="order-3 lg:col-start-1 lg:row-start-2">
-        <ul class="grid gap-3">
+        <ul class="co-rail grid gap-3" data-rail>
           {items.map(([i, h, x], k) => (
             <li class="co-it tf" data-it={k} style={`--d:${k * 90}ms`}>
               <span class="co-ico"><Icon name={i} class="size-5" /></span>
@@ -81,13 +81,13 @@ const rows = [
                 <circle cx="24" cy="8" r="3" fill="#E5484D" />
                 <path d="M24 5c0-2 1-3 2.5-3.5" stroke="#00804A" stroke-width="1.4" fill="none" stroke-linecap="round" />
               </svg>
-              <div><p class="co-k">{tt('Texte sur le gâteau')}</p><p class="co-quote">{tt('« Joyeux anniversaire Lina »')}</p></div>
+              <div><p class="co-k">{tt('Texte sur le gâteau')}</p><p class="co-quote" data-quote>{tt('« Joyeux anniversaire Lina »')}</p></div>
             </div>
 
             <div class="co-sum">
-              <p data-at="2" style="--i:3"><span>{tt('Total')}</span><span dir="ltr">600 MAD</span></p>
-              <p class="co-dep" data-at="3"><span>{tt('Acompte reçu · espèces')}</span><span dir="ltr">− 300 MAD</span></p>
-              <p class="co-left" data-at="3" style="--i:1"><span class="co-lbl"><span class="co-l1">{tt('Reste à payer')}</span><span class="co-l2">{tt('Encaissé au retrait')}</span></span><span dir="ltr">300 MAD</span></p>
+              <p data-at="2" style="--i:3"><span>{tt('Total')}</span><span dir="ltr"><b class="co-num" data-n="600" data-c="2" data-dl="900">600</b> MAD</span></p>
+              <p class="co-dep" data-at="3"><span>{tt('Acompte reçu · espèces')}</span><span dir="ltr">− <b class="co-num" data-n="300" data-c="3" data-dl="150">300</b> MAD</span></p>
+              <p class="co-left" data-at="3" style="--i:1"><span class="co-lbl"><span class="co-l1">{tt('Reste à payer')}</span><span class="co-l2">{tt('Encaissé au retrait')}</span></span><span dir="ltr"><b class="co-num" data-n="300" data-c="3" data-dl="450">300</b> MAD</span></p>
             </div>
             <p class="co-wa" data-at="3" style="--i:2"><Icon name="message" class="size-[1.1em]" />{tt('Confirmation envoyée sur WhatsApp')}</p>
             <p class="co-list" data-at="4"><Icon name="bell" class="size-[1.1em]" />{tt('Dans la liste du jour : à remettre à 16 h')}</p>
@@ -106,7 +106,7 @@ const rows = [
 <style>
   .co-grid { background: radial-gradient(55% 60% at 78% 50%, rgba(255, 255, 255, .09), transparent 70%), repeating-linear-gradient(0deg, rgba(255, 255, 255, .035) 0 1px, transparent 1px 44px); }
   .co-sheet-wrap { container-type: inline-size; position: relative; }
-  .co-sheet { position: relative; max-width: 30em; margin-inline: auto; font-size: clamp(10.5px, 3.3cqw, 15px); padding: 2.2em 2em 1.8em; border-radius: .5em; background: #FFFDF8; color: #001E3E; box-shadow: 0 5em 7em -3em rgba(0, 0, 0, .75), 0 0 0 1px rgba(0, 0, 0, .06); transform: rotate(1.6deg); cursor: pointer; }
+  .co-sheet { position: relative; max-width: 30em; margin-inline: auto; font-size: clamp(10.5px, 3.3cqw, 15px); padding: 2.2em 2em 1.8em; border-radius: .5em; background: #FFFDF8; color: #001E3E; box-shadow: 0 5em 7em -3em rgba(0, 0, 0, .75), 0 0 0 1px rgba(0, 0, 0, .06); --rot: 1.6deg; transform: rotate(var(--rot)); cursor: pointer; }
   .co-sheet::before { content: ""; position: absolute; inset: 0 0 auto; height: .5em; border-radius: .5em .5em 0 0; background: #05B962; }
   .co-k { font-size: .75em; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #6B7A8C; }
   .co-n { margin-top: .15em; font-size: 1.9em; font-weight: 800; line-height: 1; letter-spacing: -.01em; }
@@ -146,28 +146,55 @@ const rows = [
   .co-stamp span { font-size: 1.6em; font-weight: 800; letter-spacing: .12em; line-height: 1; }
   .co-stamp small { font-size: .8em; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
   .co-stamp-a { inset-inline-end: 1.2em; bottom: 1.2em; transform: rotate(-9deg); }
-  .co-stamp-b { inset-inline-end: 1.4em; bottom: 2em; transform: rotate(-7deg); }
+  .co-stamp-b { inset-inline-end: 1.4em; bottom: 3.4em; transform: rotate(-7deg); }
   .co-redo { display: flex; align-items: center; gap: .5em; margin: 1.4rem auto 0; padding: .55rem 1rem; border-radius: 999px; color: rgba(255, 255, 255, .75); font-size: .9rem; font-weight: 600; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .22); transition: background .2s; }
   .co-redo:hover { background: rgba(255, 255, 255, .1); }
 
   /* what appears at which step */
   .co [data-at] { opacity: 0; transform: translateY(.9em); transition: opacity .5s calc(var(--i, 0) * .3s), transform .55s calc(var(--i, 0) * .3s) cubic-bezier(.2, .8, .2, 1); }
-  .co .co-stamp[data-at] { transition-timing-function: cubic-bezier(.3, 1.3, .5, 1); transition-delay: .7s; }
+  .co .co-stamp[data-at] { transition-timing-function: cubic-bezier(.3, 1.3, .5, 1); transition-delay: .35s; }
   .co .co-stamp-a[data-at] { transform: rotate(-9deg) scale(1.9); }
   .co .co-stamp-b[data-at] { transform: rotate(-7deg) scale(1.9); }
   .co.k1 [data-at="1"], .co.k2 [data-at="2"], .co.k3 [data-at="3"], .co.k4 [data-at="4"], .co.k5 [data-at="5"] { opacity: 1; transform: none; }
   .co.k3 .co-stamp-a[data-at] { transform: rotate(-9deg); }
   .co.k5 .co-stamp-b[data-at] { transform: rotate(-7deg); }
-  /* the deposit stamp gives way to the hand-over stamp */
-  .co.k5 .co-stamp-a[data-at] { opacity: 0; transform: rotate(-9deg); transition-delay: 0s; }
+  /* the deposit stamp gives way to the day's list, and then the hand-over stamp takes the place */
+  .co.k4 .co-stamp-a[data-at] { opacity: 0; transform: rotate(-9deg); transition-delay: 0s; transition-duration: .35s; }
 
   .co-it { display: flex; gap: 1rem; padding: 1rem 1.1rem; border-radius: 1.2rem; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); transition: background .4s, box-shadow .4s; }
   .co-ico { display: grid; place-items: center; flex: none; width: 2.75rem; height: 2.75rem; border-radius: 1rem; background: rgba(255, 255, 255, .1); color: #05B962; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15); transition: background .4s, color .4s; }
   .co-it.on { background: rgba(5, 185, 98, .1); box-shadow: inset 0 0 0 1px rgba(5, 185, 98, .45); }
   .co-it.on .co-ico { background: #05B962; color: #001E3E; }
-  [dir="rtl"] .co-sheet { transform: rotate(-1.6deg); }
+  [dir="rtl"] .co-sheet { --rot: -1.6deg; }
+
+  /* the status lines give way to the hand-over stamp, so nothing is printed under it */
+  .co.k5 .co-wa[data-at], .co.k5 .co-list[data-at] { opacity: 0; transform: none; transition-delay: 0s; }
+  .co-num { font-weight: inherit; font-variant-numeric: tabular-nums; }
+  /* the text on the cake is written letter by letter */
+  .co-quote { min-height: 1.3em; }
+  .co-quote.typing::after { content: ""; display: inline-block; width: .09em; height: 1.05em; margin-inline-start: .12em; vertical-align: -.15em; background: #7A4A2B; animation: co-blink .7s steps(1) infinite; }
+  @keyframes co-blink { 50% { opacity: 0; } }
+  .co-cake { transform-origin: 50% 90%; }
+  .co-cake.wig { animation: co-wig .7s ease-in-out; }
+  @keyframes co-wig { 0%, 100% { transform: none; } 20% { transform: rotate(-7deg) scale(1.06); } 45% { transform: rotate(6deg) scale(1.06); } 70% { transform: rotate(-3deg); } }
+  /* the stamp lands: the sheet gives a small knock */
+  .co-sheet.hit { animation: co-thud .38s ease-out; }
+  @keyframes co-thud { 0% { transform: rotate(var(--rot)); } 28% { transform: rotate(var(--rot)) translateY(.4em) scale(.992); } 62% { transform: rotate(var(--rot)) translateY(-.12em); } 100% { transform: rotate(var(--rot)); } }
+  /* WhatsApp confirmation pops in with a ring */
+  .co-wa { position: relative; }
+  .co.k3 .co-wa::after { content: ""; position: absolute; inset: 0; border-radius: 999px; box-shadow: 0 0 0 0 rgba(5, 185, 98, .55); animation: co-ring 1.1s .9s ease-out 1 both; }
+  @keyframes co-ring { 0% { box-shadow: 0 0 0 0 rgba(5, 185, 98, .55); } 100% { box-shadow: 0 0 0 .8em rgba(5, 185, 98, 0); } }
+  /* a line runs through the four points and fills with the steps */
+  .co-rail { position: relative; --fill: 0px; --top: 0px; --h: 0px; }
+  .co-rail::before, .co-rail::after { content: ""; position: absolute; inset-inline-start: 2.475rem; width: 2px; margin-inline-start: -1px; top: var(--top); border-radius: 2px; pointer-events: none; }
+  .co-rail::before { height: var(--h); background: rgba(255, 255, 255, .12); }
+  .co-rail::after { height: var(--fill); background: #05B962; transition: height .9s cubic-bezier(.4, 0, .2, 1); }
+  .co-rail > li { position: relative; z-index: 1; }
+  .co-ico { position: relative; z-index: 1; background: #12385A; }
+  .co-it.on .co-ico { background: #05B962; }
   @media (prefers-reduced-motion: reduce) {
-    .co [data-at], .co-when, .co-w1, .co-w2, .co-l1, .co-l2 { transition: none; }
+    .co [data-at], .co-when, .co-w1, .co-w2, .co-l1, .co-l2, .co-rail::after { transition: none; }
+    .co-sheet.hit, .co-cake.wig, .co.k3 .co-wa::after { animation: none; }
   }
 </style>
 
@@ -177,20 +204,81 @@ const rows = [
     const items = [...root.querySelectorAll<HTMLElement>('[data-it]')];
     const redo = root.querySelector<HTMLElement>('[data-redo]');
     const sheet = root.querySelector<HTMLElement>('[data-sheet]');
+    const rail = root.querySelector<HTMLElement>('[data-rail]');
+    const quote = root.querySelector<HTMLElement>('[data-quote]');
+    const cake = root.querySelector<HTMLElement>('.co-cake');
+    const nums = [...root.querySelectorAll<HTMLElement>('[data-n]')];
+    const full = quote?.textContent ?? '';
     // the step at which each of the four points lights up: the order, the deposit, the list, the hand-over
     const LIGHT = [1, 3, 4, 5];
     let timers: number[] = [];
+    let raf = 0;
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // the line through the four points: from the first icon to the last, filled up to the last lit one
+    const railPos = (n: number) => {
+      if (!rail || !items.length) return;
+      const mid = (el: HTMLElement) => { const ic = el.querySelector<HTMLElement>('.co-ico'); return el.offsetTop + (ic ? ic.offsetTop + ic.offsetHeight / 2 : 38); };
+      const top = mid(items[0]);
+      let lit = -1;
+      items.forEach((_, i) => { if (n >= LIGHT[i]) lit = i; });
+      rail.style.setProperty('--top', top + 'px');
+      rail.style.setProperty('--h', mid(items[items.length - 1]) - top + 'px');
+      rail.style.setProperty('--fill', (lit < 0 ? 0 : mid(items[lit]) - top) + 'px');
+    };
+    const countUp = (el: HTMLElement, delay: number) => {
+      const to = Number(el.dataset.n);
+      timers.push(window.setTimeout(() => {
+        const t0 = performance.now();
+        const tick = (t: number) => {
+          const k = Math.min(1, (t - t0) / 700);
+          el.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3))));
+          if (k < 1) raf = requestAnimationFrame(tick);
+        };
+        raf = requestAnimationFrame(tick);
+      }, delay));
+    };
+    // the text on the cake is written letter by letter (word by word in Arabic, where letters join)
+    const write = () => {
+      if (!quote) return;
+      const rtl = getComputedStyle(quote).direction === 'rtl';
+      const parts = rtl ? full.split(/(?<=\s)/) : Array.from(full);
+      let n = 0;
+      quote.classList.add('typing');
+      const tick = () => {
+        n++;
+        quote.textContent = parts.slice(0, n).join('');
+        if (n < parts.length) timers.push(window.setTimeout(tick, rtl ? 230 : 48));
+        else {
+          timers.push(window.setTimeout(() => quote.classList.remove('typing'), 600));
+          cake?.classList.remove('wig'); void cake?.getBoundingClientRect(); cake?.classList.add('wig');
+        }
+      };
+      tick();
+    };
+    const knock = () => { if (!sheet) return; sheet.classList.remove('hit'); void sheet.offsetWidth; sheet.classList.add('hit'); };
     const step = (n: number) => {
       for (let k = 1; k <= 5; k++) root.classList.toggle('k' + k, k <= n);
       items.forEach((el, i) => el.classList.toggle('on', n >= LIGHT[i]));
+      railPos(n);
     };
     const run = () => {
-      timers.forEach(clearTimeout); timers = [];
+      timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf);
+      sheet?.classList.remove('hit'); cake?.classList.remove('wig'); quote?.classList.remove('typing');
+      if (quote) quote.textContent = '';
+      nums.forEach((el) => { el.textContent = '0'; });
       step(0);
-      [350, 1500, 3200, 4800, 6400].forEach((ms, i) => timers.push(window.setTimeout(() => step(i + 1), ms)));
+      [350, 1500, 3200, 5100, 6800].forEach((ms, i) => {
+        timers.push(window.setTimeout(() => {
+          step(i + 1);
+          nums.forEach((el) => { if (Number(el.dataset.c) === i + 1) countUp(el, Number(el.dataset.dl)); });
+        }, ms));
+      });
+      timers.push(window.setTimeout(write, 2500));
+      // the two stamps land a moment after their step starts
+      timers.push(window.setTimeout(knock, 3200 + 450), window.setTimeout(knock, 6800 + 450));
     };
     // the section reveals as it scrolls in (the dry cleaners page does this for every [data-tf] block)
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    addEventListener('resize', () => railPos(root.className.match(/k(\d)/g)?.length ?? 0));
     if (still || !('IntersectionObserver' in window)) { root.classList.add('in'); step(5); }
     else {
       new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { root.classList.add('in'); o.disconnect(); } }, { threshold: 0.12 }).observe(root);
