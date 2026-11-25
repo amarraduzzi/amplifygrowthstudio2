@@ -1,0 +1,208 @@
+---
+// The hotel's own booking site, played on a phone. It copies the guest page of the app (?chambres) and its three
+// styles the hotel picks in the back office: Atelier (light, the photo in a frame), Nuit (dark, capitals) and
+// Carnet (a serif notebook, the rooms as a list with the total). The colour is the hotel's own.
+// A guest books by itself in a loop: dates, the rooms with the price for those nights, the room, breakfast added,
+// confirmed. The style changes at every loop. The visitor can pick a style and a colour: the style then stays.
+// Demo riad, invented names, demo prices.
+import Device from './Device.astro';
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const SKINS: [string, string, string][] = [['atelier', 'Atelier', tt('Clair et calme')], ['nuit', 'Nuit', tt('Sombre et chic')], ['carnet', 'Carnet', tt('La réservation d’abord')]];
+const COLORS: [string, string][] = [['#8A4B2A', tt('Terre')], ['#1F5C4A', tt('Vert')], ['#1D3C78', tt('Bleu')], ['#B8893C', tt('Or')]];
+const ROOMS = [
+  { n: tt('Chambre Jasmin'), img: '/img/photos/hotel-chambre-800.webp', cap: tt('2 pers. · patio'), night: 500, left: tt('Il reste 2 chambres') },
+  { n: tt('Suite Atlas'), img: '/img/photos/hotel-suite-800.webp', cap: tt('4 pers. · terrasse'), night: 900, left: tt('Dernière chambre') },
+];
+const nights = 2;
+const fmt = (n: number) => `${n.toLocaleString('fr-FR')} ${lang === 'ar' ? 'درهم' : 'DH'}`;
+---
+<div class="hs" data-hs data-skin="atelier" data-scr="0" style="--b:#8A4B2A">
+  <div class="hs-stage">
+    <div class="hs-phone">
+      <Device kind="phone" w={600} h={1298}>
+        <div slot="screen" class="hs-scr" dir={lang === 'ar' ? 'rtl' : 'ltr'} aria-hidden="true"><div class="hs-in">
+          <!-- 0: the cover and the search -->
+          <section class="hs-p p0">
+            <div class="hs-nav"><b>Dar Lina</b><span>FR · AR · EN</span></div>
+            <p class="hs-hl">{tt('Une maison calme, au milieu de tout.')}</p>
+            <div class="hs-cover"><img src="/img/photos/hotel-patio-800.webp" alt="" loading="lazy" decoding="async" />
+              <div class="hs-cv"><small>Rabat · {tt('Médina')}</small><h4>Dar Lina</h4><p>{tt('Une maison calme, au milieu de tout.')}</p></div>
+            </div>
+            <div class="hs-collage"><img src="/img/photos/hotel-cour-800.webp" alt="" loading="lazy" /><img src="/img/photos/hotel-terrasse-800.webp" alt="" loading="lazy" /></div>
+            <div class="hs-search">
+              <p class="hs-from">{tt('dès')} <b>300 DH</b> {tt('par nuit')}</p>
+              <div class="hs-f"><label>{tt('Arrivée')}<span>12 déc.</span></label><label>{tt('Départ')}<span>14 déc.</span></label><label>{tt('Voyageurs')}<span>2</span></label></div>
+              <span class="hs-btn t0">{tt('Voir les chambres')}</span>
+            </div>
+          </section>
+          <!-- 1: the rooms with the price for these nights -->
+          <section class="hs-p p1">
+            <p class="hs-h">{tt('Chambres libres')}</p>
+            <p class="hs-sub">12 → 14 déc. · {nights} {tt('nuits')} · 2 pers.</p>
+            {ROOMS.map((r, i) => (
+              <div class="hs-room">
+                <img src={r.img} alt="" loading="lazy" />
+                <div class="hs-ri"><b>{r.n}</b><small>{r.cap}</small><em>{r.left}</em></div>
+                <div class="hs-rp"><b>{fmt(r.night * nights)}</b><small>{nights} {tt('nuits')}</small><span class={`hs-btn ${i === 0 ? 't1' : ''}`}>{tt('Réserver')}</span></div>
+              </div>))}
+          </section>
+          <!-- 2: the booking panel -->
+          <section class="hs-p p2">
+            <p class="hs-k">{tt('Votre chambre')}</p>
+            <div class="hs-me"><img src={ROOMS[0].img} alt="" loading="lazy" /><div><b>{ROOMS[0].n}</b><small>12 → 14 déc. · 2 pers.</small></div></div>
+            <p class="hs-k2">{tt('Ajoutez à votre séjour')}</p>
+            <div class="hs-x"><i class="hs-box"></i><span><b>{tt('Petit-déjeuner sur la terrasse')}</b><small>80 DH / pers. / {tt('nuit')}</small></span><em>320 DH</em></div>
+            <div class="hs-x2"><i></i><span><b>{tt('Transfert aéroport')}</b><small>250 DH</small></span></div>
+            <div class="hs-tot"><span>{tt('Total du séjour')}</span><b><s>1 000 DH</s><u>1 320 DH</u></b></div>
+            <div class="hs-form"><span>Sara B.</span><span>06 •• •• •• 12</span></div>
+            <span class="hs-btn t2">{tt('Réserver')}</span>
+          </section>
+          <!-- 3: confirmed -->
+          <section class="hs-p p3">
+            <div class="hs-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
+            <p class="hs-h">{tt('Votre réservation est confirmée')}</p>
+            <p class="hs-sub">{ROOMS[0].n} · 12 → 14 déc.</p>
+            <p class="hs-sum">1 320 DH · {tt('payé à l’hôtel')}</p>
+            <span class="hs-wa">WhatsApp</span>
+          </section>
+          <i class="hs-tap"></i>
+        </div></div>
+      </Device>
+    </div>
+    <span class="hs-chip c1"><i></i>{tt('0 % de commission')}</span>
+    <span class="hs-chip c2"><i></i>{tt('Nouvelle réservation : Sara B.')}</span>
+  </div>
+
+  <div class="hs-ctl">
+    <div class="hs-skins" role="group" aria-label={tt('Le style du site')}>
+      {SKINS.map(([k, n, d]) => <button type="button" data-skin-btn={k} aria-pressed={k === 'atelier' ? 'true' : 'false'}><span class={`hs-mini m-${k}`}></span><b>{n}</b><small>{d}</small></button>)}
+    </div>
+    <div class="hs-colors" role="group" aria-label={tt('Votre couleur')}>
+      <span>{tt('Votre couleur')}</span>
+      {COLORS.map(([c, n], i) => <button type="button" data-color={c} aria-label={n} aria-pressed={i === 0 ? 'true' : 'false'} style={`background:${c}`}></button>)}
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .hs { display: grid; gap: 1.6rem; }
+  .hs-stage { position: relative; display: grid; place-items: center; padding: 1rem 0; }
+  .hs-phone { width: min(320px, 78vw); }
+  .hs-scr { container-type: inline-size; position: relative; aspect-ratio: 600 / 1240; overflow: hidden; transition: background .5s, color .5s;
+    --bg: #F3F2EA; --sf: #fff; --ink: #1C1E17; --mu: #5F6158; --ln: #E2E2D8; --hf: inherit; --hw: 300; --up: none; background: var(--bg); color: var(--ink); }
+  .hs-in { position: absolute; inset: 0; font-size: 4.1cqw; }
+  .hs[data-skin="nuit"] .hs-scr { --bg: #16130F; --sf: #1F1A15; --ink: #EFE7DC; --mu: #BFB3A3; --ln: #3A3229; --hf: Georgia, 'Times New Roman', serif; --hw: 400; --up: uppercase; }
+  .hs[data-skin="carnet"] .hs-scr { --bg: #F2ECE2; --sf: #fff; --ink: #1E2A24; --mu: #5D6A62; --ln: #D9D0C2; --hf: Georgia, 'Times New Roman', serif; --hw: 400; }
+  .hs-p { position: absolute; inset: 0; padding: 0 0 4%; overflow: hidden; opacity: 0; transform: translateX(8%); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  [dir="rtl"] .hs-p { transform: translateX(-8%); }
+  .hs[data-scr="0"] .p0, .hs[data-scr="1"] .p1, .hs[data-scr="2"] .p2, .hs[data-scr="3"] .p3 { opacity: 1; transform: none; }
+  .hs-nav { display: flex; justify-content: space-between; align-items: center; padding: 3% 5%; font-size: .8em; } .hs-nav b { font-family: var(--hf); font-size: 1.25em; font-weight: 600; } .hs-nav span { color: var(--mu); font-size: .85em; }
+  .hs-cover { position: relative; margin: 0 4%; height: 46%; overflow: hidden; background: var(--b); }
+  .hs-cover img { width: 100%; height: 100%; object-fit: cover; display: block; animation: hs-zoom 14s ease-in-out infinite alternate; }
+  @keyframes hs-zoom { to { transform: scale(1.12); } }
+  .hs-cv { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; color: #fff; background: rgba(0, 0, 0, .3); padding: 0 6%; }
+  .hs-cv small { font-size: .65em; letter-spacing: .2em; text-transform: uppercase; } .hs-cv h4 { font-family: var(--hf); font-weight: var(--hw); text-transform: var(--up); font-size: 2.6em; line-height: 1; margin: .15em 0; } .hs-cv p { font-size: .8em; opacity: .9; }
+  .hs-collage { display: none; }
+  .hs-search { position: relative; margin: -9% 8% 0; background: var(--sf); padding: 5% 5% 6%; box-shadow: 0 1em 2em -1.4em rgba(0, 0, 0, .4); }
+  .hs-from { font-size: .8em; color: var(--mu); } .hs-from b { font-family: var(--hf); font-size: 1.5em; color: var(--ink); font-weight: 500; }
+  .hs-f { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4%; margin: 4% 0 6%; }
+  .hs-f label { display: grid; gap: .3em; font-size: .55em; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--mu); border-bottom: 1px solid var(--ln); padding-bottom: .5em; }
+  .hs-f span { font-size: 1.6em; font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--ink); }
+  .hs-btn { display: grid; place-items: center; min-height: 2.6em; padding: 0 1em; background: var(--b); color: #fff; font-weight: 700; font-size: .8em; letter-spacing: .04em; transition: background .5s, transform .2s; }
+  .hs-btn.press { transform: scale(.95); }
+  .hs-h { padding: 8% 5% 0; font-family: var(--hf); font-weight: var(--hw); text-transform: var(--up); font-size: 1.7em; line-height: 1.05; }
+  .hs-sub { padding: 1.5% 5% 4%; font-size: .75em; color: var(--mu); }
+  .hs-room { margin: 0 5% 5%; background: var(--sf); }
+  .hs-room img { width: 100%; height: 7.2em; object-fit: cover; display: block; }
+  .hs-ri { display: grid; padding: 3% 4% 0; } .hs-ri b { font-family: var(--hf); font-weight: 500; text-transform: var(--up); font-size: 1.05em; } .hs-ri small { font-size: .7em; color: var(--mu); } .hs-ri em { font-style: normal; font-size: .7em; font-weight: 700; color: #2F8A50; }
+  .hs-rp { display: flex; align-items: center; justify-content: space-between; gap: 3%; padding: 2% 4% 4%; } .hs-rp b { font-family: var(--hf); font-size: 1.15em; font-weight: 500; } .hs-rp small { font-size: .65em; color: var(--mu); margin-inline-end: auto; }
+  .hs-rp .hs-btn { min-height: 2.2em; }
+  .hs-k { padding: 7% 5% 3%; font-size: .6em; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: var(--b); filter: brightness(1.2); }
+  .hs-me { display: flex; gap: 4%; align-items: center; margin: 0 5%; } .hs-me img { width: 26%; aspect-ratio: 1; object-fit: cover; } .hs-me b { display: block; font-family: var(--hf); font-weight: 500; text-transform: var(--up); font-size: 1.1em; } .hs-me small { font-size: .7em; color: var(--mu); }
+  .hs-k2 { padding: 6% 5% 2%; font-size: .8em; font-weight: 700; }
+  .hs-x, .hs-x2 { display: flex; align-items: center; gap: 3%; margin: 0 5% 2.5%; padding: 3% 4%; border: 1px solid var(--ln); font-size: .75em; transition: border-color .4s; }
+  .hs-x span, .hs-x2 span { display: grid; flex: 1; } .hs-x small, .hs-x2 small { color: var(--mu); font-size: .85em; } .hs-x em { font-style: normal; font-weight: 700; opacity: 0; transition: opacity .3s; }
+  .hs-x i, .hs-x2 i { width: 1.3em; height: 1.3em; border: 2px solid var(--mu); flex: none; transition: background .3s, border-color .3s; }
+  .hs.ext .hs-x { border-color: var(--b); } .hs.ext .hs-x i { background: var(--b); border-color: var(--b); box-shadow: inset 0 0 0 .2em var(--sf); } .hs.ext .hs-x em { opacity: 1; }
+  .hs-tot { display: flex; justify-content: space-between; align-items: baseline; margin: 5% 5% 3%; padding-top: 3%; border-top: 1px solid var(--ln); font-size: .8em; }
+  .hs-tot b { display: grid; font-family: var(--hf); font-size: 1.6em; font-weight: 500; } .hs-tot b > * { grid-area: 1 / 1; text-decoration: none; transition: opacity .3s, transform .3s; text-align: end; }
+  .hs-tot u { opacity: 0; transform: translateY(.4em); } .hs.ext .hs-tot s { opacity: 0; transform: translateY(-.4em); } .hs.ext .hs-tot u { opacity: 1; transform: none; }
+  .hs-form { display: grid; gap: 2%; margin: 0 5% 4%; } .hs-form span { border: 1px solid var(--ln); padding: 2.6% 4%; font-size: .75em; }
+  .p2 > .hs-btn { margin: 0 5%; }
+  .p3 { display: grid; align-content: center; justify-items: center; text-align: center; }
+  .hs-ok { display: grid; place-items: center; width: 22%; aspect-ratio: 1; border-radius: 99px; background: var(--b); color: #fff; } .hs-ok svg { width: 55%; stroke-dasharray: 30; stroke-dashoffset: 30; }
+  .hs[data-scr="3"] .hs-ok { animation: hs-pop .5s cubic-bezier(.2, 1.6, .4, 1) both; } .hs[data-scr="3"] .hs-ok svg { animation: hs-draw .5s .3s forwards; }
+  @keyframes hs-pop { from { transform: scale(.3); } } @keyframes hs-draw { to { stroke-dashoffset: 0; } }
+  .p3 .hs-h { padding-top: 6%; } .hs-sum { font-weight: 700; font-size: .85em; } .hs-wa { margin-top: 6%; padding: .7em 1.4em; background: #25D366; color: #fff; font-weight: 700; font-size: .8em; border-radius: 99px; }
+  .hs-tap { position: absolute; z-index: 5; width: 13%; aspect-ratio: 1; border-radius: 99px; background: rgba(255, 255, 255, .55); box-shadow: 0 0 0 .3em rgba(0, 0, 0, .12); left: 50%; top: 50%; opacity: 0; transform: translate(-50%, -50%) scale(.6); transition: left .6s cubic-bezier(.4, 0, .2, 1), top .6s cubic-bezier(.4, 0, .2, 1), opacity .3s; pointer-events: none; }
+  .hs-tap.on { opacity: 1; } .hs-tap.hit { animation: hs-hit .4s; } @keyframes hs-hit { 50% { transform: translate(-50%, -50%) scale(.8); } }
+  /* Nuit: the dark page, capitals, the search as a bordered strip */
+  .hs[data-skin="nuit"] .hs-cover { margin: 0; height: 50%; } .hs[data-skin="nuit"] .hs-search { margin: 0; background: transparent; box-shadow: none; border-top: 1px solid var(--ln); }
+  .hs[data-skin="nuit"] .hs-f label { border: 1px solid var(--ln); padding: .6em; } .hs[data-skin="nuit"] .hs-btn { letter-spacing: .14em; text-transform: uppercase; }
+  .hs[data-skin="nuit"] .hs-room img { height: 9em; }
+  /* Carnet: the headline, a collage of photos, the booking card, the rooms as a list */
+  .hs[data-skin="carnet"] .hs-cover { height: 30%; margin: 0 4% 0; } .hs[data-skin="carnet"] .hs-cv { background: none; place-content: end start; text-align: start; padding: 4%; }
+  .hs[data-skin="carnet"] .hs-cv h4, .hs[data-skin="carnet"] .hs-cv small { display: none; } .hs[data-skin="carnet"] .hs-cv p { display: none; }
+  .hs-hl { display: none; padding: 2% 5% 4%; font-family: var(--hf); font-size: 1.75em; line-height: 1.05; }
+  .hs[data-skin="carnet"] .hs-hl { display: block; }
+  .hs[data-skin="carnet"] .hs-collage { display: grid; grid-template-columns: 1fr 1fr; gap: 2%; margin: 2% 4% 0; height: 13%; } .hs-collage img { width: 100%; height: 100%; object-fit: cover; }
+  .hs[data-skin="carnet"] .hs-search { margin: 4% 4% 0; border: 1px solid var(--ln); box-shadow: none; }
+  .hs[data-skin="carnet"] .hs-f { border: 1px solid var(--ink); gap: 0; } .hs[data-skin="carnet"] .hs-f label { border-bottom: 0; border-inline-end: 1px solid var(--ink); padding: .5em .6em; } .hs[data-skin="carnet"] .hs-f label:last-child { border-inline-end: 0; }
+  .hs[data-skin="carnet"] .hs-room { display: grid; grid-template-columns: 28% 1fr; grid-template-rows: auto auto; border-top: 1px solid var(--ln); background: transparent; margin-bottom: 0; padding: 3% 0; }
+  .hs[data-skin="carnet"] .hs-room img { grid-row: span 2; height: 100%; aspect-ratio: 1; } .hs[data-skin="carnet"] .hs-ri { padding-top: 0; }
+  .hs-chip { position: absolute; display: inline-flex; align-items: center; gap: .5rem; border-radius: 999px; background: #fff; padding: .45rem .9rem .45rem .55rem; font-size: .85rem; font-weight: 700; color: #0B1E33; box-shadow: 0 12px 30px -16px rgba(0, 30, 62, .55); animation: pf-float 6s ease-in-out infinite; }
+  .hs-chip i { width: .7rem; height: .7rem; border-radius: 99px; background: #05B962; }
+  .hs-chip.c1 { top: 12%; inset-inline-start: 0; } .hs-chip.c2 { bottom: 14%; inset-inline-end: 0; animation-delay: 1.5s; }
+  @media (max-width: 640px) { .hs-chip { display: none; } }
+  .hs-ctl { display: grid; gap: 1rem; }
+  .hs-skins { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; }
+  .hs-skins button { display: grid; justify-items: start; gap: .15rem; min-height: 2.75rem; border-radius: 1.1rem; background: #fff; padding: .6rem; text-align: start; box-shadow: 0 0 0 1px #D8DDE3; transition: box-shadow .3s, transform .2s; }
+  .hs-skins button[aria-pressed="true"] { box-shadow: 0 0 0 2px #0B1E33; } .hs-skins button:hover { transform: translateY(-2px); }
+  .hs-skins b { font-size: 1rem; } .hs-skins small { font-size: .78rem; color: #5B6878; line-height: 1.2; }
+  .hs-mini { width: 100%; aspect-ratio: 16 / 8; border-radius: .6rem; margin-bottom: .35rem; background: var(--mb); position: relative; overflow: hidden; }
+  .hs-mini::after { content: ""; position: absolute; inset: 22% 18%; background: var(--mp); }
+  .m-atelier { --mb: #F3F2EA; --mp: linear-gradient(#c9a27a, #6b4f3a); } .m-nuit { --mb: #16130F; --mp: linear-gradient(90deg, #16130F 50%, #8a6a4f 50%); } .m-carnet { --mb: #F2ECE2; --mp: linear-gradient(90deg, #b99b7a 62%, #fff 62%); }
+  .hs-colors { display: flex; align-items: center; gap: .6rem; font-size: .9rem; font-weight: 600; color: #5B6878; }
+  .hs-colors button { width: 2.75rem; height: 2.75rem; border-radius: 99px; box-shadow: inset 0 0 0 3px #fff, 0 0 0 1px #D8DDE3; transition: transform .2s; }
+  .hs-colors button[aria-pressed="true"] { box-shadow: inset 0 0 0 3px #fff, 0 0 0 2px #0B1E33; transform: scale(1.08); }
+  @media (prefers-reduced-motion: reduce) { .hs-p, .hs-tap, .hs-cover img, .hs-chip { transition: none !important; animation: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hs]').forEach((root) => {
+    const skins = ['atelier', 'nuit', 'carnet'];
+    const sb = [...root.querySelectorAll<HTMLButtonElement>('[data-skin-btn]')], cb = [...root.querySelectorAll<HTMLButtonElement>('[data-color]')];
+    const scr = root.querySelector<HTMLElement>('.hs-scr')!, tap = root.querySelector<HTMLElement>('.hs-tap')!;
+    let timers: number[] = [], running = false, pinned = false, k = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const skin = (s: string) => { root.dataset.skin = s; sb.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.skinBtn === s))); };
+    const color = (c: string) => { root.style.setProperty('--b', c); cb.forEach(b => b.setAttribute('aria-pressed', String(b.dataset.color === c))); };
+    const press = (sel: string, then: () => void) => {
+      const el = root.querySelector<HTMLElement>(sel); if (!el) { then(); return; }
+      const a = scr.getBoundingClientRect(), r = el.getBoundingClientRect();
+      tap.style.left = `${((r.left + r.width / 2 - a.left) / a.width) * 100}%`; tap.style.top = `${((r.top + r.height / 2 - a.top) / a.height) * 100}%`;
+      tap.classList.add('on');
+      later(650, () => { tap.classList.remove('hit'); void tap.offsetWidth; tap.classList.add('hit'); el.classList.add('press'); });
+      later(950, () => { el.classList.remove('press'); then(); });
+    };
+    const go = (n: number) => { root.dataset.scr = String(n); };
+    const loop = () => {
+      go(0); root.classList.remove('ext'); tap.classList.remove('on');
+      later(2200, () => press('.p0 .t0', () => go(1)));
+      later(4600, () => press('.p1 .t1', () => go(2)));
+      later(6800, () => press('.p2 .hs-x', () => root.classList.add('ext')));
+      later(8300, () => press('.p2 .t2', () => { go(3); tap.classList.remove('on'); }));
+      later(12000, () => { if (!pinned) { k = (k + 1) % skins.length; skin(skins[k]); } loop(); });
+    };
+    const start = () => { if (running) return; running = true; loop(); };
+    const stop = () => { running = false; timers.forEach(clearTimeout); timers = []; };
+    sb.forEach(b => b.addEventListener('click', () => { pinned = true; k = skins.indexOf(b.dataset.skinBtn!); skin(b.dataset.skinBtn!); }));
+    cb.forEach(b => b.addEventListener('click', () => color(b.dataset.color!)));
+    if (still) { go(1); return; }
+    if (!('IntersectionObserver' in window)) { start(); return; }
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else stop(); }, { threshold: 0.35 }).observe(root);
+  });
+</script>

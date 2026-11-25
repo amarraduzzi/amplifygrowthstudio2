@@ -13,6 +13,7 @@ import CountUp from '../CountUp.astro';
 import HotelHeroBoard from '../HotelHeroBoard.astro';
 import HotelDesk from '../HotelDesk.astro';
 import HotelChannels from '../HotelChannels.astro';
+import HotelSite from '../HotelSite.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -36,6 +37,12 @@ const desk = [
   ['users', tt('Arrivée en deux gestes'), tt('L’identité scannée, la fiche de police remplie toute seule si vous l’utilisez. La chambre passe en Occupée.')],
   ['check', tt('Le ménage suit'), tt('Au départ, la chambre passe en Ménage. Quand elle est propre, la réception le voit sans téléphoner.')],
   ['wallet', tt('La note juste'), tt('Les nuits, les extras, le restaurant et la taxe de séjour sur une note. Le client paie, la chambre se libère.')],
+];
+const site = [
+  ['coins', tt('Sans commission'), tt('Le client réserve chez vous. Pas 15 à 18 % pour une plateforme.')],
+  ['calendar', tt('Le prix de chaque nuit'), tt('Un calendrier avec vos prix du week-end et des saisons. Un seul prix toute l’année ? Ça marche aussi.')],
+  ['gift', tt('Extras et code promo'), tt('Petit-déjeuner, transfert, dîner : le client les ajoute en réservant. Vos codes promo pour les habitués.')],
+  ['shield', tt('Acompte ou confirmation immédiate'), tt('Vous demandez un acompte, ou la chambre est réservée tout de suite. C’est vous qui choisissez.')],
 ];
 const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
 ---
@@ -107,7 +114,22 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
     </div>
   </section>
 
-  <!-- next steps: the website with its three styles, the guest's stay, housekeeping, the money -->
+  <!-- the hotel's own booking site: three styles, the hotel's colour, a guest books by itself -->
+  <section id="site" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+      <div class="tf-x">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Votre site de réservation.')}</span><span class="block text-green-deep">{tt('Trois styles. Votre couleur.')}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-muted">{tt('Vos photos, vos chambres et vos prix sur votre propre site. Vous choisissez le style dans votre espace : Atelier, Nuit ou Carnet. Essayez-les, et regardez un client réserver.')}</p>
+        <ul class="mt-8 grid gap-5 sm:grid-cols-2">
+          {site.map(([ic, h, x], i) => (
+            <li class="tf flex gap-4" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-muted">{x}</span></span></li>))}
+        </ul>
+      </div>
+      <div class="tf" style="--d:120ms"><HotelSite /></div>
+    </div>
+  </section>
+
+  <!-- next steps: the guest's stay, housekeeping, the money -->
 
   <SectorPrices lang={lang} k="hotel" />
 
