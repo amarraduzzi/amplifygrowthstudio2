@@ -1,95 +1,117 @@
 ---
-// The hero of the Hotels page: the reception's planning, played live. Bookings come from Airbnb, Booking.com, the
-// hotel's own site and the desk, fly in and land on the right room and the right nights. The occupancy counts up.
-// It mirrors the real planning of the reception app (rooms down, nights across, one bar per stay, coloured by where
-// the booking came from). It loops while in view. Reduced motion: the full week is shown at once. Demo riad, invented names.
+// The hero of the Hotels page: the Calendar tab of the reception app, played live. It copies the real screen:
+// the dark navy till, the tabs, the rooms grouped by type, the occupancy row, one block per stay coloured by its
+// state (in the hotel, confirmed, waiting) and the legend. Bookings arrive from Airbnb, Booking.com, the hotel's
+// own site and the desk: each one shows where it came from while it lands, then takes the colour of its state.
+// It loops while in view. Reduced motion: the full week is shown at once. Demo riad, invented names.
 import { tr, langOf } from '../i18n/t';
 const lang = langOf(Astro.url);
 const tt = tr(lang);
 const LOC = { fr: 'fr-FR', en: 'en-GB', ar: 'ar-MA-u-nu-latn' }[lang];
-// room, first night (0 = today), nights, source, guest
-const B: [number, number, number, 'site' | 'airbnb' | 'booking' | 'desk', string][] = [
-  [0, 0, 3, 'site', 'Sara B.'], [2, 0, 2, 'booking', 'M. Haddad'], [1, 1, 2, 'airbnb', 'Tom W.'], [3, 2, 4, 'site', 'Fam. Idrissi'],
-  [5, 1, 3, 'desk', 'Karim A.'], [4, 3, 2, 'booking', 'Lucas P.'], [1, 4, 3, 'airbnb', 'Emma R.'], [0, 4, 2, 'booking', 'J. Martin'],
+type Src = 'airbnb' | 'booking' | 'site' | 'desk';
+type St = 'in' | 'ok' | 'wait';
+// room index, first night (0 = today), nights, source, state, guest
+const B: [number, number, number, Src, St, string][] = [
+  [5, 0, 3, 'site', 'in', 'Yassine Alaoui'], [2, 1, 1, 'booking', 'ok', 'Laurent Petit'], [3, 0, 1, 'airbnb', 'in', 'Nadia Chraibi'],
+  [4, 0, 2, 'desk', 'in', 'Fatima Zahra'], [0, 2, 3, 'site', 'ok', 'Sara B.'], [6, 1, 4, 'airbnb', 'ok', 'Emma R.'],
+  [7, 3, 2, 'site', 'wait', 'Lucas P.'], [1, 4, 2, 'booking', 'ok', 'J. Martin'],
 ];
-const ROOMS = ['1', '2', '3', '4', '5', '6'];
-const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
-const SRC = { site: tt('Votre site'), airbnb: 'Airbnb', booking: 'Booking.com', desk: tt('Réception') };
-const total = ROOMS.length * days.length;
+const GROUPS: [string, number[]][] = [[tt('Chambre simple'), [0, 1, 2]], [tt('Chambre double'), [3, 4, 5, 6, 7]]];
+const NUM = ['101', '102', '103', '104', '105', '106', '107', '108'];
+const D = 7;
+const days = Array.from({ length: D }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
+const SRC: Record<Src, string> = { site: tt('Votre site'), airbnb: 'Airbnb', booking: 'Booking.com', desk: tt('Réception') };
+// grid rows: 1 days, 2 occupancy, then each group header and its rooms
+const rowOf: number[] = []; let row = 3;
+for (const [, rooms] of GROUPS) { row++; for (const r of rooms) rowOf[r] = row++; }
+const groupRow: number[] = []; row = 3; for (const [, rooms] of GROUPS) { groupRow.push(row); row += rooms.length + 1; }
+const freeToday = GROUPS.map(([, rooms]) => rooms.filter(r => !B.some(b => b[0] === r && b[1] === 0)).length);
+const now = new Date();
+const hm = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 ---
-<div class="hb" data-hb data-n="0" data-total={total} data-nights={JSON.stringify(B.map(b => b[2]))} dir="ltr" aria-hidden="true">
-  <div class="hb-top">
-    <div>
-      <p class="hb-name">Dar Lina</p>
-      <p class="hb-sub">{tt('Planning')} · {days[0].toLocaleDateString(LOC, { day: 'numeric', month: 'long' })}</p>
-    </div>
-    <div class="hb-occ"><b data-occ>0</b><span>%</span><small>{tt('occupé')}</small></div>
+<div class="hb" data-hb data-rooms={NUM.length} data-b={JSON.stringify(B.map(b => [b[1], b[2]]))} dir="ltr" aria-hidden="true"><div class="hb-in">
+  <div class="hb-bar0">
+    <span class="hb-logo">DL</span>
+    <div class="hb-who"><b>Dar Lina</b><small>{hm} · Karim</small></div>
+    <span class="hb-new">+ {tt('Nouvelle réservation')}</span>
   </div>
-  <div class="hb-src">
-    {(['airbnb', 'booking', 'site', 'desk'] as const).map(k => <span class={`hb-s hb-${k}`}><i></i>{SRC[k]}</span>)}
+  <div class="hb-tabs">
+    {[tt('Aujourd’hui'), tt('Chambres'), tt('Calendrier'), tt('Réservations'), tt('Ménage')].map((x, i) => <span class={i === 2 ? 'on' : ''}>{x}</span>)}
   </div>
-  <div class="hb-grid" style={`--rows:${ROOMS.length}`}>
-    <span class="hb-corner"></span>
-    {days.map((d, i) => <span class={`hb-day ${i === 0 ? 'today' : ''}`} style={`grid-column:${i + 2}`}><b>{d.toLocaleDateString(LOC, { weekday: 'short' }).replace('.', '')}</b>{d.getDate()}</span>)}
-    {ROOMS.map((r, i) => <span class="hb-room" style={`grid-row:${i + 2}`}>{tt('Ch.')} {r}</span>)}
-    {ROOMS.map((_, i) => days.map((__, j) => <span class="hb-cell" style={`grid-row:${i + 2};grid-column:${j + 2}`}></span>))}
-    {B.map(([r, s, n, src, who], k) => (
-      <span class={`hb-bar hb-${src}`} data-k={k} style={`grid-row:${r + 2};grid-column:${s + 2} / span ${n};--fx:${src === 'airbnb' ? -18 : src === 'booking' ? -4 : src === 'site' ? 10 : 22}cqw;--fy:${-(r * 5.5 + 16)}cqw`}>
-        <em>{who}</em>
+  <div class="hb-grid" style={`grid-template-rows: 3em 1.9em repeat(${NUM.length + GROUPS.length}, 2.15em)`}>
+    <span class="hb-c0" style="grid-row:1"></span>
+    {days.map((d, i) => <span class={`hb-day ${i === 0 ? 'today' : ''}`} style={`grid-column:${i + 2};grid-row:1`}><small>{d.toLocaleDateString(LOC, { weekday: 'short' }).replace('.', '')}</small><b>{d.getDate()}</b></span>)}
+    <span class="hb-occl" style="grid-row:2">{tt('Occupation')}</span>
+    {days.map((_, i) => <span class="hb-occ" style={`grid-column:${i + 2};grid-row:2`}><b data-occ={i}>0</b>/{NUM.length}<i data-occb={i}></i></span>)}
+    {GROUPS.map(([name, rooms], g) => <span class="hb-grp" style={`grid-row:${groupRow[g]}`}>{name.toUpperCase()} · {freeToday[g]}/{rooms.length} {tt('libres').toUpperCase()}</span>)}
+    {NUM.map((n, r) => <span class="hb-room" style={`grid-row:${rowOf[r]}`}>{n}</span>)}
+    {NUM.map((_, r) => days.map((__, j) => <span class={`hb-cell ${j === 0 ? 'today' : ''}`} style={`grid-row:${rowOf[r]};grid-column:${j + 2}`}></span>))}
+    {B.map(([r, s, n, src, st, who]) => (
+      <span class={`hb-b st-${st}`} style={`grid-row:${rowOf[r]};grid-column:${s + 2} / span ${n};--fy:${-(rowOf[r] * 2.6 + 4)}em`}>
+        <em>{who}</em><small>{n}{tt('n')}</small>
+        <i class={`hb-src src-${src}`}>{SRC[src]}</i>
       </span>))}
   </div>
-</div>
+  <div class="hb-legend">
+    <span><i class="st-in"></i>{tt('Dans l’hôtel')}</span><span><i class="st-ok"></i>{tt('Confirmée')}</span><span><i class="st-wait"></i>{tt('En attente')}</span>
+  </div>
+</div></div>
 
 <style is:global>
-  .hb { container-type: inline-size; position: relative; background: #FAF8F3; color: #0B1E33; font-family: inherit; padding: 3.6cqw 3.8cqw 4cqw; }
-  .hb-top { display: flex; align-items: flex-end; justify-content: space-between; }
-  .hb-name { font-family: Georgia, 'Times New Roman', serif; font-size: 5cqw; line-height: 1; }
-  .hb-sub { margin-top: 1cqw; font-size: 2.4cqw; color: #6B7482; font-weight: 600; }
-  .hb-occ { display: flex; align-items: baseline; gap: .3cqw; }
-  .hb-occ b { font-size: 7.5cqw; line-height: .9; font-variant-numeric: tabular-nums; color: #00804A; }
-  .hb-occ span { font-size: 3.6cqw; font-weight: 700; color: #00804A; }
-  .hb-occ small { margin-inline-start: .8cqw; font-size: 2.3cqw; color: #6B7482; font-weight: 600; }
-  .hb-src { display: flex; flex-wrap: wrap; gap: 1.2cqw 2.4cqw; margin-top: 2.6cqw; font-size: 2.3cqw; font-weight: 600; color: #3A4656; }
-  .hb-s { display: inline-flex; align-items: center; gap: .8cqw; } .hb-s i { width: 1.6cqw; height: 1.6cqw; border-radius: 99px; background: var(--c); }
-  .hb-airbnb { --c: #FF5A5F; } .hb-booking { --c: #1A4FB4; } .hb-site { --c: #00A35C; } .hb-desk { --c: #0B1E33; }
-  .hb-grid { position: relative; display: grid; grid-template-columns: 8.5cqw repeat(7, minmax(0, 1fr)); grid-template-rows: 7cqw repeat(var(--rows), 7.6cqw); gap: .5cqw; margin-top: 2cqw; }
-  .hb-day { display: grid; place-items: center; align-content: center; font-size: 2.3cqw; line-height: 1.15; color: #6B7482; border-radius: 1cqw; }
-  .hb-day b { font-size: 1.9cqw; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
-  .hb-day.today { background: #0B1E33; color: #fff; }
-  .hb-room { grid-column: 1; display: flex; align-items: center; font-size: 2.3cqw; font-weight: 700; color: #3A4656; }
-  .hb-cell { border-radius: 1cqw; background: #EFEBE2; }
-  .hb-bar { position: relative; z-index: 1; display: flex; align-items: center; min-width: 0; margin: .5cqw .3cqw; padding: 0 1.3cqw; border-radius: 1.4cqw; background: var(--c); color: #fff; box-shadow: 0 1cqw 2cqw -1cqw rgba(11, 30, 51, .45);
-    opacity: 0; transform: translate(var(--fx), var(--fy)) scale(.35); transition: transform .9s cubic-bezier(.2, .85, .25, 1), opacity .35s; }
-  .hb-bar em { font-style: normal; font-size: 2.25cqw; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .hb-bar.on { opacity: 1; transform: none; }
-  .hb-bar.on::after { content: ""; position: absolute; inset: -.4cqw; border-radius: 1.8cqw; border: .35cqw solid var(--c); opacity: 0; animation: hb-ping .9s .75s ease-out; }
-  @keyframes hb-ping { from { opacity: .8; transform: scale(.96); } to { opacity: 0; transform: scale(1.06); } }
-  .hb.out .hb-bar { opacity: 0; transform: scale(.9); transition: opacity .5s, transform .5s; }
-  @media (prefers-reduced-motion: reduce) { .hb-bar { opacity: 1; transform: none; transition: none; } .hb-bar.on::after { display: none; } }
+  .hb { container-type: inline-size; position: relative; background: #0A1931; color: #fff; font-family: inherit; }
+  .hb-in { font-size: 2.05cqw; }
+  .hb-bar0 { display: flex; align-items: center; gap: 1.6em; padding: 1.2em 1.6em; border-bottom: 1px solid rgba(255, 255, 255, .07); }
+  .hb-logo { display: grid; place-items: center; width: 2.6em; height: 2.6em; border-radius: 30%; background: #05B962; color: #0A1931; font-weight: 800; font-size: .85em; }
+  .hb-who b { display: block; font-size: 1.15em; } .hb-who small { color: #8FA3C2; font-size: .8em; }
+  .hb-new { margin-inline-start: auto; border-radius: .6em; background: #05B962; color: #062314; font-weight: 700; padding: .55em .9em; font-size: .85em; }
+  .hb-tabs { display: flex; gap: 1.6em; padding: .2em 1.6em 0; border-bottom: 1px solid rgba(255, 255, 255, .07); font-size: .85em; font-weight: 600; color: #B8C6DC; }
+  .hb-tabs span { padding: .7em .2em; } .hb-tabs .on { color: #fff; box-shadow: inset 0 -2px 0 #05B962; }
+  .hb-grid { position: relative; display: grid; grid-template-columns: 4.2em repeat(7, minmax(0, 1fr)); margin: .9em 1.2em 0; border-radius: .7em; overflow: hidden; background: #0E2140; }
+  .hb-day { display: grid; place-items: center; align-content: center; line-height: 1.1; color: #B8C6DC; border-inline-start: 1px solid rgba(255, 255, 255, .05); }
+  .hb-day small { font-size: .7em; } .hb-day b { font-size: 1.25em; color: #fff; }
+  .hb-day.today { background: #0F3B33; } .hb-day.today small { color: #05B962; }
+  .hb-occl { grid-column: 1; display: flex; align-items: center; padding-inline-start: .6em; font-size: .7em; color: #8FA3C2; border-top: 1px solid rgba(255, 255, 255, .06); }
+  .hb-occ { position: relative; display: flex; align-items: center; justify-content: center; font-size: .75em; color: #8FA3C2; border-top: 1px solid rgba(255, 255, 255, .06); border-inline-start: 1px solid rgba(255, 255, 255, .05); }
+  .hb-occ b { color: #fff; font-variant-numeric: tabular-nums; }
+  .hb-occ i { position: absolute; inset: auto auto 0 8%; height: .18em; width: 0; background: #05B962; transition: width .6s; }
+  .hb-grp { grid-column: 1 / -1; display: flex; align-items: center; gap: .3em; padding-inline-start: .6em; background: #16305A; font-size: .7em; font-weight: 700; letter-spacing: .03em; color: #DDE6F3; }
+  .hb-room { grid-column: 1; display: flex; align-items: center; padding-inline-start: .6em; font-weight: 800; font-size: 1.05em; border-top: 1px solid rgba(255, 255, 255, .05); }
+  .hb-cell { border-top: 1px solid rgba(255, 255, 255, .05); border-inline-start: 1px solid rgba(255, 255, 255, .05); }
+  .hb-cell.today { background: #0F3B33; }
+  .hb-b { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; min-width: 0; margin: .22em .18em; padding: 0 .5em; border-radius: .45em; line-height: 1.05; overflow: hidden;
+    opacity: 0; transform: translateY(var(--fy)) scale(.6); transition: transform .9s cubic-bezier(.2, .85, .25, 1), opacity .3s; }
+  .hb-b em { font-style: normal; font-weight: 700; font-size: .78em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .hb-b small { font-size: .62em; opacity: .75; }
+  .st-in { background: #05B962; color: #052414; } .st-ok { background: #4C6FD6; color: #fff; } .st-wait { background: rgba(243, 166, 50, .18); color: #F8C46A; box-shadow: inset 0 0 0 .14em #F3A632; }
+  .hb-b.st-wait { background: repeating-linear-gradient(135deg, rgba(243, 166, 50, .22) 0 .5em, rgba(243, 166, 50, .1) .5em 1em); }
+  .hb-src { position: absolute; inset: 0; display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: .72em; color: #fff; transition: opacity .4s 1.3s; }
+  .src-airbnb { background: #FF5A5F; } .src-booking { background: #1A4FB4; } .src-site { background: #0BA05A; } .src-desk { background: #334A70; }
+  .hb-b.on { opacity: 1; transform: none; } .hb-b.on .hb-src { opacity: 0; }
+  .hb-legend { display: flex; flex-wrap: wrap; gap: 1.4em; padding: .9em 1.4em 1.1em; font-size: .75em; color: #DDE6F3; }
+  .hb-legend span { display: inline-flex; align-items: center; gap: .5em; } .hb-legend i { width: 1.7em; height: .95em; border-radius: .25em; }
+  .hb.out .hb-b { opacity: 0; transition: opacity .5s; }
+  @media (prefers-reduced-motion: reduce) { .hb-b { opacity: 1; transform: none; transition: none; } .hb-src { display: none; } }
 </style>
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>('[data-hb]').forEach((root) => {
-    const bars = [...root.querySelectorAll<HTMLElement>('.hb-bar')];
-    const occ = root.querySelector<HTMLElement>('[data-occ]')!;
-    const nights = JSON.parse(root.dataset.nights || '[]') as number[];
-    const total = Number(root.dataset.total || 42);
-    let shown = 0, cur = 0, raf = 0, timers: number[] = [], running = false;
-    const count = (to: number) => {
-      cancelAnimationFrame(raf);
-      const from = cur, t0 = performance.now();
-      const step = (t: number) => { const p = Math.min(1, (t - t0) / 700); cur = Math.round(from + (to - from) * p); occ.textContent = String(cur); if (p < 1) raf = requestAnimationFrame(step); };
-      raf = requestAnimationFrame(step);
+    const bars = [...root.querySelectorAll<HTMLElement>('.hb-b')];
+    const B = JSON.parse(root.dataset.b || '[]') as [number, number][];
+    const rooms = Number(root.dataset.rooms || 8);
+    const occ = [...root.querySelectorAll<HTMLElement>('[data-occ]')], occb = [...root.querySelectorAll<HTMLElement>('[data-occb]')];
+    const show = (k: number) => {
+      const per = occ.map((_, d) => B.slice(0, k).filter(([s, n]) => d >= s && d < s + n).length);
+      per.forEach((v, d) => { occ[d].textContent = String(v); occb[d].style.width = `${(v / rooms) * 84}%`; });
     };
-    const pct = (n: number) => Math.round(nights.slice(0, n).reduce((a, b) => a + b, 0) / total * 100);
-    if (still) { bars.forEach(b => b.classList.add('on')); occ.textContent = String(pct(bars.length)); return; }
+    let timers: number[] = [], running = false;
+    if (still) { bars.forEach(b => b.classList.add('on')); show(bars.length); return; }
     const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
     const loop = () => {
-      root.classList.remove('out'); shown = 0; bars.forEach(b => b.classList.remove('on')); cur = 0; occ.textContent = '0';
-      bars.forEach((b, i) => later(500 + i * 650, () => { b.classList.add('on'); shown = i + 1; count(pct(shown)); }));
-      later(500 + bars.length * 650 + 3200, () => { root.classList.add('out'); count(0); });
-      later(500 + bars.length * 650 + 4000, () => { bars.forEach(b => b.classList.remove('on')); loop(); });
+      root.classList.remove('out'); bars.forEach(b => b.classList.remove('on')); show(0);
+      bars.forEach((b, i) => later(600 + i * 700, () => { b.classList.add('on'); show(i + 1); }));
+      const end = 600 + bars.length * 700;
+      later(end + 3600, () => { root.classList.add('out'); show(0); });
+      later(end + 4300, loop);
     };
     const start = () => { if (running) return; running = true; loop(); };
     const stop = () => { running = false; timers.forEach(clearTimeout); timers = []; };

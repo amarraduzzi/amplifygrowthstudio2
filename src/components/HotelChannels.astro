@@ -1,0 +1,126 @@
+---
+// Airbnb, Booking.com and the hotel's own site, played as calendars of one room over two weeks.
+// 1. three calendars that do not know each other; 2. Amplify reads them: one planning; 3. Amplify sends the taken
+// nights back, so each channel closes them; 4. if two bookings still land on the same night, the reception sees it
+// at once and moves one guest to a free room (the conflict banner of the reception app). Steps play by themselves
+// once in view; touching a step or the button stops the tour. Demo riad, invented names.
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const N = 14;
+const LOC = { fr: 'fr-FR', en: 'en-GB', ar: 'ar-MA-u-nu-latn' }[lang];
+const start = new Date(); start.setDate(start.getDate() + 2);
+const day = (i: number) => { const d = new Date(start); d.setDate(d.getDate() + i); return d; };
+type Src = 'airbnb' | 'booking' | 'site';
+const ROWS: { k: Src; name: string; own: [number, number, string][] }[] = [
+  { k: 'airbnb', name: 'Airbnb', own: [[1, 3, 'Tom W.'], [9, 2, 'Lea S.']] },
+  { k: 'booking', name: 'Booking.com', own: [[5, 2, 'J. Martin']] },
+  { k: 'site', name: tt('Votre site'), own: [[11, 3, 'Sara B.']] },
+];
+const all = ROWS.flatMap((r, ri) => r.own.map(([s, n, who]) => ({ s, n, who, k: r.k, ri })));
+const pct = (x: number) => `${(x / N) * 100}%`;
+const STEPS = [tt('Trois calendriers'), tt('Un seul planning'), tt('Chacun est fermé'), tt('Un conflit ?')];
+const conflictDay = day(5).toLocaleDateString(LOC, { day: 'numeric', month: 'long' });
+---
+<div class="hc" data-hc data-p="0">
+  <ol class="hc-steps" role="group" aria-label={tt('Les étapes')}>
+    {STEPS.map((s, i) => <li><button type="button" data-step={i} class={i === 0 ? 'on' : ''}><span dir="ltr">{i + 1}</span>{s}</button></li>)}
+  </ol>
+
+  <div class="hc-board" dir="ltr">
+    <div class="hc-days"><span></span><div>{Array.from({ length: N }, (_, i) => <span class={day(i).getDay() % 6 === 0 || day(i).getDay() === 5 ? 'we' : ''}><b>{day(i).toLocaleDateString(LOC, { weekday: 'narrow' })}</b>{day(i).getDate()}</span>)}</div></div>
+    {ROWS.map((r, ri) => (
+      <div class={`hc-row hc-${r.k}`}>
+        <span class="hc-name"><i></i>{r.name}</span>
+        <div class="hc-track">
+          {r.own.map(([s, n, who]) => <span class="hc-b own" style={`left:${pct(s)};width:${pct(n)}`}><em>{who}</em></span>)}
+          {all.filter(b => b.ri !== ri).map((b, j) => <span class="hc-b shut" style={`left:${pct(b.s)};width:${pct(b.n)};--dl:${j * 90}ms`}><em>{tt('Fermé')}</em></span>)}
+        </div>
+      </div>))}
+    <div class="hc-merge"><span>Amplify</span></div>
+    <div class="hc-row hc-all">
+      <span class="hc-name">{tt('Chambre 102')}</span>
+      <div class="hc-track">
+        {all.map((b, j) => <span class={`hc-b in hc-${b.k}`} style={`left:${pct(b.s)};width:${pct(b.n)};--from:${-(3 - b.ri) * 3.4 - 2.6}rem;--dl:${j * 110}ms`}><em>{b.who}</em></span>)}
+        <span class="hc-b clash hc-airbnb" style={`left:${pct(5)};width:${pct(1)}`}><em>Emma R.</em></span>
+      </div>
+    </div>
+    <div class="hc-row hc-four">
+      <span class="hc-name">{tt('Chambre 104')}</span>
+      <div class="hc-track"><span class="hc-b moved hc-airbnb" style={`left:${pct(5)};width:${pct(1)}`}><em>Emma R.</em></span></div>
+    </div>
+  </div>
+
+  <div class="hc-alert" role="status">
+    <p class="bad"><b>{tt('Deux réservations le même soir')}</b><span>{tt('Chambre 102')} · {conflictDay} · Airbnb + Booking.com</span>
+      <button type="button" data-fix>{tt('Mettre Emma R. en chambre 104')}</button></p>
+    <p class="good"><b>{tt('Réglé')}</b><span>{tt('Emma R. dort en chambre 104. Personne n’a été refusé.')}</span></p>
+  </div>
+</div>
+
+<style is:global>
+  .hc-steps { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; margin-inline: -.25rem; padding: .25rem; }
+  .hc-steps li { flex: none; }
+  .hc-steps button { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.75rem; border-radius: 999px; padding: 0 1rem 0 .4rem; font-weight: 600; color: rgba(255, 255, 255, .7); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .18); transition: background .3s, color .3s; }
+  [dir="rtl"] .hc-steps button { padding: 0 .4rem 0 1rem; }
+  .hc-steps button span { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: rgba(255, 255, 255, .1); font-size: .85rem; }
+  .hc-steps button.on { background: #fff; color: #0B1E33; box-shadow: none; } .hc-steps button.on span { background: #05B962; }
+  .hc-board { margin-top: 1.5rem; border-radius: 1.6rem; background: rgba(255, 255, 255, .06); padding: 1.1rem 1.1rem 1.3rem; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); overflow-x: auto; }
+  .hc-board > * { min-width: 560px; }
+  @media (max-width: 640px) { .hc-days, .hc-row, .hc-merge { grid-template-columns: 5.6rem 1fr !important; } .hc-name { font-size: .8rem; } }
+  .hc-days, .hc-row { display: grid; grid-template-columns: 8.5rem 1fr; align-items: center; gap: .75rem; }
+  .hc-days > div { display: grid; grid-template-columns: repeat(14, 1fr); text-align: center; font-size: .72rem; color: rgba(255, 255, 255, .55); }
+  .hc-days b { display: block; font-size: .62rem; text-transform: uppercase; } .hc-days .we { color: #7BE3A9; }
+  .hc-row { height: 2.6rem; margin-top: .8rem; }
+  .hc-name { display: flex; align-items: center; gap: .5rem; font-size: .9rem; font-weight: 700; color: #fff; white-space: nowrap; }
+  .hc-name i { width: .7rem; height: .7rem; border-radius: 99px; background: var(--c); }
+  .hc-airbnb { --c: #FF5A5F; } .hc-booking { --c: #3B73E0; } .hc-site { --c: #05B962; }
+  .hc-track { position: relative; height: 100%; border-radius: .7rem; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .07) 0 calc(100% / 14 - 2px), transparent calc(100% / 14 - 2px) calc(100% / 14)); }
+  .hc-b { position: absolute; top: .3rem; bottom: .3rem; display: flex; align-items: center; padding: 0 .5rem; border-radius: .55rem; overflow: hidden; font-size: .75rem; font-weight: 700; color: #fff; transition: opacity .5s var(--dl, 0ms), transform .8s cubic-bezier(.2, .85, .25, 1) var(--dl, 0ms); }
+  .hc-b em { font-style: normal; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hc-b.own { background: var(--c); }
+  .hc-b.shut { background: repeating-linear-gradient(135deg, rgba(255, 255, 255, .22) 0 6px, rgba(255, 255, 255, .08) 6px 12px); color: rgba(255, 255, 255, .85); opacity: 0; transform: scaleX(.4); transform-origin: left; }
+  .hc[data-p="2"] .hc-b.shut, .hc[data-p="3"] .hc-b.shut, .hc[data-p="4"] .hc-b.shut { opacity: 1; transform: none; }
+  .hc-merge { display: grid; grid-template-columns: 8.5rem 1fr; gap: .75rem; height: 0; opacity: 0; overflow: hidden; transition: height .5s, opacity .5s, margin .5s; }
+  .hc-merge span { grid-column: 2; display: grid; place-items: center; font-size: .75rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: #7BE3A9; border-top: 1px dashed rgba(123, 227, 169, .5); padding-top: .4rem; }
+  .hc-all, .hc-four { height: 0; margin-top: 0; opacity: 0; transition: height .5s, opacity .5s, margin .5s; }
+  .hc:not([data-p="0"]) .hc-merge { height: 1.8rem; margin-top: .9rem; opacity: 1; }
+  .hc:not([data-p="0"]) .hc-all { height: 2.6rem; margin-top: .5rem; opacity: 1; }
+  .hc[data-p="4"] .hc-four { height: 2.6rem; margin-top: .6rem; opacity: 1; }
+  .hc-all .hc-name, .hc-four .hc-name { color: #7BE3A9; }
+  .hc-b.in { background: var(--c); opacity: 0; transform: translateY(var(--from)) scale(.8); }
+  .hc:not([data-p="0"]) .hc-b.in { opacity: 1; transform: none; }
+  .hc-b.clash { background: var(--c); opacity: 0; transform: translateY(-2.5rem); z-index: 2; box-shadow: 0 0 0 3px #FF3B3B; }
+  .hc[data-p="3"] .hc-b.clash { opacity: 1; transform: translateY(-.9rem); animation: hc-shake .5s .8s 2; }
+  .hc[data-p="4"] .hc-b.clash { opacity: 0; transform: translateY(2rem); }
+  @keyframes hc-shake { 25% { margin-left: -4px; } 75% { margin-left: 4px; } }
+  .hc-b.moved { background: var(--c); opacity: 0; transform: translateY(-2rem); }
+  .hc[data-p="4"] .hc-b.moved { opacity: 1; transform: none; transition-delay: .25s; }
+  .hc-alert { display: grid; margin-top: 1.2rem; }
+  .hc-alert p { grid-area: 1 / 1; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem 1rem; border-radius: 1.2rem; padding: .9rem 1.1rem; opacity: 0; transform: translateY(.6rem); transition: opacity .4s, transform .4s; pointer-events: none; }
+  .hc-alert b { font-size: 1.05rem; } .hc-alert span { font-size: .95rem; opacity: .85; }
+  .hc-alert .bad { background: #FFE4E2; color: #7A1410; } .hc-alert .good { background: #DDF7E8; color: #0B4F2B; }
+  .hc[data-p="3"] .hc-alert .bad, .hc[data-p="4"] .hc-alert .good { opacity: 1; transform: none; pointer-events: auto; }
+  .hc-alert button { margin-inline-start: auto; min-height: 2.75rem; border-radius: 999px; background: #7A1410; color: #fff; padding: 0 1.1rem; font-weight: 700; }
+  @media (prefers-reduced-motion: reduce) { .hc-b, .hc-merge, .hc-all, .hc-four, .hc-alert p { transition: none !important; animation: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hc]').forEach((root) => {
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    let p = 0, timer = 0, auto = false;
+    const go = (n: number) => { p = n; root.dataset.p = String(n); steps.forEach((b, i) => b.classList.toggle('on', i === Math.min(n, 3))); };
+    const stop = () => { auto = false; clearTimeout(timer); };
+    const tick = () => { if (!auto) return; go((p + 1) % 5); timer = window.setTimeout(tick, p === 4 ? 5000 : p === 3 ? 3200 : 3400); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { stop(); go(i); }));
+    root.querySelector('[data-fix]')!.addEventListener('click', () => { stop(); go(4); });
+    if (still) { go(2); return; }
+    if (!('IntersectionObserver' in window)) return;
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; timer = window.setTimeout(tick, 1800); }
+      else if (!e.isIntersecting) stop();
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

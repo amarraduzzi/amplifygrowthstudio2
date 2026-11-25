@@ -1,0 +1,180 @@
+---
+// The reception's day, played live on the tablet: the "Aujourd'hui" screen of the reception app (occupancy tonight,
+// arrivals, departures) above the room board (Libre, Occupée, Ménage, Hors service, as in the app). A clock runs
+// through the day: departures at 11:00 turn rooms to cleaning, housekeeping frees them, guests arrive at 14:00,
+// the evening fills up, and at 23:00 the owner gets the report. Tap an hour to jump, tap a room to open its card.
+// It plays by itself once in view and stops as soon as the visitor touches something. Demo riad, invented names.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+type St = 'free' | 'occupied' | 'cleaning' | 'out';
+// per hour: [status, guest] for each room
+const HOURS = ['08:00', '11:00', '14:00', '18:00', '23:00'];
+const R: { n: string; type: string; steps: [St, string][] }[] = [
+  { n: '101', type: tt('Double'), steps: [['occupied', 'Tom W.'], ['occupied', 'Tom W.'], ['occupied', 'Tom W.'], ['occupied', 'Tom W.'], ['occupied', 'Tom W.']] },
+  { n: '102', type: tt('Suite'), steps: [['occupied', 'M. Haddad'], ['cleaning', ''], ['free', ''], ['occupied', 'Fam. Idrissi'], ['occupied', 'Fam. Idrissi']] },
+  { n: '103', type: tt('Double'), steps: [['free', ''], ['free', ''], ['occupied', 'Sara B.'], ['occupied', 'Sara B.'], ['occupied', 'Sara B.']] },
+  { n: '104', type: tt('Double'), steps: [['occupied', 'Emma R.'], ['occupied', 'Emma R.'], ['occupied', 'Emma R.'], ['occupied', 'Emma R.'], ['occupied', 'Emma R.']] },
+  { n: '105', type: tt('Simple'), steps: [['occupied', 'J. Martin'], ['cleaning', ''], ['cleaning', ''], ['occupied', 'Lucas P.'], ['occupied', 'Lucas P.']] },
+  { n: '106', type: tt('Suite'), steps: [['cleaning', ''], ['free', ''], ['free', ''], ['free', ''], ['free', '']] },
+  { n: '107', type: tt('Double'), steps: [['occupied', 'Karim A.'], ['occupied', 'Karim A.'], ['occupied', 'Karim A.'], ['occupied', 'Karim A.'], ['occupied', 'Karim A.']] },
+  { n: '108', type: tt('Simple'), steps: [['out', ''], ['out', ''], ['out', ''], ['out', ''], ['out', '']] },
+];
+// tonight's occupancy, arrivals and departures still to do, per hour
+const STATS: [number, number, number][] = [[7, 3, 2], [7, 3, 0], [7, 2, 0], [7, 0, 0], [7, 0, 0]];
+const usable = R.filter(r => r.steps[0][0] !== 'out').length;
+const NEWS = [
+  ['calendar', tt('3 arrivées et 2 départs aujourd’hui')],
+  ['wallet', tt('Départ chambre 102 : note payée, 1 450 DH')],
+  ['users', tt('Sara B. arrive : identité scannée, fiche faite')],
+  ['check', tt('Chambre 105 propre, Lucas P. installé')],
+  ['phone', tt('Le rapport du jour part chez le propriétaire')],
+];
+const LABEL: Record<St, string> = { free: tt('Libre'), occupied: tt('Occupée'), cleaning: tt('Ménage'), out: tt('Hors service') };
+---
+<div class="hd" data-hd data-t="0" data-stats={JSON.stringify(STATS)} data-usable={usable}>
+  <div class="hd-tab">
+    <div class="hd-screen" dir="ltr">
+      <div class="hd-top"><span class="hd-logo">DL</span><b>Dar Lina</b><span class="hd-new">+ {tt('Nouvelle arrivée')}</span></div>
+      <div class="hd-tabs">{[tt('Aujourd’hui'), tt('Chambres'), tt('Calendrier'), tt('Réservations'), tt('Ménage')].map((x, i) => <span class={i === 1 ? 'on' : ''}>{x}</span>)}</div>
+      <div class="hd-head">
+        <div><p class="hd-title">{tt('Chambres')}</p><p class="hd-clock"><span data-clock>08:00</span> · Dar Lina</p></div>
+        <div class="hd-stats">
+          <p><b data-occ>{STATS[0][0]}/{usable}</b><span>{tt('Occupation ce soir')}</span></p>
+          <p><b data-arr>{STATS[0][1]}</b><span>{tt('Arrivées')}</span></p>
+          <p><b data-dep>{STATS[0][2]}</b><span>{tt('Départs')}</span></p>
+        </div>
+      </div>
+      <ul class="hd-rooms">
+        {R.map((r, i) => (
+          <li>
+            <button type="button" class="hd-room" data-room={i} data-steps={JSON.stringify(r.steps)} data-s={r.steps[0][0]} aria-label={`${tt('Chambre')} ${r.n}`}>
+              <i class="hd-band"></i>
+              <span class="hd-n">{r.n}</span>
+              <span class="hd-type">{r.type}</span>
+              <span class="hd-st">{(Object.keys(LABEL) as St[]).map(k => <em data-k={k}>{LABEL[k]}</em>)}</span>
+              <span class="hd-guest" data-guest>{r.steps[0][1]}</span>
+            </button>
+          </li>))}
+      </ul>
+      <div class="hd-card" data-card hidden>
+        <button type="button" class="hd-x" data-close aria-label={tt('Fermer')}>×</button>
+        <p class="hd-cn" data-cn></p>
+        <p class="hd-cg" data-cg></p>
+        <p class="hd-cs" data-cs>{tt('3 nuits · note 1 200 DH')}</p>
+        <div class="hd-cb"><span class="k">{tt('Note et départ')}</span><span class="s">{tt('Identité')}</span></div>
+        <p class="hd-ce" data-ce>{tt('Chambre prête pour la prochaine arrivée.')}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="hd-news" aria-live="polite">
+    {NEWS.map(([ic, t], i) => <p data-news={i} class={i === 0 ? 'on' : ''}><span class="hd-ic"><Icon name={ic} class="size-4" /></span>{t}</p>)}
+  </div>
+
+  <div class="hd-hours" role="group" aria-label={tt('Les heures de la journée')}>
+    <i class="hd-line"><i class="hd-fill"></i></i>
+    {HOURS.map((h, i) => <button type="button" data-h={i} class={i === 0 ? 'on' : ''} dir="ltr">{h}</button>)}
+  </div>
+</div>
+
+<style is:global>
+  .hd { position: relative; }
+  .hd-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .55); }
+  .hd-screen { container-type: inline-size; position: relative; overflow: hidden; border-radius: 1.1rem; background: #0A1931; color: #fff; padding: 0 3.4cqw 3.4cqw; }
+  .hd-top { display: flex; align-items: center; gap: 2cqw; margin: 0 -3.4cqw; padding: 2.4cqw 3.4cqw; border-bottom: 1px solid rgba(255, 255, 255, .07); font-size: 2.8cqw; }
+  .hd-logo { display: grid; place-items: center; width: 5.4cqw; height: 5.4cqw; border-radius: 30%; background: #05B962; color: #0A1931; font-weight: 800; font-size: 2cqw; }
+  .hd-new { margin-inline-start: auto; border-radius: 1.2cqw; background: #05B962; color: #062314; font-weight: 700; padding: 1.1cqw 1.8cqw; font-size: 2.1cqw; }
+  .hd-tabs { display: flex; gap: 3.4cqw; margin: 0 -3.4cqw 3cqw; padding: 0 3.4cqw; border-bottom: 1px solid rgba(255, 255, 255, .07); font-size: 2.1cqw; font-weight: 600; color: #B8C6DC; }
+  .hd-tabs span { padding: 1.6cqw .3cqw; } .hd-tabs .on { color: #fff; box-shadow: inset 0 -2px 0 #05B962; }
+  .hd-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2cqw; }
+  .hd-title { font-size: 5.4cqw; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+  .hd-clock { margin-top: 1cqw; font-size: 2.6cqw; font-weight: 600; color: #8FA3C2; } .hd-clock span { color: #fff; font-variant-numeric: tabular-nums; }
+  .hd-stats { display: flex; gap: 1.4cqw; }
+  .hd-stats p { min-width: 15cqw; border-radius: 2cqw; background: #0E2140; padding: 1.6cqw 2cqw; }
+  .hd-stats b { display: block; font-size: 4.6cqw; line-height: 1; font-variant-numeric: tabular-nums; transition: color .3s; }
+  .hd-stats span { display: block; margin-top: .6cqw; font-size: 2cqw; font-weight: 600; color: #8FA3C2; }
+  .hd-stats .bump { animation: hd-bump .5s; } @keyframes hd-bump { 40% { transform: scale(1.15); color: #05B962; } }
+  .hd-rooms { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.6cqw; margin-top: 3cqw; }
+  .hd-room { --c: #05B962; position: relative; display: grid; width: 100%; text-align: start; align-content: start; min-height: 21cqw; overflow: hidden; border-radius: 2.2cqw; background: #0E2140; color: #fff; padding: 2.6cqw 2.2cqw 2cqw; transition: background .5s, transform .2s; cursor: pointer; }
+  .hd-room:hover { transform: translateY(-.4cqw); }
+  .hd-room[data-s="occupied"] { --c: #6E8FF0; } .hd-room[data-s="cleaning"] { --c: #F3A632; } .hd-room[data-s="out"] { --c: #6B7A93; background: #0C1A33; }
+  .hd-room[data-s="cleaning"] { background: #2A2A2A40; box-shadow: inset 0 0 0 .3cqw rgba(243, 166, 50, .5); }
+  .hd-band { position: absolute; inset: 0 0 auto; height: 1.2cqw; background: var(--c); transition: background .5s; }
+  .hd-n { font-size: 5cqw; font-weight: 800; line-height: 1; }
+  .hd-type { font-size: 2cqw; color: #8FA3C2; font-weight: 600; }
+  .hd-st { display: grid; margin-top: 1.6cqw; font-size: 2.3cqw; font-weight: 800; color: var(--c); transition: color .5s; }
+  .hd-st em { grid-area: 1 / 1; font-style: normal; opacity: 0; transform: translateY(.6cqw); transition: opacity .35s, transform .35s; }
+  .hd-room[data-s="free"] em[data-k="free"], .hd-room[data-s="occupied"] em[data-k="occupied"], .hd-room[data-s="cleaning"] em[data-k="cleaning"], .hd-room[data-s="out"] em[data-k="out"] { opacity: 1; transform: none; }
+  .hd-guest { min-height: 3cqw; margin-top: .4cqw; font-size: 2.2cqw; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hd-room.flash::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 .5cqw var(--c); animation: hd-flash 1s ease-out forwards; }
+  @keyframes hd-flash { from { opacity: 1; } to { opacity: 0; } }
+  .hd-card { position: absolute; inset: auto 3.4cqw 3.4cqw; border-radius: 2.6cqw; background: #16305A; color: #fff; padding: 3cqw 3.4cqw; box-shadow: 0 2cqw 5cqw -2cqw rgba(0, 0, 0, .6); animation: hd-up .35s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes hd-up { from { transform: translateY(40%); opacity: 0; } }
+  .hd-x { position: absolute; top: 1.6cqw; inset-inline-end: 2cqw; width: 6cqw; height: 6cqw; font-size: 4.4cqw; line-height: 1; color: #fff; opacity: .7; }
+  .hd-cn { font-size: 2.4cqw; font-weight: 700; color: #7BE3A9; } .hd-cg { margin-top: .6cqw; font-size: 4.4cqw; font-weight: 800; } .hd-cs { margin-top: .4cqw; font-size: 2.4cqw; opacity: .75; }
+  .hd-cb { display: flex; gap: 1.4cqw; margin-top: 2cqw; font-size: 2.4cqw; font-weight: 700; } .hd-cb span { border-radius: 1.6cqw; padding: 1.4cqw 2.4cqw; } .hd-cb .k { background: #05B962; color: #0B1E33; } .hd-cb .s { background: rgba(255, 255, 255, .12); }
+  .hd-ce { margin-top: .6cqw; font-size: 2.6cqw; }
+  .hd-card[data-free] .hd-cs, .hd-card[data-free] .hd-cb, .hd-card[data-free] .hd-cg { display: none; } .hd-card:not([data-free]) .hd-ce { display: none; }
+  .hd-news { position: relative; height: 3.25rem; margin-top: 1.1rem; }
+  .hd-news p { position: absolute; inset: 0 auto auto 0; display: inline-flex; align-items: center; gap: .6rem; max-width: 100%; border-radius: 999px; background: #fff; padding: .4rem 1rem .4rem .4rem; font-size: .95rem; font-weight: 600; color: #0B1E33; box-shadow: 0 10px 30px -18px rgba(0, 30, 62, .6); opacity: 0; transform: translateY(.6rem); transition: opacity .4s, transform .4s; pointer-events: none; }
+  [dir="rtl"] .hd-news p { inset: 0 0 auto auto; padding: .4rem .4rem .4rem 1rem; }
+  .hd-news p.on { opacity: 1; transform: none; }
+  .hd-ic { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 999px; background: #05B962; color: #0B1E33; flex: none; }
+  .hd-hours { position: relative; display: flex; justify-content: space-between; margin-top: 1rem; }
+  .hd-line { position: absolute; inset: 50% 1.4rem auto; height: 3px; transform: translateY(-50%); border-radius: 9px; background: #D8DDE3; }
+  .hd-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 9px; background: #05B962; transition: width .6s cubic-bezier(.4, 0, .2, 1); }
+  [dir="rtl"] .hd-fill { inset: 0 0 0 auto; }
+  .hd-hours button { position: relative; min-height: 2.75rem; min-width: 2.75rem; border-radius: 999px; background: #fff; padding: 0 .9rem; font-size: .9rem; font-weight: 700; color: #536072; box-shadow: 0 0 0 1px #D8DDE3; transition: background .3s, color .3s; font-variant-numeric: tabular-nums; }
+  .hd-hours button.on { background: #0B1E33; color: #fff; box-shadow: none; }
+  @media (max-width: 480px) { .hd-hours button { padding: 0 .55rem; font-size: .8rem; } }
+  @media (prefers-reduced-motion: reduce) { .hd-room, .hd-st em, .hd-news p, .hd-fill, .hd-card { transition: none; animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hd]').forEach((root) => {
+    const rooms = [...root.querySelectorAll<HTMLButtonElement>('.hd-room')];
+    const hours = [...root.querySelectorAll<HTMLButtonElement>('[data-h]')];
+    const news = [...root.querySelectorAll<HTMLElement>('[data-news]')];
+    const stats = JSON.parse(root.dataset.stats || '[]') as [number, number, number][];
+    const usable = Number(root.dataset.usable || 7);
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const card = q<HTMLElement>('[data-card]'), fill = q<HTMLElement>('.hd-fill');
+    let t = 0, timer = 0, auto = false;
+    const set = (el: HTMLElement, v: string) => { if (el.textContent !== v) { el.textContent = v; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); } };
+    const go = (n: number) => {
+      t = n; root.dataset.t = String(n);
+      q<HTMLElement>('[data-clock]').textContent = hours[n].textContent || '';
+      rooms.forEach((r) => {
+        const st = JSON.parse(r.dataset.steps || '[]')[n] as [string, string];
+        if (r.dataset.s !== st[0]) { r.dataset.s = st[0]; r.classList.remove('flash'); void r.offsetWidth; r.classList.add('flash'); }
+        r.querySelector<HTMLElement>('[data-guest]')!.textContent = st[1];
+      });
+      const [o, a, d] = stats[n];
+      set(q('[data-occ]'), `${o}/${usable}`); set(q('[data-arr]'), String(a)); set(q('[data-dep]'), String(d));
+      hours.forEach((h, i) => h.classList.toggle('on', i === n));
+      news.forEach((p, i) => p.classList.toggle('on', i === n));
+      fill.style.width = `${(n / (hours.length - 1)) * 100}%`;
+      card.hidden = true;
+    };
+    const stop = () => { auto = false; clearTimeout(timer); };
+    const tick = () => { if (!auto) return; go((t + 1) % hours.length); timer = window.setTimeout(tick, t === hours.length - 1 ? 4200 : 3000); };
+    hours.forEach((h, i) => h.addEventListener('click', () => { stop(); go(i); }));
+    rooms.forEach((r) => r.addEventListener('click', () => {
+      stop();
+      const st = JSON.parse(r.dataset.steps || '[]')[t] as [string, string];
+      q<HTMLElement>('[data-cn]').textContent = r.getAttribute('aria-label') || '';
+      q<HTMLElement>('[data-cg]').textContent = st[1];
+      if (st[1]) card.removeAttribute('data-free'); else card.setAttribute('data-free', '');
+      card.hidden = false;
+    }));
+    q<HTMLElement>('[data-close]').addEventListener('click', () => { card.hidden = true; });
+    if (still || !('IntersectionObserver' in window)) return;
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; timer = window.setTimeout(tick, 2200); }
+      else if (!e.isIntersecting) stop();
+    }, { threshold: 0.4 }).observe(root);
+  });
+</script>

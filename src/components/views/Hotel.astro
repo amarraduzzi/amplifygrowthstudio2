@@ -11,6 +11,8 @@ import Icon from '../Icon.astro';
 import Device from '../Device.astro';
 import CountUp from '../CountUp.astro';
 import HotelHeroBoard from '../HotelHeroBoard.astro';
+import HotelDesk from '../HotelDesk.astro';
+import HotelChannels from '../HotelChannels.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -28,6 +30,12 @@ const faq = [
   [tt('Mon restaurant utilise déjà Amplify POS.'), tt('Les deux se parlent : le serveur met l’addition sur la chambre, et elle arrive sur la note du client à la réception.')],
   [tt('Qui installe tout ?'), tt('Nous. Vos chambres, vos prix, vos liens Airbnb et Booking, votre équipe, et nous formons la réception. C’est offert.')],
   [tt('Et si j’arrête ?'), tt('Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.')],
+];
+const desk = [
+  ['calendar', tt('Aujourd’hui en un regard'), tt('L’occupation de ce soir, les arrivées et les départs. Ce qui est en retard remonte en premier.')],
+  ['users', tt('Arrivée en deux gestes'), tt('L’identité scannée, la fiche de police remplie toute seule si vous l’utilisez. La chambre passe en Occupée.')],
+  ['check', tt('Le ménage suit'), tt('Au départ, la chambre passe en Ménage. Quand elle est propre, la réception le voit sans téléphoner.')],
+  ['wallet', tt('La note juste'), tt('Les nuits, les extras, le restaurant et la taxe de séjour sur une note. Le client paie, la chambre se libère.')],
 ];
 const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
 ---
@@ -53,11 +61,11 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
         <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
         <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
         <span class="shadow-in absolute start-[8%] top-[80%] h-6 w-[80%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
-        <div class="land absolute start-[5%] top-[13%] w-[90%]" style="--d:300ms">
+        <div class="land absolute start-[5%] top-[12%] w-[90%]" style="--d:300ms">
           <Device w={1200} h={900}><HotelHeroBoard slot="screen" /></Device>
         </div>
-        <div class="absolute start-[4%] top-[3.5%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2600ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#FF5A5F] text-white sm:size-7"><Icon name="calendar" class="size-3.5 sm:size-4" /></span>{tt('Airbnb : chambre 2 bloquée partout')}</p></div></div>
-        <div class="absolute bottom-[5%] end-[4%] z-10"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4200ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>{tt('Chambre 1 : propre, prête à 14:00')}</p></div></div>
+        <div class="absolute start-[4%] top-[3.5%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2600ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#FF5A5F] text-white sm:size-7"><Icon name="calendar" class="size-3.5 sm:size-4" /></span>{tt('Airbnb : chambre 107 bloquée partout')}</p></div></div>
+        <div class="absolute bottom-[5%] end-[4%] z-10"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4200ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>{tt('Chambre 104 : propre, prête à 14:00')}</p></div></div>
         <div class="absolute bottom-[5%] start-[4%] z-10 hidden sm:block"><div class="tf-float" style="--d:2400ms"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:5800ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>{tt('Sara est enregistrée')}</p></div></div>
       </div>
     </div>
@@ -72,7 +80,34 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
     </div>
   </section>
 
-  <!-- next steps: the reception live, the website with its three styles, the guest's stay, housekeeping, the money -->
+  <!-- the reception's day: the room board on the tablet, hour by hour -->
+  <section id="reception" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="grid items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-x-14 lg:gap-y-8">
+      <div class="tf-x lg:col-start-1 lg:row-start-1">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Toute la journée.')}</span><span class="block text-green-deep">{tt('Sur un seul écran.')}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-muted">{tt('La réception voit chaque chambre : libre, occupée, au ménage ou hors service. Touchez une heure pour voir la journée avancer, ou une chambre pour l’ouvrir.')}</p>
+      </div>
+      <div class="tf lg:col-start-2 lg:row-span-2 lg:row-start-1" style="--d:120ms"><HotelDesk /></div>
+      <ul class="grid gap-5 sm:grid-cols-2 lg:col-start-1 lg:row-start-2 lg:grid-cols-1">
+        {desk.map(([ic, h, x], i) => (
+          <li class="tf flex gap-4" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-muted">{x}</span></span></li>))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the channels: three calendars become one, each one closes what the others sold -->
+  <section id="canaux" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Airbnb, Booking, votre site.')}</span><span class="block text-green">{tt('Une nuit vendue une fois.')}</span></h2>
+      <p class="mt-5 max-w-2xl text-lg text-white/75">{tt('Amplify lit les calendriers d’Airbnb et de Booking, et leur renvoie les nuits déjà prises. Vous gardez vos annonces. Si deux réservations tombent quand même sur le même soir, la réception le voit tout de suite et déplace le client.')}</p>
+      <div class="mt-10"><HotelChannels /></div>
+      <p class="mt-4 text-sm text-white/55">{tt('La mise à jour passe par les calendriers des plateformes : elle prend quelques minutes, parfois plus selon Airbnb ou Booking.')}</p>
+    </div>
+  </section>
+
+  <!-- next steps: the website with its three styles, the guest's stay, housekeeping, the money -->
 
   <SectorPrices lang={lang} k="hotel" />
 
