@@ -87,7 +87,8 @@ const TRADES = [
   { k: 'spas', name: 'Spas et instituts', line: 'Les cabines, les soins et les forfaits.', img: '/img/photos/spa-cabine-800.webp', pos: '55% 50%', cls: '' },
   { k: 'pressing', name: 'Pressings', line: 'Une étiquette par pièce, le client prévenu.', img: '/img/nav-pressing.webp', pos: '55% 45%', cls: '' },
   { k: 'hanout', name: 'Hanouts', line: 'Le kridi, la caisse et le stock, sur le téléphone.', img: '/img/photos/hanout-comptoir-800.webp', pos: '62% 45%', cls: '' },
-  { k: 'immobilier', name: 'Immobilier', line: 'Les biens, les visites et les loyers.', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%', cls: 'col-span-2' },
+  { k: 'hotel', name: 'Hôtels et riads', line: 'La réception, Airbnb et Booking, le ménage.', img: '/img/photos/hotel-patio-800.webp', pos: '50% 55%', cls: '' },
+  { k: 'immobilier', name: 'Immobilier', line: 'Les biens, les visites et les loyers.', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%', cls: '' },
 ] as const;
 const trades = TRADES.map(x => ({ ...x, href: ROUTES[x.k][lang] }));
 // the hero's trade picker: each card previews its trade in the scene on the right (hover, focus, or the auto tour)

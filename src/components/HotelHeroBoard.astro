@@ -1,0 +1,99 @@
+---
+// The hero of the Hotels page: the reception's planning, played live. Bookings come from Airbnb, Booking.com, the
+// hotel's own site and the desk, fly in and land on the right room and the right nights. The occupancy counts up.
+// It mirrors the real planning of the reception app (rooms down, nights across, one bar per stay, coloured by where
+// the booking came from). It loops while in view. Reduced motion: the full week is shown at once. Demo riad, invented names.
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const LOC = { fr: 'fr-FR', en: 'en-GB', ar: 'ar-MA-u-nu-latn' }[lang];
+// room, first night (0 = today), nights, source, guest
+const B: [number, number, number, 'site' | 'airbnb' | 'booking' | 'desk', string][] = [
+  [0, 0, 3, 'site', 'Sara B.'], [2, 0, 2, 'booking', 'M. Haddad'], [1, 1, 2, 'airbnb', 'Tom W.'], [3, 2, 4, 'site', 'Fam. Idrissi'],
+  [5, 1, 3, 'desk', 'Karim A.'], [4, 3, 2, 'booking', 'Lucas P.'], [1, 4, 3, 'airbnb', 'Emma R.'], [0, 4, 2, 'booking', 'J. Martin'],
+];
+const ROOMS = ['1', '2', '3', '4', '5', '6'];
+const days = Array.from({ length: 7 }, (_, i) => { const d = new Date(); d.setDate(d.getDate() + i); return d; });
+const SRC = { site: tt('Votre site'), airbnb: 'Airbnb', booking: 'Booking.com', desk: tt('Réception') };
+const total = ROOMS.length * days.length;
+---
+<div class="hb" data-hb data-n="0" data-total={total} data-nights={JSON.stringify(B.map(b => b[2]))} dir="ltr" aria-hidden="true">
+  <div class="hb-top">
+    <div>
+      <p class="hb-name">Dar Lina</p>
+      <p class="hb-sub">{tt('Planning')} · {days[0].toLocaleDateString(LOC, { day: 'numeric', month: 'long' })}</p>
+    </div>
+    <div class="hb-occ"><b data-occ>0</b><span>%</span><small>{tt('occupé')}</small></div>
+  </div>
+  <div class="hb-src">
+    {(['airbnb', 'booking', 'site', 'desk'] as const).map(k => <span class={`hb-s hb-${k}`}><i></i>{SRC[k]}</span>)}
+  </div>
+  <div class="hb-grid" style={`--rows:${ROOMS.length}`}>
+    <span class="hb-corner"></span>
+    {days.map((d, i) => <span class={`hb-day ${i === 0 ? 'today' : ''}`} style={`grid-column:${i + 2}`}><b>{d.toLocaleDateString(LOC, { weekday: 'short' }).replace('.', '')}</b>{d.getDate()}</span>)}
+    {ROOMS.map((r, i) => <span class="hb-room" style={`grid-row:${i + 2}`}>{tt('Ch.')} {r}</span>)}
+    {ROOMS.map((_, i) => days.map((__, j) => <span class="hb-cell" style={`grid-row:${i + 2};grid-column:${j + 2}`}></span>))}
+    {B.map(([r, s, n, src, who], k) => (
+      <span class={`hb-bar hb-${src}`} data-k={k} style={`grid-row:${r + 2};grid-column:${s + 2} / span ${n};--fx:${src === 'airbnb' ? -18 : src === 'booking' ? -4 : src === 'site' ? 10 : 22}cqw;--fy:${-(r * 5.5 + 16)}cqw`}>
+        <em>{who}</em>
+      </span>))}
+  </div>
+</div>
+
+<style is:global>
+  .hb { container-type: inline-size; position: relative; background: #FAF8F3; color: #0B1E33; font-family: inherit; padding: 3.6cqw 3.8cqw 4cqw; }
+  .hb-top { display: flex; align-items: flex-end; justify-content: space-between; }
+  .hb-name { font-family: Georgia, 'Times New Roman', serif; font-size: 5cqw; line-height: 1; }
+  .hb-sub { margin-top: 1cqw; font-size: 2.4cqw; color: #6B7482; font-weight: 600; }
+  .hb-occ { display: flex; align-items: baseline; gap: .3cqw; }
+  .hb-occ b { font-size: 7.5cqw; line-height: .9; font-variant-numeric: tabular-nums; color: #00804A; }
+  .hb-occ span { font-size: 3.6cqw; font-weight: 700; color: #00804A; }
+  .hb-occ small { margin-inline-start: .8cqw; font-size: 2.3cqw; color: #6B7482; font-weight: 600; }
+  .hb-src { display: flex; flex-wrap: wrap; gap: 1.2cqw 2.4cqw; margin-top: 2.6cqw; font-size: 2.3cqw; font-weight: 600; color: #3A4656; }
+  .hb-s { display: inline-flex; align-items: center; gap: .8cqw; } .hb-s i { width: 1.6cqw; height: 1.6cqw; border-radius: 99px; background: var(--c); }
+  .hb-airbnb { --c: #FF5A5F; } .hb-booking { --c: #1A4FB4; } .hb-site { --c: #00A35C; } .hb-desk { --c: #0B1E33; }
+  .hb-grid { position: relative; display: grid; grid-template-columns: 8.5cqw repeat(7, minmax(0, 1fr)); grid-template-rows: 7cqw repeat(var(--rows), 7.6cqw); gap: .5cqw; margin-top: 2cqw; }
+  .hb-day { display: grid; place-items: center; align-content: center; font-size: 2.3cqw; line-height: 1.15; color: #6B7482; border-radius: 1cqw; }
+  .hb-day b { font-size: 1.9cqw; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+  .hb-day.today { background: #0B1E33; color: #fff; }
+  .hb-room { grid-column: 1; display: flex; align-items: center; font-size: 2.3cqw; font-weight: 700; color: #3A4656; }
+  .hb-cell { border-radius: 1cqw; background: #EFEBE2; }
+  .hb-bar { position: relative; z-index: 1; display: flex; align-items: center; min-width: 0; margin: .5cqw .3cqw; padding: 0 1.3cqw; border-radius: 1.4cqw; background: var(--c); color: #fff; box-shadow: 0 1cqw 2cqw -1cqw rgba(11, 30, 51, .45);
+    opacity: 0; transform: translate(var(--fx), var(--fy)) scale(.35); transition: transform .9s cubic-bezier(.2, .85, .25, 1), opacity .35s; }
+  .hb-bar em { font-style: normal; font-size: 2.25cqw; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hb-bar.on { opacity: 1; transform: none; }
+  .hb-bar.on::after { content: ""; position: absolute; inset: -.4cqw; border-radius: 1.8cqw; border: .35cqw solid var(--c); opacity: 0; animation: hb-ping .9s .75s ease-out; }
+  @keyframes hb-ping { from { opacity: .8; transform: scale(.96); } to { opacity: 0; transform: scale(1.06); } }
+  .hb.out .hb-bar { opacity: 0; transform: scale(.9); transition: opacity .5s, transform .5s; }
+  @media (prefers-reduced-motion: reduce) { .hb-bar { opacity: 1; transform: none; transition: none; } .hb-bar.on::after { display: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hb]').forEach((root) => {
+    const bars = [...root.querySelectorAll<HTMLElement>('.hb-bar')];
+    const occ = root.querySelector<HTMLElement>('[data-occ]')!;
+    const nights = JSON.parse(root.dataset.nights || '[]') as number[];
+    const total = Number(root.dataset.total || 42);
+    let shown = 0, cur = 0, raf = 0, timers: number[] = [], running = false;
+    const count = (to: number) => {
+      cancelAnimationFrame(raf);
+      const from = cur, t0 = performance.now();
+      const step = (t: number) => { const p = Math.min(1, (t - t0) / 700); cur = Math.round(from + (to - from) * p); occ.textContent = String(cur); if (p < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    };
+    const pct = (n: number) => Math.round(nights.slice(0, n).reduce((a, b) => a + b, 0) / total * 100);
+    if (still) { bars.forEach(b => b.classList.add('on')); occ.textContent = String(pct(bars.length)); return; }
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const loop = () => {
+      root.classList.remove('out'); shown = 0; bars.forEach(b => b.classList.remove('on')); cur = 0; occ.textContent = '0';
+      bars.forEach((b, i) => later(500 + i * 650, () => { b.classList.add('on'); shown = i + 1; count(pct(shown)); }));
+      later(500 + bars.length * 650 + 3200, () => { root.classList.add('out'); count(0); });
+      later(500 + bars.length * 650 + 4000, () => { bars.forEach(b => b.classList.remove('on')); loop(); });
+    };
+    const start = () => { if (running) return; running = true; loop(); };
+    const stop = () => { running = false; timers.forEach(clearTimeout); timers = []; };
+    if (!('IntersectionObserver' in window)) { start(); return; }
+    new IntersectionObserver(([e]) => { if (e.isIntersecting) start(); else stop(); }, { threshold: 0.3 }).observe(root);
+  });
+</script>

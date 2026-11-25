@@ -23,6 +23,11 @@ export function metiers(tt: Tt): Metier[] {
       { id: 'depots', name: 'Dépôts', n: SECTOR.pressing.entry, text: 'Du dépôt au retrait : étiquettes, liste de prix, ticket, retards et caisse du jour.' },
       { id: 'complet', name: 'Complet', n: SECTOR.pressing.full, text: 'Plus WhatsApp automatique, ramassage et livraison, crédit client, comptes pro et rapport du gérant.' },
     ] },
+    { key: 'hotel', name: 'Amplify Hotel', text: 'La réception, Airbnb et Booking, le site de réservation, le ménage et la page du client.', icon: 'door', plans: [
+      { name: 'Riad', n: SECTOR.hotel.riad, text: tt('Jusqu’à {n} chambres. Tout Amplify Hotel est inclus.').replace('{n}', String(SECTOR.hotel.riadRooms)) },
+      { name: 'Hôtel', n: SECTOR.hotel.hotel, text: tt('Jusqu’à {n} chambres. Tout Amplify Hotel est inclus.').replace('{n}', String(SECTOR.hotel.hotelRooms)) },
+      { name: 'Grand hôtel', n: SECTOR.hotel.grand, text: tt('Plus de {n} chambres. Tout Amplify Hotel est inclus.').replace('{n}', String(SECTOR.hotel.hotelRooms)) },
+    ] },
     { key: 'garage', signup: 'garage', name: 'Amplify Garage', text: 'Les devis, les ordres de réparation et le rappel de vidange.', icon: 'check', plans: [
       { id: 'atelier', name: 'Atelier', n: SECTOR.garage.entry, text: 'De la réception à la remise : devis sur WhatsApp, fiche voiture, caisse de l’atelier et équipe.' },
       { id: 'atelier_rappels', name: 'Atelier + rappels', n: SECTOR.garage.full, text: 'Plus les rappels par date et par kilométrage, avec le WhatsApp déjà écrit.' },

@@ -1,0 +1,107 @@
+---
+// Hotels page (Amplify Hotel): hotels, riads and guest houses. Linked from the home trades and the footer.
+// Same look as the Pressing page: a live hero, then one live demo per part of the hotel's day, the prices, the FAQ.
+// Built in steps; every demo copies the real screens of the reception app. Demo riad "Dar Lina", invented names.
+// No clients, reviews or results are claimed.
+import Base from '../../layouts/Base.astro';
+import Faq from '../Faq.astro';
+import SectorPrices from '../SectorPrices.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import Device from '../Device.astro';
+import CountUp from '../CountUp.astro';
+import HotelHeroBoard from '../HotelHeroBoard.astro';
+import { tr } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { faqSchema, serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const title = tt('Logiciel pour hôtels et riads au Maroc : réception, Airbnb, Booking et site | Amplify');
+const description = tt('Amplify Hotel : le planning des chambres, Airbnb et Booking synchronisés, votre site de réservation sans commission, l’arrivée en ligne, le ménage, la caisse de la réception et le rapport du propriétaire.');
+const wa = tt('Bonjour, je voudrais voir Amplify Hotel pour mon établissement.');
+const faq = [
+  [tt('Je dois quitter Airbnb ou Booking ?'), tt('Non. Vous gardez vos annonces. Amplify lit leurs calendriers et leur envoie les chambres prises, pour éviter les doubles réservations. Les réservations de votre site passent sans commission.')],
+  [tt('Ça marche pour un riad de 5 chambres ?'), tt('Oui. Tout est facultatif : la fiche de police, la taxe de séjour, les prix par saison ou l’acompte. Vous allumez ce qui vous sert, le reste ne vous gêne pas.')],
+  [tt('Il me faut quel matériel ?'), tt('Une tablette ou un ordinateur à la réception, et le téléphone de chaque membre de l’équipe. Rien à installer pour vos clients.')],
+  [tt('Mes clients doivent-ils installer une application ?'), tt('Non. Ils reçoivent un lien sur WhatsApp : arrivée en ligne, wifi, commandes, messages à la réception et leur note.')],
+  [tt('Mon restaurant utilise déjà Amplify POS.'), tt('Les deux se parlent : le serveur met l’addition sur la chambre, et elle arrive sur la note du client à la réception.')],
+  [tt('Qui installe tout ?'), tt('Nous. Vos chambres, vos prix, vos liens Airbnb et Booking, votre équipe, et nous formons la réception. C’est offert.')],
+  [tt('Et si j’arrête ?'), tt('Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.')],
+];
+const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="hotel" title={title} description={description} wa={wa} schema={schema}>
+  <!-- hero: the bookings of every channel land on one planning -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-12 lg:pb-14">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="size-2 rounded-full bg-green"></span>{tt('Hôtels, riads et maisons d’hôtes')}</p>
+        <h1 class="mt-5 text-[clamp(2.8rem,5.8vw,5rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Une réception.')}</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">{tt('Pour tout l’hôtel.')}<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('Airbnb, Booking, votre site et la réception sur un seul planning. Le client arrive enregistré, la chambre est prête, la note est juste. Et vous voyez tout depuis votre téléphone.')}</p>
+        <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Demander une démo')} where="hotel-hero" class="px-7 text-lg" />
+          <a href="#tarifs" class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold ring-1 ring-line hover:bg-paper">{tt('Voir les tarifs')}</a>
+        </div>
+      </div>
+
+      <div class="relative isolate aspect-[4/3.6] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.6] lg:rounded-[2.25rem]">
+        <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+        <span class="shadow-in absolute start-[8%] top-[80%] h-6 w-[80%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+        <div class="land absolute start-[5%] top-[13%] w-[90%]" style="--d:300ms">
+          <Device w={1200} h={900}><HotelHeroBoard slot="screen" /></Device>
+        </div>
+        <div class="absolute start-[4%] top-[3.5%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2600ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#FF5A5F] text-white sm:size-7"><Icon name="calendar" class="size-3.5 sm:size-4" /></span>{tt('Airbnb : chambre 2 bloquée partout')}</p></div></div>
+        <div class="absolute bottom-[5%] end-[4%] z-10"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4200ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>{tt('Chambre 1 : propre, prête à 14:00')}</p></div></div>
+        <div class="absolute bottom-[5%] start-[4%] z-10 hidden sm:block"><div class="tf-float" style="--d:2400ms"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:5800ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>{tt('Sara est enregistrée')}</p></div></div>
+      </div>
+    </div>
+
+    <!-- three facts -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['1', tt('planning pour Airbnb, Booking, votre site et la réception')], ['0', tt('commission sur les réservations de votre site')], ['14', tt('jours gratuits, sans engagement')]].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- next steps: the reception live, the website with its three styles, the guest's stay, housekeeping, the money -->
+
+  <SectorPrices lang={lang} k="hotel" />
+
+  <Faq lang={lang} items={faq} wa={wa} />
+
+  <!-- final -->
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <img src="/img/photos/hotel-cour-1376.webp" alt="" width="1200" height="896" loading="lazy" decoding="async" class="pointer-events-none absolute inset-y-0 end-0 -z-20 hidden h-full w-1/2 object-cover opacity-40 [mask-image:linear-gradient(to_left,#000_40%,transparent)] md:block" />
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Voyez-le avec vos chambres.')}</span><span class="block text-green">{tt('En 15 minutes.')}</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Écrivez-nous sur WhatsApp. Nous mettons vos chambres, vos prix et vos liens Airbnb et Booking, nous formons la réception, et vous essayez 14 jours gratuitement.')}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <WaButton text={wa} label={tt('Demander une démo')} where="hotel-final" class="px-8 text-lg" />
+        <a href={ROUTES.immoStay[lang]} class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold text-white ring-1 ring-white/25 hover:bg-white/10">{tt('Vous louez des appartements ?')}</a>
+      </div>
+    </div>
+  </section>
+  <CountUp />
+</Base>
+
+<script>
+  // sections reveal as they scroll in
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];
+  if (still || !('IntersectionObserver' in window)) roots.forEach((r) => r.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
+    roots.forEach((r) => io.observe(r));
+  }
+</script>

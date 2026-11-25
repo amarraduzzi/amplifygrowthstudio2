@@ -106,6 +106,8 @@ export const SECTOR = {
   immobilier: { agency: 299, agencyMembers: 5, agencyProperties: 100, syndic: 199, syndicLots: 150, promoter: 399, promoterProjects: 2 },
   /** Amplify Livraison: monthly, same ladder as the services à la carte. Drivers: nothing published yet. */
   livraison: { monthly: 100, setup: 250, perDelivery: 4 },
+  /** Amplify Hotel: by size. Riad up to riadRooms rooms, Hôtel up to hotelRooms, Grand hôtel above. Everything included in each. */
+  hotel: { riad: 299, hotel: 499, grand: 799, riadRooms: 10, hotelRooms: 30 },
   /** One-off setup for Pressing, Garage and Hanout (moving the client list and history) */
   setup: 490,
 };
