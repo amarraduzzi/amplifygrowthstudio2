@@ -33,6 +33,7 @@ Page: [Logiciel de caisse et de production pour pâtisserie](https://www.amplify
 - [Spas and institutes](https://www.amplifygrowthstudio.com/spas/)
 - [Dry cleaners](https://www.amplifygrowthstudio.com/pressing/): one label per item, client notified
 - [Corner shops (hanouts)](https://www.amplifygrowthstudio.com/hanout/): credit book (kridi), till and stock on the phone
+- [Hotels, riads and guest houses (Amplify Hotel)](https://www.amplifygrowthstudio.com/hotels/): room planning, Airbnb and Booking sync (iCal or Beds24), booking site without commission, online check-in, passport scan, housekeeping, cash control and owner report
 - [Garages](https://www.amplifygrowthstudio.com/garages/)
 - [Real estate](https://www.amplifygrowthstudio.com/immobilier/)
 - [Delivery without commission](https://www.amplifygrowthstudio.com/livraison/)

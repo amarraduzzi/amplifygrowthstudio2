@@ -18,6 +18,8 @@ import HotelGuest from '../HotelGuest.astro';
 import HotelWatch from '../HotelWatch.astro';
 import HotelClean from '../HotelClean.astro';
 import HotelBill from '../HotelBill.astro';
+import HotelFit from '../HotelFit.astro';
+import Related from '../Related.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -34,6 +36,9 @@ const faq = [
   [tt('Il me faut quel matériel ?'), tt('Une tablette ou un ordinateur à la réception, et le téléphone de chaque membre de l’équipe. Rien à installer pour vos clients.')],
   [tt('Mes clients doivent-ils installer une application ?'), tt('Non. Ils reçoivent un lien sur WhatsApp : arrivée en ligne, wifi, commandes, messages à la réception et leur note.')],
   [tt('Mon restaurant utilise déjà Amplify POS.'), tt('Les deux se parlent : le serveur met l’addition sur la chambre, et elle arrive sur la note du client à la réception.')],
+  [tt('Les photos de passeport partent-elles quelque part ?'), tt('Non. La lecture du passeport ou de la CIN se fait sur la tablette de la réception. La photo reste dans votre compte Amplify, avec la fiche du client.')],
+  [tt('Je peux suivre l’hôtel sans y être ?'), tt('Oui. Sur votre téléphone : l’occupation, l’argent encaissé, les écarts de caisse et le bilan du soir à l’heure que vous choisissez.')],
+  [tt('En quelles langues ?'), tt('La réception, le ménage et la page du client sont en français, en arabe et en anglais. Chacun choisit sa langue.')],
   [tt('Qui installe tout ?'), tt('Nous. Vos chambres, vos prix, vos liens Airbnb et Booking, votre équipe, et nous formons la réception. C’est offert.')],
   [tt('Et si j’arrête ?'), tt('Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.')],
 ];
@@ -73,9 +78,21 @@ const money = [
   ['wallet', tt('La caisse de la réception'), tt('Espèces, carte et virement. Chaque remise de caisse est comptée, avec le nom de l’employé.')],
   ['chart', tt('Le rapport du propriétaire'), tt('Occupation, prix moyen, revenu par chambre et par canal, sur le mois ou l’année.')],
 ];
+const toc = [
+  { id: 'pour-qui', label: tt('Pour qui') },
+  { id: 'reception', label: tt('La réception') },
+  { id: 'canaux', label: tt('Airbnb et Booking') },
+  { id: 'site', label: tt('Votre site') },
+  { id: 'sejour', label: tt('Le client') },
+  { id: 'controle', label: tt('Le contrôle') },
+  { id: 'menage', label: tt('Le ménage') },
+  { id: 'argent', label: tt('L’argent') },
+  { id: 'tarifs', label: tt('Tarifs') },
+  { id: 'faq', label: 'FAQ' },
+];
 const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
 ---
-<Base lang={lang} page="hotel" title={title} description={description} wa={wa} schema={schema}>
+<Base lang={lang} page="hotel" title={title} description={description} wa={wa} schema={schema} toc={toc} image="/img/photos/hotel-patio-1376.webp">
   <!-- hero: the bookings of every channel land on one planning -->
   <section class="relative">
     <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-12 lg:pb-14">
@@ -115,6 +132,8 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
       </ul>
     </div>
   </section>
+
+  <HotelFit lang={lang} />
 
   <!-- the reception's day: the room board on the tablet, hour by hour -->
   <section id="reception" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
@@ -251,6 +270,7 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
       </div>
     </div>
   </section>
+  <Related links={[[tt('Amplify Site : votre site à votre nom'), ROUTES.site[lang]], [tt('Location courte durée'), ROUTES.immoStay[lang]], [tt('Caisse pour restaurants'), ROUTES.restaurants[lang]], [tt('Tous nos systèmes'), ROUTES.systems[lang]], [tt('Tarifs'), ROUTES.pricing[lang]]]} />
   <CountUp />
 </Base>
 
