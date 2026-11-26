@@ -1,0 +1,246 @@
+---
+// Reception and consent, played live. Left, the practice's tablet; right, the patient's phone (the "Atelier" patient pages).
+// 1) he scans the QR at the desk and lands in the waiting room, 2) he answers the medical questionnaire (the allergy
+// turns red on the tablet), 3) he reads the consent and signs with his finger (the signature draws itself),
+// 4) everything is already in the file. Tap a step to jump. Plays by itself once in view, stops when touched.
+// Demo practice, invented names.
+import Device from './Device.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const STEPS = [tt('Le QR'), tt('Le questionnaire'), tt('La signature'), tt('Dans le dossier')];
+// a fixed 21 x 21 pattern that looks like a QR code (three finder squares plus a pseudo-random fill)
+const N = 21, cells: [number, number][] = [];
+const finder = (x: number, y: number) => x < 7 && y < 7 || x > 13 && y < 7 || x < 7 && y > 13;
+for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+  if (finder(x, y)) {
+    const fx = x > 13 ? x - 14 : x, fy = y > 13 ? y - 14 : y;
+    const edge = fx === 0 || fx === 6 || fy === 0 || fy === 6, core = fx >= 2 && fx <= 4 && fy >= 2 && fy <= 4;
+    if (edge || core) cells.push([x, y]);
+  } else if (((x * 7 + y * 13 + x * y * 3) % 5) < 2) cells.push([x, y]);
+}
+const SIGN = 'M6 62 C 16 18, 30 14, 34 46 S 48 74, 60 36 S 80 22, 86 50 C 92 70, 108 38, 124 46 L 150 40';
+---
+<div class="dqk" data-dqk data-s="0">
+  <div class="dqk-grid">
+    <!-- the practice's tablet -->
+    <div class="dqk-tab">
+      <div class="dqk-scr" dir="ltr">
+        <!-- 0: the QR at the desk -->
+        <section class="dqk-t" data-t="0">
+          <div class="dqk-qrbox">
+            <svg viewBox={`0 0 ${N} ${N}`} shape-rendering="crispEdges" aria-hidden="true"><rect width={N} height={N} fill="#fff" />{cells.map(([x, y]) => <rect x={x} y={y} width="1" height="1" fill="#0B1E33" />)}</svg>
+            <i class="dqk-beam"></i>
+          </div>
+          <div class="dqk-txt">
+            <p class="dqk-k">{tt('Accueil')} · Cabinet Dr Alami</p>
+            <p class="dqk-h">{tt('Scannez pour vous annoncer')}</p>
+            <p class="dqk-s">{tt('Sans application, sans file au comptoir.')}</p>
+          </div>
+        </section>
+        <!-- 1: the waiting room, with the new arrival -->
+        <section class="dqk-t dqk-list" data-t="1">
+          <p class="dqk-k">{tt('Salle d’attente')}</p>
+          <ul>
+            <li><span class="dqk-av">M</span><span class="dqk-who"><b>Mehdi B.</b><small>{tt('Consultation')}</small></span><span class="dqk-min">12 min</span></li>
+            <li class="dqk-new"><span class="dqk-av dqk-av2">S</span><span class="dqk-who"><b>Sara L.</b><small data-state><em data-st="0">{tt('Arrivée par QR')}</em><em data-st="1">{tt('Questionnaire reçu')}</em></small></span><span class="dqk-qr">QR</span></li>
+          </ul>
+          <p class="dqk-alert" data-alert><i></i>{tt('Allergie pénicilline')}</p>
+        </section>
+        <!-- 2: the consent waiting for the signature -->
+        <section class="dqk-t dqk-doc" data-t="2">
+          <p class="dqk-k">{tt('Consentement')} · Sara L.</p>
+          <div class="dqk-paper">
+            <b>{tt('Extraction de la dent 47')}</b>
+            <i></i><i></i><i class="s"></i>
+            <svg viewBox="0 0 160 80" aria-hidden="true"><path d={SIGN} pathLength="1" /></svg>
+            <span class="dqk-signed">✓ {tt('Signé')}</span>
+          </div>
+        </section>
+        <!-- 3: the file, already complete -->
+        <section class="dqk-t dqk-fiche" data-t="3">
+          <div class="dqk-fh"><span class="dqk-av dqk-av2">S</span><b>Sara Lahlou</b><span class="dqk-chip">{tt('Allergie pénicilline')}</span></div>
+          <ul>
+            <li><i>✓</i>{tt('Questionnaire reçu')}</li>
+            <li><i>✓</i>{tt('Consentement signé')}</li>
+            <li><i>✓</i>{tt('Rangé dans le dossier')}</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <!-- the patient's phone -->
+    <div class="dqk-phone">
+      <Device kind="phone" w={390} h={820} screenBg="#f4eee5">
+        <div slot="screen" class="dqk-ps" dir="ltr">
+          <!-- 0: scanning -->
+          <section class="dqk-v dqk-cam" data-v="0">
+            <p class="dqk-k2">{tt('Scannez le QR de l’accueil')}</p>
+            <div class="dqk-vf"><b></b><svg viewBox={`0 0 ${N} ${N}`} shape-rendering="crispEdges" aria-hidden="true"><rect width={N} height={N} fill="#fff" />{cells.map(([x, y]) => <rect x={x} y={y} width="1" height="1" fill="#0B1E33" />)}</svg><i></i></div>
+            <p class="dqk-hello dqk-serif">{tt('Bienvenue')} <em>Sara.</em></p>
+          </section>
+          <!-- 1: the questionnaire -->
+          <section class="dqk-v" data-v="1">
+            <p class="dqk-k2">{tt('Questionnaire médical')}</p>
+            <p class="dqk-serif dqk-h2">{tt('Quelques')} <em>{tt('questions')}</em></p>
+            <ul class="dqk-qs">
+              <li data-q="y"><span>{tt('Allergie à la pénicilline ?')}</span><span class="dqk-yn"><b class="y">{tt('Oui')}</b><b class="n">{tt('Non')}</b></span></li>
+              <li data-q="n"><span>{tt('Prenez-vous des anticoagulants ?')}</span><span class="dqk-yn"><b class="y">{tt('Oui')}</b><b class="n">{tt('Non')}</b></span></li>
+              <li data-q="n"><span>{tt('Êtes-vous diabétique ?')}</span><span class="dqk-yn"><b class="y">{tt('Oui')}</b><b class="n">{tt('Non')}</b></span></li>
+            </ul>
+          </section>
+          <!-- 2: the signature -->
+          <section class="dqk-v" data-v="2">
+            <p class="dqk-k2">{tt('Consentement')}</p>
+            <p class="dqk-serif dqk-h2">{tt('Extraction de la dent 47')}</p>
+            <div class="dqk-sig"><span>{tt('Signez avec le doigt')}</span><svg viewBox="0 0 160 80" aria-hidden="true"><path d={SIGN} pathLength="1" /></svg></div>
+            <span class="dqk-btn" data-sign>{tt('Signer')}</span>
+          </section>
+          <!-- 3: done -->
+          <section class="dqk-v dqk-end" data-v="3">
+            <p class="dqk-serif dqk-h3">{tt('C’est')} <em>{tt('noté.')}</em></p>
+            <p class="dqk-mute">{tt('Installez-vous, nous vous appelons.')}</p>
+            <p class="dqk-tick"><i>✓</i></p>
+          </section>
+        </div>
+      </Device>
+    </div>
+  </div>
+  <div class="dqk-steps" role="group" aria-label={tt('Les étapes de l’accueil')}>
+    {STEPS.map((s, i) => <button type="button" data-step={i} class={i === 0 ? 'on' : ''}>{s}</button>)}
+  </div>
+</div>
+
+<style is:global>
+  .dqk-grid { display: grid; grid-template-columns: 1.35fr .9fr; gap: 2rem; align-items: center; }
+  @media (max-width: 767px) { .dqk-grid { grid-template-columns: 1fr; gap: 1.5rem; } }
+  .dqk-phone { width: 100%; max-width: 18rem; justify-self: center; }
+  @media (max-width: 767px) { .dqk-phone { width: min(100%, 17rem); margin-inline: auto; } }
+  .dqk-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .55); }
+  .dqk-scr { container-type: inline-size; position: relative; overflow: hidden; border-radius: 1.1rem; background: #020F20; color: #ECF2FA; aspect-ratio: 4 / 3.1; }
+  .dqk-t { position: absolute; inset: 0; padding: 5cqw; opacity: 0; transform: translateY(3cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .dqk[data-s="0"] [data-t="0"], .dqk[data-s="1"] [data-t="1"], .dqk[data-s="2"] [data-t="2"], .dqk[data-s="3"] [data-t="3"] { opacity: 1; transform: none; }
+  .dqk-k { font-size: 2.3cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: #8CA0BE; }
+  .dqk-av { display: grid; place-items: center; flex: none; width: 7cqw; height: 7cqw; border-radius: 50%; background: #163662; font-weight: 800; font-size: 3cqw; }
+  .dqk-av2 { background: #05B962; color: #001E3E; }
+  /* 0: QR */
+  [data-t="0"] { display: flex; align-items: center; gap: 6cqw; padding: 6cqw 7cqw; }
+  .dqk-qrbox { position: relative; flex: none; width: 36cqw; aspect-ratio: 1; border-radius: 3cqw; background: #fff; padding: 2.4cqw; overflow: hidden; box-shadow: 0 0 0 1.2cqw rgba(5, 185, 98, .25); }
+  .dqk-qrbox svg, .dqk-vf svg { display: block; width: 100%; height: 100%; }
+  .dqk-beam { position: absolute; inset-inline: 0; top: 0; height: 18%; background: linear-gradient(to bottom, transparent, rgba(5, 185, 98, .55)); border-bottom: .5cqw solid #05B962; animation: dqk-beam 2.2s ease-in-out infinite; }
+  @keyframes dqk-beam { 0%, 100% { transform: translateY(-100%); } 50% { transform: translateY(560%); } }
+  .dqk-txt { display: grid; gap: 2cqw; }
+  .dqk-h { font-size: 6.4cqw; line-height: 1.05; font-weight: 800; }
+  .dqk-s { font-size: 2.8cqw; color: #B8C6DC; }
+  /* 1: waiting list */
+  .dqk-list ul { display: grid; gap: 2cqw; margin-top: 3cqw; }
+  .dqk-list li { display: flex; align-items: center; gap: 2.4cqw; border-radius: 2cqw; background: #071B36; padding: 2.4cqw 2.8cqw; }
+  .dqk-who { flex: 1; display: grid; } .dqk-who b { font-size: 3.2cqw; } .dqk-who small { display: grid; font-size: 2.4cqw; color: #8CA0BE; }
+  .dqk-who em { grid-area: 1 / 1; font-style: normal; transition: opacity .35s; }
+  .dqk-who em[data-st="1"] { opacity: 0; color: #05B962; }
+  .dqk.q-done .dqk-who em[data-st="0"] { opacity: 0; } .dqk.q-done .dqk-who em[data-st="1"] { opacity: 1; }
+  .dqk-min { font-size: 2.6cqw; font-weight: 700; color: #B8C6DC; font-variant-numeric: tabular-nums; }
+  .dqk-qr { border-radius: 1.2cqw; background: rgba(88, 140, 255, .2); color: #8FB0FF; font-weight: 800; font-size: 2.3cqw; padding: .8cqw 1.8cqw; }
+  .dqk-new { transform: translateX(8cqw); opacity: 0; box-shadow: inset 0 0 0 1px rgba(5, 185, 98, .45); background: rgba(5, 185, 98, .12) !important; transition: opacity .5s .5s, transform .6s .5s cubic-bezier(.2, .8, .2, 1); }
+  .dqk[data-s="1"] .dqk-new, .dqk[data-s="2"] .dqk-new { opacity: 1; transform: none; }
+  .dqk-alert { display: flex; align-items: center; gap: 2cqw; margin-top: 3cqw; width: max-content; border-radius: 99px; background: rgba(239, 68, 68, .18); color: #FF8A8A; padding: 1.4cqw 3cqw; font-size: 2.8cqw; font-weight: 800; opacity: 0; transform: scale(.7); transition: opacity .35s, transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .dqk-alert i, .dqk-chip::before { content: ""; width: 2cqw; height: 2cqw; border-radius: 50%; background: #EF4444; animation: dqk-pulse 1.6s ease-out infinite; }
+  @keyframes dqk-pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, .6); } 80%, 100% { box-shadow: 0 0 0 2.4cqw rgba(239, 68, 68, 0); } }
+  .dqk.q-done .dqk-alert { opacity: 1; transform: none; }
+  /* 2: the consent paper */
+  .dqk-paper { position: relative; margin-top: 3cqw; width: 70%; border-radius: 2cqw; background: #f4eee5; color: #0e3b3a; padding: 4cqw; transform: rotate(-1.2deg); box-shadow: 0 2cqw 5cqw rgba(0, 0, 0, .4); }
+  .dqk-paper b { font-size: 3.2cqw; }
+  .dqk-paper i { display: block; height: .9cqw; margin-top: 2.2cqw; border-radius: 9px; background: rgba(14, 59, 58, .18); } .dqk-paper i.s { width: 60%; }
+  .dqk-paper svg { display: block; width: 46%; margin-top: 3cqw; overflow: visible; }
+  .dqk-paper path, .dqk-sig path { fill: none; stroke: #0e3b3a; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+  .dqk.sign .dqk-paper path, .dqk.sign .dqk-sig path { animation: dqk-draw 1.7s cubic-bezier(.4, 0, .2, 1) forwards; }
+  @keyframes dqk-draw { to { stroke-dashoffset: 0; } }
+  .dqk-signed { position: absolute; right: -9%; bottom: 14%; border: .7cqw solid #059669; color: #059669; font-weight: 900; font-size: 3.4cqw; text-transform: uppercase; letter-spacing: .08em; padding: .6cqw 2cqw; transform: rotate(-10deg) scale(2.2); opacity: 0; background: rgba(244, 238, 229, .9); }
+  .dqk.signed .dqk-signed { animation: dqk-stamp .45s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+  @keyframes dqk-stamp { to { transform: rotate(-10deg) scale(1); opacity: .95; } }
+  /* 3: the file */
+  .dqk-fh { display: flex; align-items: center; gap: 2.4cqw; flex-wrap: wrap; } .dqk-fh b { font-size: 4.4cqw; }
+  .dqk-chip { display: inline-flex; align-items: center; gap: 1.6cqw; border-radius: 99px; background: rgba(239, 68, 68, .18); color: #FF8A8A; padding: 1cqw 2.6cqw; font-size: 2.6cqw; font-weight: 800; }
+  .dqk-fiche ul { display: grid; gap: 2cqw; margin-top: 4cqw; }
+  .dqk-fiche li { display: flex; align-items: center; gap: 2.4cqw; border-radius: 2cqw; background: #071B36; padding: 2.6cqw 3cqw; font-size: 3cqw; font-weight: 700; opacity: 0; transform: translateX(-5cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); }
+  .dqk-fiche li i { display: grid; place-items: center; width: 5cqw; height: 5cqw; border-radius: 50%; background: #05B962; color: #001E3E; font-style: normal; font-size: 2.8cqw; }
+  .dqk[data-s="3"] .dqk-fiche li { opacity: 1; transform: none; }
+  .dqk[data-s="3"] .dqk-fiche li:nth-child(2) { transition-delay: .35s; } .dqk[data-s="3"] .dqk-fiche li:nth-child(3) { transition-delay: .7s; }
+  /* the phone */
+  .dqk-ps { container-type: inline-size; position: relative; aspect-ratio: 390 / 700; overflow: hidden; background: #f4eee5; color: #0e3b3a; font-size: 15px; }
+  .dqk-serif { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; letter-spacing: -.01em; }
+  .dqk-ps em { font-style: italic; color: #136F6A; }
+  .dqk-v { position: absolute; inset: 0; padding: 8cqw 6cqw; opacity: 0; transform: translateX(8cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .dqk[data-s="0"] [data-v="0"], .dqk[data-s="1"] [data-v="1"], .dqk[data-s="2"] [data-v="2"], .dqk[data-s="3"] [data-v="3"] { opacity: 1; transform: none; }
+  .dqk-k2 { font-size: 2.8cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: #6b7a74; }
+  .dqk-cam { background: #0e3b3a; color: #fff; } .dqk-cam .dqk-k2 { color: rgba(255, 255, 255, .7); }
+  .dqk-vf { position: relative; margin: 10cqw auto 0; width: 62cqw; aspect-ratio: 1; padding: 4cqw; background: #fff; border-radius: 3cqw; transition: transform .6s cubic-bezier(.3, 1.4, .5, 1); }
+  .dqk-vf b { position: absolute; inset: -2.4cqw; border: 1cqw solid #e9a23b; border-radius: 5cqw; opacity: .95; }
+  .dqk-vf i { position: absolute; inset-inline: 4cqw; top: 4cqw; height: .8cqw; background: #05B962; box-shadow: 0 0 4cqw 1cqw rgba(5, 185, 98, .7); animation: dqk-scan 1.6s ease-in-out infinite; }
+  @keyframes dqk-scan { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(51cqw); } }
+  .dqk.ok .dqk-vf { transform: scale(.9); } .dqk.ok .dqk-vf i { opacity: 0; animation: none; }
+  .dqk-hello { margin-top: 12cqw; font-size: 11cqw; line-height: 1; opacity: 0; transform: translateY(5cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); } .dqk-cam em { color: #e9a23b; }
+  .dqk.ok .dqk-hello { opacity: 1; transform: none; }
+  .dqk-h2 { margin-top: 2cqw; font-size: 9cqw; line-height: 1.02; }
+  .dqk-qs { margin-top: 6cqw; border-top: .7cqw solid #0e3b3a; }
+  .dqk-qs li { display: flex; align-items: center; justify-content: space-between; gap: 3cqw; padding: 4cqw 0; border-bottom: 1px solid rgba(14, 59, 58, .18); font-size: 3.6cqw; font-weight: 600; line-height: 1.25; }
+  .dqk-yn { display: flex; flex: none; } .dqk-yn b { display: grid; place-items: center; width: 12cqw; height: 9cqw; border: .5cqw solid #0e3b3a; font-size: 3.2cqw; font-weight: 800; transition: background .25s, color .25s, transform .25s; }
+  .dqk-yn b + b { border-inline-start: 0; }
+  .dqk-qs li[data-set="y"] .y { background: #0e3b3a; color: #fff; transform: scale(1.08); } .dqk-qs li[data-set="n"] .n { background: #0e3b3a; color: #fff; transform: scale(1.08); }
+  .dqk-sig { position: relative; margin-top: 6cqw; height: 40cqw; border: .5cqw dashed rgba(14, 59, 58, .45); background: #fffaf2; }
+  .dqk-sig span { position: absolute; left: 4cqw; top: 3cqw; font-size: 3cqw; color: #6b7a74; }
+  .dqk-sig svg { position: absolute; inset: 8cqw 6cqw 4cqw; width: calc(100% - 12cqw); height: calc(100% - 12cqw); overflow: visible; }
+  .dqk-btn { display: flex; align-items: center; justify-content: center; height: 13cqw; margin-top: 5cqw; background: #e9a23b; color: #0e3b3a; font-weight: 800; font-size: 4cqw; box-shadow: 0 1.2cqw 0 #b9781e; transition: transform .15s, box-shadow .15s; }
+  .dqk-btn.press { transform: translateY(1.2cqw); box-shadow: 0 0 0 #b9781e; }
+  .dqk-end { background: #0e3b3a; color: #fff; padding-top: 22cqw; } .dqk-end em { color: #e9a23b; }
+  .dqk-h3 { font-size: 16cqw; line-height: .95; } .dqk-mute { margin-top: 6cqw; font-size: 4.4cqw; opacity: .8; }
+  .dqk-tick { margin-top: 10cqw; } .dqk-tick i { display: grid; place-items: center; width: 18cqw; height: 18cqw; border-radius: 50%; background: #e9a23b; color: #0e3b3a; font-style: normal; font-size: 9cqw; font-weight: 900; transform: scale(0); }
+  .dqk[data-s="3"] .dqk-tick i { animation: dqk-pop .6s .3s cubic-bezier(.3, 1.6, .5, 1) forwards; }
+  @keyframes dqk-pop { to { transform: scale(1); } }
+  .dqk-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.6rem; }
+  .dqk-steps button { min-height: 2.75rem; border-radius: 999px; background: #fff; padding: 0 1rem; font-size: .9rem; font-weight: 700; color: #536072; box-shadow: 0 0 0 1px #D8DDE3; transition: background .3s, color .3s; }
+  .dqk-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; }
+  @media (prefers-reduced-motion: reduce) { .dqk-t, .dqk-v, .dqk-new, .dqk-fiche li, .dqk-alert, .dqk-hello { transition: none; } .dqk-beam, .dqk-vf i { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dqk]').forEach((root) => {
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const rows = [...root.querySelectorAll<HTMLElement>('[data-q]')], btn = root.querySelector<HTMLElement>('[data-sign]')!;
+    let timers: number[] = [], auto = false, cur = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    const reset = () => { root.classList.remove('ok', 'sign', 'signed'); rows.forEach(r => r.removeAttribute('data-set')); btn.classList.remove('press'); };
+    const show = (s: number) => {
+      cur = s; root.dataset.s = String(s);
+      steps.forEach((b, i) => b.classList.toggle('on', i === s));
+      if (s <= 1) root.classList.remove('q-done');
+      if (s < 2) reset();
+      if (s === 2) root.classList.remove('sign', 'signed');
+      if (s >= 2) root.classList.add('q-done');
+      if (s === 1) rows.forEach(r => r.removeAttribute('data-set'));
+    };
+    // what plays inside a step while it is on screen
+    const play = (s: number) => {
+      if (s === 0) later(2000, () => root.classList.add('ok'));
+      if (s === 1) {
+        rows.forEach((r, i) => later(900 + i * 800, () => { r.dataset.set = r.dataset.q; }));
+        later(3600, () => root.classList.add('q-done'));
+      }
+      if (s === 2) {
+        later(700, () => root.classList.add('sign'));
+        later(2600, () => btn.classList.add('press'));
+        later(2900, () => { btn.classList.remove('press'); root.classList.add('signed'); });
+      }
+    };
+    const LEN = [4600, 5800, 5000, 4200];
+    const run = () => { if (!auto) return; show(cur); play(cur); later(LEN[cur], () => { cur = (cur + 1) % 4; run(); }); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { auto = false; clear(); show(i); play(i); }));
+    if (still || !('IntersectionObserver' in window)) { show(3); root.classList.add('sign', 'signed'); rows.forEach(r => { r.dataset.set = r.dataset.q; }); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; later(900, run); }
+      else if (!e.isIntersecting && auto) { clear(); started = false; auto = false; reset(); show(0); }
+    }, { threshold: 0.4 }).observe(root);
+  });
+</script>
