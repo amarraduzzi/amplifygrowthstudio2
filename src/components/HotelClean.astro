@@ -1,0 +1,136 @@
+---
+// Housekeeping and repairs, played live: the cleaning team's page on a phone (the "?menage=" page of the app: rooms
+// to clean, planned times, the deadline when a guest arrives, "Prête") next to the reception's room tiles.
+// 1. the day's plan; 2. "Prête" on room 105, and the reception sees it free at once; 3. a breakdown reported from the
+// phone goes to the technician's list. Steps play by themselves once in view; touching one stops the tour.
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const STEPS = [tt('Le plan du jour'), tt('Chambre prête'), tt('Une panne')];
+const TILES: [string, string][] = [['102', 'occupied'], ['104', 'occupied'], ['105', 'cleaning'], ['106', 'free']];
+---
+<div class="hk" data-hk data-s="0">
+  <ol class="hg-steps" role="group" aria-label={tt('Les étapes')}>
+    {STEPS.map((s, i) => <li><button type="button" data-step={i} class={i === 0 ? 'on' : ''}><span dir="ltr">{i + 1}</span>{s}</button></li>)}
+  </ol>
+
+  <div class="hk-stage" aria-hidden="true">
+    <!-- the cleaning team's phone -->
+    <div class="hk-phone"><div class="hk-scr" dir={lang === 'ar' ? 'rtl' : 'ltr'}><div class="hk-in">
+      <div class="hk-head"><b>{tt('Ménage')}</b><span>Dar Lina</span></div>
+      <div class="hk-stats">
+        <p><small>{tt('Chambres à faire')}</small><b><i class="a">2</i><i class="b">1</i></b></p>
+        <p><small>{tt('Nous sommes')}</small><b>2</b></p>
+        <p><small>{tt('Fin estimée')}</small><b dir="ltr">12:40</b></p>
+      </div>
+      <div class="hk-list">
+        <p class="hk-k">{tt('À nettoyer maintenant')}</p>
+        <div class="hk-card c105"><span class="hk-no">105</span><span class="hk-tx"><small>{tt('Simple')}</small><em class="dl">{tt('Prête avant')} <span dir="ltr">14:00</span></em><small dir="ltr">{tt('Prévu')} 11:00–11:40</small></span><span class="hk-ready">✓ {tt('Prête')}</span></div>
+        <p class="hk-k">{tt('Après le départ du client')}</p>
+        <div class="hk-card"><span class="hk-no">102</span><span class="hk-tx"><small>{tt('Suite')}</small><em>{tt('Départ avant')} <span dir="ltr">12:00</span></em><small dir="ltr">{tt('Prévu')} 12:00–12:40</small></span></div>
+      </div>
+      <div class="hk-issue">
+        <p class="hk-ib">🔧 {tt('Signaler une panne')}</p>
+        <div class="hk-form"><span>{tt('Chambre')} 104</span><span class="ty2">{tt('La douche fuit')}</span><b>{tt('Envoyer')}</b></div>
+        <p class="hk-sent">✓ {tt('Envoyé au technicien')}</p>
+      </div>
+    </div></div></div>
+
+    <!-- the reception's tiles -->
+    <div class="hk-desk">
+      <p class="hk-dt">{tt('Réception')} · {tt('Chambres')}</p>
+      <div class="hk-tiles">
+        {TILES.map(([n, s]) => <div class="hk-t" data-n={n} data-s={s}><b>{n}</b><span><em data-k="free">{tt('Libre')}</em><em data-k="occupied">{tt('Occupée')}</em><em data-k="cleaning">{tt('Ménage')}</em></span></div>)}
+      </div>
+      <p class="hk-toast t1">✓ {tt('Chambre 105 propre : la réception le voit sans téléphoner.')}</p>
+      <p class="hk-toast t2">🔧 {tt('Technicien : chambre 104, la douche fuit.')}</p>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .hk { display: grid; gap: 1.4rem; }
+  .hk-stage { display: grid; gap: 1.2rem; justify-items: center; }
+  @media (min-width: 760px) { .hk-stage { grid-template-columns: auto minmax(0, 34rem); justify-content: center; align-items: center; gap: 2.5rem; } }
+  .hk-phone { width: min(290px, 78vw); border-radius: 18% / 8.5%; background: linear-gradient(#3A3F47, #1C1F24 50%, #3A3F47); padding: 2.2%; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .5); }
+  .hk-scr { container-type: inline-size; position: relative; aspect-ratio: 600 / 1240; overflow: hidden; border-radius: 15% / 7.2%; border: .55rem solid #000; background: #020F20; color: #fff; }
+  .hk-in { position: absolute; inset: 0; padding: 9% 5% 0; font-size: 3.9cqw; }
+  .hk-head { display: flex; align-items: baseline; justify-content: space-between; } .hk-head b { font-size: 1.5em; font-weight: 800; } .hk-head span { font-size: .75em; color: rgba(255, 255, 255, .55); }
+  .hk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45em; margin-top: 4%; }
+  .hk-stats p { border-radius: .8em; background: rgba(255, 255, 255, .1); padding: .5em .6em; }
+  .hk-stats small { display: block; font-size: .58em; color: rgba(255, 255, 255, .6); font-weight: 600; } .hk-stats b { display: grid; font-size: 1.45em; font-weight: 800; }
+  .hk-stats i { grid-area: 1 / 1; font-style: normal; transition: opacity .3s; } .hk-stats .b { opacity: 0; }
+  .hk:not([data-s="0"]) .hk-stats .a { opacity: 0; } .hk:not([data-s="0"]) .hk-stats .b { opacity: 1; }
+  .hk-k { margin: 5% 0 2%; font-size: .58em; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
+  .hk-card { display: flex; align-items: center; gap: .55em; border-radius: 1em; background: rgba(255, 255, 255, .1); padding: .55em; transition: opacity .4s, transform .5s, max-height .5s, padding .5s, margin .5s; max-height: 6em; }
+  .hk-card.c105 { box-shadow: inset 0 0 0 2px rgba(251, 191, 36, .45); }
+  .hk:not([data-s="0"]) .hk-card.c105 { opacity: 0; transform: translateX(30%); max-height: 0; padding: 0 .55em; }
+  .hk-no { display: grid; place-items: center; width: 2.6em; height: 2.6em; flex: none; border-radius: .7em; background: rgba(0, 0, 0, .3); font-size: 1.25em; font-weight: 800; }
+  .hk-tx { display: grid; gap: .15em; flex: 1; min-width: 0; } .hk-tx small { font-size: .62em; color: rgba(255, 255, 255, .6); }
+  .hk-tx em { justify-self: start; font-style: normal; font-size: .62em; font-weight: 800; border-radius: .5em; padding: .15em .5em; background: rgba(255, 255, 255, .12); }
+  .hk-tx em.dl { background: rgba(251, 191, 36, .2); color: #FDE68A; }
+  .hk-ready { flex: none; border-radius: .7em; background: #10B981; padding: .7em .7em; font-size: .7em; font-weight: 800; transition: transform .2s; }
+  .hk-ready.press { transform: scale(.9); }
+  .hk-issue { position: absolute; inset-inline: 5%; bottom: 5%; }
+  .hk-ib { display: grid; place-items: center; min-height: 2.6em; border-radius: .9em; background: rgba(255, 255, 255, .1); font-size: .8em; font-weight: 800; transition: opacity .3s; }
+  .hk-form { display: grid; gap: .4em; max-height: 0; overflow: hidden; opacity: 0; transition: max-height .5s, opacity .4s, margin .4s; }
+  .hk-form span { border-radius: .6em; background: rgba(255, 255, 255, .08); padding: .55em .7em; font-size: .72em; }
+  .hk-form b { display: grid; place-items: center; min-height: 2.4em; border-radius: .7em; background: #10B981; font-size: .75em; transition: transform .2s; } .hk-form b.press { transform: scale(.94); }
+  .hk[data-s="2"] .hk-form { max-height: 12em; opacity: 1; margin-top: .5em; }
+  .hk[data-s="2"] .ty2 { animation: hk-type 1s steps(14) .5s both; }
+  @keyframes hk-type { from { color: transparent; } to { color: inherit; } }
+  .hk-sent { margin-top: .5em; text-align: center; font-size: .72em; font-weight: 800; color: #6EE7B7; opacity: 0; transition: opacity .3s; }
+  .hk.sent .hk-sent { opacity: 1; } .hk.sent .hk-form { opacity: .4; }
+  /* the reception's tiles */
+  .hk-desk { width: 100%; max-width: 34rem; border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .45); }
+  .hk-dt { padding: .6rem .7rem .2rem; font-size: .8rem; font-weight: 700; color: #B8C6DC; }
+  .hk-tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; padding: .5rem; }
+  @media (min-width: 520px) { .hk-tiles { grid-template-columns: repeat(4, 1fr); } }
+  .hk-t { --c: #05B962; position: relative; overflow: hidden; display: grid; gap: .2rem; border-radius: .9rem; background: #0E2140; color: #fff; padding: .9rem .7rem .7rem; transition: background .5s, box-shadow .5s; }
+  .hk-t::before { content: ""; position: absolute; inset: 0 0 auto; height: .3rem; background: var(--c); transition: background .5s; }
+  .hk-t[data-s="occupied"] { --c: #6E8FF0; } .hk-t[data-s="cleaning"] { --c: #F3A632; box-shadow: inset 0 0 0 2px rgba(243, 166, 50, .5); }
+  .hk-t b { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+  .hk-t span { display: grid; font-size: .72rem; font-weight: 800; color: var(--c); }
+  .hk-t em { grid-area: 1 / 1; font-style: normal; opacity: 0; transition: opacity .35s; }
+  .hk-t[data-s="free"] [data-k="free"], .hk-t[data-s="occupied"] [data-k="occupied"], .hk-t[data-s="cleaning"] [data-k="cleaning"] { opacity: 1; }
+  .hk-t.flash { animation: hk-flash 1s; } @keyframes hk-flash { 30% { box-shadow: inset 0 0 0 3px #05B962, 0 0 24px rgba(5, 185, 98, .5); } }
+  .hk-t.tech { box-shadow: inset 0 0 0 2px #F97316; }
+  .hk-t.tech::after { content: "🔧"; position: absolute; top: .55rem; inset-inline-end: .5rem; font-size: .8rem; }
+  .hk-toast { margin: .2rem .5rem .5rem; border-radius: .9rem; padding: .7rem .9rem; font-size: .85rem; font-weight: 700; max-height: 0; overflow: hidden; opacity: 0; padding-block: 0; transition: opacity .4s, max-height .4s, padding .4s; }
+  .hk-toast.t1 { background: rgba(5, 185, 98, .16); color: #7BE3A9; } .hk-toast.t2 { background: rgba(249, 115, 22, .16); color: #FDBA74; }
+  .hk[data-s="1"] .t1, .hk.sent .t2 { max-height: 5rem; opacity: 1; padding-block: .7rem; }
+  @media (prefers-reduced-motion: reduce) { .hk-card, .hk-form, .hk-toast, .hk-t { transition: none !important; animation: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hk]').forEach((root) => {
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const tile = (n: string) => root.querySelector<HTMLElement>(`.hk-t[data-n="${n}"]`)!;
+    let s = 0, timers: number[] = [], auto = false, loop = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const play = (n: number) => {
+      timers.forEach(clearTimeout); timers = [];
+      root.classList.remove('sent');
+      tile('105').dataset.s = n === 0 ? 'cleaning' : 'free';
+      tile('104').classList.toggle('tech', false);
+      if (n === 1) {
+        // the tap happened on the phone: the card leaves, the tile turns free with a flash
+        tile('105').classList.remove('flash'); void tile('105').offsetWidth; tile('105').classList.add('flash');
+      }
+      if (n === 0) later(2600, () => { const b = root.querySelector('.hk-ready'); b?.classList.add('press'); later(200, () => b?.classList.remove('press')); });
+      if (n === 2) later(1900, () => { const b = root.querySelector('.hk-form b'); b?.classList.add('press'); later(220, () => { b?.classList.remove('press'); root.classList.add('sent'); tile('104').classList.add('tech'); }); });
+    };
+    const go = (n: number) => { s = n; root.dataset.s = String(n); steps.forEach((b, i) => b.classList.toggle('on', i === n)); play(n); };
+    const stop = () => { auto = false; clearTimeout(loop); };
+    const tick = () => { if (!auto) return; go((s + 1) % 3); loop = window.setTimeout(tick, s === 2 ? 5200 : 3600); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { stop(); go(i); }));
+    if (still) { go(1); return; }
+    if (!('IntersectionObserver' in window)) { go(0); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; go(0); loop = window.setTimeout(tick, 3200); }
+      else if (!e.isIntersecting) stop();
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

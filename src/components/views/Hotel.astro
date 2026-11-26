@@ -16,6 +16,8 @@ import HotelChannels from '../HotelChannels.astro';
 import HotelSite from '../HotelSite.astro';
 import HotelGuest from '../HotelGuest.astro';
 import HotelWatch from '../HotelWatch.astro';
+import HotelClean from '../HotelClean.astro';
+import HotelBill from '../HotelBill.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -58,6 +60,18 @@ const watch = [
   ['wallet', tt('La caisse qui ne tombe pas juste'), tt('À chaque remise de caisse, l’écart avec le nom de l’employé. Vous choisissez à partir de quel montant.')],
   ['shield', tt('Ce qui change après l’arrivée'), tt('Un séjour annulé, raccourci ou moins cher après l’arrivée, un client parti sans tout payer, une chambre marquée « payée ailleurs ».')],
   ['bell', tt('Le bilan du soir'), tt('À l’heure que vous choisissez : chambres, argent encaissé, caisse, arrivées de demain et ce qu’il faut vérifier.')],
+];
+const clean = [
+  ['calendar', tt('Le plan du ménage, calculé'), tt('Les chambres à faire, l’heure prévue pour chacune et l’heure limite quand un client arrive. Selon le nombre de personnes ce jour-là.')],
+  ['phone', tt('Sur le téléphone de l’équipe'), tt('Un lien, sans code ni application. En français, en arabe ou en anglais, et sans le nom des clients.')],
+  ['bell', tt('Une panne, un technicien'), tt('Le ménage ou la réception signale une panne. Le technicien la voit sur son téléphone et la marque réparée.')],
+  ['shirt', tt('Le linge suivi'), tt('Draps et serviettes en réserve, au lavage ou perdus : vous savez ce que vous avez avant de racheter.')],
+];
+const money = [
+  ['calendar', tt('Vos prix, à votre façon'), tt('Un prix toute l’année, ou des prix par saison, week-end et durée de séjour. Et un prix convenu à la réception quand il le faut.')],
+  ['shield', tt('Acompte et annulation'), tt('Un acompte à la réservation et vos règles d’annulation. Ou rien du tout : c’est vous qui choisissez.')],
+  ['wallet', tt('La caisse de la réception'), tt('Espèces, carte et virement. Chaque remise de caisse est comptée, avec le nom de l’employé.')],
+  ['chart', tt('Le rapport du propriétaire'), tt('Occupation, prix moyen, revenu par chambre et par canal, sur le mois ou l’année.')],
 ];
 const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
 ---
@@ -189,7 +203,36 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
     </div>
   </section>
 
-  <!-- next steps: housekeeping and maintenance, the money -->
+  <!-- housekeeping and repairs: the team's phone and the reception's tiles -->
+  <section id="menage" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf-x max-w-3xl">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le ménage sait quoi faire.')}</span><span class="block text-green-deep">{tt('La réception le voit.')}</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-muted">{tt('Plus de coups de téléphone pour savoir si une chambre est prête. L’équipe a sa liste sur son téléphone, et chaque chambre propre apparaît libre à la réception.')}</p>
+    </div>
+    <div class="tf mt-10" style="--d:120ms"><HotelClean /></div>
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {clean.map(([ic, h, x], i) => (
+        <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+    </ul>
+  </section>
+
+  <!-- the money: the bill of the stay, the payment, the invoice -->
+  <section id="argent" class="scroll-mt-20 border-y border-line bg-paper px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="mx-auto max-w-6xl">
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
+        <div class="tf-x">
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une note juste.')}</span><span class="block text-green-deep">{tt('Rien d’oublié.')}</span></h2>
+          <p class="mt-5 max-w-xl text-lg text-muted">{tt('Les nuits, les commandes, l’addition du restaurant, la taxe de séjour et l’acompte arrivent tout seuls sur la note. Le client paie, part, et reçoit sa facture sur WhatsApp.')}</p>
+        </div>
+        <div class="tf" style="--d:120ms"><HotelBill /></div>
+      </div>
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {money.map(([ic, h, x], i) => (
+          <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+      </ul>
+    </div>
+  </section>
+
 
   <SectorPrices lang={lang} k="hotel" />
 
