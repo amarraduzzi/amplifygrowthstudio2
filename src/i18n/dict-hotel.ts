@@ -378,6 +378,8 @@ export const hotelEn: Record<string, string> = {
   "Une chambre, un étage ou le riad entier : chaque annonce a son lien. Réservée ici ou là-bas, la nuit se ferme partout. La mise à jour prend quelques minutes, parfois plus selon la plateforme.": "A room, a floor or the whole riad: every listing has its own link. Booked here or there, the night closes everywhere. The update takes a few minutes, sometimes longer depending on the platform.",
   "J’ai déjà un site et un nom de domaine. Je le garde ?": "I already have a website and a domain name. Do I keep it?",
   "Vous gardez votre nom de domaine : il ouvre votre site Amplify, qui remplace l’ancien. Vous ajoutez un réglage chez votre fournisseur de domaine, nous vous disons lequel, et vos e-mails ne changent pas.": "You keep your domain name: it opens your Amplify site, which replaces the old one. You add one setting at your domain provider, we tell you which, and your e-mails do not change.",
+  "Votre compte bancaire": "Your bank account",
+  "à l’instant": "just now",
 };
 export const hotelAr: Record<string, string> = {
   "Hôtels et riads": "فنادق ورياضات",
@@ -757,4 +759,6 @@ export const hotelAr: Record<string, string> = {
   "Une chambre, un étage ou le riad entier : chaque annonce a son lien. Réservée ici ou là-bas, la nuit se ferme partout. La mise à jour prend quelques minutes, parfois plus selon la plateforme.": "بيت، طابق ولا الرياض كامل: كل إعلان عندو الرابط ديالو. تحجز هنا ولا لهيه، الليلة كتسد فكل بلاصة. التحديث كياخد شي دقايق، وأحيانا أكثر على حساب المنصة.",
   "J’ai déjà un site et un nom de domaine. Je le garde ?": "عندي موقع واسم نطاق. واش نخليه؟",
   "Vous gardez votre nom de domaine : il ouvre votre site Amplify, qui remplace l’ancien. Vous ajoutez un réglage chez votre fournisseur de domaine, nous vous disons lequel, et vos e-mails ne changent pas.": "كتخلي اسم النطاق ديالك: كيحل الموقع ديالك فـ Amplify، اللي كيعوض القديم. كتزيد إعداد واحد عند مزود النطاق، كنقولو ليك شنو هو، والإيميلات ديالك ما كيتبدلوش.",
+  "Votre compte bancaire": "الحساب البنكي ديالك",
+  "à l’instant": "دابا",
 };

@@ -8,7 +8,7 @@ type K = 'restaurant' | 'salon' | 'spa' | 'pressing' | 'garage' | 'patisserie' |
 interface Props { lang: Lang; k: K }
 const { lang, k } = Astro.props;
 const tt = tr(lang);
-const S: Record<K, { bill: string; who: string; amount: number; h1: string; h2: string; lead: string }> = {
+const S: Record<K, { bill: string; who: string; amount: number; h1: string; h2: string; lead: string; bg?: string }> = {
   restaurant: { bill: tt('Table 4 · 3 couverts'), who: 'Café Andalous', amount: 186, h1: tt('Pas de terminal ?'), h2: tt('La carte passe quand même.'),
     lead: tt('« Carte (QR) » à la caisse : un QR code avec l’addition. Le client le scanne et paie par carte sur son téléphone. La table se libère toute seule.') },
   pos: { bill: tt('Table 4 · 3 couverts'), who: 'Café Andalous', amount: 186, h1: tt('Pas de terminal ?'), h2: tt('La carte passe quand même.'),
@@ -27,6 +27,15 @@ const S: Record<K, { bill: string; who: string; amount: number; h1: string; h2: 
     lead: tt('L’acompte se paie par carte en réservant sur votre site, et la chambre est confirmée tout de suite. La note, un groupe ou un devis : un lien sur WhatsApp, ou un QR à la réception.') },
 };
 const s = S[k];
+// the scene: the trade's own photo behind, a real hand holding the customer's phone
+const BG: Record<K, string> = {
+  restaurant: '/img/photos/metier-cafe-1600.webp', pos: '/img/photos/metier-cafe-1600.webp', hotel: '/img/photos/hotel-salon-1376.webp',
+  salon: '/img/photos/salon-barbier-1376.webp', spa: '/img/photos/spa-accueil-1376.webp', pressing: '/img/nav-pressing.webp',
+  garage: '/img/photos/garage-comptoir-1200.webp', patisserie: '/img/photos/pat-matin-800.webp',
+};
+const hand = k === 'salon' || k === 'spa' || k === 'patisserie' ? 'woman' : 'man';
+// where the phone's screen sits in the hand photo (percent of the photo), measured on the picture
+const SCREEN = hand === 'man' ? { l: 34.6, t: 21.83, w: 30.8, h: 48.25 } : { l: 36.27, t: 18.33, w: 27.79, h: 43.67 };
 const money = (n: number) => `${n.toLocaleString('fr-FR').replace(/[  ]/g, ' ')} DH`;
 const facts: [string, string][] = [
   ['0', tt('terminal à louer : le téléphone du client suffit')],
@@ -58,9 +67,10 @@ const eyes = [[0, 0], [N - 7, 0], [0, N - 7]];
       <p class="tf mt-4 max-w-xl text-sm text-muted" style="--d:420ms">{tt('Il vous faut le paiement en ligne CMI de votre banque. Vous collez ses deux codes dans Amplify et c’est actif sur toutes vos caisses. Nous vous aidons à le demander.')}</p>
     </div>
 
-    <div class="tf relative isolate overflow-hidden rounded-[2rem] bg-navy" style="--d:120ms" aria-hidden="true">
-      <span class="sl-blob sl-blob-a"></span>
-      <div class="cq-stage" dir="ltr">
+    <div class="tf cq-stage relative isolate overflow-hidden rounded-[2rem] bg-navy" style="--d:120ms" aria-hidden="true">
+      <img src={BG[k]} alt="" loading="lazy" decoding="async" class="cq-bg absolute inset-0 -z-20 h-full w-full object-cover" />
+      <span class="cq-shade absolute inset-0 -z-10"></span>
+      <div class="cq-in" dir="ltr">
         <!-- the till -->
         <div class="cq-till">
           <p class="cq-tt"><span>{tt('Caisse')}</span><b>{s.who}</b></p>
@@ -78,9 +88,11 @@ const eyes = [[0, 0], [N - 7, 0], [0, N - 7]];
           <p class="cq-paid">{tt('Payé par carte')} ✓</p>
           <span class="cq-stamp">{tt('Payé')}</span>
         </div>
-        <!-- the customer's phone -->
-        <div class="cq-phone">
-          <div class="cq-screen">
+        <!-- the customer's hand and phone -->
+        <div class={`cq-hand cq-${hand}`}>
+          <img src={`/img/photos/pay-hand-${hand}-896.webp`} srcset={`/img/photos/pay-hand-${hand}-600.webp 600w, /img/photos/pay-hand-${hand}-896.webp 896w`} sizes="(min-width:1024px) 420px, 70vw"
+            alt="" width="896" height="1200" loading="lazy" decoding="async" class="block h-auto w-full" />
+          <div class="cq-screen" style={`left:${SCREEN.l}%;top:${SCREEN.t}%;width:${SCREEN.w}%;height:${SCREEN.h}%`}>
             <div class="cq-s1">
               <span class="cq-cam"><b></b><b></b><b></b><b></b></span>
               <small>{tt('Scanner')}</small>
@@ -89,8 +101,7 @@ const eyes = [[0, 0], [N - 7, 0], [0, N - 7]];
               <p class="cq-cmi"><span>🔒</span>CMI · {tt('Paiement sécurisé')}</p>
               <p class="cq-mer">{s.who}</p>
               <p class="cq-pay display">{money(s.amount)}</p>
-              <p class="cq-field">•••• •••• •••• 4821</p>
-              <p class="cq-field cq-half"><span>12/28</span><span>•••</span></p>
+              <p class="cq-field">•••• 4821</p>
               <p class="cq-btn">{tt('Payer')}</p>
             </div>
             <div class="cq-s3">
@@ -100,14 +111,22 @@ const eyes = [[0, 0], [N - 7, 0], [0, N - 7]];
             </div>
           </div>
         </div>
+        <!-- the money lands on the business's own account -->
+        <div class="cq-bank">
+          <span class="cq-bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 4l9 6" /><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8" /><path d="M3 20h18" /></svg></span>
+          <span class="cq-bt"><small>{tt('Votre compte bancaire')} · {tt('à l’instant')}</small><b>+ {money(s.amount)}</b></span>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <style is:global>
-  .cq-stage { position: relative; aspect-ratio: 5 / 4.4; min-height: 20rem; }
-  .cq-till { position: absolute; left: 6%; top: 8%; width: 52%; padding: 4.5% 5%; border-radius: 1.1rem; background: #fff; color: #001E3E; box-shadow: 0 2rem 3rem -1.5rem rgba(0,0,0,.6); container-type: inline-size; }
+  .cq-stage { aspect-ratio: 5 / 4.7; min-height: 21rem; }
+  .cq-bg { filter: saturate(.9) brightness(.62); transform: scale(1.04); }
+  .cq-shade { background: radial-gradient(120% 90% at 80% 100%, rgba(0,30,62,.15), rgba(0,30,62,.85) 70%), linear-gradient(to bottom, rgba(0,30,62,.55), transparent 45%); }
+  .cq-in { position: absolute; inset: 0; }
+  .cq-till { position: absolute; left: 5%; top: 8%; width: 44%; padding: 4.5% 5%; border-radius: 1.1rem; background: #fff; color: #001E3E; box-shadow: 0 2.2rem 3rem -1.4rem rgba(0,0,0,.75); container-type: inline-size; z-index: 1; }
   .cq-tt { display: flex; justify-content: space-between; gap: .5rem; font-size: 5.2cqw; color: #4A5D74; }
   .cq-tt b { color: #001E3E; font-weight: 700; }
   .cq-bill { margin-top: 3cqw; font-size: 5.6cqw; font-weight: 600; }
@@ -119,55 +138,69 @@ const eyes = [[0, 0], [N - 7, 0], [0, N - 7]];
   .cq-wait { color: #4A5D74; display: flex; align-items: center; justify-content: center; gap: .4em; }
   .cq-wait i { width: .7em; height: .7em; border-radius: 50%; border: 2px solid #05B962; border-right-color: transparent; animation: cq-spin 1s linear infinite; }
   .cq-paid { color: #037A42; display: none; }
-  .cq-stamp { position: absolute; right: 6%; top: 38%; padding: .1em .45em; border: 3px solid #05B962; border-radius: .4rem; color: #05B962; font-weight: 900; font-size: 13cqw; text-transform: uppercase; letter-spacing: .04em; transform: rotate(-12deg) scale(1.6); opacity: 0; }
-  .cq-phone { position: absolute; right: 6%; bottom: 7%; width: 34%; aspect-ratio: 9 / 18.5; border-radius: 1.4rem; background: #0b0d12; padding: 3.5%; box-shadow: 0 2rem 3rem -1.2rem rgba(0,0,0,.7), inset 0 0 0 2px #2a2f3a; transform: rotate(4deg); }
-  .cq-screen { position: relative; height: 100%; border-radius: 1.05rem; overflow: hidden; background: #F4F1EA; container-type: inline-size; }
-  .cq-s1, .cq-s2, .cq-s3 { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 9cqw 8cqw; opacity: 0; }
+  .cq-stamp { position: absolute; right: 6%; top: 38%; padding: .1em .45em; border: 3px solid #05B962; border-radius: .4rem; color: #05B962; font-weight: 900; font-size: 13cqw; text-transform: uppercase; letter-spacing: .04em; transform: rotate(-12deg) scale(1.6); opacity: 0; background: rgba(255,255,255,.85); }
+  /* the hand: comes up from the bottom edge, its phone shows the customer's screens */
+  .cq-hand { position: absolute; right: -6%; bottom: -15%; width: 70%; z-index: 2; filter: drop-shadow(0 2rem 2.4rem rgba(0,0,0,.55)); }
+  .cq-screen { position: absolute; border-radius: 13% / 6.2%; overflow: hidden; background: #0b0d12; container-type: inline-size; }
+  .cq-s1, .cq-s2, .cq-s3 { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 10cqw 8cqw; opacity: 0; }
   .cq-s1 { background: #1b1f27; align-items: center; justify-content: center; gap: 6cqw; color: #fff; }
   .cq-s1 small { font-size: 9cqw; opacity: .8; }
   .cq-cam { position: relative; width: 62cqw; aspect-ratio: 1; }
   .cq-cam b { position: absolute; width: 16cqw; height: 16cqw; border-color: #05B962; border-style: solid; }
   .cq-cam b:nth-child(1) { left: 0; top: 0; border-width: 3px 0 0 3px; } .cq-cam b:nth-child(2) { right: 0; top: 0; border-width: 3px 3px 0 0; }
   .cq-cam b:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 3px 3px; } .cq-cam b:nth-child(4) { right: 0; bottom: 0; border-width: 0 3px 3px 0; }
-  .cq-s2 { gap: 4cqw; color: #1E1B16; }
+  .cq-s2 { gap: 4cqw; color: #1E1B16; background: #F4F1EA; padding-top: 14cqw; }
   .cq-cmi { display: flex; gap: .35em; align-items: center; font-size: 7.5cqw; font-weight: 700; color: #1F7A4D; }
   .cq-mer { margin-top: 3cqw; font-size: 8cqw; color: #6b6458; }
   .cq-pay { font-size: 17cqw; line-height: 1; }
-  .cq-field { margin-top: 2cqw; padding: 4cqw; border: 1px solid #d9d3c7; border-radius: 3cqw; background: #fff; font-size: 7.5cqw; letter-spacing: .06em; }
-  .cq-half { display: flex; justify-content: space-between; }
-  .cq-btn { margin-top: auto; padding: 5cqw; border-radius: 3cqw; background: #1E1B16; color: #fff; text-align: center; font-weight: 700; font-size: 9cqw; }
-  .cq-s3 { align-items: center; justify-content: center; gap: 3cqw; text-align: center; }
+  .cq-field { margin-top: 2cqw; padding: 4cqw; border: 1px solid #d9d3c7; border-radius: 3cqw; background: #fff; font-size: 8cqw; letter-spacing: .06em; }
+  .cq-btn { margin-top: auto; margin-bottom: 4cqw; padding: 5cqw; border-radius: 3cqw; background: #1E1B16; color: #fff; text-align: center; font-weight: 700; font-size: 9cqw; }
+  .cq-s3 { align-items: center; justify-content: center; gap: 3cqw; text-align: center; background: #F4F1EA; }
   .cq-s3 b { font-size: 10cqw; color: #1E1B16; } .cq-s3 small { font-size: 9cqw; color: #6b6458; }
   .cq-ok { display: grid; place-items: center; width: 30cqw; height: 30cqw; border-radius: 50%; background: #1F7A4D; color: #fff; font-size: 16cqw; font-weight: 900; }
+  /* the bank's notification: the money is on the business's own account */
+  .cq-bank { position: absolute; right: 4%; top: 5%; z-index: 3; display: flex; align-items: center; gap: .7rem; padding: .7rem .95rem .7rem .7rem; border-radius: 1rem; background: rgba(255,255,255,.94); color: #001E3E; box-shadow: 0 1.2rem 2rem -1rem rgba(0,0,0,.6); backdrop-filter: blur(8px); opacity: 0; transform: translateY(-120%); }
+  .cq-bi { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: .7rem; background: #05B962; color: #001E3E; flex: none; }
+  .cq-bi svg { width: 1.4rem; height: 1.4rem; }
+  .cq-bt { display: flex; flex-direction: column; line-height: 1.15; }
+  .cq-bt small { font-size: .72rem; color: #4A5D74; font-weight: 600; }
+  .cq-bt b { font-family: var(--font-display, inherit); font-size: 1.35rem; font-weight: 800; color: #037A42; }
   @keyframes cq-spin { to { transform: rotate(1turn); } }
 
-  /* one loop of 10 s, only once the section is in view */
-  [data-cq].in .cq-scan { animation: cq-scan 10s infinite; }
-  [data-cq].in .cq-s1 { animation: cq-s1 10s infinite; }
-  [data-cq].in .cq-s2 { animation: cq-s2 10s infinite; }
-  [data-cq].in .cq-s3 { animation: cq-s3 10s infinite; }
-  [data-cq].in .cq-stamp { animation: cq-stamp 10s infinite; }
-  [data-cq].in .cq-wait { animation: cq-wait 10s infinite; }
-  [data-cq].in .cq-paid { display: block; animation: cq-paid 10s infinite; height: 0; overflow: visible; }
-  [data-cq].in .cq-btn { animation: cq-btn 10s infinite; }
-  @keyframes cq-scan { 0%, 6% { opacity: 0; top: 0; } 8% { opacity: 1; top: 0; } 20% { opacity: 1; top: 100%; } 22%, 100% { opacity: 0; top: 100%; } }
-  @keyframes cq-s1 { 0%, 4% { opacity: 0; } 7%, 22% { opacity: 1; } 25%, 100% { opacity: 0; } }
-  @keyframes cq-s2 { 0%, 22% { opacity: 0; } 25%, 58% { opacity: 1; } 61%, 100% { opacity: 0; } }
-  @keyframes cq-btn { 0%, 50% { transform: none; } 53% { transform: scale(.94); background: #1F7A4D; } 58%, 100% { transform: none; } }
-  @keyframes cq-s3 { 0%, 58% { opacity: 0; } 61%, 92% { opacity: 1; } 96%, 100% { opacity: 0; } }
-  @keyframes cq-wait { 0%, 62% { opacity: 1; } 64%, 96% { opacity: 0; } 100% { opacity: 1; } }
-  @keyframes cq-paid { 0%, 63% { opacity: 0; transform: translateY(-1.2em); } 66%, 94% { opacity: 1; transform: translateY(-1.2em); } 97%, 100% { opacity: 0; transform: translateY(-1.2em); } }
-  @keyframes cq-stamp { 0%, 64% { opacity: 0; transform: rotate(-12deg) scale(1.6); } 67% { opacity: 1; transform: rotate(-12deg) scale(1); } 93% { opacity: 1; transform: rotate(-12deg) scale(1); } 97%, 100% { opacity: 0; transform: rotate(-12deg) scale(1); } }
+  /* one loop of 11 s, once the section is in view */
+  [data-cq].in .cq-hand { animation: cq-hand 11s infinite; }
+  [data-cq].in .cq-scan { animation: cq-scan 11s infinite; }
+  [data-cq].in .cq-s1 { animation: cq-s1 11s infinite; }
+  [data-cq].in .cq-s2 { animation: cq-s2 11s infinite; }
+  [data-cq].in .cq-s3 { animation: cq-s3 11s infinite; }
+  [data-cq].in .cq-stamp { animation: cq-stamp 11s infinite; }
+  [data-cq].in .cq-wait { animation: cq-wait 11s infinite; }
+  [data-cq].in .cq-paid { display: block; animation: cq-paid 11s infinite; height: 0; overflow: visible; }
+  [data-cq].in .cq-btn { animation: cq-btn 11s infinite; }
+  [data-cq].in .cq-bank { animation: cq-bank 11s infinite; }
+  @keyframes cq-hand { 0% { transform: translateY(22%); } 7%, 92% { transform: translateY(0); } 100% { transform: translateY(22%); } }
+  @keyframes cq-scan { 0%, 8% { opacity: 0; top: 0; } 10% { opacity: 1; top: 0; } 21% { opacity: 1; top: 100%; } 23%, 100% { opacity: 0; top: 100%; } }
+  @keyframes cq-s1 { 0%, 6% { opacity: 0; } 8%, 23% { opacity: 1; } 26%, 100% { opacity: 0; } }
+  @keyframes cq-s2 { 0%, 23% { opacity: 0; } 26%, 55% { opacity: 1; } 58%, 100% { opacity: 0; } }
+  @keyframes cq-btn { 0%, 47% { transform: none; } 50% { transform: scale(.93); background: #1F7A4D; } 54%, 100% { transform: none; } }
+  @keyframes cq-s3 { 0%, 55% { opacity: 0; } 58%, 92% { opacity: 1; } 96%, 100% { opacity: 0; } }
+  @keyframes cq-wait { 0%, 59% { opacity: 1; } 61%, 96% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes cq-paid { 0%, 60% { opacity: 0; transform: translateY(-1.2em); } 63%, 93% { opacity: 1; transform: translateY(-1.2em); } 96%, 100% { opacity: 0; transform: translateY(-1.2em); } }
+  @keyframes cq-stamp { 0%, 61% { opacity: 0; transform: rotate(-12deg) scale(1.6); } 64% { opacity: 1; transform: rotate(-12deg) scale(1); } 93% { opacity: 1; transform: rotate(-12deg) scale(1); } 96%, 100% { opacity: 0; transform: rotate(-12deg) scale(1); } }
+  @keyframes cq-bank { 0%, 67% { opacity: 0; transform: translateY(-120%); } 71%, 93% { opacity: 1; transform: translateY(0); } 97%, 100% { opacity: 0; transform: translateY(-120%); } }
   @media (max-width: 639px) {
-    .cq-stage { aspect-ratio: 4 / 4.6; }
-    .cq-till { width: 60%; left: 5%; }
-    .cq-phone { width: 40%; right: 4%; }
+    .cq-stage { aspect-ratio: 4 / 5; }
+    .cq-till { width: 56%; left: 5%; top: 17%; }
+    .cq-hand { width: 82%; right: -14%; bottom: -12%; }
+    .cq-bank { left: 4%; right: auto; top: 3.5%; padding: .55rem .8rem .55rem .55rem; }
+    .cq-bi { width: 2rem; height: 2rem; }
+    .cq-bt b { font-size: 1.1rem; }
   }
   @media (prefers-reduced-motion: reduce) {
-    [data-cq] .cq-s3 { opacity: 1; animation: none !important; }
+    [data-cq] .cq-s3, [data-cq] .cq-bank { opacity: 1; transform: none; animation: none !important; }
     [data-cq] .cq-stamp { opacity: 1; transform: rotate(-12deg); animation: none !important; }
     [data-cq] .cq-wait { display: none; }
-    [data-cq] .cq-scan, [data-cq] .cq-s1, [data-cq] .cq-s2 { animation: none !important; }
+    [data-cq] .cq-scan, [data-cq] .cq-s1, [data-cq] .cq-s2, [data-cq] .cq-hand { animation: none !important; }
   }
 </style>
 
