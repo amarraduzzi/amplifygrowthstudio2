@@ -1,0 +1,208 @@
+---
+// The guest's stay, played on a phone. It copies the guest page of the app (?sejour=, the "Atelier" style) and the
+// reception's identity screen: 1. the room is kept, with a countdown and "J'arrive"; 2. arrival online; 3. at the
+// reception, the passport photo fills the fiche de police by itself; 4. during the stay: wifi, an order, on the bill.
+// Steps play by themselves once in view; touching a step stops the tour. Demo riad "Dar Lina", invented names.
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const STEPS = [tt('Chambre gardée'), tt('Arrivée en ligne'), tt('Fiche de police'), tt('Pendant le séjour')];
+---
+<div class="hg" data-hg data-s="0">
+  <ol class="hg-steps" role="group" aria-label={tt('Les étapes')}>
+    {STEPS.map((s, i) => <li><button type="button" data-step={i} class={i === 0 ? 'on' : ''}><span dir="ltr">{i + 1}</span>{s}</button></li>)}
+  </ol>
+
+  <div class="hg-stage">
+    <div class="hg-phone">
+      <div class="hg-frame">
+        <div class="hg-scr" dir={lang === 'ar' ? 'rtl' : 'ltr'} aria-hidden="true"><div class="hg-in">
+
+          <!-- 1. the room is kept for her -->
+          <section class="hg-p hg-s0">
+            <div class="hg-nav"><b>DAR LINA</b><span>FR · <u>EN</u> · AR</span></div>
+            <div class="hg-photo"><img src="/img/photos/hotel-patio-800.webp" alt="" loading="lazy" decoding="async" /></div>
+            <p class="hg-hi">{tt('Bonjour Sara')}</p>
+            <p class="hg-meta">{tt('Chambre 104')} · <span dir="ltr">12/12 → 14/12</span> · {tt('2 nuits')}</p>
+            <div class="hg-hold">
+              <p class="hg-k"><i></i>{tt('Chambre gardée pour vous')}</p>
+              <p class="hg-big" dir="ltr">{tt('jusqu’à 18:40')}</p>
+              <p class="hg-left">{tt('Il reste')} <b dir="ltr" data-cd>1 h 12</b></p>
+              <span class="hg-btn hg-go">{tt('J’arrive')}</span>
+              <span class="hg-ok"><i>✓</i>{tt('La réception sait que vous arrivez.')}</span>
+              <u class="hg-cancel">{tt('Annuler la réservation')}</u>
+            </div>
+          </section>
+
+          <!-- 2. arrival online -->
+          <section class="hg-p hg-s1">
+            <div class="hg-nav"><b>DAR LINA</b><span>FR · <u>EN</u> · AR</span></div>
+            <p class="hg-sec"><span>01</span>{tt('Arrivée en ligne')}</p>
+            <div class="hg-form">
+              <label>{tt('Heure d’arrivée')}<span class="ty" style="--n:5;--d:.3s">17:00</span></label>
+              <div class="two"><label>{tt('Adultes')}<span class="ty" style="--n:1;--d:.9s">2</span></label><label>{tt('Enfants')}<span class="ty" style="--n:1;--d:1.1s">0</span></label></div>
+              <p class="hg-fiche">{tt('Fiche n° 1')}</p>
+              <div class="two"><label>{tt('Nom')}<span class="ty" style="--n:6;--d:1.4s">Benali</span></label><label>{tt('Prénom')}<span class="ty" style="--n:4;--d:2s">Sara</span></label></div>
+              <label>{tt('Nationalité')}<span class="ty" style="--n:9;--d:2.5s">{tt('Française')}</span></label>
+            </div>
+            <span class="hg-btn hg-send">{tt('Envoyer')}</span>
+            <p class="hg-done"><i>✓</i>{tt('Fait')} · 17:00</p>
+          </section>
+
+          <!-- 3. at the reception: the passport fills the fiche -->
+          <section class="hg-p hg-s2 dark">
+            <div class="hg-rec"><b>{tt('Identité')} · Sara Benali</b><span>{tt('Réception')}</span></div>
+            <div class="hg-pass">
+              <div class="pp-top"><span class="pp-ph"></span><span class="pp-l"><i></i><i></i><i class="s"></i><i></i><i class="s"></i></span></div>
+              <div class="pp-mrz" dir="ltr"><span>P&lt;FRABENALI&lt;&lt;SARA&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span><span>18AB24680&lt;5FRA9203148F3304021&lt;&lt;&lt;&lt;</span></div>
+              <span class="pp-scan"></span>
+            </div>
+            <span class="hg-btn hg-read">{tt('Remplir la fiche')}</span>
+            <div class="hg-fill">
+              {[[tt('Nom'), 'BENALI'], [tt('Prénom'), 'Sara'], [tt('Nationalité'), tt('Française')], [tt('Née le'), '14/03/1992'], [tt('Passeport'), '18AB24680']].map(([k, v], i) => (
+                <p style={`--i:${i}`}><small>{k}</small><b dir="ltr">{v}</b><i>✓</i></p>))}
+            </div>
+            <p class="hg-note">{tt('Lu sur la pièce. Vérifiez la fiche puis enregistrez.')}</p>
+          </section>
+
+          <!-- 4. during the stay: wifi, an order, the bill -->
+          <section class="hg-p hg-s3">
+            <div class="hg-nav"><b>DAR LINA</b><span>FR · <u>EN</u> · AR</span></div>
+            <p class="hg-sec"><span>02</span>{tt('Wifi et infos')}</p>
+            <div class="hg-wifi"><span><b>DarLina-Guest</b><small dir="ltr">bienvenue2026</small></span><u>{tt('Copier')}</u></div>
+            <p class="hg-sec"><span>03</span>{tt('Commander')}</p>
+            <div class="hg-svc"><span><b>{tt('Petit-déjeuner en chambre')}</b><small>80 DH</small></span><em class="hg-order">{tt('Commander')}</em><em class="hg-acc">✓ {tt('Accepté')}</em></div>
+            <div class="hg-svc"><span><b>{tt('Transfert aéroport')}</b><small>250 DH</small></span><em>{tt('Commander')}</em></div>
+            <p class="hg-sec"><span>04</span>{tt('Votre note')}</p>
+            <div class="hg-bill">
+              <p><span>{tt('Chambre')} · {tt('2 nuits')}</span><b dir="ltr">1 200 DH</b></p>
+              <p class="add"><span>1 × {tt('Petit-déjeuner en chambre')}</span><b dir="ltr">80 DH</b></p>
+              <p class="tot"><span>{tt('Total')}</span><b dir="ltr"><i class="a">1 200 DH</i><i class="b">1 280 DH</i></b></p>
+            </div>
+          </section>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .hg { display: grid; gap: 1.4rem; }
+  .hg-steps { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; margin-inline: -.25rem; padding: .25rem; }
+  .hg-steps li { flex: none; }
+  @media (min-width: 640px) { .hg-steps { flex-wrap: wrap; overflow: visible; } }
+  .hg-steps button { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.75rem; border-radius: 999px; padding: 0 1rem 0 .4rem; font-weight: 600; color: #0B1E33; box-shadow: inset 0 0 0 1px #DCE3E9; transition: background .3s, color .3s; }
+  [dir="rtl"] .hg-steps button { padding: 0 .4rem 0 1rem; }
+  .hg-steps button span { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: #EEF3F1; font-size: .85rem; }
+  .hg-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; } .hg-steps button.on span { background: #05B962; color: #0B1E33; }
+  .hg-stage { display: grid; place-items: center; }
+  .hg-phone { width: min(320px, 80vw); }
+  .hg-frame { border-radius: 18% / 8.5%; background: linear-gradient(#3A3F47, #1C1F24 50%, #3A3F47); padding: 2.2%; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .55); }
+  .hg-scr { container-type: inline-size; position: relative; aspect-ratio: 600 / 1240; overflow: hidden; border-radius: 15% / 7.2%; background: #F4F1EA; color: #1E211C;
+    --b: #1F5C4A; --mu: #6A6C63; --ln: #DDD8CC; --hf: 'Fraunces', Georgia, serif; border: .6rem solid #000; }
+  /* the font size lives on an inner box: a cqw size on the container itself would not work */
+  .hg-in { position: absolute; inset: 0; font-size: 4cqw; }
+  .hg-p { position: absolute; inset: 0; padding: 7% 0 4%; overflow: hidden; opacity: 0; transform: translateX(8%); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  [dir="rtl"] .hg-p { transform: translateX(-8%); }
+  .hg[data-s="0"] .hg-s0, .hg[data-s="1"] .hg-s1, .hg[data-s="2"] .hg-s2, .hg[data-s="3"] .hg-s3 { opacity: 1; transform: none; }
+  .hg-nav { display: flex; justify-content: space-between; align-items: center; padding: 2% 6%; font-size: .72em; }
+  .hg-nav b { letter-spacing: .14em; } .hg-nav span { color: var(--mu); } .hg-nav u { color: var(--b); text-underline-offset: .3em; }
+  .hg-photo { margin: 3% 6% 0; background: #fff; padding: 2%; } .hg-photo img { display: block; width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+  .hg-hi { margin: 6% 6% 0; font-family: var(--hf); font-size: 2.2em; line-height: 1.05; letter-spacing: -.02em; font-weight: 400; }
+  .hg-meta { margin: 2% 6% 0; font-size: .7em; color: var(--mu); }
+  .hg-hold { position: relative; margin: 6% 6% 0; border-top: 2px solid #B42318; padding-top: 5%; }
+  .hg-k { display: flex; align-items: center; gap: .5em; font-size: .75em; font-weight: 600; color: #B42318; } .hg-k i { width: .45em; height: .45em; border-radius: 9em; background: currentColor; }
+  .hg-big { margin-top: 2%; font-family: var(--hf); font-size: 2.3em; line-height: 1; }
+  .hg-left { margin-top: 2%; font-size: .8em; font-weight: 600; color: #B42318; }
+  .hg-btn { display: grid; place-items: center; grid-auto-flow: column; gap: .4em; min-height: 2.9em; margin-top: 5%; background: var(--b); color: #fff; font-weight: 700; font-size: .85em; border-radius: 3px; transition: transform .2s, opacity .3s; }
+  .hg-btn.press { transform: scale(.95); }
+  .hg-ok { position: absolute; inset-inline: 0; bottom: 2.1em; display: flex; align-items: center; gap: .5em; min-height: 2.9em; font-size: .8em; font-weight: 700; color: var(--b); opacity: 0; transition: opacity .3s; }
+  .hg-ok i { font-style: normal; }
+  .hg.going .hg-go { opacity: 0; } .hg.going .hg-ok { opacity: 1; }
+  .hg-cancel { display: block; margin-top: 4%; text-align: center; font-size: .7em; color: var(--mu); text-underline-offset: .3em; }
+  .hg-sec { display: flex; align-items: baseline; gap: .6em; margin: 6% 6% 3%; font-family: var(--hf); font-size: 1.35em; font-style: italic; border-top: 1px solid var(--ln); padding-top: 4%; }
+  .hg-sec span { font-family: inherit; font-size: .55em; font-style: normal; color: var(--mu); }
+  .hg-form { display: grid; gap: .8em; margin: 0 6%; } .hg-form .two { display: grid; grid-template-columns: 1fr 1fr; gap: .8em; }
+  .hg-form label { display: grid; gap: .3em; font-size: .65em; font-weight: 600; }
+  .hg-form label > span { display: block; min-height: 2.6em; line-height: 2.6em; border: 1px solid var(--ln); background: #fff; padding: 0 .7em; font-size: 1.3em; font-weight: 400; border-radius: 3px; }
+  .ty { white-space: nowrap; overflow: hidden; }
+  .hg[data-s="1"] .ty { animation: hg-type .5s steps(var(--n)) var(--d) both; }
+  @keyframes hg-type { from { color: transparent; text-shadow: none; } to { color: inherit; } }
+  .hg-fiche { font-size: .7em; font-weight: 700; color: var(--b); margin-top: .4em; }
+  .hg-send { margin: 6% 6% 0; }
+  .hg-done { display: flex; align-items: center; gap: .5em; margin: 4% 6% 0; font-size: .85em; font-weight: 700; color: var(--b); opacity: 0; transition: opacity .3s; }
+  .hg.sent .hg-done { opacity: 1; } .hg.sent .hg-send { opacity: .35; }
+  /* the reception's identity screen */
+  .hg-p.dark { background: #061A30; color: #fff; }
+  .hg-rec { display: flex; justify-content: space-between; align-items: baseline; gap: .5em; padding: 3% 6%; border-bottom: 1px solid rgba(255, 255, 255, .1); font-size: .8em; }
+  .hg-rec span { font-size: .75em; color: #7BE3A9; letter-spacing: .1em; text-transform: uppercase; }
+  .hg-pass { position: relative; margin: 6% 6% 0; border-radius: .6em; background: linear-gradient(135deg, #E9E3D3, #D9D1BC); padding: 5% 5% 4%; color: #2B2A26; overflow: hidden; }
+  .pp-top { display: flex; gap: 6%; } .pp-ph { width: 26%; aspect-ratio: 3 / 4; border-radius: .2em; background: linear-gradient(#B8AE98, #9C927D); }
+  .pp-l { flex: 1; display: grid; gap: .55em; align-content: start; padding-top: .3em; } .pp-l i { height: .45em; border-radius: 9em; background: rgba(43, 42, 38, .25); } .pp-l i.s { width: 55%; }
+  .pp-mrz { display: grid; gap: .15em; margin-top: 6%; font-family: ui-monospace, 'Courier New', monospace; font-size: .62em; letter-spacing: .02em; white-space: nowrap; overflow: hidden; }
+  .pp-scan { position: absolute; inset-inline: 0; top: 0; height: 18%; background: linear-gradient(transparent, rgba(5, 185, 98, .55), transparent); opacity: 0; }
+  .hg.reading .pp-scan { opacity: 1; animation: hg-scan 1.1s ease-in-out 2; }
+  @keyframes hg-scan { from { top: 55%; } 50% { top: 92%; } to { top: 55%; } }
+  .hg-read { margin: 5% 6% 0; background: rgba(255, 255, 255, .1); color: #fff; } .hg-read i { font-style: normal; color: #7BE3A9; }
+  .hg-fill { margin: 4% 6% 0; display: grid; gap: .35em; }
+  .hg-fill p { display: grid; grid-template-columns: 5.2em 1fr auto; align-items: center; gap: .5em; padding: .45em .6em; border-radius: .4em; background: rgba(255, 255, 255, .06); font-size: .78em; opacity: 0; transform: translateY(.4em); transition: opacity .3s calc(var(--i) * 140ms), transform .3s calc(var(--i) * 140ms); }
+  .hg-fill small { color: rgba(255, 255, 255, .55); font-size: .85em; } .hg-fill i { font-style: normal; color: #05B962; font-weight: 800; }
+  .hg.filled .hg-fill p { opacity: 1; transform: none; }
+  .hg-note { margin: 4% 6% 0; border-radius: .4em; background: rgba(5, 185, 98, .15); color: #7BE3A9; padding: .6em .8em; font-size: .7em; font-weight: 600; opacity: 0; transition: opacity .4s .8s; }
+  .hg.filled .hg-note { opacity: 1; }
+  /* during the stay */
+  .hg-wifi, .hg-svc { display: flex; align-items: center; justify-content: space-between; gap: .6em; margin: 0 6% .6em; font-size: .78em; }
+  .hg-wifi span, .hg-svc span { display: grid; } .hg-wifi small, .hg-svc small { color: var(--mu); } .hg-wifi u { font-weight: 700; text-underline-offset: .3em; }
+  .hg-svc { border-bottom: 1px solid var(--ln); padding-bottom: .6em; }
+  .hg-svc em { font-style: normal; font-weight: 700; font-size: .9em; color: var(--b); border: 1px solid var(--b); border-radius: 3px; padding: .35em .7em; white-space: nowrap; transition: opacity .3s; }
+  .hg-svc .hg-acc { display: none; border: 0; padding: 0; color: #2F7D4F; }
+  .hg.ordered .hg-order { display: none; } .hg.ordered .hg-acc { display: inline; }
+  .hg-bill { margin: 0 6%; font-size: .78em; }
+  .hg-bill p { display: flex; justify-content: space-between; padding: .25em 0; }
+  .hg-bill .add { max-height: 0; overflow: hidden; padding: 0; opacity: 0; transition: max-height .4s, opacity .4s, padding .4s; }
+  .hg.ordered .hg-bill .add { max-height: 2em; opacity: 1; padding: .25em 0; }
+  .hg-bill .tot { border-top: 2px solid currentColor; margin-top: .3em; padding-top: .45em; font-weight: 700; }
+  .hg-bill .tot b { font-family: var(--hf); font-size: 1.35em; font-weight: 400; display: grid; }
+  .hg-bill .tot i { grid-area: 1 / 1; font-style: normal; text-align: end; transition: opacity .3s; } .hg-bill .tot .b { opacity: 0; }
+  .hg.ordered .hg-bill .tot .a { opacity: 0; } .hg.ordered .hg-bill .tot .b { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { .hg-p, .hg-fill p, .ty { transition: none !important; animation: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hg]').forEach((root) => {
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const cd = root.querySelector<HTMLElement>('[data-cd]')!;
+    let s = 0, timers: number[] = [], auto = false, loop = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const press = (sel: string, ms: number, then: () => void) => later(ms, () => {
+      const b = root.querySelector(sel); b?.classList.add('press');
+      later(220, () => { b?.classList.remove('press'); then(); });
+    });
+    // what happens inside each step
+    const play = (n: number) => {
+      timers.forEach(clearTimeout); timers = [];
+      root.classList.remove('going', 'sent', 'reading', 'filled', 'ordered');
+      if (n === 0) {
+        let m = 72; cd.textContent = '1 h 12';
+        const tickDown = () => { m--; cd.textContent = m >= 60 ? `1 h ${String(m - 60).padStart(2, '0')}` : `${m} min`; if (m > 69) later(700, tickDown); };
+        later(700, tickDown);
+        press('.hg-go', 2600, () => root.classList.add('going'));
+      }
+      if (n === 1) press('.hg-send', 3400, () => root.classList.add('sent'));
+      if (n === 2) press('.hg-read', 900, () => { root.classList.add('reading'); later(2300, () => root.classList.add('filled')); });
+      if (n === 3) press('.hg-order', 1500, () => root.classList.add('ordered'));
+    };
+    const go = (n: number) => { s = n; root.dataset.s = String(n); steps.forEach((b, i) => b.classList.toggle('on', i === n)); play(n); };
+    const stop = () => { auto = false; clearTimeout(loop); };
+    const tick = () => { if (!auto) return; go((s + 1) % 4); loop = window.setTimeout(tick, s === 2 ? 6000 : 5000); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { stop(); go(i); }));
+    if (still) { root.classList.add('going'); return; }
+    if (!('IntersectionObserver' in window)) { go(0); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; go(0); loop = window.setTimeout(tick, 5000); }
+      else if (!e.isIntersecting) stop();
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

@@ -1,0 +1,88 @@
+---
+// "Contrôle": what the owner gets on his phone without being at the desk. Played in a loop once in view:
+// the cleaner's morning check (room 104 was used, but nobody slept there according to the reception), the alert on
+// the owner's phone at once, a drawer that did not match at the hand-over, and the day report in the evening.
+// It copies the real notifications and the cleaning page of the app. Demo riad "Dar Lina", invented names.
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+---
+<div class="hw" data-hw data-s="0">
+  <div class="hw-clean" aria-hidden="true">
+    <p class="hw-ck">{tt('Ménage · contrôle du matin')}</p>
+    <p class="hw-ct">{tt('Personne n’a dormi ici cette nuit. Regardez le lit et la salle de bain.')}</p>
+    {[['103', false], ['104', true], ['105', false]].map(([n, used]) => (
+      <div class={`hw-room ${used ? 'u' : ''}`}><b>{n}</b><span class="ok">✓ {tt('Intacte')}</span><span class="no">{tt('Utilisée')}</span></div>))}
+  </div>
+
+  <div class="hw-phone">
+    <div class="hw-scr" aria-hidden="true"><div class="hw-in">
+      <p class="hw-time" dir="ltr"><span class="t1">10:12</span><span class="t2">15:00</span><span class="t3">23:00</span></p>
+      <p class="hw-date">{tt('jeudi 26 novembre')}</p>
+      <div class="hw-list">
+        <div class="hw-n n1"><p class="hw-h"><i>A</i>{tt('À vérifier')} · Dar Lina<small dir="ltr">10:12</small></p><p>{tt('Chambre 104 utilisée sans client enregistré')}</p></div>
+        <div class="hw-n n2"><p class="hw-h"><i>A</i>{tt('À vérifier')} · Dar Lina<small dir="ltr">15:00</small></p><p>{tt('Il manquait 300 MAD dans la caisse')} · Youssef</p></div>
+        <div class="hw-n n3 big"><p class="hw-h"><i>A</i>Dar Lina · {tt('2 à vérifier')}<small dir="ltr">23:00</small></p>
+          <p>{tt('9/12 chambres (75 %) · Encaissé 4 650 MAD · En caisse 5 120 MAD · Demain 4 arrivée(s).')}</p></div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<style is:global>
+  .hw { position: relative; display: grid; place-items: center; padding: 1rem 0 2rem; }
+  .hw-phone { width: min(300px, 76vw); border-radius: 18% / 8.5%; background: linear-gradient(#3A3F47, #1C1F24 50%, #3A3F47); padding: 2.2%; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .6); }
+  .hw-scr { container-type: inline-size; position: relative; aspect-ratio: 600 / 1240; overflow: hidden; border-radius: 15% / 7.2%; border: .55rem solid #000;
+    background: radial-gradient(120% 80% at 30% 10%, #24506A, #0B1E33 60%, #061423); color: #fff; }
+  .hw-in { position: absolute; inset: 0; font-size: 4cqw; }
+  .hw-time { display: grid; margin-top: 18%; text-align: center; font-size: 4.4em; font-weight: 600; letter-spacing: -.03em; line-height: 1; }
+  .hw-time span { grid-area: 1 / 1; opacity: 0; transition: opacity .4s; }
+  .hw[data-s="0"] .t1, .hw[data-s="1"] .t1, .hw[data-s="2"] .t2, .hw[data-s="3"] .t3 { opacity: 1; }
+  .hw-date { margin-top: 2%; text-align: center; font-size: .85em; opacity: .75; }
+  .hw-list { display: grid; gap: .55em; margin: 12% 5% 0; }
+  .hw-n { border-radius: 1.1em; background: rgba(255, 255, 255, .16); backdrop-filter: blur(12px); padding: .75em .9em; font-size: .78em; line-height: 1.35;
+    opacity: 0; transform: translateY(-1.2em) scale(.96); transition: opacity .45s, transform .55s cubic-bezier(.2, .9, .25, 1.15); }
+  .hw-h { display: flex; align-items: center; gap: .5em; font-weight: 700; margin-bottom: .2em; }
+  .hw-h i { display: grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: .4em; background: #05B962; color: #0B1E33; font-style: normal; font-size: .85em; font-weight: 900; }
+  .hw-h small { margin-inline-start: auto; font-weight: 500; opacity: .65; }
+  .hw-n.big { background: rgba(255, 255, 255, .22); }
+  .hw[data-s="1"] .n1, .hw[data-s="2"] .n1, .hw[data-s="3"] .n1, .hw[data-s="2"] .n2, .hw[data-s="3"] .n2, .hw[data-s="3"] .n3 { opacity: 1; transform: none; }
+  .hw-n.n1 { order: 3; } .hw-n.n2 { order: 2; } .hw-n.n3 { order: 1; }
+  /* the cleaner's phone card, beside the owner's phone on a big screen, above it on a small one */
+  .hw-clean { position: relative; z-index: 2; width: min(260px, 70vw); margin-bottom: -1.2rem; border-radius: 1.2rem; background: #061A30; color: #fff; padding: .9rem; box-shadow: 0 24px 50px -20px rgba(0, 0, 0, .5); font-size: .8rem;
+    transition: opacity .5s, transform .6s; }
+  @media (min-width: 900px) { .hw { grid-template-columns: auto auto; gap: 0; align-items: center; } .hw-clean { margin: 0 -2.5rem 0 0; transform: rotate(-3deg); } [dir="rtl"] .hw-clean { margin: 0 0 0 -2.5rem; transform: rotate(3deg); } }
+  .hw[data-s="2"] .hw-clean, .hw[data-s="3"] .hw-clean { opacity: .35; }
+  .hw-ck { font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: rgba(255, 255, 255, .6); }
+  .hw-ct { margin: .3rem 0 .6rem; color: rgba(255, 255, 255, .75); line-height: 1.35; }
+  .hw-room { display: flex; align-items: center; gap: .4rem; margin-top: .4rem; border-radius: .8rem; background: rgba(255, 255, 255, .1); padding: .4rem; }
+  .hw-room b { display: grid; place-items: center; width: 2.6rem; height: 2.2rem; border-radius: .6rem; background: rgba(0, 0, 0, .3); font-size: 1.05rem; }
+  .hw-room span { border-radius: .6rem; padding: .45rem .6rem; font-weight: 800; font-size: .72rem; }
+  .hw-room .ok { margin-inline-start: auto; background: rgba(255, 255, 255, .15); } .hw-room .no { background: rgba(239, 68, 68, .22); color: #FECACA; transition: background .3s, color .3s, transform .2s; }
+  .hw[data-s="1"] .hw-room.u .no, .hw[data-s="2"] .hw-room.u .no, .hw[data-s="3"] .hw-room.u .no { background: #EF4444; color: #fff; }
+  .hw-room.u .no.press { transform: scale(.92); }
+  .hw-room:not(.u) .ok { transition: background .3s; } .hw[data-s="1"] .hw-room:not(.u) .ok, .hw[data-s="2"] .hw-room:not(.u) .ok, .hw[data-s="3"] .hw-room:not(.u) .ok { background: rgba(5, 185, 98, .35); }
+  @media (prefers-reduced-motion: reduce) { .hw-n, .hw-time span, .hw-clean { transition: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hw]').forEach((root) => {
+    const used = root.querySelector('.hw-room.u .no');
+    let s = 0, t = 0, on = false;
+    const go = (n: number) => { s = n; root.dataset.s = String(n); };
+    // 0: the cleaner looks · 1: she taps "Utilisée", the owner knows at once · 2: the drawer at the hand-over · 3: the evening report
+    const tick = () => {
+      if (!on) return;
+      if (s === 0) { used?.classList.add('press'); window.setTimeout(() => used?.classList.remove('press'), 220); }
+      go((s + 1) % 4);
+      t = window.setTimeout(tick, s === 3 ? 5200 : s === 0 ? 2600 : 3000);
+    };
+    if (still) { go(3); return; }
+    if (!('IntersectionObserver' in window)) { go(3); return; }
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !on) { on = true; t = window.setTimeout(tick, 1600); }
+      else if (!e.isIntersecting) { on = false; clearTimeout(t); }
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

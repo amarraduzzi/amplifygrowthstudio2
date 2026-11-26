@@ -14,6 +14,8 @@ import HotelHeroBoard from '../HotelHeroBoard.astro';
 import HotelDesk from '../HotelDesk.astro';
 import HotelChannels from '../HotelChannels.astro';
 import HotelSite from '../HotelSite.astro';
+import HotelGuest from '../HotelGuest.astro';
+import HotelWatch from '../HotelWatch.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -25,6 +27,7 @@ const description = tt('Amplify Hotel : le planning des chambres, Airbnb et Book
 const wa = tt('Bonjour, je voudrais voir Amplify Hotel pour mon établissement.');
 const faq = [
   [tt('Je dois quitter Airbnb ou Booking ?'), tt('Non. Vous gardez vos annonces. Amplify lit leurs calendriers et leur envoie les chambres prises, pour éviter les doubles réservations. Les réservations de votre site passent sans commission.')],
+  [tt('J’ai plusieurs chambres identiques sur Booking. Les calendriers suffisent ?'), tt('Pour une annonce avec plusieurs chambres, Amplify se connecte à Beds24, un gestionnaire de canaux que l’hôtel prend à son nom et paie directement à Beds24. Vous collez leur code dans Amplify et vous reliez vos types de chambres. Nous vous aidons à tout mettre en place.')],
   [tt('Ça marche pour un riad de 5 chambres ?'), tt('Oui. Tout est facultatif : la fiche de police, la taxe de séjour, les prix par saison ou l’acompte. Vous allumez ce qui vous sert, le reste ne vous gêne pas.')],
   [tt('Il me faut quel matériel ?'), tt('Une tablette ou un ordinateur à la réception, et le téléphone de chaque membre de l’équipe. Rien à installer pour vos clients.')],
   [tt('Mes clients doivent-ils installer une application ?'), tt('Non. Ils reçoivent un lien sur WhatsApp : arrivée en ligne, wifi, commandes, messages à la réception et leur note.')],
@@ -43,6 +46,18 @@ const site = [
   ['calendar', tt('Le prix de chaque nuit'), tt('Un calendrier avec vos prix du week-end et des saisons. Un seul prix toute l’année ? Ça marche aussi.')],
   ['gift', tt('Extras et code promo'), tt('Petit-déjeuner, transfert, dîner : le client les ajoute en réservant. Vos codes promo pour les habitués.')],
   ['shield', tt('Acompte ou confirmation immédiate'), tt('Vous demandez un acompte, ou la chambre est réservée tout de suite. C’est vous qui choisissez.')],
+];
+const guest = [
+  ['clock', tt('Une chambre gardée, avec l’heure'), tt('Le client voit jusqu’à quelle heure sa chambre l’attend. Il touche « J’arrive », ou il annule et la chambre revient à la vente.')],
+  ['users', tt('L’arrivée faite avant d’arriver'), tt('Heure d’arrivée et fiches remplies depuis son téléphone. À la réception, il ne reste qu’à donner la clé.')],
+  ['camera', tt('Le passeport remplit la fiche'), tt('Une photo du passeport ou de la CIN, et la fiche de police se remplit toute seule. La réception vérifie et enregistre.')],
+  ['gift', tt('Les commandes sur la note'), tt('Petit-déjeuner, transfert, dîner : le client commande depuis sa page, la réception accepte, c’est sur la note.')],
+];
+const watch = [
+  ['door', tt('Une chambre utilisée sans client'), tt('Chaque matin, le ménage regarde les chambres où personne n’a dormi. Une chambre utilisée vous est signalée tout de suite.')],
+  ['wallet', tt('La caisse qui ne tombe pas juste'), tt('À chaque remise de caisse, l’écart avec le nom de l’employé. Vous choisissez à partir de quel montant.')],
+  ['shield', tt('Ce qui change après l’arrivée'), tt('Un séjour annulé, raccourci ou moins cher après l’arrivée, un client parti sans tout payer, une chambre marquée « payée ailleurs ».')],
+  ['bell', tt('Le bilan du soir'), tt('À l’heure que vous choisissez : chambres, argent encaissé, caisse, arrivées de demain et ce qu’il faut vérifier.')],
 ];
 const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
 ---
@@ -110,7 +125,18 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
       <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Airbnb, Booking, votre site.')}</span><span class="block text-green">{tt('Une nuit vendue une fois.')}</span></h2>
       <p class="mt-5 max-w-2xl text-lg text-white/75">{tt('Amplify lit les calendriers d’Airbnb et de Booking, et leur renvoie les nuits déjà prises. Vous gardez vos annonces. Si deux réservations tombent quand même sur le même soir, la réception le voit tout de suite et déplace le client.')}</p>
       <div class="mt-10"><HotelChannels /></div>
-      <p class="mt-4 text-sm text-white/55">{tt('La mise à jour passe par les calendriers des plateformes : elle prend quelques minutes, parfois plus selon Airbnb ou Booking.')}</p>
+      <div class="mt-10 grid gap-px overflow-hidden rounded-[1.6rem] bg-white/10 md:grid-cols-2">
+        <div class="tf bg-navy p-6 md:p-8" style="--d:100ms">
+          <p class="text-sm font-bold uppercase tracking-[0.14em] text-white/55">{tt('Calendriers iCal')} · <span class="text-green">{tt('inclus')}</span></p>
+          <p class="mt-3 text-xl font-semibold md:text-2xl">{tt('Pour une annonce, une chambre.')}</p>
+          <p class="mt-2 text-white/70">{tt('Le lien de chaque chambre va dans Airbnb et Booking, le leur vient dans Amplify. La mise à jour prend quelques minutes, parfois plus selon la plateforme.')}</p>
+        </div>
+        <div class="tf bg-navy p-6 md:p-8" style="--d:200ms">
+          <p class="text-sm font-bold uppercase tracking-[0.14em] text-white/55">Beds24 · {tt('gestionnaire de canaux')}</p>
+          <p class="mt-3 text-xl font-semibold md:text-2xl">{tt('Plusieurs chambres. Prix et disponibilités.')}</p>
+          <p class="mt-2 text-white/70">{tt('Pour une annonce Booking avec plusieurs chambres identiques. L’hôtel prend son compte Beds24 et le paie directement à Beds24. Il colle leur code dans Amplify, relie ses types de chambres, et c’est connecté.')}</p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -129,7 +155,41 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
     </div>
   </section>
 
-  <!-- next steps: the guest's stay, housekeeping, the money -->
+  <!-- the guest's stay: kept room, arrival online, the passport fills the fiche, orders on the bill -->
+  <section id="sejour" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
+      <div class="tf order-2 lg:order-1" style="--d:120ms"><HotelGuest /></div>
+      <div class="tf-x order-1 lg:order-2">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le client a son lien.')}</span><span class="block text-green-deep">{tt('Pas d’application.')}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-muted">{tt('Sur WhatsApp, le client reçoit la page de son séjour, dans le style de votre site. De la réservation au départ, tout se passe là.')}</p>
+      </div>
+    </div>
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {guest.map(([ic, h, x], i) => (
+        <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+    </ul>
+  </section>
+
+  <!-- the owner's control: what can hide a room sold for cash, on his phone -->
+  <section id="controle" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr] lg:gap-14">
+        <div>
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Vous n’êtes pas à l’hôtel.')}</span><span class="block text-green">{tt('Vous savez tout.')}</span></h2>
+          <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Une chambre vendue en espèces sans être enregistrée ne laisse pas de trace. Sauf ici : Amplify croise le ménage, les séjours et la caisse, et vous prévient sur votre téléphone.')}</p>
+        </div>
+        <div class="tf" style="--d:120ms"><HotelWatch /></div>
+      </div>
+      <ul class="mt-10 grid gap-6 border-t border-white/10 pt-10 sm:grid-cols-2 lg:grid-cols-4">
+        {watch.map(([ic, h, x], i) => (
+          <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-white/70">{x}</span></li>))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- next steps: housekeeping and maintenance, the money -->
 
   <SectorPrices lang={lang} k="hotel" />
 
