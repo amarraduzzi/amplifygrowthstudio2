@@ -1,11 +1,10 @@
 ---
-// The bill of a stay, played live: the "Note du séjour" of the reception app. The nights, the guest's orders, the
-// restaurant bill sent to the room from the restaurant's till, the tourist tax, the deposit already paid; then the
-// payment, the departure, and the invoice ready to send. Plays in a loop once in view. Demo riad, invented names.
+// The bill of a stay, played as a receipt rolling out of the reception's printer: the nights, the guest's orders, the
+// restaurant bill sent to the room from the restaurant's till, the tourist tax, the deposit already paid. Then the
+// payment, a "PAYÉ" stamp, and the invoice leaving as a WhatsApp message. Loops once in view. Demo riad, invented names.
 import { tr, langOf } from '../i18n/t';
 const lang = langOf(Astro.url);
 const tt = tr(lang);
-// [label, detail, amount in DH (negative = paid)], each one arrives in turn
 const LINES: [string, string, number][] = [
   [tt('Chambre'), tt('2 nuits · Suite'), 1300],
   [tt('Petit-déjeuner en chambre'), '× 2', 160],
@@ -13,91 +12,97 @@ const LINES: [string, string, number][] = [
   [tt('Taxe de séjour'), tt('2 adultes · 2 nuits'), 60],
   [tt('Acompte reçu'), tt('à la réservation'), -500],
 ];
-const fmt = (n: number) => `${n < 0 ? '− ' : ''}${Math.abs(n).toLocaleString('fr-FR').replace(/ /g, ' ')} DH`;
-let run = 0;
-const totals = LINES.map(l => (run += l[2]));
+const fmt = (n: number) => `${n < 0 ? '− ' : ''}${Math.abs(n).toLocaleString('fr-FR').replace(/[  ]/g, ' ')} DH`;
+const due = LINES.reduce((s, l) => s + l[2], 0);
 ---
-<div class="hbl" data-hbl data-s="0" aria-hidden="true">
-  <div class="hbl-tab"><div class="hbl-scr" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
-    <div class="hbl-top"><b>{tt('Note du séjour')} · Fam. Idrissi</b><span>{tt('Chambre')} 102</span></div>
-    <div class="hbl-lines">
-      {LINES.map(([l, d, a], i) => (
-        <p class="hbl-l" style={`--i:${i}`} data-i={i}><span><b>{l}</b><small>{d}</small></span><em dir="ltr" class={a < 0 ? 'neg' : ''}>{fmt(a)}</em></p>))}
+<div class="hbl" data-hbl aria-hidden="true">
+  <div class="hbl-printer"><span class="hbl-led"></span><span class="hbl-slot"></span><small>Amplify · {tt('Réception')}</small></div>
+  <div class="hbl-roll">
+    <div class="hbl-paper" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
+      <p class="hbl-c" data-r><b>DAR LINA</b><small>{tt('Note du séjour')}</small><small>{tt('Chambre')} 102 · Fam. Idrissi</small></p>
+      <p class="hbl-cut" data-r></p>
+      {LINES.map(([l, d, a]) => (
+        <p class="hbl-line" data-r><span><b>{l}</b><small>{d}</small></span><em dir="ltr" class={a < 0 ? 'neg' : ''}>{fmt(a)}</em></p>))}
+      <p class="hbl-cut" data-r></p>
+      <p class="hbl-tot" data-r><span>{tt('Reste à payer')}</span><b dir="ltr">{fmt(due)}</b></p>
+      <p class="hbl-line" data-r><span><b>{tt('Espèces')}</b><small dir="ltr">14:32 · Youssef</small></span><em dir="ltr">{fmt(due)}</em></p>
+      <p class="hbl-c hbl-end" data-r><small>{tt('Merci et à bientôt')}</small></p>
+      <span class="hbl-stamp">{tt('Payé')}</span>
     </div>
-    <div class="hbl-sum">
-      <span>{tt('Reste à payer')}</span>
-      <b dir="ltr">{totals.map((t, i) => <i data-t={i}>{fmt(t)}</i>)}<i data-t="paid">0 DH</i></b>
-    </div>
-    <div class="hbl-pay">
-      <span class="on">{tt('Espèces')}</span><span>{tt('Carte')}</span><span>{tt('Virement')}</span>
-      <b>{tt('Encaisser')} <span dir="ltr">{fmt(totals[totals.length - 1])}</span></b>
-    </div>
-    <p class="hbl-paid">✓ {tt('Payé')} · {tt('Départ fait')} · {tt('la chambre passe au ménage')}</p>
-  </div></div>
-
-  <div class="hbl-inv">
-    <p class="hbl-ik">{tt('Facture')} <span dir="ltr">n° 2026-0142</span></p>
-    <p class="hbl-ih">Dar Lina</p>
-    <p class="hbl-ix">ICE 002345678000091 · {tt('TVA comprise')}</p>
-    <div class="hbl-ir"><span>{tt('Total')}</span><b dir="ltr">{fmt(LINES.filter(l => l[2] > 0).reduce((s, l) => s + l[2], 0))}</b></div>
-    <p class="hbl-ia"><span>PDF</span><span>WhatsApp</span></p>
+  </div>
+  <div class="hbl-wa">
+    <p class="hbl-wh"><i>D</i><span><b>Dar Lina</b><small>{tt('en ligne')}</small></span></p>
+    <p class="hbl-msg"><span class="hbl-pdf">PDF</span><span><b>{tt('Facture')} <span dir="ltr">2026-0142</span></b><small dir="ltr">{fmt(1760)} · ICE 002345678000091</small></span><em>✓✓</em></p>
   </div>
 </div>
 
 <style is:global>
-  .hbl { position: relative; padding-bottom: 8.5rem; }
-  .hbl-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .55); }
-  .hbl-scr { border-radius: 1.1rem; background: #0A1931; color: #fff; padding: 1.1rem 1.1rem 1.2rem; min-height: 26rem; }
-  .hbl-top { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem 1rem; padding-bottom: .8rem; border-bottom: 1px solid rgba(255, 255, 255, .08); }
-  .hbl-top b { font-size: 1.05rem; } .hbl-top span { font-size: .8rem; font-weight: 700; color: #8FA3C2; }
-  .hbl-lines { display: grid; gap: .4rem; margin-top: .9rem; min-height: 15.5rem; align-content: start; }
-  .hbl-l { display: flex; align-items: center; justify-content: space-between; gap: 1rem; border-radius: .8rem; background: #0E2140; padding: .55rem .8rem; opacity: 0; transform: translateY(.5rem); transition: opacity .35s, transform .35s; }
-  .hbl-l span { display: grid; } .hbl-l b { font-size: .9rem; } .hbl-l small { font-size: .72rem; color: #8FA3C2; }
-  .hbl-l em { font-style: normal; font-weight: 800; font-variant-numeric: tabular-nums; white-space: nowrap; } .hbl-l em.neg { color: #7BE3A9; }
-  .hbl[data-s="1"] .hbl-l[data-i="0"], .hbl[data-s="2"] .hbl-l:is([data-i="0"], [data-i="1"]), .hbl[data-s="3"] .hbl-l:is([data-i="0"], [data-i="1"], [data-i="2"]),
-  .hbl[data-s="4"] .hbl-l:not([data-i="4"]), .hbl:is([data-s="5"], [data-s="6"], [data-s="7"]) .hbl-l { opacity: 1; transform: none; }
-  .hbl-l[data-i="2"] { box-shadow: inset 0 0 0 1px rgba(110, 143, 240, .4); }
-  .hbl-sum { display: flex; align-items: baseline; justify-content: space-between; margin-top: .9rem; padding-top: .8rem; border-top: 2px solid rgba(255, 255, 255, .85); }
-  .hbl-sum span { font-weight: 700; color: #B8C6DC; }
-  .hbl-sum b { display: grid; font-size: 1.8rem; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .hbl-sum i { grid-area: 1 / 1; font-style: normal; text-align: end; opacity: 0; transition: opacity .3s; }
-  .hbl[data-s="1"] [data-t="0"], .hbl[data-s="2"] [data-t="1"], .hbl[data-s="3"] [data-t="2"], .hbl[data-s="4"] [data-t="3"], .hbl[data-s="5"] [data-t="4"], .hbl:is([data-s="6"], [data-s="7"]) [data-t="paid"] { opacity: 1; }
-  .hbl:is([data-s="6"], [data-s="7"]) .hbl-sum b { color: #05B962; }
-  .hbl-pay { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .9rem; opacity: .35; transition: opacity .4s; }
-  .hbl-pay span { border-radius: .7rem; background: #0E2140; padding: .55rem .8rem; font-size: .8rem; font-weight: 700; color: #B8C6DC; } .hbl-pay span.on { background: #fff; color: #0A1931; }
-  .hbl-pay b { margin-inline-start: auto; display: inline-flex; gap: .4rem; border-radius: .8rem; background: #05B962; color: #062314; padding: .55rem 1rem; font-size: .85rem; transition: transform .2s; }
-  .hbl-pay b.press { transform: scale(.94); }
-  .hbl[data-s="5"] .hbl-pay { opacity: 1; } .hbl:is([data-s="6"], [data-s="7"]) .hbl-pay { opacity: 0; height: 0; margin: 0; overflow: hidden; }
-  .hbl-paid { margin-top: .9rem; border-radius: .9rem; background: rgba(5, 185, 98, .15); color: #7BE3A9; padding: .7rem .9rem; font-size: .9rem; font-weight: 700; opacity: 0; transition: opacity .4s; }
-  .hbl:is([data-s="6"], [data-s="7"]) .hbl-paid { opacity: 1; }
-  /* the invoice, slipping out of the tablet */
-  .hbl-inv { position: absolute; inset-inline-end: 1rem; bottom: 0; width: min(15rem, 70%); border-radius: 1rem; background: #fff; color: #0B1E33; padding: 1rem 1.1rem; box-shadow: 0 24px 50px -18px rgba(0, 0, 0, .45);
-    opacity: 0; transform: translateY(1.5rem) rotate(4deg); transition: opacity .5s, transform .6s cubic-bezier(.2, .9, .25, 1.15); }
-  [dir="rtl"] .hbl-inv { transform: translateY(1.5rem) rotate(-4deg); }
-  .hbl[data-s="7"] .hbl-inv { opacity: 1; transform: rotate(3deg); } [dir="rtl"] .hbl[data-s="7"] .hbl-inv { transform: rotate(-3deg); }
-  .hbl-ik { font-size: .7rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #5C6B7A; }
-  .hbl-ih { margin-top: .3rem; font-size: 1.25rem; font-weight: 800; } .hbl-ix { font-size: .7rem; color: #5C6B7A; }
-  .hbl-ir { display: flex; justify-content: space-between; align-items: baseline; margin-top: .7rem; padding-top: .5rem; border-top: 1px solid #E3E8EE; font-weight: 700; } .hbl-ir b { font-size: 1.15rem; }
-  .hbl-ia { display: flex; gap: .4rem; margin-top: .7rem; } .hbl-ia span { border-radius: 99px; background: #EEF3F1; padding: .3rem .7rem; font-size: .72rem; font-weight: 800; } .hbl-ia span:last-child { background: #25D366; color: #fff; }
-  @media (prefers-reduced-motion: reduce) { .hbl-l, .hbl-sum i, .hbl-inv, .hbl-pay, .hbl-paid { transition: none !important; } }
+  .hbl { position: relative; display: grid; justify-items: center; padding: 0 0 4rem; }
+  .hbl-printer { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; width: min(23rem, 92%); height: 3.6rem; border-radius: 1.2rem 1.2rem .8rem .8rem; background: linear-gradient(#1B2B44, #0B1626); padding: 0 1.1rem; box-shadow: 0 24px 40px -22px rgba(0, 0, 0, .6); }
+  .hbl-printer small { font-size: .68rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #5F7290; }
+  .hbl-led { width: .55rem; height: .55rem; border-radius: 9px; background: #05B962; box-shadow: 0 0 10px #05B962; animation: hbl-blink 1.4s infinite; }
+  @keyframes hbl-blink { 50% { opacity: .35; } }
+  .hbl-slot { position: absolute; inset-inline: 1.6rem; bottom: .45rem; height: .3rem; border-radius: 9px; background: #000; }
+  /* the paper comes out of the slot: the roll grows to the height JS gives it */
+  .hbl-roll { position: relative; z-index: 1; width: min(20rem, 84%); height: var(--h, 0px); margin-top: -.55rem; overflow: hidden; transition: height .55s cubic-bezier(.3, .9, .3, 1); }
+  .hbl.reset .hbl-roll { transition: height .4s ease-in; }
+  .hbl-paper { position: relative; background: #FFFEFA; color: #1B2230; padding: 1.4rem 1.2rem 1.6rem; font-size: .88rem;
+    box-shadow: inset 0 14px 14px -12px rgba(0, 0, 0, .28);
+    -webkit-mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%; mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / 14px 100%; }
+  .hbl-c { display: grid; justify-items: center; text-align: center; gap: .1rem; }
+  .hbl-c b { font-size: 1.2rem; letter-spacing: .3em; } .hbl-c small, .hbl-line small { color: #6B7280; font-size: .74rem; }
+  .hbl-cut { margin: .8rem 0; border-top: 2px dashed #CBD2DA; }
+  .hbl-line { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; padding: .35rem 0; }
+  .hbl-line span { display: grid; } .hbl-line em { font-style: normal; font-weight: 800; white-space: nowrap; font-variant-numeric: tabular-nums; } .hbl-line em.neg { color: #0A7A43; }
+  .hbl-tot { display: flex; justify-content: space-between; align-items: baseline; padding: .2rem 0 .6rem; font-weight: 800; }
+  .hbl-tot b { font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+  .hbl-end { margin-top: .8rem; }
+  .hbl-stamp { position: absolute; top: 46%; inset-inline-start: 50%; translate: -50% 0; border: 4px solid #0A7A43; border-radius: .6rem; padding: .2rem 1rem; color: #0A7A43; font-size: 2.4rem; font-weight: 900; letter-spacing: .18em; text-transform: uppercase;
+    mix-blend-mode: multiply; opacity: 0; transform: rotate(-14deg) scale(2.4); pointer-events: none; }
+  [dir="rtl"] .hbl-stamp { translate: 50% 0; }
+  .hbl.paid .hbl-stamp { animation: hbl-stamp .45s cubic-bezier(.3, 1.6, .5, 1) forwards; }
+  @keyframes hbl-stamp { to { opacity: .85; transform: rotate(-14deg) scale(1); } }
+  .hbl.paid .hbl-roll { animation: hbl-thump .3s .3s; } @keyframes hbl-thump { 40% { transform: translateY(3px); } }
+  /* the invoice leaves on WhatsApp */
+  .hbl-wa { position: absolute; z-index: 3; inset-inline-end: 0; bottom: .5rem; width: min(17rem, 78%); border-radius: 1.2rem; background: #ECE5DD; padding: .6rem; box-shadow: 0 24px 50px -18px rgba(0, 0, 0, .45);
+    opacity: 0; transform: translate(1.5rem, 1rem) scale(.92); transition: opacity .45s, transform .6s cubic-bezier(.2, .9, .25, 1.2); }
+  [dir="rtl"] .hbl-wa { transform: translate(-1.5rem, 1rem) scale(.92); }
+  .hbl.sent .hbl-wa { opacity: 1; transform: none; }
+  @media (min-width: 1024px) { .hbl-wa { inset-inline-end: -1.5rem; } }
+  .hbl-wh { display: flex; align-items: center; gap: .55rem; border-radius: .8rem; background: #075E54; color: #fff; padding: .45rem .6rem; }
+  .hbl-wh i { display: grid; place-items: center; width: 1.8rem; height: 1.8rem; border-radius: 99px; background: #fff; color: #075E54; font-style: normal; font-weight: 900; }
+  .hbl-wh span { display: grid; line-height: 1.15; } .hbl-wh small { font-size: .68rem; opacity: .75; }
+  .hbl-msg { display: flex; align-items: center; gap: .6rem; margin: .6rem 0 .2rem auto; width: 92%; border-radius: .8rem .2rem .8rem .8rem; background: #DCF8C6; padding: .55rem .6rem; color: #1B2230; font-size: .8rem; }
+  [dir="rtl"] .hbl-msg { margin: .6rem auto .2rem 0; border-radius: .2rem .8rem .8rem .8rem; }
+  .hbl-msg > span:nth-child(2) { display: grid; flex: 1; min-width: 0; } .hbl-msg small { font-size: .66rem; color: #4B5563; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hbl-pdf { display: grid; place-items: center; width: 2.3rem; height: 2.7rem; flex: none; border-radius: .35rem; background: #E5484D; color: #fff; font-size: .66rem; font-weight: 900; }
+  .hbl-msg em { align-self: flex-end; font-style: normal; font-size: .7rem; color: #34B7F1; font-weight: 800; }
+  @media (prefers-reduced-motion: reduce) { .hbl-roll, .hbl-wa { transition: none !important; } .hbl-stamp { animation: none !important; opacity: .85; transform: rotate(-14deg); } }
 </style>
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>('[data-hbl]').forEach((root) => {
-    let s = 0, t = 0, on = false;
-    const pay = root.querySelector('.hbl-pay b');
-    // 1-5: the lines arrive · 5: pay · 6: paid, departure · 7: the invoice · then again
+    const roll = root.querySelector<HTMLElement>('.hbl-roll')!;
+    const paper = root.querySelector<HTMLElement>('.hbl-paper')!;
+    const rows = [...root.querySelectorAll<HTMLElement>('[data-r]')];
+    // the paper shows down to the bottom of row i (and the whole paper at the end)
+    const upTo = (i: number) => { const r = rows[i]; roll.style.setProperty('--h', `${i >= rows.length - 1 ? paper.offsetHeight : r.offsetTop + r.offsetHeight + 12}px`); };
+    let i = -1, t = 0, on = false;
     const tick = () => {
       if (!on) return;
-      if (s === 5) { pay?.classList.add('press'); window.setTimeout(() => pay?.classList.remove('press'), 200); }
-      s = (s + 1) % 8; root.dataset.s = String(s);
-      t = window.setTimeout(tick, s === 7 ? 4200 : s === 0 ? 900 : s === 5 ? 1800 : 1300);
+      i++;
+      if (i < rows.length) { root.classList.remove('reset'); upTo(i); t = window.setTimeout(tick, i === 1 ? 250 : i === rows.length - 3 ? 1100 : 650); return; }
+      if (i === rows.length) { root.classList.add('paid'); t = window.setTimeout(tick, 1300); return; }
+      if (i === rows.length + 1) { root.classList.add('sent'); t = window.setTimeout(tick, 4200); return; }
+      // tear it off and print the next one
+      root.classList.add('reset'); root.classList.remove('paid', 'sent'); roll.style.setProperty('--h', '0px'); i = -1; t = window.setTimeout(tick, 900);
     };
-    if (still || !('IntersectionObserver' in window)) { root.dataset.s = '7'; return; }
+    if (still || !('IntersectionObserver' in window)) { root.classList.add('paid', 'sent'); roll.style.setProperty('--h', `${paper.offsetHeight}px`); return; }
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !on) { on = true; t = window.setTimeout(tick, 600); }
+      if (e.isIntersecting && !on) { on = true; t = window.setTimeout(tick, 500); }
       else if (!e.isIntersecting) { on = false; clearTimeout(t); }
-    }, { threshold: 0.35 }).observe(root);
+    }, { threshold: 0.3 }).observe(root);
+    addEventListener('resize', () => { if (i >= rows.length - 1) roll.style.setProperty('--h', `${paper.offsetHeight}px`); });
   });
 </script>

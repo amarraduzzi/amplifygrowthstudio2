@@ -281,6 +281,9 @@ export const hotelEn: Record<string, string> = {
   "la chambre passe au ménage": "the room goes to housekeeping",
   "À nettoyer maintenant": "Clean now",
   "à la réservation": "at booking",
+  "Ampoule de la salle de bain": "Bathroom light bulb",
+  "Merci et à bientôt": "Thank you, see you soon",
+  "Technicien": "Technician",
 };
 export const hotelAr: Record<string, string> = {
   "Hôtels et riads": "فنادق ورياضات",
@@ -563,4 +566,7 @@ export const hotelAr: Record<string, string> = {
   "la chambre passe au ménage": "الغرفة تذهب للتنظيف",
   "À nettoyer maintenant": "للتنظيف الآن",
   "à la réservation": "عند الحجز",
+  "Ampoule de la salle de bain": "مصباح الحمام",
+  "Merci et à bientôt": "شكرا وإلى اللقاء",
+  "Technicien": "التقني",
 };

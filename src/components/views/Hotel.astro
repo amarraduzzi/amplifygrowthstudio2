@@ -171,17 +171,12 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
 
   <!-- the guest's stay: kept room, arrival online, the passport fills the fiche, orders on the bill -->
   <section id="sejour" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
-    <div class="grid items-center gap-10 lg:grid-cols-[1fr_1fr] lg:gap-14">
-      <div class="tf order-2 lg:order-1" style="--d:120ms"><HotelGuest /></div>
-      <div class="tf-x order-1 lg:order-2">
+    <div class="tf"><HotelGuest items={guest.map(([, h, x]) => [h, x] as [string, string])}>
+      <div slot="head">
         <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le client a son lien.')}</span><span class="block text-green-deep">{tt('Pas d’application.')}</span></h2>
         <p class="mt-5 max-w-xl text-lg text-muted">{tt('Sur WhatsApp, le client reçoit la page de son séjour, dans le style de votre site. De la réservation au départ, tout se passe là.')}</p>
       </div>
-    </div>
-    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {guest.map(([ic, h, x], i) => (
-        <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
-    </ul>
+    </HotelGuest></div>
   </section>
 
   <!-- the owner's control: what can hide a room sold for cash, on his phone -->
@@ -196,43 +191,47 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
         </div>
         <div class="tf" style="--d:120ms"><HotelWatch /></div>
       </div>
-      <ul class="mt-10 grid gap-6 border-t border-white/10 pt-10 sm:grid-cols-2 lg:grid-cols-4">
+      <ul class="mt-10 grid gap-3 md:grid-cols-2">
         {watch.map(([ic, h, x], i) => (
-          <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-white/10 text-green"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-white/70">{x}</span></li>))}
+          <li class="tf flex gap-4 rounded-[1.4rem] bg-white/[0.07] p-4 ring-1 ring-white/10 backdrop-blur-sm" style={`--d:${i * 90 + 100}ms`}>
+            <span class={`relative grid size-11 shrink-0 place-items-center rounded-xl ${['bg-[#EF4444]/20 text-[#FCA5A5]', 'bg-[#F59E0B]/20 text-[#FCD34D]', 'bg-[#F59E0B]/20 text-[#FCD34D]', 'bg-green/20 text-green'][i]}`}>
+              <Icon name={ic} class="size-5" /><i class={`absolute -end-0.5 -top-0.5 size-2.5 rounded-full ring-2 ring-navy ${['bg-[#EF4444]', 'bg-[#F59E0B]', 'bg-[#F59E0B]', 'bg-green'][i]}`}></i></span>
+            <span class="min-w-0"><b class="block text-lg">{h}</b><span class="text-white/70">{x}</span></span>
+          </li>))}
       </ul>
     </div>
   </section>
 
   <!-- housekeeping and repairs: the team's phone and the reception's tiles -->
   <section id="menage" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
-    <div class="tf-x max-w-3xl">
+    <div class="tf-x mx-auto max-w-3xl text-center">
       <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le ménage sait quoi faire.')}</span><span class="block text-green-deep">{tt('La réception le voit.')}</span></h2>
-      <p class="mt-5 max-w-xl text-lg text-muted">{tt('Plus de coups de téléphone pour savoir si une chambre est prête. L’équipe a sa liste sur son téléphone, et chaque chambre propre apparaît libre à la réception.')}</p>
+      <p class="mx-auto mt-5 max-w-xl text-lg text-muted">{tt('Plus de coups de téléphone pour savoir si une chambre est prête. L’équipe a sa liste sur son téléphone, et chaque chambre propre apparaît libre à la réception.')}</p>
     </div>
     <div class="tf mt-10" style="--d:120ms"><HotelClean /></div>
-    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {clean.map(([ic, h, x], i) => (
-        <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
-    </ul>
+    <ol class="mt-16 grid gap-x-8 gap-y-10 border-t border-line pt-12 sm:grid-cols-2 lg:grid-cols-4">
+      {clean.map(([, h, x], i) => (
+        <li class="tf" style={`--d:${i * 90 + 100}ms`}>
+          <span class="display block text-7xl leading-none text-transparent [-webkit-text-stroke:1.5px_var(--color-green-deep,#0A7A43)]" dir="ltr">{String(i + 1).padStart(2, '0')}</span>
+          <b class="mt-4 block text-lg">{h}</b><span class="text-muted">{x}</span>
+        </li>))}
+    </ol>
   </section>
 
   <!-- the money: the bill of the stay, the payment, the invoice -->
   <section id="argent" class="scroll-mt-20 border-y border-line bg-paper px-4 py-14 sm:px-6 md:py-24" data-tf>
-    <div class="mx-auto max-w-6xl">
-      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
-        <div class="tf-x">
-          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une note juste.')}</span><span class="block text-green-deep">{tt('Rien d’oublié.')}</span></h2>
-          <p class="mt-5 max-w-xl text-lg text-muted">{tt('Les nuits, les commandes, l’addition du restaurant, la taxe de séjour et l’acompte arrivent tout seuls sur la note. Le client paie, part, et reçoit sa facture sur WhatsApp.')}</p>
-        </div>
-        <div class="tf" style="--d:120ms"><HotelBill /></div>
+    <div class="mx-auto grid max-w-6xl items-start gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16">
+      <div class="tf-x">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Une note juste.')}</span><span class="block text-green-deep">{tt('Rien d’oublié.')}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-muted">{tt('Les nuits, les commandes, l’addition du restaurant, la taxe de séjour et l’acompte arrivent tout seuls sur la note. Le client paie, part, et reçoit sa facture sur WhatsApp.')}</p>
+        <dl class="mt-10 divide-y divide-line border-y border-line">
+          {money.map(([, h, x], i) => (
+            <div class="tf grid gap-1 py-5 sm:grid-cols-[13rem_1fr] sm:gap-6" style={`--d:${i * 90 + 100}ms`}><dt class="text-lg font-bold">{h}</dt><dd class="text-muted">{x}</dd></div>))}
+        </dl>
       </div>
-      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {money.map(([ic, h, x], i) => (
-          <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
-      </ul>
+      <div class="tf lg:pt-6" style="--d:120ms"><HotelBill /></div>
     </div>
   </section>
-
 
   <SectorPrices lang={lang} k="hotel" />
 

@@ -6,11 +6,19 @@
 import { tr, langOf } from '../i18n/t';
 const lang = langOf(Astro.url);
 const tt = tr(lang);
-const STEPS = [tt('Chambre gardée'), tt('Arrivée en ligne'), tt('Fiche de police'), tt('Pendant le séjour')];
+// the steps are the text beside the phone: each one is a title and a line; the one playing fills its bar
+interface Props { items: [string, string][] }
+const { items } = Astro.props;
 ---
 <div class="hg" data-hg data-s="0">
-  <ol class="hg-steps" role="group" aria-label={tt('Les étapes')}>
-    {STEPS.map((s, i) => <li><button type="button" data-step={i} class={i === 0 ? 'on' : ''}><span dir="ltr">{i + 1}</span>{s}</button></li>)}
+  <div class="hg-head"><slot name="head" /></div>
+  <ol class="hg-list" role="group" aria-label={tt('Les étapes')}>
+    {items.map(([h, x], i) => (
+      <li><button type="button" data-step={i} class={`hg-item ${i === 0 ? 'on' : ''}`}>
+        <span class="hg-num" dir="ltr">{String(i + 1).padStart(2, '0')}</span>
+        <span class="hg-txt"><b>{h}</b><span>{x}</span></span>
+        <i class="hg-bar" aria-hidden="true"></i>
+      </button></li>))}
   </ol>
 
   <div class="hg-stage">
@@ -87,14 +95,23 @@ const STEPS = [tt('Chambre gardée'), tt('Arrivée en ligne'), tt('Fiche de poli
 </div>
 
 <style is:global>
-  .hg { display: grid; gap: 1.4rem; }
-  .hg-steps { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; margin-inline: -.25rem; padding: .25rem; }
-  .hg-steps li { flex: none; }
-  @media (min-width: 640px) { .hg-steps { flex-wrap: wrap; overflow: visible; } }
-  .hg-steps button { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.75rem; border-radius: 999px; padding: 0 1rem 0 .4rem; font-weight: 600; color: #0B1E33; box-shadow: inset 0 0 0 1px #DCE3E9; transition: background .3s, color .3s; }
-  [dir="rtl"] .hg-steps button { padding: 0 .4rem 0 1rem; }
-  .hg-steps button span { display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 999px; background: #EEF3F1; font-size: .85rem; }
-  .hg-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; } .hg-steps button.on span { background: #05B962; color: #0B1E33; }
+  .hg { display: grid; gap: 2rem; grid-template-areas: "head" "stage" "list"; }
+  @media (min-width: 1024px) { .hg { grid-template-columns: 1fr minmax(0, 360px); grid-template-areas: "head stage" "list stage"; column-gap: 4rem; row-gap: 2.2rem; align-items: start; } }
+  .hg-head { grid-area: head; } .hg-list { grid-area: list; display: grid; gap: .4rem; } .hg-stage { grid-area: stage; }
+  @media (min-width: 1024px) { .hg-stage { position: sticky; top: 6rem; } }
+  .hg-item { position: relative; display: flex; gap: 1.1rem; width: 100%; text-align: start; border-radius: 1.2rem; padding: 1rem 1.1rem 1.1rem; overflow: hidden; transition: background .35s, box-shadow .35s; }
+  .hg-item:hover { background: rgba(11, 30, 51, .04); }
+  .hg-num { flex: none; font-family: var(--font-display, inherit); font-size: 2rem; line-height: 1; font-weight: 800; color: #C9D3CE; transition: color .35s; }
+  .hg-txt { display: grid; gap: .25rem; } .hg-txt b { font-size: 1.2rem; color: #0B1E33; } .hg-txt span { color: #5C6B7A; }
+  /* the step that plays: white card, green number, and its bar filling for the time it is shown */
+  .hg-item.on { background: #fff; box-shadow: 0 18px 40px -26px rgba(11, 30, 51, .35), inset 0 0 0 1px #E3E9E6; }
+  .hg-item.on .hg-num { color: #05B962; }
+  .hg-bar { position: absolute; inset-inline: 1.1rem; bottom: .55rem; height: 3px; border-radius: 9px; background: #E7EEEA; opacity: 0; }
+  .hg-bar::after { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; border-radius: inherit; background: #05B962; }
+  .hg-item.on .hg-bar { opacity: 1; }
+  .hg.auto .hg-item.on .hg-bar::after { animation: hg-fill var(--dur, 5s) linear forwards; }
+  .hg:not(.auto) .hg-item.on .hg-bar::after { width: 100%; }
+  @keyframes hg-fill { to { width: 100%; } }
   .hg-stage { display: grid; place-items: center; }
   .hg-phone { width: min(320px, 80vw); }
   .hg-frame { border-radius: 18% / 8.5%; background: linear-gradient(#3A3F47, #1C1F24 50%, #3A3F47); padding: 2.2%; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .55); }
@@ -193,15 +210,16 @@ const STEPS = [tt('Chambre gardée'), tt('Arrivée en ligne'), tt('Fiche de poli
       if (n === 2) press('.hg-read', 900, () => { root.classList.add('reading'); later(2300, () => root.classList.add('filled')); });
       if (n === 3) press('.hg-order', 1500, () => root.classList.add('ordered'));
     };
-    const go = (n: number) => { s = n; root.dataset.s = String(n); steps.forEach((b, i) => b.classList.toggle('on', i === n)); play(n); };
-    const stop = () => { auto = false; clearTimeout(loop); };
-    const tick = () => { if (!auto) return; go((s + 1) % 4); loop = window.setTimeout(tick, s === 2 ? 6000 : 5000); };
+    const dur = (n: number) => (n === 2 ? 6000 : 5000);
+    const go = (n: number) => { s = n; root.dataset.s = String(n); root.style.setProperty('--dur', `${dur(n)}ms`); steps.forEach((b, i) => b.classList.toggle('on', i === n)); play(n); };
+    const stop = () => { auto = false; root.classList.remove('auto'); clearTimeout(loop); };
+    const tick = () => { if (!auto) return; go((s + 1) % 4); loop = window.setTimeout(tick, dur(s)); };
     steps.forEach((b, i) => b.addEventListener('click', () => { stop(); go(i); }));
     if (still) { root.classList.add('going'); return; }
     if (!('IntersectionObserver' in window)) { go(0); return; }
     let started = false;
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started) { started = true; auto = true; go(0); loop = window.setTimeout(tick, 5000); }
+      if (e.isIntersecting && !started) { started = true; auto = true; root.classList.add('auto'); go(0); loop = window.setTimeout(tick, dur(0)); }
       else if (!e.isIntersecting) stop();
     }, { threshold: 0.35 }).observe(root);
   });

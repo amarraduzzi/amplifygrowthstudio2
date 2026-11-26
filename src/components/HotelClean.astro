@@ -1,20 +1,28 @@
 ---
-// Housekeeping and repairs, played live: the cleaning team's page on a phone (the "?menage=" page of the app: rooms
-// to clean, planned times, the deadline when a guest arrives, "Prête") next to the reception's room tiles.
-// 1. the day's plan; 2. "Prête" on room 105, and the reception sees it free at once; 3. a breakdown reported from the
-// phone goes to the technician's list. Steps play by themselves once in view; touching one stops the tour.
+// Housekeeping and repairs, played live as one connected scene: the cleaning team's phone (the "?menage=" page of
+// the app), the reception's room tiles and the technician's list. When the team taps "Prête", a beam of light runs
+// from the phone to the room's tile, and the tile turns free; a breakdown sent from the phone runs to the technician.
+// 1. the day's plan; 2. room 105 ready; 3. a breakdown. Plays by itself once in view; touching a step stops the tour.
 import { tr, langOf } from '../i18n/t';
 const lang = langOf(Astro.url);
 const tt = tr(lang);
-const STEPS = [tt('Le plan du jour'), tt('Chambre prête'), tt('Une panne')];
-const TILES: [string, string][] = [['102', 'occupied'], ['104', 'occupied'], ['105', 'cleaning'], ['106', 'free']];
+const STEPS: [string, string][] = [['08:30', tt('Le plan du jour')], ['11:40', tt('Chambre prête')], ['12:15', tt('Une panne')]];
+const TILES: [string, string, string][] = [['102', 'occupied', 'Fam. Idrissi'], ['104', 'occupied', 'Emma R.'], ['105', 'cleaning', ''], ['106', 'free', '']];
 ---
 <div class="hk" data-hk data-s="0">
-  <ol class="hg-steps" role="group" aria-label={tt('Les étapes')}>
-    {STEPS.map((s, i) => <li><button type="button" data-step={i} class={i === 0 ? 'on' : ''}><span dir="ltr">{i + 1}</span>{s}</button></li>)}
+  <ol class="hk-steps" role="group" aria-label={tt('Les étapes')}>
+    {STEPS.map(([h, s], i) => <li><button type="button" data-step={i} class={i === 0 ? 'on' : ''}><time dir="ltr">{h}</time>{s}</button></li>)}
   </ol>
 
   <div class="hk-stage" aria-hidden="true">
+    <svg class="hk-beams"><defs>
+      <linearGradient id="hk-g" x1="0" x2="1"><stop offset="0" stop-color="#05B962" stop-opacity=".15" /><stop offset="1" stop-color="#05B962" /></linearGradient>
+      <filter id="hk-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4" /></filter>
+    </defs>
+      <path class="hk-path" /><path class="hk-path" />
+      <circle class="hk-comet" r="9" filter="url(#hk-glow)" /><circle class="hk-comet core" r="4" />
+    </svg>
+
     <!-- the cleaning team's phone -->
     <div class="hk-phone"><div class="hk-scr" dir={lang === 'ar' ? 'rtl' : 'ltr'}><div class="hk-in">
       <div class="hk-head"><b>{tt('Ménage')}</b><span>Dar Lina</span></div>
@@ -23,114 +31,175 @@ const TILES: [string, string][] = [['102', 'occupied'], ['104', 'occupied'], ['1
         <p><small>{tt('Nous sommes')}</small><b>2</b></p>
         <p><small>{tt('Fin estimée')}</small><b dir="ltr">12:40</b></p>
       </div>
-      <div class="hk-list">
-        <p class="hk-k">{tt('À nettoyer maintenant')}</p>
-        <div class="hk-card c105"><span class="hk-no">105</span><span class="hk-tx"><small>{tt('Simple')}</small><em class="dl">{tt('Prête avant')} <span dir="ltr">14:00</span></em><small dir="ltr">{tt('Prévu')} 11:00–11:40</small></span><span class="hk-ready">✓ {tt('Prête')}</span></div>
-        <p class="hk-k">{tt('Après le départ du client')}</p>
-        <div class="hk-card"><span class="hk-no">102</span><span class="hk-tx"><small>{tt('Suite')}</small><em>{tt('Départ avant')} <span dir="ltr">12:00</span></em><small dir="ltr">{tt('Prévu')} 12:00–12:40</small></span></div>
-      </div>
+      <p class="hk-k">{tt('À nettoyer maintenant')}</p>
+      <div class="hk-card c105"><span class="hk-no">105</span><span class="hk-tx"><small>{tt('Simple')}</small><em class="dl">{tt('Prête avant')} <span dir="ltr">14:00</span></em></span><span class="hk-ready" data-from="ready">✓ {tt('Prête')}</span></div>
+      <p class="hk-k">{tt('Après le départ du client')}</p>
+      <div class="hk-card"><span class="hk-no">102</span><span class="hk-tx"><small>{tt('Suite')}</small><em>{tt('Départ avant')} <span dir="ltr">12:00</span></em></span></div>
       <div class="hk-issue">
+        <div class="hk-form"><span>{tt('Chambre')} 104</span><span class="ty2">{tt('La douche fuit')}</span><b data-from="send">{tt('Envoyer')}</b></div>
         <p class="hk-ib">🔧 {tt('Signaler une panne')}</p>
-        <div class="hk-form"><span>{tt('Chambre')} 104</span><span class="ty2">{tt('La douche fuit')}</span><b>{tt('Envoyer')}</b></div>
-        <p class="hk-sent">✓ {tt('Envoyé au technicien')}</p>
       </div>
     </div></div></div>
 
-    <!-- the reception's tiles -->
-    <div class="hk-desk">
-      <p class="hk-dt">{tt('Réception')} · {tt('Chambres')}</p>
-      <div class="hk-tiles">
-        {TILES.map(([n, s]) => <div class="hk-t" data-n={n} data-s={s}><b>{n}</b><span><em data-k="free">{tt('Libre')}</em><em data-k="occupied">{tt('Occupée')}</em><em data-k="cleaning">{tt('Ménage')}</em></span></div>)}
+    <div class="hk-right">
+      <!-- the reception's tiles -->
+      <div class="hk-desk">
+        <p class="hk-dt"><span>{tt('Réception')}</span><span>{tt('Chambres')}</span></p>
+        <div class="hk-tiles">
+          {TILES.map(([n, s, g]) => <div class="hk-t" data-n={n} data-s={s}><b>{n}</b><span><em data-k="free">{tt('Libre')}</em><em data-k="occupied">{tt('Occupée')}</em><em data-k="cleaning">{tt('Ménage')}</em></span><small>{g}</small></div>)}
+        </div>
       </div>
-      <p class="hk-toast t1">✓ {tt('Chambre 105 propre : la réception le voit sans téléphoner.')}</p>
-      <p class="hk-toast t2">🔧 {tt('Technicien : chambre 104, la douche fuit.')}</p>
+      <!-- the technician's list -->
+      <div class="hk-tech">
+        <p class="hk-dt"><span>🔧 {tt('Technicien')}</span><span>Dar Lina</span></p>
+        <p class="hk-task done"><b>201</b>{tt('Ampoule de la salle de bain')}<em>✓</em></p>
+        <p class="hk-task new"><b>104</b>{tt('La douche fuit')}<em>{tt('Nouveau')}</em></p>
+      </div>
     </div>
   </div>
 </div>
 
 <style is:global>
-  .hk { display: grid; gap: 1.4rem; }
-  .hk-stage { display: grid; gap: 1.2rem; justify-items: center; }
-  @media (min-width: 760px) { .hk-stage { grid-template-columns: auto minmax(0, 34rem); justify-content: center; align-items: center; gap: 2.5rem; } }
-  .hk-phone { width: min(290px, 78vw); border-radius: 18% / 8.5%; background: linear-gradient(#3A3F47, #1C1F24 50%, #3A3F47); padding: 2.2%; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .5); }
-  .hk-scr { container-type: inline-size; position: relative; aspect-ratio: 600 / 1240; overflow: hidden; border-radius: 15% / 7.2%; border: .55rem solid #000; background: #020F20; color: #fff; }
+  .hk { display: grid; gap: 1.6rem; }
+  .hk-steps { display: flex; justify-content: center; gap: .5rem; overflow-x: auto; scrollbar-width: none; padding: .25rem; }
+  @media (max-width: 640px) { .hk-steps { justify-content: flex-start; } }
+  .hk-steps li { flex: none; }
+  .hk-steps button { display: inline-flex; align-items: center; gap: .6rem; min-height: 2.9rem; border-radius: 999px; padding: 0 1.1rem 0 .45rem; font-weight: 600; color: #0B1E33; box-shadow: inset 0 0 0 1px #DCE3E9; transition: background .3s, color .3s; }
+  [dir="rtl"] .hk-steps button { padding: 0 .45rem 0 1.1rem; }
+  .hk-steps time { border-radius: 999px; background: #EEF3F1; padding: .35rem .6rem; font-size: .8rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .hk-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; } .hk-steps button.on time { background: #05B962; color: #0B1E33; }
+  .hk-stage { position: relative; display: grid; gap: 2.2rem; justify-items: center; }
+  @media (min-width: 860px) { .hk-stage { grid-template-columns: auto minmax(0, 30rem); justify-content: center; align-items: center; column-gap: clamp(4rem, 9vw, 8rem); } }
+  .hk-beams { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 3; }
+  .hk-path { fill: none; stroke: url(#hk-g); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 2 7; opacity: 0; transition: opacity .4s; }
+  .hk-path.lit { opacity: 1; }
+  .hk-comet { fill: #05B962; opacity: 0; } .hk-comet.core { fill: #E8FFF2; }
+  .hk-comet.go { opacity: 1; }
+  .hk-phone { position: relative; z-index: 2; width: min(270px, 74vw); border-radius: 18% / 8.5%; background: linear-gradient(#3A3F47, #1C1F24 50%, #3A3F47); padding: 2.2%; box-shadow: 0 30px 60px -20px rgba(0, 0, 0, .5); }
+  .hk-scr { container-type: inline-size; position: relative; aspect-ratio: 600 / 1180; overflow: hidden; border-radius: 15% / 7.4%; border: .55rem solid #000; background: #020F20; color: #fff; }
   .hk-in { position: absolute; inset: 0; padding: 9% 5% 0; font-size: 3.9cqw; }
   .hk-head { display: flex; align-items: baseline; justify-content: space-between; } .hk-head b { font-size: 1.5em; font-weight: 800; } .hk-head span { font-size: .75em; color: rgba(255, 255, 255, .55); }
   .hk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: .45em; margin-top: 4%; }
   .hk-stats p { border-radius: .8em; background: rgba(255, 255, 255, .1); padding: .5em .6em; }
   .hk-stats small { display: block; font-size: .58em; color: rgba(255, 255, 255, .6); font-weight: 600; } .hk-stats b { display: grid; font-size: 1.45em; font-weight: 800; }
   .hk-stats i { grid-area: 1 / 1; font-style: normal; transition: opacity .3s; } .hk-stats .b { opacity: 0; }
-  .hk:not([data-s="0"]) .hk-stats .a { opacity: 0; } .hk:not([data-s="0"]) .hk-stats .b { opacity: 1; }
-  .hk-k { margin: 5% 0 2%; font-size: .58em; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
-  .hk-card { display: flex; align-items: center; gap: .55em; border-radius: 1em; background: rgba(255, 255, 255, .1); padding: .55em; transition: opacity .4s, transform .5s, max-height .5s, padding .5s, margin .5s; max-height: 6em; }
+  .hk.done105 .hk-stats .a { opacity: 0; } .hk.done105 .hk-stats .b { opacity: 1; }
+  .hk-k { margin: 6% 0 2%; font-size: .58em; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
+  .hk-card { display: flex; align-items: center; gap: .55em; border-radius: 1em; background: rgba(255, 255, 255, .1); padding: .55em; max-height: 6em; transition: opacity .4s, transform .5s, max-height .5s .2s, padding .5s .2s; }
   .hk-card.c105 { box-shadow: inset 0 0 0 2px rgba(251, 191, 36, .45); }
-  .hk:not([data-s="0"]) .hk-card.c105 { opacity: 0; transform: translateX(30%); max-height: 0; padding: 0 .55em; }
+  .hk.done105 .hk-card.c105 { opacity: 0; transform: translateX(30%); max-height: 0; padding: 0 .55em; }
   .hk-no { display: grid; place-items: center; width: 2.6em; height: 2.6em; flex: none; border-radius: .7em; background: rgba(0, 0, 0, .3); font-size: 1.25em; font-weight: 800; }
-  .hk-tx { display: grid; gap: .15em; flex: 1; min-width: 0; } .hk-tx small { font-size: .62em; color: rgba(255, 255, 255, .6); }
+  .hk-tx { display: grid; gap: .2em; flex: 1; min-width: 0; } .hk-tx small { font-size: .62em; color: rgba(255, 255, 255, .6); }
   .hk-tx em { justify-self: start; font-style: normal; font-size: .62em; font-weight: 800; border-radius: .5em; padding: .15em .5em; background: rgba(255, 255, 255, .12); }
   .hk-tx em.dl { background: rgba(251, 191, 36, .2); color: #FDE68A; }
-  .hk-ready { flex: none; border-radius: .7em; background: #10B981; padding: .7em .7em; font-size: .7em; font-weight: 800; transition: transform .2s; }
-  .hk-ready.press { transform: scale(.9); }
+  .hk-ready { flex: none; border-radius: .7em; background: #10B981; padding: .75em .75em; font-size: .7em; font-weight: 800; transition: transform .2s, box-shadow .3s; }
+  .hk-ready.press, .hk-form b.press { transform: scale(.88); box-shadow: 0 0 0 .4em rgba(16, 185, 129, .35); }
   .hk-issue { position: absolute; inset-inline: 5%; bottom: 5%; }
-  .hk-ib { display: grid; place-items: center; min-height: 2.6em; border-radius: .9em; background: rgba(255, 255, 255, .1); font-size: .8em; font-weight: 800; transition: opacity .3s; }
-  .hk-form { display: grid; gap: .4em; max-height: 0; overflow: hidden; opacity: 0; transition: max-height .5s, opacity .4s, margin .4s; }
+  .hk-ib { display: grid; place-items: center; min-height: 2.6em; margin-top: .5em; border-radius: .9em; background: rgba(255, 255, 255, .1); font-size: .8em; font-weight: 800; }
+  .hk-form { display: grid; gap: .4em; max-height: 0; overflow: hidden; opacity: 0; transition: max-height .5s, opacity .4s; }
   .hk-form span { border-radius: .6em; background: rgba(255, 255, 255, .08); padding: .55em .7em; font-size: .72em; }
-  .hk-form b { display: grid; place-items: center; min-height: 2.4em; border-radius: .7em; background: #10B981; font-size: .75em; transition: transform .2s; } .hk-form b.press { transform: scale(.94); }
-  .hk[data-s="2"] .hk-form { max-height: 12em; opacity: 1; margin-top: .5em; }
+  .hk-form b { display: grid; place-items: center; min-height: 2.4em; border-radius: .7em; background: #10B981; font-size: .75em; transition: transform .2s, box-shadow .3s; }
+  .hk[data-s="2"] .hk-form { max-height: 12em; opacity: 1; }
   .hk[data-s="2"] .ty2 { animation: hk-type 1s steps(14) .5s both; }
   @keyframes hk-type { from { color: transparent; } to { color: inherit; } }
-  .hk-sent { margin-top: .5em; text-align: center; font-size: .72em; font-weight: 800; color: #6EE7B7; opacity: 0; transition: opacity .3s; }
-  .hk.sent .hk-sent { opacity: 1; } .hk.sent .hk-form { opacity: .4; }
-  /* the reception's tiles */
-  .hk-desk { width: 100%; max-width: 34rem; border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .45); }
-  .hk-dt { padding: .6rem .7rem .2rem; font-size: .8rem; font-weight: 700; color: #B8C6DC; }
-  .hk-tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: .5rem; padding: .5rem; }
-  @media (min-width: 520px) { .hk-tiles { grid-template-columns: repeat(4, 1fr); } }
-  .hk-t { --c: #05B962; position: relative; overflow: hidden; display: grid; gap: .2rem; border-radius: .9rem; background: #0E2140; color: #fff; padding: .9rem .7rem .7rem; transition: background .5s, box-shadow .5s; }
+  .hk-right { position: relative; z-index: 2; display: grid; gap: 1.2rem; width: 100%; max-width: 30rem; }
+  .hk-desk, .hk-tech { border-radius: 1.5rem; background: #0B1422; padding: .6rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .45); }
+  .hk-dt { display: flex; justify-content: space-between; padding: .55rem .7rem .3rem; font-size: .8rem; font-weight: 700; color: #B8C6DC; } .hk-dt span:last-child { color: #5F7290; }
+  .hk-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; padding: .5rem; }
+  @media (max-width: 519px) { .hk-tiles { gap: .35rem; padding: .35rem; } .hk-t { padding: .85rem .45rem .55rem; } .hk-t b { font-size: 1.15rem; } .hk-t span { font-size: .62rem; } .hk-t small { display: none; } }
+  .hk-t { --c: #05B962; position: relative; overflow: hidden; display: grid; gap: .2rem; border-radius: .9rem; background: #0E2140; color: #fff; padding: .95rem .7rem .7rem; transition: background .5s, box-shadow .5s, transform .4s; }
   .hk-t::before { content: ""; position: absolute; inset: 0 0 auto; height: .3rem; background: var(--c); transition: background .5s; }
   .hk-t[data-s="occupied"] { --c: #6E8FF0; } .hk-t[data-s="cleaning"] { --c: #F3A632; box-shadow: inset 0 0 0 2px rgba(243, 166, 50, .5); }
-  .hk-t b { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+  .hk-t b { font-size: 1.45rem; font-weight: 800; line-height: 1; }
   .hk-t span { display: grid; font-size: .72rem; font-weight: 800; color: var(--c); }
   .hk-t em { grid-area: 1 / 1; font-style: normal; opacity: 0; transition: opacity .35s; }
   .hk-t[data-s="free"] [data-k="free"], .hk-t[data-s="occupied"] [data-k="occupied"], .hk-t[data-s="cleaning"] [data-k="cleaning"] { opacity: 1; }
-  .hk-t.flash { animation: hk-flash 1s; } @keyframes hk-flash { 30% { box-shadow: inset 0 0 0 3px #05B962, 0 0 24px rgba(5, 185, 98, .5); } }
-  .hk-t.tech { box-shadow: inset 0 0 0 2px #F97316; }
-  .hk-t.tech::after { content: "🔧"; position: absolute; top: .55rem; inset-inline-end: .5rem; font-size: .8rem; }
-  .hk-toast { margin: .2rem .5rem .5rem; border-radius: .9rem; padding: .7rem .9rem; font-size: .85rem; font-weight: 700; max-height: 0; overflow: hidden; opacity: 0; padding-block: 0; transition: opacity .4s, max-height .4s, padding .4s; }
-  .hk-toast.t1 { background: rgba(5, 185, 98, .16); color: #7BE3A9; } .hk-toast.t2 { background: rgba(249, 115, 22, .16); color: #FDBA74; }
-  .hk[data-s="1"] .t1, .hk.sent .t2 { max-height: 5rem; opacity: 1; padding-block: .7rem; }
-  @media (prefers-reduced-motion: reduce) { .hk-card, .hk-form, .hk-toast, .hk-t { transition: none !important; animation: none !important; } }
+  .hk-t small { min-height: 1em; font-size: .65rem; color: #8FA3C2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hk-t.hit { animation: hk-hit .9s; } @keyframes hk-hit { 25% { transform: scale(1.08); box-shadow: 0 0 0 3px #05B962, 0 0 40px rgba(5, 185, 98, .6); } }
+  .hk-t.tech { box-shadow: inset 0 0 0 2px #F97316; } .hk-t.tech::after { content: "🔧"; position: absolute; top: .6rem; inset-inline-end: .5rem; font-size: .8rem; }
+  .hk-task { display: flex; align-items: center; gap: .7rem; margin: .3rem .4rem; border-radius: .8rem; background: #0E2140; padding: .6rem .7rem; color: #fff; font-size: .85rem; }
+  .hk-task b { display: grid; place-items: center; min-width: 2.4rem; height: 2rem; border-radius: .55rem; background: rgba(0, 0, 0, .3); }
+  .hk-task em { margin-inline-start: auto; font-style: normal; font-size: .72rem; font-weight: 800; color: #7BE3A9; }
+  .hk-task.done { opacity: .5; }
+  .hk-task.new { max-height: 0; margin-block: 0; padding-block: 0; opacity: 0; overflow: hidden; transition: max-height .4s, opacity .4s, padding .4s, margin .4s; }
+  .hk-task.new em { border-radius: 99px; background: #F97316; color: #fff; padding: .2rem .55rem; }
+  .hk.sent .hk-task.new { max-height: 4rem; margin-block: .3rem; padding-block: .6rem; opacity: 1; animation: hk-hit .9s; }
+  @media (prefers-reduced-motion: reduce) { .hk-card, .hk-form, .hk-task, .hk-t, .hk-path { transition: none !important; animation: none !important; } .hk-comet { display: none; } }
 </style>
 
 <script>
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>('[data-hk]').forEach((root) => {
     const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const stage = root.querySelector<HTMLElement>('.hk-stage')!;
+    const paths = [...root.querySelectorAll<SVGPathElement>('.hk-path')];
+    const comets = [...root.querySelectorAll<SVGCircleElement>('.hk-comet')];
     const tile = (n: string) => root.querySelector<HTMLElement>(`.hk-t[data-n="${n}"]`)!;
-    let s = 0, timers: number[] = [], auto = false, loop = 0;
+    let s = 0, timers: number[] = [], auto = false, loop = 0, raf = 0;
     const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+
+    /** a curve from the middle of one element to the near edge of another, in the stage's own coordinates */
+    /** an arc over the other tiles, landing on top of the target (for the room tiles) */
+    const arc = (path: SVGPathElement, from: Element, to: Element) => {
+      const o = stage.getBoundingClientRect(), a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
+      const x1 = a.left + a.width / 2 - o.left, y1 = a.top + a.height / 2 - o.top;
+      const x2 = b.left + b.width / 2 - o.left, y2 = b.top - o.top + 2;
+      const lift = Math.max(70, Math.min(160, Math.abs(x2 - x1) * .35));
+      path.setAttribute('d', `M${x1},${y1} C${x1 + (x2 - x1) * .45},${Math.min(y1, y2) - lift} ${x2},${y2 - lift} ${x2},${y2}`);
+    };
+    const route = (path: SVGPathElement, from: Element, to: Element) => {
+      const o = stage.getBoundingClientRect(), a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
+      const x1 = a.left + a.width / 2 - o.left, y1 = a.top + a.height / 2 - o.top;
+      const side = Math.abs(b.left + b.width / 2 - x1 - o.left) > Math.abs(b.top + b.height / 2 - y1 - o.top);
+      const x2 = (side ? (b.left > a.left ? b.left : b.right) : b.left + b.width / 2) - o.left;
+      const y2 = (side ? b.top + b.height / 2 : (b.top > a.top ? b.top : b.bottom)) - o.top;
+      const k = side ? (x2 - x1) * .55 : (y2 - y1) * .55;
+      path.setAttribute('d', side ? `M${x1},${y1} C${x1 + k},${y1} ${x2 - k},${y2} ${x2},${y2}` : `M${x1},${y1} C${x1},${y1 + k} ${x2},${y2 - k} ${x2},${y2}`);
+    };
+    /** the light runs along the curve, then the target lights up */
+    const shoot = (path: SVGPathElement, done: () => void) => {
+      cancelAnimationFrame(raf);
+      path.classList.add('lit');
+      const len = path.getTotalLength(), t0 = performance.now(), T = 950;
+      comets.forEach((c) => c.classList.add('go'));
+      const step = (now: number) => {
+        const p = Math.min(1, (now - t0) / T), e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+        const pt = path.getPointAtLength(len * e);
+        comets.forEach((c) => { c.setAttribute('cx', String(pt.x)); c.setAttribute('cy', String(pt.y)); });
+        if (p < 1) raf = requestAnimationFrame(step); else { comets.forEach((c) => c.classList.remove('go')); done(); }
+      };
+      raf = requestAnimationFrame(step);
+    };
+    const press = (el: Element | null, then: () => void) => { el?.classList.add('press'); later(260, () => { el?.classList.remove('press'); then(); }); };
+    const hit = (el: HTMLElement) => { el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit'); };
+
     const play = (n: number) => {
-      timers.forEach(clearTimeout); timers = [];
-      root.classList.remove('sent');
-      tile('105').dataset.s = n === 0 ? 'cleaning' : 'free';
-      tile('104').classList.toggle('tech', false);
+      timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf);
+      comets.forEach((c) => c.classList.remove('go')); paths.forEach((p) => p.classList.remove('lit'));
+      root.classList.remove('done105', 'sent'); tile('104').classList.remove('tech');
+      tile('105').dataset.s = n === 2 ? 'free' : 'cleaning';
+      if (n === 2) root.classList.add('done105');
       if (n === 1) {
-        // the tap happened on the phone: the card leaves, the tile turns free with a flash
-        tile('105').classList.remove('flash'); void tile('105').offsetWidth; tile('105').classList.add('flash');
+        // the tap: the beam runs from the button to the room's tile, the tile turns free, the card leaves the list
+        const btn = root.querySelector('[data-from="ready"]')!;
+        later(700, () => { arc(paths[0], btn, tile('105')); press(btn, () => shoot(paths[0], () => { tile('105').dataset.s = 'free'; hit(tile('105')); root.classList.add('done105'); })); });
       }
-      if (n === 0) later(2600, () => { const b = root.querySelector('.hk-ready'); b?.classList.add('press'); later(200, () => b?.classList.remove('press')); });
-      if (n === 2) later(1900, () => { const b = root.querySelector('.hk-form b'); b?.classList.add('press'); later(220, () => { b?.classList.remove('press'); root.classList.add('sent'); tile('104').classList.add('tech'); }); });
+      if (n === 2) {
+        const btn = root.querySelector('[data-from="send"]')!;
+        later(1900, () => { route(paths[1], btn, root.querySelector('.hk-task.done')!); press(btn, () => shoot(paths[1], () => { root.classList.add('sent'); tile('104').classList.add('tech'); })); });
+      }
     };
     const go = (n: number) => { s = n; root.dataset.s = String(n); steps.forEach((b, i) => b.classList.toggle('on', i === n)); play(n); };
     const stop = () => { auto = false; clearTimeout(loop); };
-    const tick = () => { if (!auto) return; go((s + 1) % 3); loop = window.setTimeout(tick, s === 2 ? 5200 : 3600); };
+    const tick = () => { if (!auto) return; go((s + 1) % 3); loop = window.setTimeout(tick, s === 0 ? 3400 : 5200); };
     steps.forEach((b, i) => b.addEventListener('click', () => { stop(); go(i); }));
-    if (still) { go(1); return; }
+    window.addEventListener('resize', () => paths.forEach((p) => p.classList.remove('lit')));
+    if (still) { go(0); tile('105').dataset.s = 'free'; root.classList.add('done105'); return; }
     if (!('IntersectionObserver' in window)) { go(0); return; }
     let started = false;
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started) { started = true; auto = true; go(0); loop = window.setTimeout(tick, 3200); }
+      if (e.isIntersecting && !started) { started = true; auto = true; go(0); loop = window.setTimeout(tick, 3400); }
       else if (!e.isIntersecting) stop();
-    }, { threshold: 0.35 }).observe(root);
+    }, { threshold: 0.3 }).observe(root);
   });
 </script>
