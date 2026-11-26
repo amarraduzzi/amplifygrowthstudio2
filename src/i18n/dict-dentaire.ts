@@ -362,6 +362,8 @@ export const dentaireEn: Record<string, string> = {
   "L’agenda des fauteuils, le dossier et le schéma dentaire, le devis, la caisse et le site du cabinet.": "The chairs’ agenda, the patient file and dental chart, the quote, the till and the practice website.",
   "Un dentiste. Tout Amplify Dentaire est inclus.": "One dentist. All of Amplify Dentaire is included.",
   "Plusieurs dentistes et plusieurs fauteuils. Tout Amplify Dentaire est inclus.": "Several dentists and several chairs. All of Amplify Dentaire is included.",
+  "Logiciel pour dentistes au Maroc : agenda, devis et site | Amplify": "Software for dentists in Morocco: agenda, quotes and website | Amplify",
+  "Amplify Dentaire : un agenda par fauteuil, le dossier et le schéma dentaire, le devis accepté sur le téléphone, le paiement par carte et le site du cabinet.": "Amplify Dentaire: an agenda per chair, the patient file and dental chart, the quote accepted on the phone, card payment and the practice website.",
 };
 export const dentaireAr: Record<string, string> = {
   "Accueil d’un centre dentaire avec banquette et fauteuil au fond": "استقبال مركز لطب الأسنان مع أريكة وكرسي العلاج في الخلف",
@@ -725,4 +727,6 @@ export const dentaireAr: Record<string, string> = {
   "L’agenda des fauteuils, le dossier et le schéma dentaire, le devis, la caisse et le site du cabinet.": "مواعيد الكراسي وملف المريض ومخطط الأسنان وعرض السعر والصندوق وموقع العيادة.",
   "Un dentiste. Tout Amplify Dentaire est inclus.": "طبيب واحد. كل Amplify Dentaire مشمول.",
   "Plusieurs dentistes et plusieurs fauteuils. Tout Amplify Dentaire est inclus.": "عدة أطباء وعدة كراسي. كل Amplify Dentaire مشمول.",
+  "Logiciel pour dentistes au Maroc : agenda, devis et site | Amplify": "برنامج لأطباء الأسنان في المغرب: المواعيد وعروض الأسعار والموقع | Amplify",
+  "Amplify Dentaire : un agenda par fauteuil, le dossier et le schéma dentaire, le devis accepté sur le téléphone, le paiement par carte et le site du cabinet.": "Amplify Dentaire: مفكرة لكل كرسي، ملف المريض ومخطط الأسنان، عرض السعر الذي يُقبل على الهاتف، الدفع بالبطاقة وموقع العيادة.",
 };

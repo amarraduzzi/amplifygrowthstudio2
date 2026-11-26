@@ -1,6 +1,6 @@
 # Amplify Growth Studio
 
-> Cash register (POS), margin, stock and marketing systems for Moroccan businesses: restaurants, cafés, pâtisseries and bakeries, hair salons, spas, dry cleaners, corner shops (hanouts), garages and real estate. Team based in Rabat, working on site in Rabat and Salé and by video call across Morocco. Website and software in French, Arabic and English.
+> Cash register (POS), margin, stock and marketing systems for Moroccan businesses: restaurants, cafés, pâtisseries and bakeries, hair salons, spas, dry cleaners, corner shops (hanouts), garages, dental practices and real estate. Team based in Rabat, working on site in Rabat and Salé and by video call across Morocco. Website and software in French, Arabic and English.
 
 ## In short
 - Based in Rabat, Morocco. On-site installation in Rabat and Salé; elsewhere in Morocco, installation and training by video call.
@@ -34,6 +34,7 @@ Page: [Logiciel de caisse et de production pour pâtisserie](https://www.amplify
 - [Dry cleaners](https://www.amplifygrowthstudio.com/pressing/): one label per item, client notified
 - [Corner shops (hanouts)](https://www.amplifygrowthstudio.com/hanout/): credit book (kridi), till and stock on the phone
 - [Hotels, riads and guest houses (Amplify Hotel)](https://www.amplifygrowthstudio.com/hotels/): room planning, Airbnb and Booking sync (iCal or Beds24), booking site without commission, online check-in, passport scan, housekeeping, cash control and owner report
+- [Dentists and dental clinics (Amplify Dentaire)](https://www.amplifygrowthstudio.com/dentistes/): agenda per chair, live waiting room, patient file with dental chart, quote accepted on the phone with a card deposit, QR check-in with medical questionnaire and signed consent, till control, and a practice website with online booking. Cabinet (one dentist) 399 DH and Clinique (several dentists and chairs) 599 DH per month excl. VAT, with a demo
 - [Garages](https://www.amplifygrowthstudio.com/garages/)
 - [Real estate](https://www.amplifygrowthstudio.com/immobilier/)
 - [Delivery without commission](https://www.amplifygrowthstudio.com/livraison/)
