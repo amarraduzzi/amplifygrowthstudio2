@@ -28,6 +28,10 @@ export function metiers(tt: Tt): Metier[] {
       { name: 'Hôtel', n: SECTOR.hotel.hotel, text: tt('Jusqu’à {n} chambres. Tout Amplify Hotel est inclus.').replace('{n}', String(SECTOR.hotel.hotelRooms)) },
       { name: 'Grand hôtel', n: SECTOR.hotel.grand, text: tt('Plus de {n} chambres. Tout Amplify Hotel est inclus.').replace('{n}', String(SECTOR.hotel.hotelRooms)) },
     ] },
+    { key: 'dentaire', name: 'Amplify Dentaire', text: 'L’agenda des fauteuils, le dossier et le schéma dentaire, le devis, la caisse et le site du cabinet.', icon: 'heart', plans: [
+      { name: 'Cabinet', n: SECTOR.dentaire.cabinet, text: 'Un dentiste. Tout Amplify Dentaire est inclus.' },
+      { name: 'Clinique', n: SECTOR.dentaire.clinique, text: 'Plusieurs dentistes et plusieurs fauteuils. Tout Amplify Dentaire est inclus.' },
+    ] },
     { key: 'garage', signup: 'garage', name: 'Amplify Garage', text: 'Les devis, les ordres de réparation et le rappel de vidange.', icon: 'check', plans: [
       { id: 'atelier', name: 'Atelier', n: SECTOR.garage.entry, text: 'De la réception à la remise : devis sur WhatsApp, fiche voiture, caisse de l’atelier et équipe.' },
       { id: 'atelier_rappels', name: 'Atelier + rappels', n: SECTOR.garage.full, text: 'Plus les rappels par date et par kilométrage, avec le WhatsApp déjà écrit.' },

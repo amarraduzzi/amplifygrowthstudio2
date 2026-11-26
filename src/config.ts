@@ -108,6 +108,8 @@ export const SECTOR = {
   livraison: { monthly: 100, setup: 250, perDelivery: 4 },
   /** Amplify Hotel: by size. Riad up to riadRooms rooms, Hôtel up to hotelRooms, Grand hôtel above. Everything included in each. */
   hotel: { riad: 299, hotel: 499, grand: 799, riadRooms: 10, hotelRooms: 30 },
+  /** Amplify Dentaire: Cabinet (one dentist) and Clinique (several dentists and chairs). Everything included in each. Sold with a demo, no free trial. */
+  dentaire: { cabinet: 399, clinique: 599 },
   /** One-off setup for Pressing, Garage and Hanout (moving the client list and history) */
   setup: 490,
 };

@@ -17,10 +17,12 @@ import DentQuote from '../DentQuote.astro';
 import DentCheckin from '../DentCheckin.astro';
 import DentSite from '../DentSite.astro';
 import DentClose from '../DentClose.astro';
+import SectorPrices from '../SectorPrices.astro';
+import Faq from '../Faq.astro';
 import Related from '../Related.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
-import { serviceSchema } from '../../lib/schema';
+import { faqSchema, serviceSchema } from '../../lib/schema';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -69,6 +71,17 @@ const close = [
   ['shield', tt('Rien ne se perd'), tt('Un écart reste visible dans Contrôle, avec son jour.')],
   ['star', tt('L’avis Google après la visite'), tt('Un message avec le bouton Google part après la visite. Les avis viennent des patients, jamais de nous.')],
 ];
+const faq = [
+  [tt('Mes patients doivent-ils installer une application ?'), tt('Non. Ils reçoivent un lien sur WhatsApp ou scannent le QR de l’accueil : rendez-vous, salle d’attente, devis, questionnaire, signature et paiement se font dans le navigateur de leur téléphone.')],
+  [tt('Le patient peut-il accepter le devis en partie ?'), tt('Oui. Il accepte le plan en entier ou seulement certaines séances, et paie l’acompte par carte. Le reste peut se payer en plusieurs échéances.')],
+  [tt('Comment le patient paie-t-il l’acompte ?'), tt('Par carte, avec CMI. Amplify ne prend aucune commission sur ce paiement.')],
+  [tt('Les rendez-vous pris sur le site sont-ils confirmés tout seuls ?'), tt('Non. La demande arrive dans l’agenda et le cabinet la confirme. Le patient ne reçoit pas de faux rendez-vous.')],
+  [tt('J’ai plusieurs dentistes et plusieurs fauteuils.'), tt('C’est la formule Clinique : un agenda par fauteuil et chacun son code. Avec un seul dentiste, la formule Cabinet suffit.')],
+  [tt('Chacun voit-il tout le dossier ?'), tt('Le dentiste, l’assistante et l’accueil entrent chacun avec leur code. Le gérant voit tout.')],
+  [tt('Il me faut quel matériel ?'), tt('Une tablette ou un ordinateur au cabinet, et le téléphone de l’équipe. Rien à installer pour vos patients.')],
+  [tt('En quelles langues ?'), tt('Le cabinet et les pages du patient sont en français, en arabe et en anglais.')],
+  [tt('Qui met tout en place ?'), tt('Nous. Vos actes et vos prix, vos fauteuils et votre équipe, et nous formons votre assistante.')],
+];
 const toc = [
   { id: 'pour-qui', label: tt('Pour qui') },
   { id: 'journee', label: tt('La journée') },
@@ -78,9 +91,11 @@ const toc = [
   { id: 'accueil', label: tt('Accueil et consentement') },
   { id: 'site', label: tt('Le site du cabinet') },
   { id: 'caisse', label: tt('Caisse et contrôle') },
+  { id: 'tarifs', label: tt('Tarifs') },
+  { id: 'faq', label: 'FAQ' },
   { id: 'demo', label: tt('Démo') },
 ];
-const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentaire[lang]))].filter(Boolean) as Record<string, unknown>[];
+const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentaire[lang])), faqSchema(faq)].filter(Boolean) as Record<string, unknown>[];
 ---
 <Base lang={lang} page="dentaire" title={title} description={description} wa={wa} schema={schema} toc={toc} image="/img/photos/dent-cabinet.webp">
   <!-- hero: the morning of the practice, live on the agenda -->
@@ -229,6 +244,10 @@ const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentai
       </ul>
     </div>
   </section>
+
+  <SectorPrices lang={lang} k="dentaire" trial={false} setup={false} />
+
+  <Faq lang={lang} items={faq} wa={wa} />
 
   <!-- final -->
   <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
