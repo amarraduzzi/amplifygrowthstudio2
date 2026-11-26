@@ -16,6 +16,7 @@ import DentFile from '../DentFile.astro';
 import DentQuote from '../DentQuote.astro';
 import DentCheckin from '../DentCheckin.astro';
 import DentSite from '../DentSite.astro';
+import DentClose from '../DentClose.astro';
 import Related from '../Related.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
@@ -62,6 +63,12 @@ const site = [
   ['calendar', tt('Le rendez-vous en ligne'), tt('Le patient choisit un créneau libre. La demande arrive dans votre agenda et vous la confirmez.')],
   ['users', tt('Les photos de l’équipe'), tt('Une photo par dentiste, envoyée depuis l’app et recadrée toute seule. Sans photo, les initiales.')],
 ];
+const close = [
+  ['wallet', tt('Chaque paiement au bon endroit'), tt('Espèces, carte, chèque : chaque encaissement est noté sur le patient et sur la journée.')],
+  ['check', tt('La clôture sans calcul'), tt('L’assistante compte les espèces. L’écart éventuel se calcule tout seul.')],
+  ['shield', tt('Rien ne se perd'), tt('Un écart reste visible dans Contrôle, avec son jour.')],
+  ['star', tt('L’avis Google après la visite'), tt('Un message avec le bouton Google part après la visite. Les avis viennent des patients, jamais de nous.')],
+];
 const toc = [
   { id: 'pour-qui', label: tt('Pour qui') },
   { id: 'journee', label: tt('La journée') },
@@ -70,6 +77,7 @@ const toc = [
   { id: 'devis', label: tt('Devis et paiement') },
   { id: 'accueil', label: tt('Accueil et consentement') },
   { id: 'site', label: tt('Le site du cabinet') },
+  { id: 'caisse', label: tt('Caisse et contrôle') },
   { id: 'demo', label: tt('Démo') },
 ];
 const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentaire[lang]))].filter(Boolean) as Record<string, unknown>[];
@@ -205,6 +213,21 @@ const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentai
       {site.map(([ic, h, x], i) => (
         <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
     </ul>
+  </section>
+
+  <!-- the end of the day: payments, the cash count, the difference, the evening report and the Google review request -->
+  <section id="caisse" class="scroll-mt-20 border-y border-line bg-paper px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="mx-auto max-w-6xl">
+      <div class="max-w-3xl">
+        <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('La caisse se ferme.')}</span><span class="block text-green-deep">{tt('Rien ne se perd.')}</span></h2>
+        <p class="tf mt-5 text-lg text-muted" style="--d:80ms">{tt('Chaque paiement est noté, la journée se clôture en une minute et un écart de caisse se voit tout de suite. Le soir, le gérant reçoit un résumé, et les patients reçoivent la demande d’avis Google.')}</p>
+      </div>
+      <div class="tf mt-10 pb-6 md:pb-16" style="--d:140ms"><DentClose /></div>
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {close.map(([ic, h, x], i) => (
+          <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+      </ul>
+    </div>
   </section>
 
   <!-- final -->

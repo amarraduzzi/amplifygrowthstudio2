@@ -1,0 +1,194 @@
+---
+// The end of the day, played live. Left, the practice's tablet: the payments land by method, the assistant counts the cash
+// and the difference shows (20 DH short), then the "Contrôle" list keeps it; right, the phone: the evening report, then the
+// patient's Google review request after the visit. Tap a step to jump. Plays by itself once in view, stops when touched.
+// Demo practice, invented names and amounts; no results or reviews are claimed.
+import Device from './Device.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const dh = (n: number) => `${n.toLocaleString('fr-FR').replace(/ | /g, ' ')} DH`;
+const STEPS = [tt('Les encaissements'), tt('La clôture'), tt('Contrôle et rapport'), tt('L’avis Google')];
+const PAY: [string, string, string, number][] = [
+  ['09:20', 'Mehdi B.', 'cash', 400], ['10:40', 'Sara L.', 'card', 3000], ['11:30', 'Youssef B.', 'chq', 1500], ['14:15', 'Khadija R.', 'card', 1200], ['16:00', 'Anas T.', 'cash', 3100],
+];
+const KIND: Record<string, string> = { cash: tt('Espèces'), card: tt('Carte'), chq: tt('Chèque') };
+const SUM = { cash: 3500, card: 4200, chq: 1500 }, TOTAL = 9200;
+const DAYS: [string, string, number][] = [[tt('Lun'), '7', 0], [tt('Mar'), '8', 0], [tt('Mer'), '9', -20]];
+---
+<div class="dcl" data-dcl data-s="0">
+  <div class="dcl-grid">
+    <div class="dcl-tab">
+      <div class="dcl-scr" dir="ltr">
+        <!-- 0: payments land -->
+        <section class="dcl-t" data-t="0">
+          <p class="dcl-k">{tt('Encaissements du jour')}</p>
+          <ul class="dcl-pay">
+            {PAY.map(([h, n, k, a], i) => <li data-pay={i}><time>{h}</time><b>{n}</b><span class={`dcl-m dcl-${k}`}>{KIND[k]}</span><em>{dh(a)}</em></li>)}
+          </ul>
+          <div class="dcl-sums">
+            <p><span>{tt('Espèces')}</span><b data-n="cash" data-to={SUM.cash}>0 DH</b></p>
+            <p><span>{tt('Carte')}</span><b data-n="card" data-to={SUM.card}>0 DH</b></p>
+            <p><span>{tt('Chèque')}</span><b data-n="chq" data-to={SUM.chq}>0 DH</b></p>
+            <p class="all"><span>{tt('Total')}</span><b data-n="all" data-to={TOTAL}>0 DH</b></p>
+          </div>
+        </section>
+        <!-- 1: the cash count -->
+        <section class="dcl-t dcl-count" data-t="1">
+          <p class="dcl-k">{tt('Clôture de la caisse')}</p>
+          <p class="dcl-row"><span>{tt('Espèces attendues')}</span><b>{dh(SUM.cash)}</b></p>
+          <p class="dcl-row dcl-in"><span>{tt('Espèces comptées')}</span><b data-typed class="dcl-type"><i></i></b></p>
+          <p class="dcl-gap"><span>{tt('Écart')}</span><b>− {dh(20)}</b></p>
+          <p class="dcl-help">{tt('L’écart reste visible dans Contrôle.')}</p>
+          <span class="dcl-btn" data-close>{tt('Clôturer la journée')}</span>
+          <span class="dcl-stamp">{tt('Journée clôturée')}</span>
+        </section>
+        <!-- 2: the control list -->
+        <section class="dcl-t dcl-ctl" data-t="2">
+          <p class="dcl-k">{tt('Contrôle')}</p>
+          <ul>
+            {DAYS.map(([d, n, g], i) => <li class={g ? 'gap' : ''} data-day={i}><span class="dcl-d"><small>{d}</small><b>{n}</b></span><span class="dcl-w">{g ? `${tt('Écart')} − ${dh(-g)}` : tt('Aucun écart')}</span><i>{g ? '!' : '✓'}</i></li>)}
+          </ul>
+        </section>
+        <!-- 3: the Google requests -->
+        <section class="dcl-t dcl-rev" data-t="3">
+          <p class="dcl-k">{tt('Avis Google')}</p>
+          <ul>
+            {['Sara L.', 'Mehdi B.', 'Khadija R.'].map((n, i) => <li data-rev={i}><b>{n}</b><span>{tt('Demande envoyée')}</span><i>✓</i></li>)}
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <div class="dcl-phone">
+      <Device kind="phone" w={390} h={820} screenBg="#f4eee5">
+        <div slot="screen" class="dcl-ps" dir="ltr">
+          <!-- evening report -->
+          <section class="dcl-v" data-v="2">
+            <p class="dcl-k2">{tt('Rapport du soir')}</p>
+            <p class="dcl-serif dcl-h">Cabinet <em>Dr Alami</em></p>
+            <ul class="dcl-rp">
+              <li><span>{tt('Patients vus')}</span><b>11</b></li>
+              <li><span>{tt('Encaissé')}</span><b>{dh(TOTAL)}</b></li>
+              <li class="g"><span>{tt('Écart de caisse')}</span><b>− {dh(20)}</b></li>
+              <li><span>{tt('Devis acceptés')}</span><b>1</b></li>
+            </ul>
+          </section>
+          <!-- patient review request -->
+          <section class="dcl-v" data-v="3">
+            <p class="dcl-serif dcl-thx">{tt('Merci pour')} <em>{tt('votre visite')}</em>, Sara.</p>
+            <p class="dcl-mute">{tt('Votre avis sur Google aide d’autres patients à trouver le cabinet.')}</p>
+            <span class="dcl-btn2" data-gbtn>★ {tt('Laisser un avis Google')}</span>
+            <p class="dcl-stars" data-stars><i>★</i><i>★</i><i>★</i><i>★</i><i>★</i></p>
+          </section>
+        </div>
+      </Device>
+    </div>
+  </div>
+  <div class="dcl-steps" role="group" aria-label={tt('Les étapes de la clôture')}>
+    {STEPS.map((s, i) => <button type="button" data-step={i} class={i === 0 ? 'on' : ''}>{s}</button>)}
+  </div>
+</div>
+
+<style is:global>
+  .dcl-grid { position: relative; display: grid; gap: 1.5rem; }
+  @media (min-width: 768px) { .dcl-grid { display: block; } .dcl-phone { position: absolute; inset-inline-end: 2%; bottom: -5%; width: 24%; } }
+  .dcl-phone { width: min(100%, 17rem); margin-inline: auto; transform: translateY(2rem); opacity: 0; max-height: 0; transition: opacity .5s, transform .6s cubic-bezier(.2, .8, .2, 1); }
+  @media (min-width: 768px) { .dcl-phone { max-height: none; margin: 0; } }
+  .dcl[data-s="2"] .dcl-phone, .dcl[data-s="3"] .dcl-phone { opacity: 1; transform: none; max-height: 40rem; }
+  .dcl-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .55); }
+  .dcl-scr { container-type: inline-size; position: relative; overflow: hidden; border-radius: 1.1rem; background: #020F20; color: #ECF2FA; aspect-ratio: 4 / 3.1; }
+  .dcl-t { position: absolute; inset: 0; padding: 5cqw; opacity: 0; transform: translateY(3cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .dcl[data-s="0"] [data-t="0"], .dcl[data-s="1"] [data-t="1"], .dcl[data-s="2"] [data-t="2"], .dcl[data-s="3"] [data-t="3"] { opacity: 1; transform: none; }
+  .dcl[data-s="2"] [data-t="2"], .dcl[data-s="3"] [data-t="3"] { padding-inline-end: 31cqw; }
+  .dcl-k { font-size: 2.3cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: #8CA0BE; }
+  .dcl-pay { display: grid; gap: 1.2cqw; margin-top: 2.4cqw; }
+  .dcl-pay li { display: grid; grid-template-columns: 8cqw 1fr auto 15cqw; align-items: center; gap: 2cqw; border-radius: 1.8cqw; background: #071B36; padding: 1.5cqw 2.4cqw; font-size: 2.7cqw; opacity: 0; transform: translateX(-4cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); }
+  .dcl-pay li.on { opacity: 1; transform: none; } .dcl-pay time { color: #8CA0BE; font-weight: 700; } .dcl-pay em { font-style: normal; font-weight: 800; text-align: end; font-variant-numeric: tabular-nums; }
+  .dcl-m { border-radius: 1.2cqw; padding: .6cqw 1.8cqw; font-size: 2.2cqw; font-weight: 800; }
+  .dcl-cash { background: rgba(242, 173, 70, .18); color: #F2AD46; } .dcl-card { background: rgba(88, 140, 255, .2); color: #8FB0FF; } .dcl-chq { background: rgba(5, 185, 98, .18); color: #26D07D; }
+  .dcl-sums { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4cqw; margin-top: 2.6cqw; }
+  .dcl-sums p { display: grid; gap: .6cqw; border-radius: 1.8cqw; background: #0A2347; padding: 1.8cqw 2.2cqw; } .dcl-sums span { font-size: 2.2cqw; color: #8CA0BE; } .dcl-sums b { font-size: 3.2cqw; font-variant-numeric: tabular-nums; }
+  .dcl-sums .all { background: rgba(5, 185, 98, .16); box-shadow: inset 0 0 0 1px rgba(5, 185, 98, .45); } .dcl-sums .all b { color: #26D07D; }
+  /* count */
+  .dcl-count { display: grid; align-content: start; gap: 2.4cqw; }
+  .dcl-row { display: flex; justify-content: space-between; align-items: baseline; border-radius: 2cqw; background: #071B36; padding: 2.6cqw 3cqw; font-size: 3cqw; color: #B8C6DC; } .dcl-row b { font-size: 5cqw; color: #fff; font-variant-numeric: tabular-nums; }
+  .dcl-in { box-shadow: inset 0 0 0 1.5px #588CFF; }
+  .dcl-type::after { content: " DH"; } .dcl-type { min-width: 10cqw; text-align: end; }
+  .dcl-gap { display: flex; justify-content: space-between; align-items: baseline; border-radius: 2cqw; background: rgba(242, 173, 70, .16); box-shadow: inset 0 0 0 1px rgba(242, 173, 70, .5); padding: 2.6cqw 3cqw; font-size: 3cqw; font-weight: 800; color: #F2AD46; opacity: 0; transform: scale(.94); transition: opacity .4s, transform .5s cubic-bezier(.3, 1.6, .5, 1); } .dcl-gap b { font-size: 5.4cqw; font-variant-numeric: tabular-nums; }
+  .dcl-help { font-size: 2.5cqw; color: #8CA0BE; opacity: 0; transition: opacity .4s .2s; }
+  .dcl.counted .dcl-gap, .dcl.counted .dcl-help { opacity: 1; transform: none; }
+  .dcl-btn { display: flex; align-items: center; justify-content: center; height: 8.5cqw; border-radius: 2cqw; background: #05B962; color: #001E3E; font-weight: 800; font-size: 3cqw; transition: transform .15s, opacity .3s; } .dcl-btn.press { transform: scale(.95); }
+  .dcl.closed .dcl-btn { opacity: .35; }
+  .dcl-stamp { position: absolute; inset-inline-end: 6cqw; bottom: 22cqw; border: .8cqw solid #26D07D; color: #26D07D; font-weight: 900; font-size: 4.4cqw; text-transform: uppercase; letter-spacing: .08em; padding: 1cqw 2.6cqw; transform: rotate(-9deg) scale(2.2); opacity: 0; background: rgba(2, 15, 32, .8); }
+  .dcl.closed .dcl-stamp { animation: dcl-stamp .45s cubic-bezier(.3, 1.4, .5, 1) forwards; } @keyframes dcl-stamp { to { transform: rotate(-9deg) scale(1); opacity: .95; } }
+  /* control + reviews lists */
+  .dcl-ctl ul, .dcl-rev ul { display: grid; gap: 1.8cqw; margin-top: 3cqw; }
+  .dcl-ctl li, .dcl-rev li { display: flex; align-items: center; gap: 3cqw; border-radius: 2cqw; background: #071B36; padding: 2.4cqw 3cqw; font-size: 3cqw; opacity: 0; transform: translateX(-4cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); }
+  .dcl-ctl li.on, .dcl-rev li.on { opacity: 1; transform: none; }
+  .dcl-d { display: grid; justify-items: center; min-width: 9cqw; border-radius: 1.6cqw; background: #163662; padding: 1cqw 0; } .dcl-d small { font-size: 2cqw; color: #8CA0BE; font-weight: 700; } .dcl-d b { font-size: 3.6cqw; }
+  .dcl-w, .dcl-rev li span { flex: 1; } .dcl-rev li b { min-width: 22cqw; } .dcl-rev li span { color: #B8C6DC; }
+  .dcl-ctl i, .dcl-rev i { display: grid; place-items: center; width: 5.4cqw; height: 5.4cqw; border-radius: 50%; background: #05B962; color: #001E3E; font-style: normal; font-weight: 900; font-size: 3cqw; }
+  .dcl-ctl li.gap { background: rgba(242, 173, 70, .14); box-shadow: inset 0 0 0 1px rgba(242, 173, 70, .5); color: #F2AD46; font-weight: 800; } .dcl-ctl li.gap i { background: #F2AD46; color: #3a2400; }
+  .dcl-ctl li.gap.on { animation: dcl-nudge 1.6s .5s ease-in-out 2; } @keyframes dcl-nudge { 0%, 100% { transform: none; } 40% { transform: scale(1.03); } }
+  /* the phone */
+  .dcl-ps { container-type: inline-size; position: relative; aspect-ratio: 390 / 700; overflow: hidden; background: #f4eee5; color: #0e3b3a; font-size: 15px; }
+  .dcl-serif { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; letter-spacing: -.01em; } .dcl-ps em { font-style: italic; color: #136F6A; }
+  .dcl-v { position: absolute; inset: 0; padding: 8cqw 6cqw; opacity: 0; transform: translateX(8cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .dcl[data-s="2"] [data-v="2"], .dcl[data-s="3"] [data-v="3"] { opacity: 1; transform: none; }
+  .dcl-k2 { font-size: 2.8cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: #6b7a74; }
+  .dcl-h { margin-top: 2cqw; font-size: 9cqw; line-height: 1.02; }
+  .dcl-rp { margin-top: 6cqw; border-top: .7cqw solid #0e3b3a; } .dcl-rp li { display: flex; justify-content: space-between; align-items: baseline; padding: 3.4cqw 0; border-bottom: 1px solid rgba(14, 59, 58, .18); font-size: 3.6cqw; } .dcl-rp b { font-family: 'Fraunces', Georgia, serif; font-weight: 400; font-size: 6cqw; font-variant-numeric: tabular-nums; }
+  .dcl-rp .g { color: #b9781e; } .dcl-rp .g b { color: #b9781e; }
+  .dcl-thx { margin-top: 10cqw; font-size: 9.6cqw; line-height: 1.02; } .dcl-mute { margin-top: 4cqw; font-size: 3.8cqw; line-height: 1.35; color: #5d6b66; }
+  .dcl-btn2 { display: flex; align-items: center; justify-content: center; height: 13cqw; margin-top: 6cqw; background: #e9a23b; color: #0e3b3a; font-weight: 800; font-size: 4cqw; box-shadow: 0 1.2cqw 0 #b9781e; }
+  .dcl-stars { display: flex; gap: 2cqw; justify-content: center; margin-top: 7cqw; font-size: 9cqw; } .dcl-stars i { font-style: normal; color: rgba(14, 59, 58, .2); transition: color .3s, transform .4s cubic-bezier(.3, 1.8, .5, 1); } .dcl-stars i.on { color: #e9a23b; transform: scale(1.25); }
+  .dcl-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.6rem; }
+  .dcl-steps button { min-height: 2.75rem; border-radius: 999px; background: #fff; padding: 0 1rem; font-size: .9rem; font-weight: 700; color: #536072; box-shadow: 0 0 0 1px #D8DDE3; transition: background .3s, color .3s; } .dcl-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; }
+  @media (prefers-reduced-motion: reduce) { .dcl-t, .dcl-v, .dcl-pay li, .dcl-ctl li, .dcl-rev li, .dcl-phone { transition: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dcl]').forEach((root) => {
+    const qa = (s: string) => [...root.querySelectorAll<HTMLElement>(s)];
+    const steps = qa('[data-step]'), pays = qa('[data-pay]'), days = qa('[data-day]'), revs = qa('[data-rev]'), nums = qa('[data-n]');
+    const typed = root.querySelector<HTMLElement>('[data-typed]')!, closeBtn = root.querySelector<HTMLElement>('[data-close]')!;
+    const stars = qa('[data-stars] i'), fmt = (n: number) => `${n.toLocaleString('fr-FR').replace(/ | /g, ' ')} DH`;
+    let timers: number[] = [], rafs: number[] = [], auto = false, cur = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; rafs.forEach(cancelAnimationFrame); rafs = []; };
+    const count = (el: HTMLElement, to: number, ms: number) => { const t0 = performance.now(); const f = (t: number) => { const k = Math.min(1, (t - t0) / ms); el.textContent = fmt(Math.round(to * (1 - Math.pow(1 - k, 3)))); if (k < 1) rafs.push(requestAnimationFrame(f)); }; rafs.push(requestAnimationFrame(f)); };
+    const reset = () => {
+      [...pays, ...days, ...revs, ...stars].forEach(e => e.classList.remove('on'));
+      nums.forEach(n => { n.textContent = '0 DH'; });
+      typed.firstElementChild!.textContent = ''; root.classList.remove('counted', 'closed'); closeBtn.classList.remove('press');
+    };
+    const show = (s: number) => { cur = s; root.dataset.s = String(s); steps.forEach((b, i) => b.classList.toggle('on', i === s)); reset(); };
+    const play = (s: number) => {
+      if (s === 0) {
+        pays.forEach((p, i) => later(500 + i * 650, () => p.classList.add('on')));
+        later(3900, () => nums.forEach(n => count(n, Number(n.dataset.to), 1100)));
+      }
+      if (s === 1) {
+        '3480'.split('').forEach((c, i) => later(700 + i * 260, () => { typed.firstElementChild!.textContent += c; }));
+        later(2200, () => root.classList.add('counted'));
+        later(3400, () => closeBtn.classList.add('press'));
+        later(3700, () => { closeBtn.classList.remove('press'); root.classList.add('closed'); });
+      }
+      if (s === 2) days.forEach((d, i) => later(500 + i * 600, () => d.classList.add('on')));
+      if (s === 3) {
+        revs.forEach((r, i) => later(500 + i * 600, () => r.classList.add('on')));
+        stars.forEach((x, i) => later(2200 + i * 180, () => x.classList.add('on')));
+      }
+    };
+    const LEN = [6200, 5200, 4600, 5200];
+    const run = () => { if (!auto) return; show(cur); play(cur); later(LEN[cur], () => { cur = (cur + 1) % 4; run(); }); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { auto = false; clear(); show(i); play(i); }));
+    if (still || !('IntersectionObserver' in window)) { show(2); days.forEach(d => d.classList.add('on')); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; later(700, run); }
+      else if (!e.isIntersecting && auto) { clear(); started = false; auto = false; show(0); }
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>
