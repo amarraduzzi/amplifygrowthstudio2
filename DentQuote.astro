@@ -1,0 +1,217 @@
+---
+// The quote, from the chair to the patient's phone and back, played live. Left, the quote editor of the practice app:
+// the lines land one by one, the total counts up, the discount comes off, "Send on WhatsApp". Right, the patient's
+// phone (the "Atelier" patient pages): the WhatsApp message, the quote page, "Accept", then the deposit by card.
+// Back on the tablet the quote turns Accepted, the deposit lands and the instalments are planned.
+// Tap a step to jump. Plays by itself once in view, stops when touched. Demo practice, invented names.
+import Device from './Device.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const LINES: [string, string, string, number][] = [
+  [tt('Implant'), '46', tt('Séance 1'), 7000],
+  [tt('Couronne céramique'), '46', tt('Séance 2'), 3000],
+  [tt('Détartrage'), '', tt('Séance 1'), 400],
+];
+const SUB = LINES.reduce((a, l) => a + l[3], 0), DISC = 400, TOTAL = SUB - DISC, DEP = 3000;
+const dh = (n: number) => `${n.toLocaleString('fr-FR').replace(/ | /g, ' ')} DH`;
+const STEPS = [tt('Le devis'), tt('Sur WhatsApp'), tt('Accepté'), tt('Acompte payé')];
+const PLAN: [string, number][] = [[tt('Aujourd’hui'), DEP], ['15/12', 3500], ['15/01', 3500]];
+---
+<div class="dqt" data-dqt data-s="0" data-sub={SUB} data-total={TOTAL}>
+  <div class="dqt-grid">
+    <!-- the practice's tablet -->
+    <div class="dqt-tab">
+      <div class="dqt-scr" dir="ltr">
+        <div class="dqt-top">
+          <div><p class="dqt-k">{tt('Devis')} n° 14</p><b>Youssef Benali</b></div>
+          <span class="dqt-st"><em data-k="0">{tt('Brouillon')}</em><em data-k="1">{tt('Envoyé')}</em><em data-k="2">{tt('Accepté')}</em></span>
+        </div>
+        <ul class="dqt-lines">
+          {LINES.map(([a, t, ph, p], i) => (
+            <li data-line={i}><span class="dqt-tooth">{t || '·'}</span><span class="dqt-a"><b>{a}</b><small>{ph}</small></span><b class="dqt-p">{dh(p)}</b></li>))}
+        </ul>
+        <div class="dqt-sum">
+          <p><span>{tt('Sous-total')}</span><b data-subn>0 DH</b></p>
+          <p class="disc"><span>{tt('Remise')}</span><b>− {dh(DISC)}</b></p>
+          <p class="tot"><span>{tt('Total')}</span><b data-totn>0 DH</b></p>
+        </div>
+        <span class="dqt-send"><i></i>{tt('Envoyer sur WhatsApp')}</span>
+        <div class="dqt-pay">
+          <p class="dqt-k">{tt('Paiements')}</p>
+          <div class="dqt-bar"><i></i></div>
+          <p class="dqt-pl"><span>{tt('Payé')} <b>{dh(DEP)}</b></span><span>{tt('Reste')} <b>{dh(TOTAL - DEP)}</b></span></p>
+          <ul class="dqt-plan">
+            {PLAN.map(([d, m], i) => <li data-plan={i}><time>{d}</time><span>{i === 0 ? tt('Acompte · carte') : tt('Échéance')}</span><b>{dh(m)}</b></li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- the patient's phone -->
+    <div class="dqt-phone">
+      <Device kind="phone" w={390} h={820} screenBg="#f4eee5">
+        <div slot="screen" class="dqt-ps" dir="ltr">
+          <!-- WhatsApp -->
+          <section class="dqt-v dqt-wa" data-v="1">
+            <p class="dqt-wah"><span>CA</span><b>Cabinet Dr Alami</b></p>
+            <div class="dqt-bub">
+              <p>{tt('Bonjour Youssef, voici votre devis n° 14 du Cabinet Dr Alami.')}</p>
+              <p class="lnk">amplify.ma/d/7Kq2…</p>
+              <small>10:42 ✓✓</small>
+            </div>
+          </section>
+          <!-- the quote page -->
+          <section class="dqt-v dqt-dv" data-v="2">
+            <p class="dqt-k2">{tt('Devis')} n° 14</p>
+            <p class="dqt-serif dqt-h">{tt('Votre plan de')} <em>{tt('traitement')}</em></p>
+            <ul class="dqt-pl2">{LINES.map(([a, t, , p]) => <li><span>{a}{t ? ` · ${t}` : ''}</span><b>{dh(p)}</b></li>)}</ul>
+            <p class="dqt-tot2"><span>{tt('Total')}</span><b class="dqt-serif">{dh(TOTAL)}</b></p>
+            <span class="dqt-btn" data-accept>{tt('Accepter le devis')}</span>
+            <span class="dqt-stamp">{tt('Accepté')}</span>
+          </section>
+          <!-- the deposit by card -->
+          <section class="dqt-v dqt-cb" data-v="3">
+            <p class="dqt-k2">{tt('Acompte')} · 30 %</p>
+            <p class="dqt-serif dqt-amt">{dh(DEP)}</p>
+            <div class="dqt-card"><span>•••• •••• •••• 4417</span><small>CMI</small></div>
+            <span class="dqt-btn" data-paybtn>{tt('Payer par carte')}</span>
+            <p class="dqt-ok"><i>✓</i>{tt('Paiement reçu. Merci !')}</p>
+          </section>
+        </div>
+      </Device>
+    </div>
+  </div>
+  <span class="dqt-fly" aria-hidden="true"></span>
+  <div class="dqt-steps" role="group" aria-label={tt('Les étapes du devis')}>
+    {STEPS.map((s, i) => <button type="button" data-step={i} class={i === 0 ? 'on' : ''}>{s}</button>)}
+  </div>
+</div>
+
+<style is:global>
+  .dqt { position: relative; }
+  .dqt-phone { width: 100%; max-width: 18rem; justify-self: center; }
+  .dqt-grid { display: grid; grid-template-columns: 1.35fr .9fr; gap: 2rem; align-items: center; }
+  @media (max-width: 767px) { .dqt-grid { grid-template-columns: 1fr; gap: 1.5rem; } .dqt-phone { width: min(100%, 17rem); margin-inline: auto; } }
+  .dqt-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .55); }
+  .dqt-scr { container-type: inline-size; position: relative; overflow: hidden; border-radius: 1.1rem; background: #020F20; color: #ECF2FA; padding: 4%; }
+  .dqt-top { display: flex; align-items: flex-start; justify-content: space-between; }
+  .dqt-top b { font-size: 4.4cqw; }
+  .dqt-k { font-size: 2.3cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: #8CA0BE; }
+  .dqt-st { display: grid; } .dqt-st em { grid-area: 1 / 1; justify-self: end; font-style: normal; font-size: 2.4cqw; font-weight: 800; border-radius: 1.2cqw; padding: .8cqw 1.8cqw; opacity: 0; transform: scale(.8); transition: opacity .35s, transform .45s cubic-bezier(.3, 1.6, .5, 1); }
+  .dqt-st em[data-k="0"] { background: #163662; color: #B8C6DC; } .dqt-st em[data-k="1"] { background: rgba(88, 140, 255, .2); color: #8FB0FF; } .dqt-st em[data-k="2"] { background: #05B962; color: #001E3E; }
+  .dqt[data-s="0"] .dqt-st em[data-k="0"], .dqt[data-s="1"] .dqt-st em[data-k="1"], .dqt[data-s="2"] .dqt-st em[data-k="2"], .dqt[data-s="3"] .dqt-st em[data-k="2"] { opacity: 1; transform: none; }
+  .dqt-lines { display: grid; gap: 1.4cqw; margin-top: 3cqw; }
+  .dqt-lines li { display: flex; align-items: center; gap: 2cqw; border-radius: 2cqw; background: #071B36; padding: 2cqw 2.4cqw; opacity: 0; transform: translateX(-4cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); }
+  .dqt-lines li.on { opacity: 1; transform: none; }
+  .dqt-tooth { display: grid; place-items: center; min-width: 6.4cqw; height: 6.4cqw; border-radius: 1.4cqw; background: #163662; font-weight: 800; font-size: 2.6cqw; }
+  .dqt-a { flex: 1; display: grid; } .dqt-a b { font-size: 3cqw; } .dqt-a small { font-size: 2.2cqw; color: #8CA0BE; }
+  .dqt-p { font-size: 3cqw; font-variant-numeric: tabular-nums; }
+  .dqt-sum { margin-top: 2.4cqw; display: grid; gap: .8cqw; padding: 2cqw 2.4cqw; border-top: 1px solid rgba(210, 225, 245, .1); }
+  .dqt-sum p { display: flex; justify-content: space-between; font-size: 2.6cqw; color: #B8C6DC; } .dqt-sum b { font-variant-numeric: tabular-nums; color: #ECF2FA; }
+  .dqt-sum .disc { color: #F2AD46; opacity: 0; transition: opacity .4s; } .dqt-sum .disc b { color: #F2AD46; } .dqt.disc .dqt-sum .disc { opacity: 1; }
+  .dqt-sum .tot { font-size: 3.6cqw; font-weight: 800; color: #fff; } .dqt-sum .tot b { color: #05B962; }
+  .dqt-send { display: flex; align-items: center; justify-content: center; gap: 1.6cqw; margin-top: 2cqw; height: 8cqw; border-radius: 2cqw; background: #25D366; color: #062314; font-weight: 800; font-size: 2.9cqw; transition: transform .15s, box-shadow .3s; }
+  .dqt-send i { width: 3cqw; height: 3cqw; border-radius: 50%; border: .5cqw solid #062314; }
+  .dqt-send.press { transform: scale(.95); box-shadow: 0 0 0 1.6cqw rgba(37, 211, 102, .3); }
+  .dqt-pay { max-height: 0; overflow: hidden; opacity: 0; transition: max-height .7s cubic-bezier(.2, .8, .2, 1), opacity .5s, margin .5s; }
+  .dqt[data-s="3"] .dqt-pay { max-height: 60cqw; opacity: 1; margin-top: 3cqw; }
+  .dqt[data-s="3"] .dqt-send { display: none; }
+  .dqt-bar { height: 2cqw; margin-top: 1.4cqw; border-radius: 9px; background: #163662; overflow: hidden; }
+  .dqt-bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #05B962, #26D07D); transition: width 1.2s .5s cubic-bezier(.2, .8, .2, 1); }
+  .dqt[data-s="3"] .dqt-bar i { width: 30%; }
+  .dqt-pl { display: flex; justify-content: space-between; margin-top: 1.2cqw; font-size: 2.4cqw; color: #8CA0BE; } .dqt-pl b { color: #ECF2FA; }
+  .dqt-plan { display: grid; gap: 1cqw; margin-top: 1.8cqw; }
+  .dqt-plan li { display: grid; grid-template-columns: 19cqw 1fr auto; align-items: center; border-radius: 1.4cqw; background: #071B36; padding: 1.4cqw 2cqw; font-size: 2.4cqw; opacity: 0; transform: translateY(2cqw); transition: opacity .4s, transform .4s; }
+  .dqt-plan li:first-child { background: rgba(5, 185, 98, .14); box-shadow: inset 0 0 0 1px rgba(5, 185, 98, .4); }
+  .dqt[data-s="3"] .dqt-plan li { opacity: 1; transform: none; }
+  .dqt[data-s="3"] .dqt-plan li:nth-child(2) { transition-delay: .9s; } .dqt[data-s="3"] .dqt-plan li:nth-child(3) { transition-delay: 1.2s; } .dqt[data-s="3"] .dqt-plan li:first-child { transition-delay: .6s; }
+  .dqt-plan time { font-weight: 800; color: #8CA0BE; } .dqt-plan b { font-variant-numeric: tabular-nums; }
+  /* the phone */
+  .dqt-ps { container-type: inline-size; position: relative; aspect-ratio: 390 / 700; overflow: hidden; background: #f4eee5; color: #0e3b3a; font-size: 15px; }
+  .dqt-serif { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; }
+  .dqt-ps em { font-style: italic; color: #136F6A; }
+  .dqt-v { position: absolute; inset: 0; padding: 8cqw 6cqw; opacity: 0; transform: translateX(8cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); }
+  .dqt[data-s="0"] [data-v="1"], .dqt[data-s="1"] [data-v="1"], .dqt[data-s="2"] [data-v="2"], .dqt[data-s="3"] [data-v="3"] { opacity: 1; transform: none; }
+  .dqt-wa { background: #ECE5DD; padding: 0; }
+  .dqt-wah { display: flex; align-items: center; gap: 3cqw; padding: 5cqw; background: #075E54; color: #fff; font-size: 4.2cqw; }
+  .dqt-wah span { display: grid; place-items: center; width: 9cqw; height: 9cqw; border-radius: 50%; background: #05B962; color: #001E3E; font-weight: 800; font-size: 3.2cqw; }
+  .dqt-bub { margin: 8cqw 5cqw 0 14cqw; border-radius: 3cqw 0 3cqw 3cqw; background: #DCF8C6; padding: 3.4cqw; color: #111; font-size: 3.8cqw; line-height: 1.35; box-shadow: 0 .6cqw 1cqw rgba(0, 0, 0, .1); opacity: 0; transform: translateY(6cqw) scale(.9); transform-origin: right top; transition: opacity .4s, transform .5s cubic-bezier(.3, 1.4, .5, 1); }
+  .dqt[data-s="1"] .dqt-bub { opacity: 1; transform: none; }
+  .dqt-bub .lnk { margin-top: 2cqw; color: #027EB5; text-decoration: underline; } .dqt-bub small { display: block; text-align: right; color: #4FB6EC; font-size: 2.8cqw; margin-top: 1cqw; }
+  .dqt-k2 { font-size: 2.8cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: #6b7a74; }
+  .dqt-h { margin-top: 2cqw; font-size: 9cqw; line-height: 1.02; }
+  .dqt-pl2 { margin-top: 5cqw; border-top: .7cqw solid #0e3b3a; }
+  .dqt-pl2 li { display: flex; justify-content: space-between; gap: 2cqw; padding: 2.6cqw 0; border-bottom: 1px solid rgba(14, 59, 58, .18); font-size: 3.5cqw; } .dqt-pl2 b { white-space: nowrap; }
+  .dqt-tot2 { display: flex; justify-content: space-between; align-items: baseline; margin-top: 3cqw; font-weight: 700; } .dqt-tot2 b { font-size: 8cqw; font-weight: 400; }
+  .dqt-btn { display: flex; align-items: center; justify-content: center; height: 13cqw; margin-top: 5cqw; background: #e9a23b; color: #0e3b3a; font-weight: 800; font-size: 4cqw; box-shadow: 0 1.2cqw 0 #b9781e; transition: transform .15s, box-shadow .15s; }
+  .dqt-btn.press { transform: translateY(1.2cqw); box-shadow: 0 0 0 #b9781e; }
+  .dqt-stamp { position: absolute; right: 6cqw; top: 26cqw; border: .9cqw solid #059669; color: #059669; font-weight: 900; font-size: 6cqw; text-transform: uppercase; letter-spacing: .08em; padding: 1cqw 3cqw; transform: rotate(-12deg) scale(2.2); opacity: 0; }
+  .dqt.stamped .dqt-stamp { animation: dqt-stamp .45s cubic-bezier(.3, 1.4, .5, 1) forwards; }
+  @keyframes dqt-stamp { to { transform: rotate(-12deg) scale(1); opacity: .9; } }
+  .dqt-amt { margin-top: 2cqw; font-size: 14cqw; line-height: 1; }
+  .dqt-card { position: relative; margin-top: 6cqw; aspect-ratio: 1.6; border-radius: 4cqw; background: linear-gradient(135deg, #0e3b3a, #136F6A 60%, #e9a23b); color: #fff; padding: 5cqw; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: 0 3cqw 6cqw -2cqw rgba(14, 59, 58, .6); }
+  .dqt-card span { font-size: 4.4cqw; letter-spacing: .12em; font-variant-numeric: tabular-nums; } .dqt-card small { position: absolute; top: 4cqw; right: 5cqw; font-weight: 900; font-size: 3.6cqw; }
+  .dqt-ok { display: flex; align-items: center; gap: 2.4cqw; font-size: 4.2cqw; margin-top: 5cqw; font-weight: 700; color: #059669; opacity: 0; transform: translateY(2cqw); transition: opacity .4s, transform .4s; }
+  .dqt-ok i { display: grid; place-items: center; width: 7cqw; height: 7cqw; border-radius: 50%; background: #059669; color: #fff; font-style: normal; }
+  .dqt.paid .dqt-ok { opacity: 1; transform: none; } .dqt.paid [data-paybtn] { opacity: .4; }
+  .dqt-fly { position: absolute; z-index: 5; width: 3rem; height: 3rem; border-radius: 50%; background: #25D366; box-shadow: 0 10px 30px -6px rgba(37, 211, 102, .7); opacity: 0; pointer-events: none; }
+  .dqt-fly::after { content: ""; position: absolute; inset: 28%; border-radius: 50%; border: 3px solid #fff; }
+  .dqt-fly.go { animation: dqt-fly .9s cubic-bezier(.5, 0, .2, 1) forwards; }
+  @keyframes dqt-fly { 0% { opacity: 1; transform: translate(var(--x0), var(--y0)) scale(.6); } 50% { transform: translate(calc((var(--x0) + var(--x1)) / 2), calc(var(--y0) - 4rem)) scale(1.1); } 100% { opacity: 0; transform: translate(var(--x1), var(--y1)) scale(.5); } }
+  .dqt-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.6rem; }
+  .dqt-steps button { min-height: 2.75rem; border-radius: 999px; background: #fff; padding: 0 1rem; font-size: .9rem; font-weight: 700; color: #536072; box-shadow: 0 0 0 1px #D8DDE3; transition: background .3s, color .3s; }
+  .dqt-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; }
+  @media (prefers-reduced-motion: reduce) { .dqt-lines li, .dqt-v, .dqt-bub, .dqt-pay, .dqt-plan li, .dqt-bar i { transition: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dqt]').forEach((root) => {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const lines = [...root.querySelectorAll<HTMLElement>('[data-line]')], steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const prices = lines.map(l => Number((l.querySelector('.dqt-p')!.textContent || '0').replace(/\D/g, '')));
+    const subN = q('[data-subn]'), totN = q('[data-totn]'), fly = q('.dqt-fly');
+    const DISC = Number(root.dataset.sub) - Number(root.dataset.total);
+    const fmt = (n: number) => `${n.toLocaleString('fr-FR').replace(/ | /g, ' ')} DH`;
+    let timers: number[] = [], raf = 0, auto = false, cur = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; cancelAnimationFrame(raf); };
+    const count = (el: HTMLElement, from: number, to: number, ms = 600) => {
+      const t0 = performance.now();
+      const step = (t: number) => { const k = Math.min(1, (t - t0) / ms); el.textContent = fmt(Math.round(from + (to - from) * (1 - Math.pow(1 - k, 3)))); if (k < 1) raf = requestAnimationFrame(step); };
+      raf = requestAnimationFrame(step);
+    };
+    const press = (el: HTMLElement) => { el.classList.add('press'); later(200, () => el.classList.remove('press')); };
+    const full = () => { lines.forEach(l => l.classList.add('on')); const s = prices.reduce((a, b) => a + b, 0); subN.textContent = fmt(s); totN.textContent = fmt(s - DISC); root.classList.add('disc'); };
+    const show = (s: number) => {
+      cur = s; root.dataset.s = String(s); steps.forEach((b, i) => b.classList.toggle('on', i === s));
+      root.classList.remove('stamped', 'paid');
+      if (s === 0) { lines.forEach(l => l.classList.remove('on')); subN.textContent = fmt(0); totN.textContent = fmt(0); root.classList.remove('disc'); } else full();
+      if (s >= 3) root.classList.add('stamped');
+    };
+    const play = (s: number) => {
+      if (s === 0) {
+        let sum = 0;
+        lines.forEach((l, i) => later(400 + i * 700, () => { l.classList.add('on'); count(subN, sum, sum + prices[i]); count(totN, sum, sum + prices[i]); sum += prices[i]; }));
+        later(400 + lines.length * 700 + 300, () => { root.classList.add('disc'); count(totN, sum, sum - DISC, 700); });
+      }
+      if (s === 1) {
+        const send = q('.dqt-send'); press(send);
+        const box = root.getBoundingClientRect(), a = send.getBoundingClientRect(), b = q('.dqt-bub').getBoundingClientRect();
+        fly.style.setProperty('--x0', `${a.left - box.left + a.width / 2 - 24}px`); fly.style.setProperty('--y0', `${a.top - box.top}px`);
+        fly.style.setProperty('--x1', `${b.left - box.left + b.width / 2 - 24}px`); fly.style.setProperty('--y1', `${b.top - box.top}px`);
+        if (getComputedStyle(q('.dqt-grid')).gridTemplateColumns.split(' ').length > 1) { fly.classList.remove('go'); void fly.offsetWidth; fly.classList.add('go'); }
+      }
+      if (s === 2) { later(1400, () => press(q('[data-accept]'))); later(1600, () => root.classList.add('stamped')); }
+      if (s === 3) { later(1500, () => press(q('[data-paybtn]'))); later(1900, () => root.classList.add('paid')); }
+    };
+    const LEN = [3800, 3000, 3600, 5600];
+    const run = () => { if (!auto) return; show(cur); play(cur); later(LEN[cur], () => { cur = (cur + 1) % 4; run(); }); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { auto = false; clear(); show(i); play(i); }));
+    if (still || !('IntersectionObserver' in window)) { show(3); root.classList.add('paid'); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; later(600, run); }
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

@@ -1,0 +1,192 @@
+---
+// Dentists page (Amplify Dentaire): practices, group practices and dental centres. Linked from the home trades and the footer.
+// Same look as the Hotel page: a live hero, then one live demo per part of the practice's day, the prices, the FAQ.
+// Built in steps; every demo copies the real screens of the practice app. Demo practice "Cabinet Dr Alami", invented names.
+// No clients, reviews or results are claimed.
+import Base from '../../layouts/Base.astro';
+import WaButton from '../WaButton.astro';
+import Icon from '../Icon.astro';
+import Device from '../Device.astro';
+import CountUp from '../CountUp.astro';
+import DentHeroBoard from '../DentHeroBoard.astro';
+import DentFit from '../DentFit.astro';
+import DentDay from '../DentDay.astro';
+import DentQueue from '../DentQueue.astro';
+import DentFile from '../DentFile.astro';
+import DentQuote from '../DentQuote.astro';
+import Related from '../Related.astro';
+import { tr } from '../../i18n/t';
+import { ROUTES, abs, type Lang } from '../../i18n/routes';
+import { serviceSchema } from '../../lib/schema';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const title = tt('Logiciel pour dentistes au Maroc : agenda, dossier patient, devis et site du cabinet | Amplify');
+const description = tt('Amplify Dentaire : l’agenda de chaque fauteuil, le rappel WhatsApp, le dossier et le schéma dentaire, le devis accepté sur le téléphone, le paiement par carte et le site du cabinet avec rendez-vous en ligne.');
+const wa = tt('Bonjour, je voudrais voir Amplify Dentaire pour mon cabinet.');
+const day = [
+  ['calendar', tt('Un agenda par fauteuil'), tt('Chaque fauteuil a sa colonne. Un rendez-vous se pose en touchant l’heure, avec l’acte et sa durée.')],
+  ['message', tt('Le rappel WhatsApp la veille'), tt('Le message est déjà écrit : l’assistante l’envoie d’un geste, et le rendez-vous passe en Confirmé.')],
+  ['clock', tt('La salle d’attente en direct'), tt('Qui attend, depuis combien de minutes, et qui est au fauteuil. Une allergie ou un anticoagulant saute aux yeux.')],
+  ['users', tt('Chacun son code'), tt('Le dentiste, l’assistante et l’accueil entrent avec leur propre code. Le gérant voit tout.')],
+];
+const queue = [
+  ['clock', tt('Le retard avant de partir'), tt('Le cabinet a 15 minutes de retard ? Le patient le voit sur son téléphone et part un peu plus tard.')],
+  ['users', tt('Combien avant lui'), tt('Le nombre de patients avant lui et l’attente estimée, mis à jour tout seuls.')],
+  ['bell', tt('Son téléphone vibre'), tt('Quand l’assistante le fait entrer, la page lui dit à quel fauteuil aller.')],
+  ['star', tt('L’avis Google après la visite'), tt('Le même bouton pour tout le monde, et un mot privé pour le cabinet.')],
+];
+const file = [
+  ['shield', tt('Les alertes en rouge'), tt('Allergie, anticoagulant, diabète : le patient les donne dans son questionnaire, et elles suivent son nom partout.')],
+  ['check', tt('Le schéma lu d’un regard'), tt('Chaque dent a sa forme, sa couleur et son signe : carie, obturée, couronne, implant, à extraire. Adulte ou enfant.')],
+  ['camera', tt('Les radios par QR'), tt('L’assistante affiche un QR, prend la radio ou la photo avec son téléphone, et elle arrive dans le dossier, sur la bonne dent.')],
+  ['book', tt('Toute l’histoire du patient'), tt('Chaque séance, chaque acte, chaque devis et chaque paiement, avec la date et le nom de qui l’a fait.')],
+];
+const quote = [
+  ['tag', tt('Le devis en une minute'), tt('Vos actes et vos prix sont déjà là. Les dents, l’acte, la séance : le total se fait seul, avec la remise.')],
+  ['message', tt('Accepté sur son téléphone'), tt('Le patient ouvre le lien, relit chaque ligne et accepte tout ou une partie. Vous le voyez aussitôt.')],
+  ['wallet', tt('L’acompte par carte'), tt('Par votre propre compte CMI : l’argent arrive sur votre compte. Amplify ne prend aucune commission.')],
+  ['calendar', tt('En plusieurs fois'), tt('Un échéancier par devis. Le patient voit ce qu’il a payé, ce qui reste, et paie la prochaine échéance en ligne.')],
+];
+const toc = [
+  { id: 'pour-qui', label: tt('Pour qui') },
+  { id: 'journee', label: tt('La journée') },
+  { id: 'file', label: tt('La salle d’attente') },
+  { id: 'dossier', label: tt('Le dossier') },
+  { id: 'devis', label: tt('Devis et paiement') },
+  { id: 'demo', label: tt('Démo') },
+];
+const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentaire[lang]))].filter(Boolean) as Record<string, unknown>[];
+---
+<Base lang={lang} page="dentaire" title={title} description={description} wa={wa} schema={schema} toc={toc} image="/img/photos/dent-cabinet.webp">
+  <!-- hero: the morning of the practice, live on the agenda -->
+  <section class="relative">
+    <div class="mx-auto grid max-w-6xl items-center gap-10 px-4 pb-10 pt-8 sm:px-6 md:pt-14 lg:grid-cols-[1fr_1.15fr] lg:gap-12 lg:pb-14">
+      <div>
+        <p class="fade-up inline-flex items-center gap-2 rounded-full bg-paper px-3 py-1.5 text-sm font-semibold ring-1 ring-line"><span class="sl-live size-2 rounded-full bg-green"></span>{tt('Cabinets et centres dentaires')}</p>
+        <h1 class="mt-5 text-[clamp(2.8rem,5.8vw,5rem)]">
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise inline-block" style="--d:80ms">{tt('Moins d’absents.')}</span></span>
+          <span class="block overflow-hidden pb-[0.04em]"><span class="rise relative inline-block text-green-deep" style="--d:200ms">{tt('Plus de sourires.')}<span class="draw absolute inset-x-0 -bottom-[0.01em] h-[0.06em] origin-left rounded-full bg-green rtl:origin-right" style="--d:700ms" aria-hidden="true"></span></span></span>
+        </h1>
+        <p class="fade-up mt-5 max-w-xl text-lg text-muted md:text-xl" style="--d:300ms">{tt('L’agenda de chaque fauteuil, le rappel WhatsApp la veille, le dossier et le schéma dentaire, le devis accepté sur le téléphone et votre site. Le patient arrive avec son questionnaire rempli, et vous voyez tout depuis votre téléphone.')}</p>
+        <div class="fade-up mt-7 flex flex-wrap items-center gap-3" style="--d:400ms">
+          <WaButton text={wa} label={tt('Demander une démo')} where="dentaire-hero" class="px-7 text-lg" />
+          <a href="#pour-qui" class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold ring-1 ring-line hover:bg-paper">{tt('Voir comment ça marche')}</a>
+        </div>
+      </div>
+
+      <div class="relative isolate aspect-[4/3.7] overflow-hidden rounded-[1.75rem] bg-navy lg:aspect-[5/4.7] lg:rounded-[2.25rem]">
+        <span class="sl-scene absolute inset-0 -z-20" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+        <span class="shadow-in absolute start-[8%] top-[82%] h-6 w-[80%] rounded-[50%] bg-black/55 blur-xl" style="--d:700ms" aria-hidden="true"></span>
+        <div class="land absolute start-[4%] top-[13%] w-[92%]" style="--d:300ms">
+          <Device w={1200} h={900}><DentHeroBoard slot="screen" /></Device>
+        </div>
+        <div class="absolute start-[4%] top-[3.5%] z-10"><div class="tf-float"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:2600ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-[#25D366] text-white sm:size-7"><Icon name="message" class="size-3.5 sm:size-4" /></span>{tt('Mehdi a confirmé son rendez-vous')}</p></div></div>
+        <div class="absolute bottom-[4.5%] end-[4%] z-10"><div class="tf-float" style="--d:1200ms"><p class="chat-in flex items-center gap-2 rounded-full bg-green py-1.5 pe-3.5 ps-3 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:4400ms" aria-hidden="true"><span class="sl-live size-2 rounded-full bg-navy"></span>{tt('Sara est arrivée avec le QR')}</p></div></div>
+        <div class="absolute bottom-[4.5%] start-[4%] z-10 hidden sm:block"><div class="tf-float" style="--d:2400ms"><p class="chat-in flex items-center gap-2 rounded-full bg-paper py-1.5 pe-3.5 ps-1.5 text-[0.7rem] font-semibold text-navy shadow-lg sm:text-sm" style="--d:7400ms" aria-hidden="true"><span class="grid size-6 place-items-center rounded-full bg-navy text-green sm:size-7"><Icon name="wallet" class="size-3.5 sm:size-4" /></span>{tt('Acompte payé par carte')}</p></div></div>
+      </div>
+    </div>
+
+    <!-- three facts -->
+    <div class="border-y border-line bg-paper">
+      <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
+        {[['1', tt('dossier par patient : schéma dentaire, devis, photos et paiements')], ['0', tt('commission sur les rendez-vous pris sur votre site')], ['3', tt('langues : français, arabe et anglais')]].map(([n, l]) => (
+          <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <DentFit lang={lang} />
+
+  <!-- the practice's day: the chairs and the waiting room on the tablet, hour by hour -->
+  <section id="journee" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="grid items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-x-14 lg:gap-y-8">
+      <div class="tf-x lg:col-start-1 lg:row-start-1">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Toute la journée.')}</span><span class="block text-green-deep">{tt('Fauteuil par fauteuil.')}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-muted">{tt('L’assistante voit chaque fauteuil, la salle d’attente et ce qui reste à faire. Touchez une heure pour voir la journée avancer, ou un fauteuil pour ouvrir le patient.')}</p>
+      </div>
+      <div class="tf lg:col-start-2 lg:row-span-2 lg:row-start-1" style="--d:120ms"><DentDay /></div>
+      <ul class="grid gap-5 sm:grid-cols-2 lg:col-start-1 lg:row-start-2 lg:grid-cols-1">
+        {day.map(([ic, h, x], i) => (
+          <li class="tf flex gap-4" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic as 'clock'} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-muted">{x}</span></span></li>))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the waiting room on the patient's phone -->
+  <section id="file" class="scroll-mt-20 border-y border-line bg-paper px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div>
+        <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le patient attend où il veut.')}</span><span class="block text-green-deep">{tt('Son téléphone le prévient.')}</span></h2>
+        <p class="tf mt-5 max-w-xl text-lg text-muted" style="--d:80ms">{tt('Il scanne le QR à l’accueil ou ouvre le lien de son rendez-vous. Sans application. Il peut prendre un café en face : sa page lui dit quand c’est à lui.')}</p>
+        <ul class="mt-8 grid gap-5 sm:grid-cols-2">
+          {queue.map(([ic, h, x], i) => (
+            <li class="tf flex gap-4" style={`--d:${i * 90 + 140}ms`}><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-navy text-green"><Icon name={ic as 'clock'} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-muted">{x}</span></span></li>))}
+        </ul>
+      </div>
+      <div class="tf" style="--d:160ms"><DentQueue /></div>
+    </div>
+  </section>
+
+  <!-- the patient file: the chart, the alerts, the history and the photos -->
+  <section id="dossier" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-5 pb-20 pt-10 text-white sm:px-8 md:px-14 md:pb-24 md:pt-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <div class="grid items-start gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
+        <div>
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Tout le patient.')}</span><span class="block text-green">{tt('Sur une seule fiche.')}</span></h2>
+          <p class="mt-5 text-lg text-white/75">{tt('Le dentiste touche une dent et voit ce qui la concerne. Regardez le schéma se remplir, puis la radio arriver du téléphone de l’assistante.')}</p>
+          <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+            {file.map(([ic, h, x], i) => (
+              <li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-green"><Icon name={ic as 'clock'} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-white/70">{x}</span></span></li>))}
+          </ul>
+        </div>
+        <div class="lg:pt-4"><DentFile /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- the quote: built at the chair, accepted and paid on the patient's phone -->
+  <section id="devis" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="max-w-3xl">
+      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le devis part sur WhatsApp.')}</span><span class="block text-green-deep">{tt('Il revient accepté et payé.')}</span></h2>
+      <p class="tf mt-5 text-lg text-muted" style="--d:80ms">{tt('Plus de devis papier qui dort dans un tiroir. Le patient le relit chez lui, en parle en famille, l’accepte sur son téléphone et paie l’acompte par carte.')}</p>
+    </div>
+    <div class="tf mt-10" style="--d:140ms"><DentQuote /></div>
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {quote.map(([ic, h, x], i) => (
+        <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+    </ul>
+  </section>
+
+  <!-- final -->
+  <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-6 py-14 text-white md:px-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <img src="/img/photos/dent-accueil.webp" alt="" width="896" height="1200" loading="lazy" decoding="async" class="pointer-events-none absolute inset-y-0 end-0 -z-20 hidden h-full w-1/2 object-cover opacity-40 [mask-image:linear-gradient(to_left,#000_40%,transparent)] md:block" />
+      <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Voyez-le avec votre cabinet.')}</span><span class="block text-green">{tt('En 15 minutes.')}</span></h2>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Écrivez-nous sur WhatsApp. Nous vous montrons un cabinet de démo complet, puis nous mettons vos actes et vos prix, vos fauteuils et votre équipe, et nous formons votre assistante.')}</p>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <WaButton text={wa} label={tt('Demander une démo')} where="dentaire-final" class="px-8 text-lg" />
+      </div>
+    </div>
+  </section>
+  <Related links={[[tt('Amplify Site : votre site à votre nom'), ROUTES.site[lang]], [tt('Spas et instituts'), ROUTES.spas[lang]], [tt('Tous nos systèmes'), ROUTES.systems[lang]], [tt('Tarifs'), ROUTES.pricing[lang]]]} />
+  <CountUp />
+</Base>
+
+<script>
+  // sections reveal as they scroll in
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const roots = [...document.querySelectorAll<HTMLElement>('[data-tf]')];
+  if (still || !('IntersectionObserver' in window)) roots.forEach((r) => r.classList.add('in'));
+  else {
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: 0.18 });
+    roots.forEach((r) => io.observe(r));
+  }
+</script>

@@ -1,0 +1,257 @@
+---
+// The patient file, played live on the tablet: the header with the medical alerts from the questionnaire, the tooth
+// chart of the practice app (every tooth in its own shape, the upper arch roots up, the lower arch roots down, a colour
+// and a sign per state), the history and the photos. The dentist marks teeth one after the other, the legend counts,
+// then the assistant's phone takes an X-ray through the QR and it lands on tooth 46. Tap a tooth to read it.
+// Plays by itself once in view, stops when touched. Reduced motion: the finished chart. Demo patient, invented name.
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const UP = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
+const LOW = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+const kind = (n: number) => { const k = n % 10; return k <= 2 ? 'incisor' : k === 3 ? 'canine' : k >= 6 ? 'molar' : 'premolar'; };
+const PATH: Record<string, string> = {
+  molar: 'M6 30C6 18 9 6 13 4c2-1 3 6 4 14l3 4 3-4c1-8 2-15 4-14 4 2 7 14 7 26 3 3 4 10 3 18-1 9-7 13-17 13S4 57 3 48c-1-8 0-15 3-18Z',
+  premolar: 'M10 30c0-12 3-25 7-27 3-1 4 0 6 0 4 2 7 15 7 27 3 4 4 11 3 19-1 8-6 12-13 12S8 57 7 49c-1-8 0-15 3-19Z',
+  canine: 'M13 32c0-14 3-29 7-30 4 1 7 16 7 30 4 5 5 13 3 20-2 6-6 10-10 10s-8-4-10-10c-2-7-1-15 3-20Z',
+  incisor: 'M14 32c0-14 3-29 6-30 3 1 6 16 6 30 3 5 4 14 3 22-1 5-4 7-9 7s-8-2-9-7c-1-8 0-17 3-22Z',
+};
+// the states of the app: id, label, colour, sign
+const ST: [string, string, string, string][] = [
+  ['caries', tt('Carie'), '#E5484D', 'C'], ['filled', tt('Obturée'), '#3E8BFF', 'O'], ['root_canal', tt('Dévitalisée'), '#A06CFF', 'D'],
+  ['crown', tt('Couronne'), '#F5B83D', 'Co'], ['implant', tt('Implant'), '#2BB3A3', 'I'], ['missing', tt('Absente'), '#6B7280', '×'],
+  ['to_extract', tt('À extraire'), '#FF6B9A', 'Ex'], ['fracture', tt('Fracturée'), '#FF8A3D', 'F'],
+];
+const COLOR = Object.fromEntries(ST.map(s => [s[0], s[2]]));
+// already on the chart, then marked one after the other by the dentist
+const BASE: [number, string][] = [[18, 'missing'], [38, 'missing'], [26, 'filled']];
+const MARKS: [number, string][] = [[16, 'caries'], [36, 'root_canal'], [46, 'implant'], [11, 'crown'], [21, 'crown'], [47, 'to_extract'], [14, 'fracture'], [25, 'filled']];
+const HIST: [string, string, string][] = [
+  ['12/11', tt('Consultation et radio panoramique'), '250 DH'],
+  ['19/11', tt('Devis n° 14 accepté : implant 46 et couronne'), '10 000 DH'],
+  ['26/11', tt('Implant 46 posé, acompte payé par carte'), '3 000 DH'],
+];
+const tooth = (n: number, lower: boolean) => {
+  const d = PATH[kind(n)];
+  return `<svg viewBox="0 0 40 64" aria-hidden="true"${lower ? ' style="transform:scaleY(-1)"' : ''}>
+    <defs><clipPath id="df-c${n}"><rect x="0" y="31" width="40" height="34"/></clipPath></defs>
+    <path class="dfl-root" d="${d}"/>
+    <g class="dfl-screw">${[6, 12, 18, 24].map(y => `<rect x="15" y="${y}" width="10" height="3.4" rx="1.2"/>`).join('')}<rect x="17.5" y="4" width="5" height="26" rx="2"/></g>
+    <path class="dfl-crown" d="${d}" clip-path="url(#df-c${n})"/>
+    <path class="dfl-canal" d="M20 6v24"/>
+    <path class="dfl-gone" d="${d}"/>
+    <path class="dfl-x" d="M11 38l18 18M29 38L11 56"/>
+  </svg>`;
+};
+---
+<div class="dfl" data-dfl data-base={JSON.stringify(BASE)} data-marks={JSON.stringify(MARKS)} data-st={JSON.stringify(ST)}>
+  <div class="dfl-tab">
+    <div class="dfl-scr" dir="ltr">
+      <div class="dfl-top">
+        <span class="dfl-av">YB</span>
+        <div class="dfl-who"><b>Youssef Benali</b><small>{tt('Dossier')} n° 0142 · 46 {tt('ans')} · 06 00 00 01 23</small></div>
+        <span class="dfl-q">{tt('Questionnaire signé le 12/11')}</span>
+      </div>
+      <div class="dfl-flags"><span>{tt('Anticoagulant')}</span><span>{tt('Diabète')}</span><span class="soft">{tt('Fumeur')}</span></div>
+      <div class="dfl-tabs">{[tt('Schéma'), tt('Historique'), tt('Devis'), tt('Photos'), tt('Documents')].map((x, i) => <span class={i === 0 ? 'on' : ''}>{x}</span>)}</div>
+      <div class="dfl-chart">
+        <i class="dfl-mid"></i>
+        {[UP, LOW].map((row, r) => (
+          <div class="dfl-arch">
+            {row.map((n, i) => (
+              <button type="button" class={`dfl-t ${i === 8 ? 'gap' : ''}`} data-t={n} data-s="" aria-label={`${tt('Dent')} ${n}`}>
+                {r === 1 && <small>{n}</small>}
+                <span class="dfl-g"><Fragment set:html={tooth(n, r === 1)} /><em class={r === 1 ? 'low' : ''}></em><i class="dfl-cam"></i></span>
+                {r === 0 && <small>{n}</small>}
+              </button>))}
+          </div>))}
+        <div class="dfl-pick" data-pick hidden><b data-pn></b><span data-ps></span><small data-pp>{tt('1 radio')}</small></div>
+      </div>
+      <div class="dfl-legend" data-legend></div>
+      <div class="dfl-low">
+        <ul class="dfl-hist">
+          {HIST.map(([d, x, m], i) => <li data-h={i}><time>{d}</time><span>{x}</span><b>{m}</b></li>)}
+        </ul>
+        <div class="dfl-photos">
+          <p>{tt('Photos')}</p>
+          <div class="dfl-ph"><span class="xr"></span><span class="io"></span><span class="new" data-newph></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- the assistant's phone, taking the X-ray through the QR -->
+  <div class="dfl-phone" aria-hidden="true">
+    <div class="dfl-ps" dir="ltr">
+      <p class="dfl-pt">{tt('Photo pour')} <b>Youssef B.</b></p>
+      <div class="dfl-view"><span class="xr"></span><i class="dfl-flash"></i></div>
+      <p class="dfl-pd">{tt('Dent')} <b>46</b> · {tt('Radio')}</p>
+      <span class="dfl-shoot"><i></i></span>
+    </div>
+  </div>
+  <span class="dfl-fly" aria-hidden="true"></span>
+  <template data-legend-tpl>{tt('Dent')}</template>
+  <template data-sound>{tt('Saine')}</template>
+</div>
+
+<style is:global>
+  .dfl { position: relative; }
+  .dfl-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .6); }
+  .dfl-scr { container-type: inline-size; position: relative; overflow: hidden; border-radius: 1.1rem; background: #020F20; color: #ECF2FA; padding: 2.6% 3% 3%; }
+  .dfl-top { display: flex; align-items: center; gap: 2cqw; }
+  .dfl-av { display: grid; place-items: center; width: 7cqw; height: 7cqw; border-radius: 50%; background: #163662; font-weight: 800; font-size: 2.4cqw; }
+  .dfl-who b { display: block; font-size: 3.4cqw; line-height: 1.1; } .dfl-who small { font-size: 1.9cqw; color: #8CA0BE; }
+  .dfl-q { margin-inline-start: auto; font-size: 1.8cqw; font-weight: 800; color: #588CFF; background: rgba(88, 140, 255, .14); border-radius: 1cqw; padding: .8cqw 1.4cqw; }
+  .dfl-flags { display: flex; gap: 1.2cqw; margin-top: 1.8cqw; }
+  .dfl-flags span { font-size: 2cqw; font-weight: 800; color: #fff; background: #C93A3F; border-radius: 1cqw; padding: .6cqw 1.6cqw; animation: dfl-blink 2.4s ease-in-out infinite; }
+  .dfl-flags span.soft { background: rgba(242, 173, 70, .2); color: #F2AD46; animation: none; }
+  @keyframes dfl-blink { 50% { box-shadow: 0 0 0 .8cqw rgba(201, 58, 63, .25); } }
+  .dfl-tabs { display: flex; gap: 3cqw; margin: 2.2cqw -3cqw 0; padding: 0 3cqw; border-bottom: 1px solid rgba(210, 225, 245, .08); font-size: 2.1cqw; font-weight: 700; color: #8CA0BE; }
+  .dfl-tabs span { padding: 1.4cqw .2cqw; } .dfl-tabs .on { color: #fff; box-shadow: inset 0 -2px 0 #05B962; }
+  .dfl-chart { position: relative; margin-top: 2cqw; border-radius: 2cqw; background: #071B36; padding: 1.6cqw 1.2cqw; }
+  .dfl-mid { position: absolute; top: 2cqw; bottom: 2cqw; left: 50%; width: 1px; background: rgba(210, 225, 245, .14); }
+  .dfl-arch { display: flex; }
+  .dfl-arch + .dfl-arch { margin-top: 1.4cqw; }
+  .dfl-t { position: relative; flex: 1; display: flex; flex-direction: column; align-items: center; gap: .5cqw; padding: .6cqw 0; border-radius: 1cqw; cursor: pointer; transition: background .2s; }
+  .dfl-t.gap { margin-inline-start: 1.2cqw; }
+  .dfl-t:hover, .dfl-t.sel { background: rgba(5, 185, 98, .14); }
+  .dfl-t.sel { box-shadow: inset 0 0 0 .3cqw #05B962; }
+  .dfl-t small { font-size: 1.5cqw; font-weight: 700; color: #8CA0BE; font-variant-numeric: tabular-nums; }
+  .dfl-g { position: relative; display: block; width: 78%; aspect-ratio: 40 / 64; }
+  .dfl-g svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .dfl-root { fill: #24497C; stroke: rgba(210, 225, 245, .35); stroke-width: 1; }
+  .dfl-crown { fill: var(--c, rgba(236, 242, 250, .92)); transition: fill .45s; }
+  .dfl-screw { fill: #2BB3A3; display: none; }
+  .dfl-canal { stroke: #A06CFF; stroke-width: 3; stroke-linecap: round; display: none; }
+  .dfl-gone { fill: none; stroke: #8CA0BE; stroke-width: 1.6; stroke-dasharray: 3 3; opacity: .55; display: none; }
+  .dfl-x { stroke: #8CA0BE; stroke-width: 2.4; stroke-linecap: round; display: none; }
+  .dfl-t[data-s="implant"] .dfl-screw { display: inline; } .dfl-t[data-s="implant"] .dfl-root { display: none; }
+  .dfl-t[data-s="root_canal"] .dfl-canal { display: inline; }
+  .dfl-t[data-s="missing"] .dfl-root, .dfl-t[data-s="missing"] .dfl-crown { display: none; }
+  .dfl-t[data-s="missing"] .dfl-gone, .dfl-t[data-s="missing"] .dfl-x { display: inline; }
+  .dfl-g em { position: absolute; inset: auto 0 6%; text-align: center; font-style: normal; font-size: 1.5cqw; font-weight: 800; color: rgba(0, 0, 0, .72); line-height: 1; }
+  .dfl-g em.low { inset: 6% 0 auto; }
+  .dfl-t[data-s="missing"] em { display: none; }
+  .dfl-t.pop .dfl-g { animation: dfl-pop .6s cubic-bezier(.3, 1.6, .5, 1); }
+  @keyframes dfl-pop { 0% { transform: scale(1); } 40% { transform: scale(1.35); } 100% { transform: scale(1); } }
+  .dfl-t.pop::after { content: ""; position: absolute; inset: 0; border-radius: 1cqw; box-shadow: 0 0 0 0 var(--c); animation: dfl-ring .8s ease-out; }
+  @keyframes dfl-ring { from { box-shadow: 0 0 0 0 var(--c); opacity: 1; } to { box-shadow: 0 0 0 1.6cqw var(--c); opacity: 0; } }
+  .dfl-cam { position: absolute; top: -1cqw; left: -1cqw; width: 2.8cqw; height: 2.8cqw; border-radius: 50%; background: #05B962; box-shadow: 0 0 0 .4cqw #071B36; transform: scale(0); transition: transform .45s cubic-bezier(.3, 1.6, .5, 1); }
+  .dfl-cam::after { content: ""; position: absolute; inset: 30% 25%; border-radius: .3cqw; border: .35cqw solid #001E3E; }
+  .dfl-t.has-ph .dfl-cam { transform: scale(1); }
+  .dfl-pick { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; gap: .4cqw; min-width: 28cqw; text-align: center; border-radius: 1.6cqw; background: #16305A; padding: 1.6cqw 2.4cqw; box-shadow: 0 2cqw 4cqw -1cqw rgba(0, 0, 0, .6); animation: dfl-up .3s cubic-bezier(.2, .8, .2, 1); }
+  .dfl-pick[hidden] { display: none; }
+  @keyframes dfl-up { from { transform: translate(-50%, -30%); opacity: 0; } }
+  .dfl-pick b { font-size: 3.4cqw; } .dfl-pick span { font-size: 2.2cqw; font-weight: 800; } .dfl-pick small { font-size: 1.8cqw; color: #7BE3A9; }
+  .dfl-legend { display: flex; flex-wrap: wrap; gap: 1cqw 2.2cqw; min-height: 3cqw; margin-top: 1.6cqw; font-size: 1.8cqw; font-weight: 700; color: #B8C6DC; }
+  .dfl-legend span { display: inline-flex; align-items: center; gap: .8cqw; animation: dfl-lin .4s ease-out both; }
+  .dfl-legend i { width: 1.8cqw; height: 1.8cqw; border-radius: .4cqw; }
+  @keyframes dfl-lin { from { opacity: 0; transform: translateY(1cqw); } }
+  .dfl-low { display: grid; grid-template-columns: 1.6fr 1fr; gap: 2cqw; margin-top: 2cqw; }
+  .dfl-hist { display: grid; gap: 1cqw; }
+  .dfl-hist li { display: grid; grid-template-columns: 7cqw 1fr auto; gap: 1.4cqw; align-items: center; border-radius: 1.2cqw; background: #071B36; padding: 1.1cqw 1.6cqw; font-size: 1.9cqw; opacity: .25; transform: translateX(-2cqw); transition: opacity .5s, transform .5s; }
+  .dfl-hist li.on { opacity: 1; transform: none; }
+  .dfl-hist time { font-weight: 800; color: #8CA0BE; font-variant-numeric: tabular-nums; } .dfl-hist b { color: #05B962; white-space: nowrap; }
+  .dfl-photos { border-radius: 1.4cqw; background: #071B36; padding: 1.4cqw; }
+  .dfl-photos p { font-size: 1.9cqw; font-weight: 800; }
+  .dfl-ph { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1cqw; margin-top: 1cqw; }
+  .dfl-ph span, .dfl-view .xr { display: block; aspect-ratio: 1; border-radius: 1cqw; background: #0D274A; }
+  .xr { background: radial-gradient(ellipse 22% 34% at 35% 55%, rgba(255, 255, 255, .75), transparent 70%), radial-gradient(ellipse 22% 34% at 65% 55%, rgba(255, 255, 255, .6), transparent 70%), radial-gradient(ellipse 60% 20% at 50% 30%, rgba(255, 255, 255, .25), transparent 70%), #1b2330 !important; }
+  .io { background: radial-gradient(circle at 50% 60%, #f3e7e0 0 30%, #c87a7a 31% 60%, #6d2f37 61%) !important; }
+  .dfl-ph .new { transform: scale(0); transition: transform .5s cubic-bezier(.3, 1.6, .5, 1); }
+  .dfl-ph .new.on { transform: scale(1); background: radial-gradient(ellipse 30% 40% at 50% 55%, rgba(255, 255, 255, .85), transparent 70%), #1b2330 !important; box-shadow: 0 0 0 .4cqw #05B962; }
+  /* the phone */
+  .dfl-phone { position: absolute; right: -.75rem; bottom: -3rem; width: 9.5rem; container-type: inline-size; border-radius: 1.6rem; background: #1C1F24; padding: .4rem; box-shadow: 0 30px 50px -20px rgba(0, 0, 0, .7); transform: rotate(6deg) translateY(30%); opacity: 0; transition: transform .7s cubic-bezier(.2, .8, .2, 1), opacity .5s; }
+  .dfl.cam .dfl-phone { transform: rotate(6deg); opacity: 1; }
+  .dfl-ps { border-radius: 1.25rem; background: #F4F6FA; color: #001E3E; padding: 9cqw 7cqw 8cqw; }
+  .dfl-pt { font-size: 7cqw; line-height: 1.2; } .dfl-pt b { display: block; font-size: 8.4cqw; }
+  .dfl-view { position: relative; margin-top: 5cqw; border-radius: 6cqw; overflow: hidden; }
+  .dfl-flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  .dfl.shot .dfl-flash { animation: dfl-flash .5s ease-out; }
+  @keyframes dfl-flash { 0% { opacity: .95; } 100% { opacity: 0; } }
+  .dfl-pd { margin-top: 4cqw; font-size: 7cqw; font-weight: 600; text-align: center; }
+  .dfl-shoot { display: grid; place-items: center; width: 22cqw; height: 22cqw; margin: 4cqw auto 0; border-radius: 50%; border: 1.6cqw solid #001E3E; }
+  .dfl-shoot i { width: 70%; height: 70%; border-radius: 50%; background: #05B962; transition: transform .15s; }
+  .dfl.shot .dfl-shoot i { transform: scale(.8); }
+  .dfl-fly { position: absolute; width: 2.6rem; height: 2.6rem; border-radius: .5rem; pointer-events: none; opacity: 0; z-index: 5;
+    background: radial-gradient(ellipse 30% 40% at 50% 55%, rgba(255, 255, 255, .85), transparent 70%), #1b2330; box-shadow: 0 0 0 3px #05B962, 0 10px 30px rgba(0, 0, 0, .5); }
+  .dfl-fly.go { animation: dfl-fly 1.1s cubic-bezier(.5, 0, .2, 1) forwards; }
+  @keyframes dfl-fly { 0% { opacity: 1; transform: translate(var(--x0), var(--y0)) scale(1.4) rotate(6deg); } 85% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x1), var(--y1)) scale(.6); } }
+  @media (max-width: 640px) { .dfl-phone { right: -.4rem; bottom: -2.6rem; width: 7.2rem; } }
+  @media (prefers-reduced-motion: reduce) { .dfl-flags span { animation: none; } .dfl-phone, .dfl-hist li, .dfl-cam { transition: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dfl]').forEach((root) => {
+    const base = JSON.parse(root.dataset.base || '[]') as [number, string][];
+    const marks = JSON.parse(root.dataset.marks || '[]') as [number, string][];
+    const ST = JSON.parse(root.dataset.st || '[]') as [string, string, string, string][];
+    const by = Object.fromEntries(ST.map(s => [s[0], s]));
+    const teeth = Object.fromEntries([...root.querySelectorAll<HTMLElement>('[data-t]')].map(t => [t.dataset.t!, t]));
+    const legend = root.querySelector<HTMLElement>('[data-legend]')!;
+    const hist = [...root.querySelectorAll<HTMLElement>('[data-h]')];
+    const pick = root.querySelector<HTMLElement>('[data-pick]')!;
+    const newph = root.querySelector<HTMLElement>('[data-newph]')!, fly = root.querySelector<HTMLElement>('.dfl-fly')!;
+    const sound = root.querySelector<HTMLTemplateElement>('[data-sound]')!.innerHTML.trim();
+    const word = root.querySelector<HTMLTemplateElement>('[data-legend-tpl]')!.innerHTML.trim();
+    let timers: number[] = [], auto = false, started = false;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const mark = (n: number, s: string, pop = true) => {
+      const t = teeth[n]; if (!t) return;
+      t.dataset.s = s;
+      const st = by[s]; t.style.setProperty('--c', st ? st[2] : '');
+      const em = t.querySelector('em'); if (em) em.textContent = st && s !== 'missing' ? st[3] : '';
+      if (pop) { t.classList.remove('pop'); void t.offsetWidth; t.classList.add('pop'); }
+      drawLegend();
+    };
+    const drawLegend = () => {
+      const count: Record<string, number> = {};
+      Object.values(teeth).forEach(t => { const s = t.dataset.s; if (s) count[s] = (count[s] || 0) + 1; });
+      legend.innerHTML = '';
+      ST.filter(s => count[s[0]]).forEach(s => {
+        const sp = document.createElement('span'); const i = document.createElement('i'); i.style.background = s[2];
+        sp.append(i, `${s[1]} · ${count[s[0]]}`); legend.appendChild(sp);
+      });
+    };
+    const reset = () => {
+      Object.values(teeth).forEach(t => { t.dataset.s = ''; t.style.removeProperty('--c'); t.classList.remove('has-ph', 'sel'); const em = t.querySelector('em'); if (em) em.textContent = ''; });
+      base.forEach(([n, s]) => mark(n, s, false));
+      hist.forEach(h => h.classList.remove('on')); newph.classList.remove('on');
+      root.classList.remove('cam', 'shot'); pick.hidden = true;
+    };
+    const shoot = () => {
+      root.classList.add('cam');
+      later(1100, () => { root.classList.remove('shot'); void root.offsetWidth; root.classList.add('shot'); });
+      later(1500, () => {
+        const box = root.getBoundingClientRect(), a = root.querySelector('.dfl-view')!.getBoundingClientRect(), b = newph.getBoundingClientRect();
+        fly.style.setProperty('--x0', `${a.left - box.left}px`); fly.style.setProperty('--y0', `${a.top - box.top}px`);
+        fly.style.setProperty('--x1', `${b.left - box.left}px`); fly.style.setProperty('--y1', `${b.top - box.top}px`);
+        fly.classList.remove('go'); void fly.offsetWidth; fly.classList.add('go');
+      });
+      later(2600, () => { newph.classList.add('on'); teeth[46].classList.add('has-ph'); });
+      later(3600, () => root.classList.remove('cam'));
+    };
+    const loop = () => {
+      reset();
+      marks.forEach(([n, s], i) => later(700 + i * 650, () => mark(n, s)));
+      const end = 700 + marks.length * 650;
+      hist.forEach((h, i) => later(400 + i * 1500, () => h.classList.add('on')));
+      later(end + 300, shoot);
+      later(end + 8000, () => { if (auto) loop(); });
+    };
+    Object.values(teeth).forEach(t => t.addEventListener('click', () => {
+      auto = false; timers.forEach(clearTimeout); timers = []; root.classList.remove('cam');
+      Object.values(teeth).forEach(x => x.classList.remove('sel')); t.classList.add('sel');
+      const st = by[t.dataset.s || ''];
+      root.querySelector('[data-pn]')!.textContent = `${word} ${t.dataset.t}`;
+      const ps = root.querySelector<HTMLElement>('[data-ps]')!; ps.textContent = st ? st[1] : sound; ps.style.color = st ? st[2] : '#ECF2FA';
+      root.querySelector<HTMLElement>('[data-pp]')!.hidden = !t.classList.contains('has-ph');
+      pick.hidden = false;
+    }));
+    pick.addEventListener('click', () => { pick.hidden = true; Object.values(teeth).forEach(x => x.classList.remove('sel')); });
+    reset();
+    if (still || !('IntersectionObserver' in window)) { marks.forEach(([n, s]) => mark(n, s, false)); hist.forEach(h => h.classList.add('on')); newph.classList.add('on'); teeth[46].classList.add('has-ph'); return; }
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; loop(); }
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

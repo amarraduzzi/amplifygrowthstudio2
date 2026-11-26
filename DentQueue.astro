@@ -1,0 +1,151 @@
+---
+// The patient's phone: his appointment page (the "Atelier" look of the patient pages), played live.
+// Before leaving home he sees the practice's delay; in the waiting room the patients before him count down with
+// the minutes; then "it is your turn, chair 2" (the phone shakes, as it vibrates); after the visit, the Google review.
+// Tap a step to jump. Plays by itself once in view, stops when touched. Demo practice, invented names.
+import Device from './Device.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const STEPS = [tt('Avant de partir'), tt('En salle d’attente'), tt('C’est à lui'), tt('Après la visite')];
+---
+<div class="dq" data-dq data-s="0">
+  <div class="dq-phone mx-auto w-[min(100%,19rem)]">
+    <Device kind="phone" w={390} h={820} screenBg="#f4eee5">
+      <div slot="screen" class="dq-scr" dir="ltr">
+        <div class="dq-hero"><img src="/img/photos/dent-attente.webp" alt="" width="896" height="1200" loading="lazy" decoding="async" /><span></span><p>Cabinet Dr Alami</p></div>
+        <div class="dq-sheet">
+          <!-- 0: before leaving home -->
+          <section class="dq-v" data-v="0">
+            <p class="dq-k">{tt('Votre rendez-vous')}</p>
+            <p class="dq-serif dq-big">{tt('Aujourd’hui')} <em>10:00</em></p>
+            <p class="dq-mute">{tt('Consultation')} · Dr Bennani</p>
+            <p class="dq-live"><i></i>{tt('Le cabinet a environ 15 min de retard. Vous pouvez venir un peu plus tard.')}</p>
+            <span class="dq-btn">{tt('Itinéraire')}</span>
+          </section>
+          <!-- 1: in the waiting room, counting down -->
+          <section class="dq-v" data-v="1">
+            <p class="dq-row"><span class="dq-livek"><i></i>{tt('En direct')}</span><span>{tt('Fauteuil')} 2</span></p>
+            <div class="dq-count">
+              <p class="dq-serif dq-n" data-n>3</p>
+              <p class="dq-serif dq-before" data-before>{tt('patients avant vous')}</p>
+              <p class="dq-serif dq-next" data-next>{tt('Vous êtes')} <em>{tt('le prochain.')}</em></p>
+            </div>
+            <p class="dq-seats" data-seats><i></i><i></i><i></i><b></b></p>
+            <p class="dq-wait"><span>{tt('Attente estimée')}</span><b class="dq-serif" data-wait>~ 25 min</b></p>
+            <p class="dq-mute dq-small">{tt('Gardez cette page ouverte : elle vous prévient quand c’est à vous.')}</p>
+          </section>
+          <!-- 2: his turn -->
+          <section class="dq-v dq-turn" data-v="2">
+            <p class="dq-serif">{tt('C’est')} <em>{tt('à vous.')}</em></p>
+            <p class="dq-go">{tt('Rendez-vous au')} <b class="dq-serif">{tt('Fauteuil')} 2</b></p>
+          </section>
+          <!-- 3: after the visit -->
+          <section class="dq-v" data-v="3">
+            <p class="dq-serif dq-thanks">{tt('Merci pour')} <em>{tt('votre visite')}</em>, Sara.</p>
+            <p class="dq-mute">{tt('Votre avis sur Google aide d’autres patients à trouver le cabinet.')}</p>
+            <span class="dq-btn">★ {tt('Laisser un avis Google')}</span>
+            <p class="dq-stars" data-stars><i>★</i><i>★</i><i>★</i><i>★</i><i>★</i></p>
+          </section>
+        </div>
+      </div>
+    </Device>
+  </div>
+  <div class="dq-steps" role="group" aria-label={tt('Les étapes du patient')}>
+    {STEPS.map((s, i) => <button type="button" data-step={i} class={i === 0 ? 'on' : ''}>{s}</button>)}
+  </div>
+  <template data-one>{tt('patient avant vous')}</template>
+  <template data-many>{tt('patients avant vous')}</template>
+  <template data-soon>{tt('Bientôt')}</template>
+</div>
+
+<style is:global>
+  .dq-scr { container-type: inline-size; position: relative; aspect-ratio: 390 / 700; overflow: hidden; background: #f4eee5; color: #0e3b3a; font-size: 15px; }
+  .dq-serif { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; letter-spacing: -.01em; }
+  .dq-serif em, .dq-scr em { font-style: italic; color: #136F6A; }
+  .dq-hero { position: relative; height: 30%; overflow: hidden; }
+  .dq-hero img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 60%; }
+  .dq-hero span { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14, 59, 58, .2), rgba(14, 59, 58, .75)); }
+  .dq-hero p { position: absolute; left: 6cqw; bottom: 9cqw; color: #fff; font-weight: 800; font-size: 4.6cqw; }
+  .dq-sheet { position: absolute; inset: 25% 0 0; background: #f4eee5; border-top: .8cqw solid #0e3b3a; padding: 6cqw; }
+  .dq-v { position: absolute; inset: 6cqw 6cqw auto; opacity: 0; transform: translateY(4cqw); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .dq[data-s="0"] [data-v="0"], .dq[data-s="1"] [data-v="1"], .dq[data-s="2"] [data-v="2"], .dq[data-s="3"] [data-v="3"] { opacity: 1; transform: none; }
+  .dq-k { font-size: 2.8cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: #6b7a74; }
+  .dq-big { margin-top: 2cqw; font-size: 11cqw; line-height: 1; }
+  .dq-mute { margin-top: 2cqw; color: #5d6b66; font-size: 3.6cqw; line-height: 1.35; }
+  .dq-small { font-size: 3cqw; }
+  .dq-live { display: flex; gap: 2.4cqw; align-items: flex-start; margin-top: 6cqw; padding: 3.4cqw 0; border-block: 1px solid rgba(14, 59, 58, .18); font-weight: 600; font-size: 3.5cqw; line-height: 1.35; }
+  .dq-live i, .dq-livek i { flex: none; width: 2cqw; height: 2cqw; margin-top: 1.4cqw; background: #059669; animation: dq-pulse 1.6s ease-out infinite; }
+  @keyframes dq-pulse { 0% { box-shadow: 0 0 0 0 rgba(5, 150, 105, .6); } 80%, 100% { box-shadow: 0 0 0 2.4cqw rgba(5, 150, 105, 0); } }
+  .dq-btn { display: flex; align-items: center; justify-content: center; gap: 2cqw; height: 13cqw; margin-top: 6cqw; background: #e9a23b; color: #0e3b3a; font-weight: 800; font-size: 4cqw; box-shadow: 0 1.2cqw 0 #b9781e; }
+  .dq-row { display: flex; justify-content: space-between; align-items: center; padding-bottom: 3cqw; border-bottom: 1px solid rgba(14, 59, 58, .18); font-weight: 600; font-size: 3.4cqw; }
+  .dq-livek { display: flex; align-items: center; gap: 2cqw; font-size: 2.8cqw; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; } .dq-livek i { margin-top: 0; }
+  .dq-count { position: relative; height: 26cqw; margin-top: 5cqw; }
+  .dq-n { position: absolute; left: 0; bottom: 0; font-size: 26cqw; line-height: .8; font-variant-numeric: tabular-nums; transition: opacity .3s, transform .4s; }
+  .dq-n.tick { animation: dq-tick .55s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes dq-tick { 0% { transform: translateY(-40%); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  .dq-before { position: absolute; left: 20cqw; bottom: 1cqw; font-size: 5.6cqw; line-height: 1.1; max-width: 55cqw; transition: opacity .3s; }
+  .dq-next { position: absolute; left: 0; bottom: 0; font-size: 11cqw; line-height: 1; opacity: 0; transform: translateY(3cqw); transition: opacity .45s, transform .45s; }
+  .dq-count.last .dq-n, .dq-count.last .dq-before { opacity: 0; }
+  .dq-count.last .dq-next { opacity: 1; transform: none; }
+  .dq-seats { display: flex; gap: 1.6cqw; margin-top: 5cqw; }
+  .dq-seats i, .dq-seats b { width: 5cqw; height: 5cqw; border: .5cqw solid #0e3b3a; transition: opacity .4s, transform .4s; }
+  .dq-seats i { background: #0e3b3a; } .dq-seats b { background: #e9a23b; border-color: #e9a23b; }
+  .dq-seats i.gone { opacity: 0; transform: scale(.2); width: 0; margin-inline-end: -1.6cqw; border-width: 0; }
+  .dq-wait { display: flex; justify-content: space-between; align-items: baseline; margin-top: 5cqw; padding: 3.4cqw 0; border-block: 1px solid rgba(14, 59, 58, .18); font-weight: 600; font-size: 3.4cqw; }
+  .dq-wait b { font-size: 7cqw; font-weight: 400; font-variant-numeric: tabular-nums; }
+  .dq-turn { inset: 0; padding: 14cqw 6cqw; background: #0e3b3a; color: #fff; }
+  .dq-turn .dq-serif { font-size: 15cqw; line-height: .95; } .dq-turn em { color: #e9a23b; }
+  .dq-go { margin-top: 8cqw; padding-top: 4cqw; border-top: 1px solid rgba(255, 255, 255, .3); font-size: 4.2cqw; } .dq-go b { font-size: 6.4cqw; font-weight: 400; }
+  .dq[data-s="2"] .dq-phone { animation: dq-buzz .5s 2 .4s; }
+  @keyframes dq-buzz { 0%, 100% { transform: none; } 15% { transform: translateX(-6px) rotate(-1.5deg); } 35% { transform: translateX(6px) rotate(1.5deg); } 55% { transform: translateX(-4px) rotate(-1deg); } 75% { transform: translateX(4px) rotate(1deg); } }
+  .dq-thanks { font-size: 9.6cqw; line-height: 1.02; }
+  .dq-stars { display: flex; gap: 1.4cqw; margin-top: 6cqw; font-size: 8cqw; color: #d8cfbf; }
+  .dq-stars i { font-style: normal; transition: color .2s, transform .3s cubic-bezier(.3, 1.6, .5, 1); }
+  .dq-stars i.on { color: #e9a23b; transform: scale(1.15); }
+  .dq-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.4rem; }
+  .dq-steps button { min-height: 2.75rem; border-radius: 999px; background: #fff; padding: 0 1rem; font-size: .9rem; font-weight: 700; color: #536072; box-shadow: 0 0 0 1px #D8DDE3; transition: background .3s, color .3s; }
+  .dq-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; }
+  @media (prefers-reduced-motion: reduce) { .dq-v, .dq-n, .dq-next, .dq-seats i { transition: none; animation: none; } .dq[data-s="2"] .dq-phone { animation: none; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dq]').forEach((root) => {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const tpl = (s: string) => q<HTMLTemplateElement>(s).innerHTML.trim();
+    const one = tpl('[data-one]'), many = tpl('[data-many]'), soon = tpl('[data-soon]');
+    const n = q('[data-n]'), before = q('[data-before]'), count = q('.dq-count'), wait = q('[data-wait]');
+    const seats = [...root.querySelectorAll<HTMLElement>('[data-seats] i')], stars = [...root.querySelectorAll<HTMLElement>('[data-stars] i')];
+    let timers: number[] = [], auto = false, cur = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    const ahead = (k: number) => {
+      count.classList.toggle('last', k === 0);
+      if (k > 0) { n.textContent = String(k); n.classList.remove('tick'); void n.offsetWidth; n.classList.add('tick'); before.textContent = k === 1 ? one : many; }
+      seats.forEach((s, i) => s.classList.toggle('gone', i >= k));
+      const m = [3, 10, 18, 25][Math.min(k, 3)];
+      wait.textContent = k === 0 ? soon : `~ ${m} min`;
+    };
+    const show = (s: number) => {
+      cur = s; root.dataset.s = String(s);
+      steps.forEach((b, i) => b.classList.toggle('on', i === s));
+      if (s === 1) ahead(3);
+      stars.forEach(x => x.classList.remove('on'));
+    };
+    // what plays inside a step while it is on screen
+    const play = (s: number) => {
+      if (s === 1) { ahead(3); later(1500, () => ahead(2)); later(3000, () => ahead(1)); later(4500, () => ahead(0)); }
+      if (s === 3) stars.forEach((x, i) => later(900 + i * 180, () => x.classList.add('on')));
+    };
+    const LEN = [3200, 6800, 3400, 4200];
+    const run = () => { if (!auto) return; show(cur); play(cur); later(LEN[cur], () => { cur = (cur + 1) % 4; run(); }); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { auto = false; clear(); show(i); play(i); }));
+    if (still || !('IntersectionObserver' in window)) { show(1); ahead(2); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; later(900, run); }
+      else if (!e.isIntersecting && auto) { clear(); started = false; }
+    }, { threshold: 0.4 }).observe(root);
+  });
+</script>

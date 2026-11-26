@@ -1,0 +1,223 @@
+---
+// The practice's day, played live on the tablet: the counters of the Agenda tab (waiting, in the chair, done),
+// one tile per chair with who is in it and for how long, and the waiting room below with the minutes running.
+// A clock runs through the day: the morning fills the chairs, patients check in with the QR, payments come in,
+// the evening closes the till. Tap an hour to jump, tap a chair to open the patient's card.
+// It plays by itself once in view and stops as soon as the visitor touches something. Demo practice, invented names.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const HOURS = ['08:45', '10:30', '12:30', '16:00', '19:00'];
+// per chair, per hour: [patient, act, minutes in the chair, alert] or null (free)
+type In = [string, string, number, string] | null;
+const CHAIRS: { name: string; who: string; steps: In[] }[] = [
+  { name: `${tt('Fauteuil')} 1`, who: 'Dr Alami', steps: [null, ['Youssef Benali', tt('Implant 46'), 35, tt('Anticoagulant')], ['Khadija Bennis', tt('Dévitalisation'), 20, ''], ['Amine Rami', tt('Couronne céramique'), 15, ''], null] },
+  { name: `${tt('Fauteuil')} 2`, who: 'Dr Bennani', steps: [null, ['Sara El Idrissi', tt('Consultation'), 5, ''], null, ['Hajar Ouali', tt('Contrôle enfant'), 10, ''], null] },
+  { name: `${tt('Fauteuil')} 3`, who: tt('Hygiène'), steps: [null, ['Nadia Chraibi', tt('Détartrage'), 20, ''], ['Lina Squalli', tt('Blanchiment'), 30, tt('Allergie : pénicilline')], null, null] },
+];
+// the waiting room per hour: [patient, minutes waiting, came with the QR]
+const WAIT: [string, number, boolean][][] = [[], [['Khadija Bennis', 4, true], ['Mehdi Alaoui', 12, false]], [['Rachid Amrani', 18, true]], [], []];
+// waiting, in the chair, done, per hour
+const STATS: [number, number, number][] = [[0, 0, 0], [2, 3, 3], [1, 2, 8], [0, 2, 13], [0, 0, 17]];
+const NEWS = [
+  ['calendar', tt('17 rendez-vous aujourd’hui, 14 confirmés sur WhatsApp')],
+  ['qr', tt('Khadija est arrivée avec le QR, questionnaire rempli')],
+  ['wallet', tt('Youssef a payé 3 000 DH, il reste 7 000 DH sur son devis')],
+  ['star', tt('Demande d’avis Google envoyée à Rachid')],
+  ['check', tt('Caisse clôturée : 9 450 DH, aucun écart')],
+];
+const STEP: Record<string, string> = { a: tt('Terminé'), b: tt('Séance et paiement') };
+---
+<div class="dd" data-dd data-t="0" data-stats={JSON.stringify(STATS)} data-wait={JSON.stringify(WAIT)}>
+  <div class="dd-tab">
+    <div class="dd-screen" dir="ltr">
+      <div class="dd-top"><span class="dd-logo">CA</span><b>Cabinet Dr Alami</b><span class="dd-new">+ {tt('Rendez-vous')}</span></div>
+      <div class="dd-head">
+        <div><p class="dd-title">{tt('Aujourd’hui')}</p><p class="dd-clock"><span data-clock>08:45</span> · {tt('Salle d’attente')}</p></div>
+        <div class="dd-stats">
+          <p><b class="w" data-st="0">0</b><span>{tt('Attendent')}</span></p>
+          <p><b class="c" data-st="1">0</b><span>{tt('Au fauteuil')}</span></p>
+          <p><b class="d" data-st="2">0</b><span>{tt('Terminés')}</span></p>
+        </div>
+      </div>
+      <ul class="dd-chairs">
+        {CHAIRS.map((c, i) => (
+          <li>
+            <button type="button" class="dd-chair" data-chair={i} data-steps={JSON.stringify(c.steps)} data-s="free" aria-label={c.name}>
+              <i class="dd-band"></i>
+              <span class="dd-n">{c.name}</span>
+              <span class="dd-doc">{c.who}</span>
+              <span class="dd-free">{tt('Libre')}</span>
+              <span class="dd-p"><b data-p></b><small data-a></small><em data-m></em><strong data-al></strong></span>
+            </button>
+          </li>))}
+      </ul>
+      <div class="dd-room">
+        <p class="dd-rh"><i></i>{tt('Salle d’attente')}<span class="dd-none" data-none>{tt('Personne n’attend.')}</span></p>
+        <ul class="dd-wl" data-wl></ul>
+      </div>
+      <div class="dd-card" data-card hidden>
+        <button type="button" class="dd-x" data-close aria-label={tt('Fermer')}>×</button>
+        <p class="dd-cn" data-cn></p>
+        <p class="dd-cg" data-cg></p>
+        <p class="dd-cs" data-cs></p>
+        <p class="dd-ca" data-ca></p>
+        <div class="dd-cb"><span class="k">{STEP.a}</span><span class="s">{STEP.b}</span></div>
+        <p class="dd-ce" data-ce>{tt('Fauteuil libre. Touchez l’agenda pour poser un rendez-vous.')}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="dd-news" aria-live="polite">
+    {NEWS.map(([ic, t], i) => <p data-news={i} class={i === 0 ? 'on' : ''}><span class="dd-ic"><Icon name={ic as 'calendar'} class="size-4" /></span>{t}</p>)}
+  </div>
+
+  <div class="dd-hours" role="group" aria-label={tt('Les heures de la journée')}>
+    <i class="dd-line"><i class="dd-fill"></i></i>
+    {HOURS.map((h, i) => <button type="button" data-h={i} class={i === 0 ? 'on' : ''} dir="ltr">{h}</button>)}
+  </div>
+  <template data-qrlabel>{tt('Arrivé avec le QR')}</template>
+  <template data-since>{tt('depuis {n} min')}</template>
+</div>
+
+<style is:global>
+  .dd { position: relative; }
+  .dd-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .55); }
+  .dd-screen { container-type: inline-size; position: relative; overflow: hidden; border-radius: 1.1rem; background: #020F20; color: #ECF2FA; padding: 0 3.4% 3.4%; }
+  .dd-top { display: flex; align-items: center; gap: 2cqw; margin: 0 -3.4cqw 3cqw; padding: 2.4cqw 3.4cqw; background: #071B36; border-bottom: 1px solid rgba(210, 225, 245, .07); font-size: 2.8cqw; }
+  .dd-logo { display: grid; place-items: center; width: 5.4cqw; height: 5.4cqw; border-radius: 30%; background: #05B962; color: #001E3E; font-weight: 800; font-size: 2cqw; }
+  .dd-new { margin-inline-start: auto; border-radius: 1.2cqw; background: #05B962; color: #001E3E; font-weight: 700; padding: 1.1cqw 1.8cqw; font-size: 2.1cqw; }
+  .dd-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2cqw; }
+  .dd-title { font-size: 5.4cqw; font-weight: 800; line-height: 1; letter-spacing: -.02em; }
+  .dd-clock { margin-top: 1cqw; font-size: 2.6cqw; font-weight: 600; color: #8CA0BE; } .dd-clock span { color: #fff; font-variant-numeric: tabular-nums; }
+  .dd-stats { display: flex; gap: 1.4cqw; }
+  .dd-stats p { min-width: 14cqw; border-radius: 2cqw; background: #071B36; padding: 1.6cqw 2cqw; }
+  .dd-stats b { display: block; font-size: 4.6cqw; line-height: 1; font-variant-numeric: tabular-nums; }
+  .dd-stats .w { color: #F2AD46; } .dd-stats .c { color: #05B962; } .dd-stats .d { color: #8CA0BE; }
+  .dd-stats span { display: block; margin-top: .6cqw; font-size: 1.9cqw; font-weight: 600; color: #8CA0BE; }
+  .dd-stats .bump { animation: dd-bump .5s; } @keyframes dd-bump { 40% { transform: scale(1.2); } }
+  .dd-chairs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.6cqw; margin-top: 3cqw; }
+  .dd-chair { --c: #3A557F; position: relative; display: grid; width: 100%; text-align: start; align-content: start; min-height: 27cqw; overflow: hidden; border-radius: 2.2cqw; background: #071B36; color: #fff; padding: 2.8cqw 2.4cqw 2.2cqw; transition: background .5s, transform .2s; cursor: pointer; }
+  .dd-chair:hover { transform: translateY(-.4cqw); }
+  .dd-chair[data-s="in"] { --c: #05B962; background: #0A2A2A; }
+  .dd-band { position: absolute; inset: 0 0 auto; height: 1.2cqw; background: var(--c); transition: background .5s; }
+  .dd-n { font-size: 3.4cqw; font-weight: 800; line-height: 1.05; }
+  .dd-doc { font-size: 2cqw; color: #8CA0BE; font-weight: 600; }
+  .dd-free { margin-top: 2.4cqw; font-size: 2.4cqw; font-weight: 800; color: #8CA0BE; transition: opacity .35s; }
+  .dd-p { display: grid; margin-top: 1.6cqw; opacity: 0; transform: translateY(1cqw); transition: opacity .4s, transform .4s; }
+  .dd-chair[data-s="in"] .dd-free { opacity: 0; height: 0; margin: 0; }
+  .dd-chair[data-s="in"] .dd-p { opacity: 1; transform: none; }
+  .dd-p b { font-size: 2.6cqw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dd-p small { font-size: 2cqw; color: #B8C6DC; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dd-p em { margin-top: 1cqw; font-style: normal; font-size: 2cqw; font-weight: 800; color: #05B962; }
+  .dd-p strong { margin-top: .8cqw; justify-self: start; font-size: 1.8cqw; font-weight: 800; color: #F46363; background: rgba(244, 99, 99, .14); border-radius: .8cqw; padding: .3cqw 1cqw; }
+  .dd-p strong:empty { display: none; }
+  .dd-chair.flash::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 .5cqw var(--c); animation: dd-flash 1s ease-out forwards; }
+  @keyframes dd-flash { from { opacity: 1; } to { opacity: 0; } }
+  .dd-room { margin-top: 2.4cqw; border-radius: 2.2cqw; background: #071B36; padding: 2.2cqw 2.6cqw; min-height: 17cqw; }
+  .dd-rh { display: flex; align-items: center; gap: 1.2cqw; font-size: 2.5cqw; font-weight: 800; }
+  .dd-rh > i { width: 2.4cqw; height: 2.4cqw; border-radius: 50%; border: .4cqw solid #F2AD46; }
+  .dd-none { margin-inline-start: auto; font-size: 2cqw; font-weight: 600; color: #8CA0BE; transition: opacity .3s; }
+  .dd-room.has .dd-none { opacity: 0; }
+  .dd-wl { display: grid; gap: 1cqw; margin-top: 1.4cqw; }
+  .dd-wl li { display: flex; align-items: center; gap: 1.6cqw; border-radius: 1.4cqw; background: #020F20; padding: 1.2cqw 1.8cqw; animation: dd-in .5s cubic-bezier(.2, .8, .2, 1) both; animation-delay: var(--d, 0ms); }
+  @keyframes dd-in { from { opacity: 0; transform: translateX(-3cqw); } }
+  .dd-wl b { font-size: 2.4cqw; } .dd-wl small { font-size: 1.8cqw; color: #588CFF; font-weight: 700; }
+  .dd-wl span { margin-inline-start: auto; font-size: 3cqw; font-weight: 800; font-variant-numeric: tabular-nums; color: #2DD4BF; }
+  .dd-wl span.late { color: #F2AD46; }
+  .dd-card { position: absolute; inset: auto 3.4cqw 3.4cqw; border-radius: 2.6cqw; background: #16305A; color: #fff; padding: 3cqw 3.4cqw; box-shadow: 0 2cqw 5cqw -2cqw rgba(0, 0, 0, .6); animation: dd-up .35s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes dd-up { from { transform: translateY(40%); opacity: 0; } }
+  .dd-x { position: absolute; top: 1.6cqw; inset-inline-end: 2cqw; width: 6cqw; height: 6cqw; font-size: 4.4cqw; line-height: 1; color: #fff; opacity: .7; }
+  .dd-cn { font-size: 2.4cqw; font-weight: 700; color: #7BE3A9; } .dd-cg { margin-top: .6cqw; font-size: 4.4cqw; font-weight: 800; } .dd-cs { margin-top: .4cqw; font-size: 2.4cqw; opacity: .75; }
+  .dd-ca { margin-top: 1cqw; justify-self: start; display: inline-block; font-size: 2.2cqw; font-weight: 800; color: #F46363; background: rgba(244, 99, 99, .16); border-radius: 1cqw; padding: .5cqw 1.4cqw; }
+  .dd-ca:empty { display: none; }
+  .dd-cb { display: flex; gap: 1.4cqw; margin-top: 2cqw; font-size: 2.4cqw; font-weight: 700; } .dd-cb span { border-radius: 1.6cqw; padding: 1.4cqw 2.4cqw; } .dd-cb .k { background: #05B962; color: #001E3E; } .dd-cb .s { background: rgba(255, 255, 255, .12); }
+  .dd-ce { margin-top: .6cqw; font-size: 2.6cqw; }
+  .dd-card[data-free] .dd-cs, .dd-card[data-free] .dd-cb, .dd-card[data-free] .dd-cg, .dd-card[data-free] .dd-ca { display: none; } .dd-card:not([data-free]) .dd-ce { display: none; }
+  .dd-news { position: relative; height: 3.25rem; margin-top: 1.1rem; }
+  .dd-news p { position: absolute; inset: 0 auto auto 0; display: inline-flex; align-items: center; gap: .6rem; max-width: 100%; border-radius: 999px; background: #fff; padding: .4rem 1rem .4rem .4rem; font-size: .95rem; font-weight: 600; color: #0B1E33; box-shadow: 0 10px 30px -18px rgba(0, 30, 62, .6); opacity: 0; transform: translateY(.6rem); transition: opacity .4s, transform .4s; pointer-events: none; }
+  [dir="rtl"] .dd-news p { inset: 0 0 auto auto; padding: .4rem .4rem .4rem 1rem; }
+  .dd-news p.on { opacity: 1; transform: none; }
+  .dd-ic { display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 999px; background: #05B962; color: #0B1E33; flex: none; }
+  .dd-hours { position: relative; display: flex; justify-content: space-between; margin-top: 1rem; }
+  .dd-line { position: absolute; inset: 50% 1.4rem auto; height: 3px; transform: translateY(-50%); border-radius: 9px; background: #D8DDE3; }
+  .dd-fill { position: absolute; inset: 0 auto 0 0; width: 0; border-radius: 9px; background: #05B962; transition: width .6s cubic-bezier(.4, 0, .2, 1); }
+  [dir="rtl"] .dd-fill { inset: 0 0 0 auto; }
+  .dd-hours button { position: relative; min-height: 2.75rem; min-width: 2.75rem; border-radius: 999px; background: #fff; padding: 0 .9rem; font-size: .9rem; font-weight: 700; color: #536072; box-shadow: 0 0 0 1px #D8DDE3; transition: background .3s, color .3s; font-variant-numeric: tabular-nums; }
+  .dd-hours button.on { background: #0B1E33; color: #fff; box-shadow: none; }
+  @media (max-width: 480px) { .dd-hours button { padding: 0 .55rem; font-size: .8rem; } .dd-news { height: 4.2rem; } .dd-news p { font-size: .82rem; } }
+  @media (prefers-reduced-motion: reduce) { .dd-chair, .dd-p, .dd-news p, .dd-fill, .dd-card, .dd-wl li { transition: none; animation: none; } }
+</style>
+
+<script>
+  type In = [string, string, number, string] | null;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dd]').forEach((root) => {
+    const chairs = [...root.querySelectorAll<HTMLButtonElement>('.dd-chair')];
+    const hours = [...root.querySelectorAll<HTMLButtonElement>('[data-h]')];
+    const news = [...root.querySelectorAll<HTMLElement>('[data-news]')];
+    const stats = JSON.parse(root.dataset.stats || '[]') as [number, number, number][];
+    const wait = JSON.parse(root.dataset.wait || '[]') as [string, number, boolean][][];
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const qrLabel = q<HTMLTemplateElement>('[data-qrlabel]').innerHTML.trim();
+    const sinceTpl = q<HTMLTemplateElement>('[data-since]').innerHTML.trim();
+    const card = q<HTMLElement>('[data-card]'), fill = q<HTMLElement>('.dd-fill'), wl = q<HTMLElement>('[data-wl]'), room = q<HTMLElement>('.dd-room');
+    let t = 0, timer = 0, auto = false;
+    const set = (el: HTMLElement, v: string) => { if (el.textContent !== v) { el.textContent = v; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump'); } };
+    const go = (n: number) => {
+      t = n; root.dataset.t = String(n);
+      q<HTMLElement>('[data-clock]').textContent = hours[n].textContent || '';
+      chairs.forEach((c) => {
+        const p = (JSON.parse(c.dataset.steps || '[]') as In[])[n];
+        const s = p ? 'in' : 'free';
+        const prev = c.querySelector<HTMLElement>('[data-p]')!.textContent;
+        if (c.dataset.s !== s || (p && prev !== p[0])) { c.classList.remove('flash'); void c.offsetWidth; c.classList.add('flash'); }
+        c.dataset.s = s;
+        if (p) {
+          c.querySelector<HTMLElement>('[data-p]')!.textContent = p[0];
+          c.querySelector<HTMLElement>('[data-a]')!.textContent = p[1];
+          c.querySelector<HTMLElement>('[data-m]')!.textContent = sinceTpl.replace('{n}', String(p[2]));
+          c.querySelector<HTMLElement>('[data-al]')!.textContent = p[3];
+        }
+      });
+      stats[n].forEach((v, i) => set(q(`[data-st="${i}"]`), String(v)));
+      wl.innerHTML = '';
+      wait[n].forEach(([who, m, qr], i) => {
+        const li = document.createElement('li'); li.style.setProperty('--d', `${i * 160}ms`);
+        const b = document.createElement('b'); b.textContent = who;
+        const box = document.createElement('div'); box.appendChild(b);
+        if (qr) { const s = document.createElement('small'); s.textContent = ` · ${qrLabel}`; b.appendChild(s); }
+        const sp = document.createElement('span'); sp.textContent = `${m}′`; if (m >= 15) sp.className = 'late';
+        li.append(box, sp); wl.appendChild(li);
+      });
+      room.classList.toggle('has', wait[n].length > 0);
+      hours.forEach((h, i) => h.classList.toggle('on', i === n));
+      news.forEach((p, i) => p.classList.toggle('on', i === n));
+      fill.style.width = `${(n / (hours.length - 1)) * 100}%`;
+      card.hidden = true;
+    };
+    const stop = () => { auto = false; clearTimeout(timer); };
+    const tick = () => { if (!auto) return; go((t + 1) % hours.length); timer = window.setTimeout(tick, t === hours.length - 1 ? 4200 : 3400); };
+    hours.forEach((h, i) => h.addEventListener('click', () => { stop(); go(i); }));
+    chairs.forEach((c) => c.addEventListener('click', () => {
+      stop();
+      const p = (JSON.parse(c.dataset.steps || '[]') as In[])[t];
+      q<HTMLElement>('[data-cn]').textContent = c.getAttribute('aria-label') || '';
+      if (p) {
+        card.removeAttribute('data-free');
+        q<HTMLElement>('[data-cg]').textContent = p[0];
+        q<HTMLElement>('[data-cs]').textContent = `${p[1]} · ${sinceTpl.replace('{n}', String(p[2]))}`;
+        q<HTMLElement>('[data-ca]').textContent = p[3];
+      } else card.setAttribute('data-free', '');
+      card.hidden = false;
+    }));
+    q<HTMLElement>('[data-close]').addEventListener('click', () => { card.hidden = true; });
+    go(still ? 1 : 0);
+    if (still || !('IntersectionObserver' in window)) return;
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; timer = window.setTimeout(tick, 2200); }
+      else if (!e.isIntersecting) stop();
+    }, { threshold: 0.4 }).observe(root);
+  });
+</script>
