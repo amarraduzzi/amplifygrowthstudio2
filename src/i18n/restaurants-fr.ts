@@ -66,6 +66,7 @@ export const rsFr = {
   },
   faq: [
     ['Par où commencer ?', 'Par ce qui vous coûte le plus. Faites le diagnostic sur cette page, ou décrivez-nous votre situation sur WhatsApp. Souvent, c’est la marge ou les erreurs de commande.'],
+    ['Mes clients peuvent-ils payer par carte sans terminal ?', 'Oui. La caisse affiche un QR code et le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission : seuls les frais de votre banque s’appliquent.'],
     ['Ça marche pour un café ou un snack ?', 'Oui. La caisse gère le comptoir, les tables, l’emporter et la livraison. Le marketing s’adapte à votre quartier.'],
     ['Mes employés préfèrent l’arabe.', 'La caisse et l’écran cuisine existent en français, en arabe et en anglais. Chaque employé choisit sa langue.'],
     ['Je dois tout changer d’un coup ?', 'Non. Vous pouvez commencer par un seul outil, par exemple Amplify Profit avec votre caisse actuelle, et ajouter le reste plus tard.'],

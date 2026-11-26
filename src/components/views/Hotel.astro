@@ -20,6 +20,7 @@ import HotelClean from '../HotelClean.astro';
 import HotelBill from '../HotelBill.astro';
 import HotelFit from '../HotelFit.astro';
 import Related from '../Related.astro';
+import CardQr from '../CardQr.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -31,6 +32,7 @@ const description = tt('Amplify Hotel : le planning des chambres, Airbnb et Book
 const wa = tt('Bonjour, je voudrais voir Amplify Hotel pour mon établissement.');
 const faq = [
   [tt('Je dois quitter Airbnb ou Booking ?'), tt('Non. Vous gardez vos annonces. Amplify lit leurs calendriers et leur envoie les chambres prises, pour éviter les doubles réservations. Les réservations de votre site passent sans commission.')],
+  [tt('Mes clients peuvent-ils payer l’acompte par carte ?'), tt('Oui, par votre propre compte CMI : en réservant sur votre site (la chambre est alors confirmée tout de suite), par un lien envoyé sur WhatsApp, ou par un QR à la réception. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission.')],
   [tt('J’ai plusieurs chambres identiques sur Booking. Les calendriers suffisent ?'), tt('Pour une annonce avec plusieurs chambres, Amplify se connecte à Beds24, un gestionnaire de canaux que l’hôtel prend à son nom et paie directement à Beds24. Vous collez leur code dans Amplify et vous reliez vos types de chambres. Nous vous aidons à tout mettre en place.')],
   [tt('Ça marche pour un riad de 5 chambres ?'), tt('Oui. Tout est facultatif : la fiche de police, la taxe de séjour, les prix par saison ou l’acompte. Vous allumez ce qui vous sert, le reste ne vous gêne pas.')],
   [tt('Il me faut quel matériel ?'), tt('Une tablette ou un ordinateur à la réception, et le téléphone de chaque membre de l’équipe. Rien à installer pour vos clients.')],
@@ -251,6 +253,8 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
       <div class="tf lg:pt-6" style="--d:120ms"><HotelBill /></div>
     </div>
   </section>
+
+  <div class="pt-14 md:pt-24"><CardQr lang={lang} k="hotel" /></div>
 
   <SectorPrices lang={lang} k="hotel" trial={false} />
 

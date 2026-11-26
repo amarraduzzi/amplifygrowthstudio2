@@ -23,6 +23,7 @@ import PressingSleep from '../PressingSleep.astro';
 import PressingHeroPhone from '../PressingHeroPhone.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
+import CardQr from '../CardQr.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -65,6 +66,7 @@ const clients = [
 ] as const;
 const faq = [
   ['Mes clients doivent-ils installer une application ?', 'Non. Ils scannent le QR du ticket ou ouvrent le lien reçu sur WhatsApp. Rien à installer, rien à créer.'],
+  [tt('Mes clients peuvent-ils payer par carte sans terminal ?'), tt('Oui. La caisse affiche un QR code et le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission : seuls les frais de votre banque s’appliquent.')],
   ['Il me faut quel matériel ?', 'Une tablette ou un ordinateur, et une imprimante de tickets. Les étiquettes sortent de la même imprimante. Nous vous conseillons si vous n’avez rien.'],
   ['Et le linge au kilo ?', 'Oui. Un article au kilo : la caisse demande le poids et calcule le prix. Le sac compte comme une pièce.'],
   ['Les photos sont-elles visibles par le client ?', 'Non. Elles restent au pressing : à la caisse et dans votre espace gérant. Le client voit seulement l’état de son dépôt.'],
@@ -170,6 +172,8 @@ const faq = [
 
   <!-- what sleeps on the rails: a living rail of 100 drop-offs, the shop's own numbers -->
   <PressingSleep />
+
+  <CardQr lang={lang} k="pressing" />
 
   <SectorPrices lang={lang} k="pressing" />
 

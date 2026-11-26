@@ -82,7 +82,7 @@ export const posFr = {
     included: {
       title: 'Tout est inclus. Aucune option payante.',
       text: 'Ailleurs, la facture, la commande QR ou les avis clients coûtent souvent 100 DH de plus chacun. Chez nous, c’est dans le prix.',
-      items: ['Factures clients avec ICE', 'QR avis Google sur chaque ticket', 'Menu QR en français, arabe et anglais', 'Fonctionne sans internet', 'Mises à jour et sauvegardes', 'Installation guidée en vidéo', 'Support WhatsApp avec un vrai interlocuteur', 'Sans engagement'],
+      items: ['Factures clients avec ICE', 'QR avis Google sur chaque ticket', 'Menu QR en français, arabe et anglais', 'Fonctionne sans internet', 'Mises à jour et sauvegardes', 'Installation guidée en vidéo', 'Support WhatsApp avec un vrai interlocuteur', 'Sans engagement', 'Paiement par carte (QR), sans commission Amplify'],
     },
     plans: [
       { name: 'Essentiel', tag: 'Amplify POS', price: '199', text: 'Pour les cafés et snacks.', product: 'pos', items: ['1 caisse', 'Fonctionne sans internet', 'Menu QR (consultation seule)', 'Bons cuisine et bar', 'Rapports X et Z', 'Français et arabe', 'Réservations et file d’attente', 'Happy hours et codes promo'] },
@@ -121,6 +121,7 @@ export const posFr = {
     title: 'Les questions qu’on nous pose.',
     items: [
       ['Faut-il acheter du matériel ?', 'Non. Un PC, une tablette ou un téléphone avec Chrome suffit. Pour imprimer, une imprimante ticket standard de 58 ou 80 mm, reliée au PC de la caisse.'],
+      ['Mes clients peuvent-ils payer par carte sans terminal ?', 'Oui. La caisse affiche un QR code et le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission : seuls les frais de votre banque s’appliquent.'],
       ['Et si internet coupe ?', 'La caisse continue : commandes, bons et encaissements. Tout se synchronise automatiquement au retour de la connexion.'],
       ['Y a-t-il un engagement ?', 'Non. Abonnement mensuel, résiliable à tout moment.'],
       ['Mes données m’appartiennent ?', 'Oui. Vous exportez vos ventes quand vous voulez, dans un format lisible par votre comptable.'],
@@ -235,6 +236,7 @@ export const featuresFr = {
         ['Bons cuisine et bar automatiques', 'Chaque article part vers le bon poste d’impression, avec les précisions (« sans oignon », « bien cuit ») et le nom du serveur.'],
         ['Écran cuisine et bar', 'Une tablette ou une télé en cuisine affiche les bons de son poste, avec le temps d’attente en couleur. Un geste : prêt. Le client qui a commandé par QR le voit aussi.'],
         ['Tous les moyens de paiement', 'Espèces avec calcul du rendu, carte, virement, paiement mixte (espèces + carte), pourboire enregistré par employé.'],
+        ['Carte par QR, sans terminal', 'La caisse affiche un QR code avec l’addition : le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire, Amplify ne prend aucune commission.'],
         ['Fichier clients et points de fidélité (option)', 'À activer si vous le voulez. Le client est reconnu par son numéro : visites, dépenses, anniversaire, points (par exemple 1 point par 10 DH) et récompense en remise. Les numéros des clients qui ont accepté WhatsApp, prêts à copier.'],
         ['Partager l’addition', 'Par article (chacun reçoit son propre ticket, le solde reste sur la table) ou en parts égales, arrondies au dirham.'],
         ['Suppléments et formules', 'Fromage + 5 DH, choix de la cuisson, formule petit-déjeuner avec boisson et viennoiserie au choix. Prix calculés automatiquement, sur la caisse et le menu QR.'],

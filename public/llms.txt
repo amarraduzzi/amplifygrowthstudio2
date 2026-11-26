@@ -38,6 +38,9 @@ Page: [Logiciel de caisse et de production pour pâtisserie](https://www.amplify
 - [Real estate](https://www.amplifygrowthstudio.com/immobilier/)
 - [Delivery without commission](https://www.amplifygrowthstudio.com/livraison/)
 
+## Card payment by QR (Amplify Pay)
+- Every Amplify till (restaurant, café, pastry shop, salon, spa, dry cleaner, garage, hotel) can take a card payment with a QR code: the customer pays by card on his phone on CMI's secure page, through the business's own CMI e-commerce account. No terminal needed. Amplify takes no commission: only the bank's fees apply. Hotels also take the booking deposit by card on their website.
+
 ## Languages
 - French: https://www.amplifygrowthstudio.com/
 - English: https://www.amplifygrowthstudio.com/en/

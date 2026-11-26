@@ -1,0 +1,181 @@
+---
+// Amplify Pay on the sector pages: the till shows a QR code, the customer pays by card on his phone (CMI's secure page,
+// the business's own CMI account), the till sees it and stamps "Payé". No terminal, no commission for Amplify: only the
+// bank's own fees. One section, the same story told for each trade (its own bill, amount and words). Loops in view.
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+type K = 'restaurant' | 'salon' | 'spa' | 'pressing' | 'garage' | 'patisserie' | 'hotel' | 'pos';
+interface Props { lang: Lang; k: K }
+const { lang, k } = Astro.props;
+const tt = tr(lang);
+const S: Record<K, { bill: string; who: string; amount: number; h1: string; h2: string; lead: string }> = {
+  restaurant: { bill: tt('Table 4 · 3 couverts'), who: 'Café Andalous', amount: 186, h1: tt('Pas de terminal ?'), h2: tt('La carte passe quand même.'),
+    lead: tt('« Carte (QR) » à la caisse : un QR code avec l’addition. Le client le scanne et paie par carte sur son téléphone. La table se libère toute seule.') },
+  pos: { bill: tt('Table 4 · 3 couverts'), who: 'Café Andalous', amount: 186, h1: tt('Pas de terminal ?'), h2: tt('La carte passe quand même.'),
+    lead: tt('« Carte (QR) » à la caisse : un QR code avec l’addition. Le client le scanne et paie par carte sur son téléphone. La table se libère toute seule.') },
+  salon: { bill: tt('Balayage · Salma'), who: 'Salon Yasmine', amount: 450, h1: tt('Payée par carte.'), h2: tt('Sans terminal au comptoir.'),
+    lead: tt('Votre cliente scanne le QR de la caisse et paie par carte sur son téléphone. Pour un acompte, le même lien part sur WhatsApp.') },
+  spa: { bill: tt('Hammam et massage · 2 pers.'), who: 'Spa Nour', amount: 760, h1: tt('Payée par carte.'), h2: tt('Sans terminal à l’accueil.'),
+    lead: tt('Votre cliente scanne le QR de la caisse et paie par carte sur son téléphone. Pour un acompte, le même lien part sur WhatsApp.') },
+  pressing: { bill: tt('Dépôt n° 214 · 6 pièces'), who: 'Pressing Atlas', amount: 120, h1: tt('Le client paie par carte.'), h2: tt('Au dépôt ou au retrait.'),
+    lead: tt('« Carte (QR) » à la caisse : le client scanne et paie sur son téléphone, le dépôt est payé. Pas de terminal à louer.') },
+  garage: { bill: tt('OR n° 58 · vidange et freins'), who: 'Garage Hassan', amount: 1240, h1: tt('La facture du garage.'), h2: tt('Payée par carte, sans terminal.'),
+    lead: tt('Au retrait de la voiture ou pour l’acompte : la caisse affiche un QR, le client paie par carte sur son téléphone. Le lien peut aussi partir sur WhatsApp avec le devis.') },
+  patisserie: { bill: tt('Acompte · gâteau d’anniversaire'), who: 'Pâtisserie Lina', amount: 200, h1: tt('L’acompte du gâteau.'), h2: tt('Payé par carte, même à distance.'),
+    lead: tt('À la commande, le client scanne le QR de la caisse, ou reçoit le lien sur WhatsApp, et paie l’acompte par carte. Au retrait, le reste de la même façon.') },
+  hotel: { bill: tt('Chambre 104 · 2 nuits'), who: 'Dar Lina', amount: 1380, h1: tt('Payé par carte.'), h2: tt('En ligne ou à la réception.'),
+    lead: tt('L’acompte se paie par carte en réservant sur votre site, et la chambre est confirmée tout de suite. La note, un groupe ou un devis : un lien sur WhatsApp, ou un QR à la réception.') },
+};
+const s = S[k];
+const money = (n: number) => `${n.toLocaleString('fr-FR').replace(/[  ]/g, ' ')} DH`;
+const facts: [string, string][] = [
+  ['0', tt('terminal à louer : le téléphone du client suffit')],
+  ['0\u00a0%', tt('pour Amplify. Seuls les frais de votre banque.')],
+  ['1', tt('compte : le vôtre. L’argent arrive sur votre compte bancaire.')],
+];
+// a QR code drawn for the picture (not a real code): 25 × 25, the three corner squares, the rest from a fixed seed
+const N = 25;
+let seed = 7;
+const rnd = () => { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+const finder = (x: number, y: number) => [[0, 0], [N - 7, 0], [0, N - 7]].some(([a, b]) => x >= a && x < a + 7 && y >= b && y < b + 7);
+const cells: [number, number][] = [];
+for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!finder(x, y) && !((x === 7 || y === 7) && (x < 8 || y < 8)) && rnd() > 0.52) cells.push([x, y]);
+const eyes = [[0, 0], [N - 7, 0], [0, N - 7]];
+---
+<section class="cq-sec mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" id="paiement-carte" data-tf data-cq>
+  <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
+    <div>
+      <p class="tf text-sm font-bold uppercase tracking-[0.16em] text-green-deep">{tt('Paiement par carte')}</p>
+      <h2 class="tf mt-3 text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]" style="--d:60ms"><span class="block">{s.h1}</span><span class="block text-green-deep">{s.h2}</span></h2>
+      <p class="tf mt-5 max-w-xl text-lg text-muted" style="--d:120ms">{s.lead}</p>
+      <dl class="mt-8 divide-y divide-line border-y border-line">
+        {facts.map(([n, l], i) => (
+          <div class="tf flex items-center gap-5 py-4" style={`--d:${180 + i * 80}ms`}>
+            <dt class="display min-w-20 shrink-0 whitespace-nowrap text-4xl text-navy sm:min-w-28 sm:text-5xl" dir="ltr">{n}</dt>
+            <dd class="text-[0.98rem] leading-snug">{l}</dd>
+          </div>))}
+      </dl>
+      <p class="tf mt-4 max-w-xl text-sm text-muted" style="--d:420ms">{tt('Il vous faut le paiement en ligne CMI de votre banque. Vous collez ses deux codes dans Amplify et c’est actif sur toutes vos caisses. Nous vous aidons à le demander.')}</p>
+    </div>
+
+    <div class="tf relative isolate overflow-hidden rounded-[2rem] bg-navy" style="--d:120ms" aria-hidden="true">
+      <span class="sl-blob sl-blob-a"></span>
+      <div class="cq-stage" dir="ltr">
+        <!-- the till -->
+        <div class="cq-till">
+          <p class="cq-tt"><span>{tt('Caisse')}</span><b>{s.who}</b></p>
+          <p class="cq-bill">{s.bill}</p>
+          <p class="cq-amt display">{money(s.amount)}</p>
+          <div class="cq-qrbox">
+            <svg viewBox={`-1 -1 ${N + 2} ${N + 2}`} class="cq-qr" shape-rendering="crispEdges">
+              <rect x="-1" y="-1" width={N + 2} height={N + 2} fill="#fff" />
+              {eyes.map(([x, y]) => <g><rect x={x} y={y} width="7" height="7" fill="#001E3E" /><rect x={x + 1} y={y + 1} width="5" height="5" fill="#fff" /><rect x={x + 2} y={y + 2} width="3" height="3" fill="#001E3E" /></g>)}
+              {cells.map(([x, y]) => <rect x={x} y={y} width="1" height="1" fill="#001E3E" />)}
+            </svg>
+            <span class="cq-scan"></span>
+          </div>
+          <p class="cq-wait"><i></i>{tt('En attente du paiement…')}</p>
+          <p class="cq-paid">{tt('Payé par carte')} ✓</p>
+          <span class="cq-stamp">{tt('Payé')}</span>
+        </div>
+        <!-- the customer's phone -->
+        <div class="cq-phone">
+          <div class="cq-screen">
+            <div class="cq-s1">
+              <span class="cq-cam"><b></b><b></b><b></b><b></b></span>
+              <small>{tt('Scanner')}</small>
+            </div>
+            <div class="cq-s2">
+              <p class="cq-cmi"><span>🔒</span>CMI · {tt('Paiement sécurisé')}</p>
+              <p class="cq-mer">{s.who}</p>
+              <p class="cq-pay display">{money(s.amount)}</p>
+              <p class="cq-field">•••• •••• •••• 4821</p>
+              <p class="cq-field cq-half"><span>12/28</span><span>•••</span></p>
+              <p class="cq-btn">{tt('Payer')}</p>
+            </div>
+            <div class="cq-s3">
+              <span class="cq-ok">✓</span>
+              <b>{tt('Paiement accepté')}</b>
+              <small>{money(s.amount)}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  .cq-stage { position: relative; aspect-ratio: 5 / 4.4; min-height: 20rem; }
+  .cq-till { position: absolute; left: 6%; top: 8%; width: 52%; padding: 4.5% 5%; border-radius: 1.1rem; background: #fff; color: #001E3E; box-shadow: 0 2rem 3rem -1.5rem rgba(0,0,0,.6); container-type: inline-size; }
+  .cq-tt { display: flex; justify-content: space-between; gap: .5rem; font-size: 5.2cqw; color: #4A5D74; }
+  .cq-tt b { color: #001E3E; font-weight: 700; }
+  .cq-bill { margin-top: 3cqw; font-size: 5.6cqw; font-weight: 600; }
+  .cq-amt { font-size: 15cqw; line-height: 1; margin-top: 1.5cqw; }
+  .cq-qrbox { position: relative; width: 62cqw; margin: 5cqw auto 0; }
+  .cq-qr { display: block; width: 100%; height: auto; }
+  .cq-scan { position: absolute; left: -4%; right: -4%; height: 3px; top: 0; background: #05B962; box-shadow: 0 0 12px #05B962; opacity: 0; }
+  .cq-wait, .cq-paid { margin-top: 4cqw; font-size: 5cqw; font-weight: 700; text-align: center; }
+  .cq-wait { color: #4A5D74; display: flex; align-items: center; justify-content: center; gap: .4em; }
+  .cq-wait i { width: .7em; height: .7em; border-radius: 50%; border: 2px solid #05B962; border-right-color: transparent; animation: cq-spin 1s linear infinite; }
+  .cq-paid { color: #037A42; display: none; }
+  .cq-stamp { position: absolute; right: 6%; top: 38%; padding: .1em .45em; border: 3px solid #05B962; border-radius: .4rem; color: #05B962; font-weight: 900; font-size: 13cqw; text-transform: uppercase; letter-spacing: .04em; transform: rotate(-12deg) scale(1.6); opacity: 0; }
+  .cq-phone { position: absolute; right: 6%; bottom: 7%; width: 34%; aspect-ratio: 9 / 18.5; border-radius: 1.4rem; background: #0b0d12; padding: 3.5%; box-shadow: 0 2rem 3rem -1.2rem rgba(0,0,0,.7), inset 0 0 0 2px #2a2f3a; transform: rotate(4deg); }
+  .cq-screen { position: relative; height: 100%; border-radius: 1.05rem; overflow: hidden; background: #F4F1EA; container-type: inline-size; }
+  .cq-s1, .cq-s2, .cq-s3 { position: absolute; inset: 0; display: flex; flex-direction: column; padding: 9cqw 8cqw; opacity: 0; }
+  .cq-s1 { background: #1b1f27; align-items: center; justify-content: center; gap: 6cqw; color: #fff; }
+  .cq-s1 small { font-size: 9cqw; opacity: .8; }
+  .cq-cam { position: relative; width: 62cqw; aspect-ratio: 1; }
+  .cq-cam b { position: absolute; width: 16cqw; height: 16cqw; border-color: #05B962; border-style: solid; }
+  .cq-cam b:nth-child(1) { left: 0; top: 0; border-width: 3px 0 0 3px; } .cq-cam b:nth-child(2) { right: 0; top: 0; border-width: 3px 3px 0 0; }
+  .cq-cam b:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 3px 3px; } .cq-cam b:nth-child(4) { right: 0; bottom: 0; border-width: 0 3px 3px 0; }
+  .cq-s2 { gap: 4cqw; color: #1E1B16; }
+  .cq-cmi { display: flex; gap: .35em; align-items: center; font-size: 7.5cqw; font-weight: 700; color: #1F7A4D; }
+  .cq-mer { margin-top: 3cqw; font-size: 8cqw; color: #6b6458; }
+  .cq-pay { font-size: 17cqw; line-height: 1; }
+  .cq-field { margin-top: 2cqw; padding: 4cqw; border: 1px solid #d9d3c7; border-radius: 3cqw; background: #fff; font-size: 7.5cqw; letter-spacing: .06em; }
+  .cq-half { display: flex; justify-content: space-between; }
+  .cq-btn { margin-top: auto; padding: 5cqw; border-radius: 3cqw; background: #1E1B16; color: #fff; text-align: center; font-weight: 700; font-size: 9cqw; }
+  .cq-s3 { align-items: center; justify-content: center; gap: 3cqw; text-align: center; }
+  .cq-s3 b { font-size: 10cqw; color: #1E1B16; } .cq-s3 small { font-size: 9cqw; color: #6b6458; }
+  .cq-ok { display: grid; place-items: center; width: 30cqw; height: 30cqw; border-radius: 50%; background: #1F7A4D; color: #fff; font-size: 16cqw; font-weight: 900; }
+  @keyframes cq-spin { to { transform: rotate(1turn); } }
+
+  /* one loop of 10 s, only once the section is in view */
+  [data-cq].in .cq-scan { animation: cq-scan 10s infinite; }
+  [data-cq].in .cq-s1 { animation: cq-s1 10s infinite; }
+  [data-cq].in .cq-s2 { animation: cq-s2 10s infinite; }
+  [data-cq].in .cq-s3 { animation: cq-s3 10s infinite; }
+  [data-cq].in .cq-stamp { animation: cq-stamp 10s infinite; }
+  [data-cq].in .cq-wait { animation: cq-wait 10s infinite; }
+  [data-cq].in .cq-paid { display: block; animation: cq-paid 10s infinite; height: 0; overflow: visible; }
+  [data-cq].in .cq-btn { animation: cq-btn 10s infinite; }
+  @keyframes cq-scan { 0%, 6% { opacity: 0; top: 0; } 8% { opacity: 1; top: 0; } 20% { opacity: 1; top: 100%; } 22%, 100% { opacity: 0; top: 100%; } }
+  @keyframes cq-s1 { 0%, 4% { opacity: 0; } 7%, 22% { opacity: 1; } 25%, 100% { opacity: 0; } }
+  @keyframes cq-s2 { 0%, 22% { opacity: 0; } 25%, 58% { opacity: 1; } 61%, 100% { opacity: 0; } }
+  @keyframes cq-btn { 0%, 50% { transform: none; } 53% { transform: scale(.94); background: #1F7A4D; } 58%, 100% { transform: none; } }
+  @keyframes cq-s3 { 0%, 58% { opacity: 0; } 61%, 92% { opacity: 1; } 96%, 100% { opacity: 0; } }
+  @keyframes cq-wait { 0%, 62% { opacity: 1; } 64%, 96% { opacity: 0; } 100% { opacity: 1; } }
+  @keyframes cq-paid { 0%, 63% { opacity: 0; transform: translateY(-1.2em); } 66%, 94% { opacity: 1; transform: translateY(-1.2em); } 97%, 100% { opacity: 0; transform: translateY(-1.2em); } }
+  @keyframes cq-stamp { 0%, 64% { opacity: 0; transform: rotate(-12deg) scale(1.6); } 67% { opacity: 1; transform: rotate(-12deg) scale(1); } 93% { opacity: 1; transform: rotate(-12deg) scale(1); } 97%, 100% { opacity: 0; transform: rotate(-12deg) scale(1); } }
+  @media (max-width: 639px) {
+    .cq-stage { aspect-ratio: 4 / 4.6; }
+    .cq-till { width: 60%; left: 5%; }
+    .cq-phone { width: 40%; right: 4%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    [data-cq] .cq-s3 { opacity: 1; animation: none !important; }
+    [data-cq] .cq-stamp { opacity: 1; transform: rotate(-12deg); animation: none !important; }
+    [data-cq] .cq-wait { display: none; }
+    [data-cq] .cq-scan, [data-cq] .cq-s1, [data-cq] .cq-s2 { animation: none !important; }
+  }
+</style>
+
+<script>
+  // the sections reveal and the loop starts when it comes into view (pages without their own reveal script too)
+  document.querySelectorAll<HTMLElement>('[data-cq]').forEach((el) => {
+    if (!('IntersectionObserver' in window)) { el.classList.add('in'); return; }
+    const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { el.classList.add('in'); io.disconnect(); } }), { threshold: 0.2 });
+    io.observe(el);
+  });
+</script>

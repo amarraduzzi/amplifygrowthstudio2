@@ -16,6 +16,7 @@ import { tr } from '../../i18n/t';
 import { ROUTES } from '../../i18n/routes';
 import { signupUrl } from '../../config';
 import type { Lang } from '../../i18n/routes';
+import CardQr from '../CardQr.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -65,6 +66,7 @@ const soon = [
 ];
 const faq = [
   ['Mes clients doivent-ils installer une application ?', 'Non. Ils ouvrent un lien ou scannent un QR. Rien à installer, rien à créer.'],
+  [tt('Mes clients peuvent-ils payer par carte sans terminal ?'), tt('Oui. La caisse affiche un QR code et le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission : seuls les frais de votre banque s’appliquent.')],
   ['Je travaille sans rendez-vous. C’est pour moi ?', 'Oui : c’est la formule Nouba. Vos clients voient l’attente et prennent leur place. Vous appuyez sur « Suivant ».'],
   ['Les rappels partent-ils tout seuls ?', 'Aujourd’hui, le salon envoie chaque rappel depuis son WhatsApp en un geste : le message et le lien sont prêts. L’envoi automatique arrive avec le module WhatsApp automatique.'],
   ['Combien de coiffeurs puis-je ajouter ?', 'Autant que vous voulez, dans toutes les formules.'],
@@ -264,6 +266,8 @@ const faq = [
       </div>
     </div>
   </section>
+
+  <CardQr lang={lang} k="salon" />
 
   <!-- prices -->
   <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>

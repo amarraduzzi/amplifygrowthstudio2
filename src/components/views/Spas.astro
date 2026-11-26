@@ -13,6 +13,7 @@ import PhotoBand from '../PhotoBand.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
 import { signupUrl } from '../../config';
+import CardQr from '../CardQr.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -53,6 +54,7 @@ const till = [
 ] as const;
 const faq = [
   ['Mes clientes doivent-elles installer une application ?', 'Non. Elles ouvrent un lien ou scannent un QR. Rien à installer, rien à créer.'],
+  [tt('Mes clients peuvent-ils payer par carte sans terminal ?'), tt('Oui. La caisse affiche un QR code et le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission : seuls les frais de votre banque s’appliquent.')],
   ['Le hammam reçoit plusieurs clientes. Ça marche ?', 'Oui. Vous indiquez combien de clientes il reçoit en même temps : l’agenda remplit jusqu’à ce nombre, pas plus.'],
   ['Et un massage en duo ?', 'Aujourd’hui, ce sont deux rendez-vous à la même heure, avec deux praticiennes. Une réservation duo en une fois arrive si nos spas la demandent.'],
   ['L’acompte est-il payé en ligne automatiquement ?', 'Le paiement en ligne automatique demande un contrat de votre spa avec CMI, PayZone ou YouCan Pay. En attendant, la cliente paie par virement, CashPlus ou votre lien, et vous confirmez la réception en un clic.'],
@@ -232,6 +234,8 @@ const modules = [
       </div>
     </div>
   </section>
+
+  <CardQr lang={lang} k="spa" />
 
   <!-- prices -->
   <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>

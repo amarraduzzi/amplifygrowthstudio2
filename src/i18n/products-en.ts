@@ -79,7 +79,7 @@ export const posEn = {
     included: {
       title: 'Everything included. No paid add-ons.',
       text: 'Elsewhere, invoicing, QR ordering or customer reviews often cost 100 DH extra each. With us, they’re in the price.',
-      items: ['Customer invoices with ICE', 'Google review QR on every receipt', 'QR menu in French, Arabic and English', 'Works without internet', 'Updates and backups', 'Guided setup by video', 'WhatsApp support with a real person', 'No commitment'],
+      items: ['Customer invoices with ICE', 'Google review QR on every receipt', 'QR menu in French, Arabic and English', 'Works without internet', 'Updates and backups', 'Guided setup by video', 'WhatsApp support with a real person', 'No commitment', 'Card payment by QR, no Amplify commission'],
     },
     plans: [
       { name: 'Essential', tag: 'Amplify POS', price: '199', text: 'For cafés and snack bars.', product: 'pos', items: ['1 POS', 'Works offline', 'View-only QR menu', 'Kitchen and bar tickets', 'X and Z reports', 'French and Arabic', 'Bookings and waitlist', 'Happy hours and promo codes'] },
@@ -118,6 +118,7 @@ export const posEn = {
     title: 'The questions we get asked.',
     items: [
       ['Do I need to buy hardware?', 'No. A PC, tablet or phone with Chrome is enough. To print, a standard 58 or 80 mm receipt printer connected to the POS computer.'],
+      ['Can my customers pay by card without a terminal?', 'Yes. The POS shows a QR code and the customer pays by card on his phone, through your own CMI account. The money lands in your bank account. Amplify takes no commission: only your bank’s fees apply.'],
       ['What if the internet goes down?', 'The POS keeps going: orders, tickets and payments. Everything syncs automatically when the connection is back.'],
       ['Is there a commitment?', 'No. Monthly subscription, cancel anytime.'],
       ['Is my data mine?', 'Yes. You export your sales whenever you like, in a format your accountant can read.'],
@@ -232,6 +233,7 @@ export const featuresEn = {
         ['Automatic kitchen and bar tickets', 'Each item goes to the right print station, with notes (“no onion”, “well done”) and the waiter’s name.'],
         ['Kitchen and bar display', 'A tablet or TV in the kitchen shows that station’s tickets, with the waiting time in colour. One tap: ready. The QR customer sees it too.'],
         ['Every payment method', 'Cash with change calculation, card, bank transfer, split payment (cash + card), tips recorded per employee.'],
+        ['Card by QR, no terminal', 'The POS shows a QR code with the bill: the customer pays by card on his phone, through your own CMI account. The money lands in your bank account; Amplify takes no commission.'],
         ['Customer list and loyalty points (optional)', 'Switch it on if you want it. Customers are recognised by their number: visits, spending, birthday, points (for example 1 point per 10 DH) and rewards as a discount. Numbers of customers who opted in to WhatsApp, ready to copy.'],
         ['Split the bill', 'By item (each person gets their own receipt, the rest stays on the table) or in equal shares, rounded to the dirham.'],
         ['Extras and set menus', 'Cheese + 5 DH, cooking preference, a breakfast set with a drink and a pastry of choice. Prices calculated automatically, on the POS and the QR menu.'],

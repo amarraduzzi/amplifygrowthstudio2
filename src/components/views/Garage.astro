@@ -13,6 +13,7 @@ import GarageBoard from '../GarageBoard.astro';
 import GarageReminder from '../GarageReminder.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, type Lang } from '../../i18n/routes';
+import CardQr from '../CardQr.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(lang);
@@ -65,6 +66,7 @@ const evening = [
 ] as const;
 const faq = [
   ['Mes clients doivent-ils installer une application ?', 'Non. Ils reçoivent le devis sur WhatsApp et l’acceptent depuis le lien. Rien à installer, rien à créer.'],
+  [tt('Mes clients peuvent-ils payer par carte sans terminal ?'), tt('Oui. La caisse affiche un QR code et le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission : seuls les frais de votre banque s’appliquent.')],
   ['Il me faut quel matériel ?', 'Une tablette ou un ordinateur au comptoir, et une imprimante de tickets si vous voulez un bon papier. Nous vous conseillons si vous n’avez rien.'],
   ['Et si le client tarde à répondre ?', 'Le devis a une durée de validité que vous choisissez. Passé ce délai, le client ne peut plus accepter depuis son téléphone : il vous appelle, et vous décidez à la caisse.'],
   ['Puis-je changer un prix sur un OR ?', 'Oui. La liste donne un prix habituel, mais chaque ligne reste modifiable sur l’OR. Les remises et les annulations passent par le manager.'],
@@ -270,6 +272,8 @@ const faq = [
       </div>
     </div>
   </section>
+
+  <CardQr lang={lang} k="garage" />
 
   <SectorPrices lang={lang} k="garage" />
 

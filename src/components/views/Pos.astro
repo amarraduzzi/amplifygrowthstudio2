@@ -31,6 +31,7 @@ const tt = tr(LG);
 const p = posOf(LG);
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema } from '../../lib/schema';
+import CardQr from '../CardQr.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const t = copy(lang);
@@ -174,6 +175,8 @@ const ICONS = ['till', 'qr', 'chef', 'check', 'chart', 'briefcase'] as const;
 
   <!-- the option for fine dining: Amplify Maître -->
   <MaitreOption />
+
+  <CardQr lang={lang} k="pos" />
 
   <!-- pricing -->
   <section id="tarifs" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 md:py-24 sm:px-6">

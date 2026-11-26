@@ -25,6 +25,7 @@ import { copy } from '../../i18n';
 import { tr, langOf } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
+import CardQr from '../CardQr.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const tt = tr(langOf(Astro.url));
@@ -38,6 +39,7 @@ const tpeLive = false;
 const wa = tt('Bonjour, j’ai une pâtisserie et je voudrais voir Amplify.');
 const faq = [
   [tt('Mes recettes sont dans Excel. Faut-il tout retaper ?'), tt('Non. Les recettes s’importent en une fois depuis Excel ou CSV : une ligne par ingrédient, avec le produit, la quantité et l’unité. Les préparations comme la pâte feuilletée ou la crème pâtissière sont reconnues. Envoyez-nous votre fichier, nous le mettons en forme avec vous.')],
+  [tt('Mes clients peuvent-ils payer par carte sans terminal ?'), tt('Oui. La caisse affiche un QR code et le client paie par carte sur son téléphone, par votre propre compte CMI. L’argent arrive sur votre compte bancaire. Amplify ne prend aucune commission : seuls les frais de votre banque s’appliquent.')],
   [tt('Je vends à la pièce et au kilo. Ça marche ?'), tt('Oui. Un produit vendu au poids a un prix au kilo : la caisse demande le poids lu sur la balance, calcule le prix et l’écrit sur le ticket. Le stock baisse du poids vendu.')],
   [tt('Les commandes traiteur passent-elles dans la comptabilité ?'), tt('Oui. Quand la commande est payée, la facture est émise par le système de la caisse : numérotée, avec l’ICE de votre client si c’est une société, et comptée dans le Z du jour.')],
   [tt('J’ai un laboratoire et plusieurs boutiques.'), tt('Oui, avec des établissements reliés. Chaque boutique du même propriétaire garde son ICE, sa caisse et son Z, achète au laboratoire au prix coûtant ou avec une marge, et ses marges et allergènes restent justes. Dans le laboratoire, le stock se répartit entre économat, ateliers et vitrine. Parlons de votre organisation avant de commencer.')],
@@ -299,6 +301,8 @@ const finalWords = `${tt('Voyez votre pâtisserie')} ${tt('dans Amplify.')}`.spl
       <WaButton text={tt('Bonjour, j’ai mes recettes dans Excel. Comment les mettre dans Amplify ?')} label={tt('Envoyer mon fichier')} where="bakery-excel" class="px-6" />
     </div>
   </section>
+
+  <div class="pt-14 md:pt-20"><CardQr lang={lang} k="patisserie" /></div>
 
   <!-- FAQ: a WhatsApp conversation, like the home page -->
   <ChatFaq lang={lang} wa={wa} items={faq} where="bakery" />
