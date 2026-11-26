@@ -10,6 +10,8 @@ import Device from '../Device.astro';
 import CountUp from '../CountUp.astro';
 import DentHeroBoard from '../DentHeroBoard.astro';
 import DentFit from '../DentFit.astro';
+import DentDay from '../DentDay.astro';
+import DentQueue from '../DentQueue.astro';
 import Related from '../Related.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
@@ -20,8 +22,22 @@ const tt = tr(lang);
 const title = tt('Logiciel pour dentistes au Maroc : agenda, dossier patient, devis et site du cabinet | Amplify');
 const description = tt('Amplify Dentaire : l’agenda de chaque fauteuil, le rappel WhatsApp, le dossier et le schéma dentaire, le devis accepté sur le téléphone, le paiement par carte et le site du cabinet avec rendez-vous en ligne.');
 const wa = tt('Bonjour, je voudrais voir Amplify Dentaire pour mon cabinet.');
+const day = [
+  ['calendar', tt('Un agenda par fauteuil'), tt('Chaque fauteuil a sa colonne. Un rendez-vous se pose en touchant l’heure, avec l’acte et sa durée.')],
+  ['message', tt('Le rappel WhatsApp la veille'), tt('Le message est déjà écrit : l’assistante l’envoie d’un geste, et le rendez-vous passe en Confirmé.')],
+  ['clock', tt('La salle d’attente en direct'), tt('Qui attend, depuis combien de minutes, et qui est au fauteuil. Une allergie ou un anticoagulant saute aux yeux.')],
+  ['users', tt('Chacun son code'), tt('Le dentiste, l’assistante et l’accueil entrent avec leur propre code. Le gérant voit tout.')],
+];
+const queue = [
+  ['clock', tt('Le retard avant de partir'), tt('Le cabinet a 15 minutes de retard ? Le patient le voit sur son téléphone et part un peu plus tard.')],
+  ['users', tt('Combien avant lui'), tt('Le nombre de patients avant lui et l’attente estimée, mis à jour tout seuls.')],
+  ['bell', tt('Son téléphone vibre'), tt('Quand l’assistante le fait entrer, la page lui dit à quel fauteuil aller.')],
+  ['star', tt('L’avis Google après la visite'), tt('Le même bouton pour tout le monde, et un mot privé pour le cabinet.')],
+];
 const toc = [
   { id: 'pour-qui', label: tt('Pour qui') },
+  { id: 'journee', label: tt('La journée') },
+  { id: 'file', label: tt('La salle d’attente') },
   { id: 'demo', label: tt('Démo') },
 ];
 const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentaire[lang]))].filter(Boolean) as Record<string, unknown>[];
@@ -68,6 +84,36 @@ const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentai
   </section>
 
   <DentFit lang={lang} />
+
+  <!-- the practice's day: the chairs and the waiting room on the tablet, hour by hour -->
+  <section id="journee" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+    <div class="grid items-start gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-x-14 lg:gap-y-8">
+      <div class="tf-x lg:col-start-1 lg:row-start-1">
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Toute la journée.')}</span><span class="block text-green-deep">{tt('Fauteuil par fauteuil.')}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-muted">{tt('L’assistante voit chaque fauteuil, la salle d’attente et ce qui reste à faire. Touchez une heure pour voir la journée avancer, ou un fauteuil pour ouvrir le patient.')}</p>
+      </div>
+      <div class="tf lg:col-start-2 lg:row-span-2 lg:row-start-1" style="--d:120ms"><DentDay /></div>
+      <ul class="grid gap-5 sm:grid-cols-2 lg:col-start-1 lg:row-start-2 lg:grid-cols-1">
+        {day.map(([ic, h, x], i) => (
+          <li class="tf flex gap-4" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic as 'clock'} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-muted">{x}</span></span></li>))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- the waiting room on the patient's phone -->
+  <section id="file" class="scroll-mt-20 border-y border-line bg-paper px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+      <div>
+        <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le patient attend où il veut.')}</span><span class="block text-green-deep">{tt('Son téléphone le prévient.')}</span></h2>
+        <p class="tf mt-5 max-w-xl text-lg text-muted" style="--d:80ms">{tt('Il scanne le QR à l’accueil ou ouvre le lien de son rendez-vous. Sans application. Il peut prendre un café en face : sa page lui dit quand c’est à lui.')}</p>
+        <ul class="mt-8 grid gap-5 sm:grid-cols-2">
+          {queue.map(([ic, h, x], i) => (
+            <li class="tf flex gap-4" style={`--d:${i * 90 + 140}ms`}><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-navy text-green"><Icon name={ic as 'clock'} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-muted">{x}</span></span></li>))}
+        </ul>
+      </div>
+      <div class="tf" style="--d:160ms"><DentQueue /></div>
+    </div>
+  </section>
 
   <!-- final -->
   <section id="demo" class="scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
