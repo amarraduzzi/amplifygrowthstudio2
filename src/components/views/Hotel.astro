@@ -40,7 +40,7 @@ const faq = [
   [tt('Je peux suivre l’hôtel sans y être ?'), tt('Oui. Sur votre téléphone : l’occupation, l’argent encaissé, les écarts de caisse et le bilan du soir à l’heure que vous choisissez.')],
   [tt('En quelles langues ?'), tt('La réception, le ménage et la page du client sont en français, en arabe et en anglais. Chacun choisit sa langue.')],
   [tt('Qui installe tout ?'), tt('Nous. Vos chambres, vos prix, vos liens Airbnb et Booking, votre équipe, et nous formons la réception. C’est offert.')],
-  [tt('Et si j’arrête ?'), tt('Sans engagement : vous arrêtez d’un mois à l’autre. Les 14 premiers jours sont gratuits.')],
+  [tt('Et si j’arrête ?'), tt('Sans engagement : vous arrêtez d’un mois à l’autre. L’installation et la formation sont offertes.')],
 ];
 const desk = [
   ['calendar', tt('Aujourd’hui en un regard'), tt('L’occupation de ce soir, les arrivées et les départs. Ce qui est en retard remonte en premier.')],
@@ -126,7 +126,7 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
     <!-- three facts -->
     <div class="border-y border-line bg-paper">
       <ul class="mx-auto grid max-w-6xl grid-cols-3 gap-3 px-4 py-5 sm:px-6 md:py-6">
-        {[['1', tt('planning pour Airbnb, Booking, votre site et la réception')], ['0', tt('commission sur les réservations de votre site')], ['14', tt('jours gratuits, sans engagement')]].map(([n, l]) => (
+        {[['1', tt('planning pour Airbnb, Booking, votre site et la réception')], ['0', tt('commission sur les réservations de votre site')], ['3', tt('langues : français, arabe et anglais')]].map(([n, l]) => (
           <li class="flex flex-col gap-1 md:flex-row md:items-center md:gap-4"><span class="display text-5xl text-navy md:text-6xl" data-count={n} dir="ltr">{n}</span><span class="text-[0.78rem] leading-snug text-muted md:max-w-[13rem] md:text-[0.95rem]">{l}</span></li>
         ))}
       </ul>
@@ -252,7 +252,7 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
     </div>
   </section>
 
-  <SectorPrices lang={lang} k="hotel" />
+  <SectorPrices lang={lang} k="hotel" trial={false} />
 
   <Faq lang={lang} items={faq} wa={wa} />
 
@@ -263,7 +263,7 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
       <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
       <img src="/img/photos/hotel-cour-1376.webp" alt="" width="1200" height="896" loading="lazy" decoding="async" class="pointer-events-none absolute inset-y-0 end-0 -z-20 hidden h-full w-1/2 object-cover opacity-40 [mask-image:linear-gradient(to_left,#000_40%,transparent)] md:block" />
       <h2 class="text-[2.8rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Voyez-le avec vos chambres.')}</span><span class="block text-green">{tt('En 15 minutes.')}</span></h2>
-      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Écrivez-nous sur WhatsApp. Nous mettons vos chambres, vos prix et vos liens Airbnb et Booking, nous formons la réception, et vous essayez 14 jours gratuitement.')}</p>
+      <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Écrivez-nous sur WhatsApp. Nous mettons vos chambres, vos prix et vos liens Airbnb et Booking, et nous formons la réception. Sans frais d’installation, sans engagement.')}</p>
       <div class="mt-8 flex flex-wrap items-center gap-3">
         <WaButton text={wa} label={tt('Demander une démo')} where="hotel-final" class="px-8 text-lg" />
         <a href={ROUTES.immoStay[lang]} class="inline-flex min-h-12 items-center rounded-full px-5 text-lg font-semibold text-white ring-1 ring-white/25 hover:bg-white/10">{tt('Vous louez des appartements ?')}</a>

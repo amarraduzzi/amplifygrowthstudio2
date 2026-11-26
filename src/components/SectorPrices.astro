@@ -8,8 +8,9 @@ import { tr } from '../i18n/t';
 import { posOf } from '../i18n/content';
 import { ROUTES, type Lang } from '../i18n/routes';
 import { metiers } from '../lib/sectorPlans';
-interface Props { lang: Lang; k: string }
-const { lang, k } = Astro.props;
+/** trial=false: a trade sold with a demo and set up by us (hotels), so no free days are offered */
+interface Props { lang: Lang; k: string; trial?: boolean }
+const { lang, k, trial = true } = Astro.props;
 const tt = tr(lang);
 const per = posOf(lang).pricing.per;
 const m = metiers(tt).find((x) => x.key === k);
@@ -23,7 +24,7 @@ const last = m?.plans ? m.plans.length - 1 : 0;
     <span class="sp-dots" aria-hidden="true"></span>
     <div class="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-24">
       <h2 id="sp-h" class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Tarifs')}.</span><span class="block text-green">{tt('Choisissez ce qu’il vous faut')}.</span></h2>
-      <p class="tf mt-4 max-w-2xl text-lg text-white/70" style="--d:80ms">{tt('Prix HT par mois. 14 jours gratuits, sans engagement.')}</p>
+      <p class="tf mt-4 max-w-2xl text-lg text-white/70" style="--d:80ms">{trial ? tt('Prix HT par mois. 14 jours gratuits, sans engagement.') : tt('Prix HT par mois. Sans engagement. Installation et formation offertes.')}</p>
 
       <div class={`mt-12 grid items-stretch gap-5 md:mt-14 ${m.plans.length === 3 ? 'lg:grid-cols-3' : m.plans.length === 2 ? 'md:grid-cols-2 lg:mx-auto lg:max-w-4xl' : ''}`}>
         {m.plans.map((pl, i) => {
@@ -37,7 +38,7 @@ const last = m?.plans ? m.plans.length - 1 : 0;
               <i class="sp-rule" aria-hidden="true"></i>
               <p class="sp-text">{tt(pl.text)}</p>
               {m.signup && pl.id && (
-                <a href={signupUrl(lang, m.signup, pl.id)} data-trial={`${k}-${pl.id}`} class={`sp-cta ${hero ? 'hero' : ''}`}>{tt('Essayer 14 jours gratuits')}<Icon name="check" class="size-[1.1em]" /></a>
+                <a href={signupUrl(lang, m.signup, pl.id)} data-trial={`${k}-${pl.id}`} class={`sp-cta ${hero ? 'hero' : ''}`}>{trial ? tt('Essayer 14 jours gratuits') : tt('Commencer')}<Icon name="check" class="size-[1.1em]" /></a>
               )}
             </div>
           );
@@ -45,7 +46,7 @@ const last = m?.plans ? m.plans.length - 1 : 0;
       </div>
 
       <ul class="tf mt-8 flex flex-wrap gap-2.5" style="--d:400ms">
-        <li class="sp-chip"><Icon name="gift" class="size-[1.1em]" />{tt('14 jours gratuits')}</li>
+        <li class="sp-chip"><Icon name="gift" class="size-[1.1em]" />{trial ? tt('14 jours gratuits') : tt('Installation offerte')}</li>
         <li class="sp-chip"><Icon name="check" class="size-[1.1em]" />{tt('Sans engagement')}</li>
         {showSetup && <li class="sp-chip"><Icon name="box" class="size-[1.1em]" />{tt('Pressing, Garage et Hanout : mise en place {n} DH HT, offerte avec un plan annuel.').replace('{n}', String(SECTOR.setup))}</li>}
       </ul>

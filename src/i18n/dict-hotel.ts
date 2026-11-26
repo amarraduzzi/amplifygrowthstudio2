@@ -320,6 +320,11 @@ export const hotelEn: Record<string, string> = {
   "Taille de l’établissement": "Size of the property",
   "Tout est inclus dans chaque formule. Le prix dépend seulement du nombre de chambres.": "Everything is included in every plan. The price only depends on the number of rooms.",
   "Vous avez un riad ou un hôtel ?": "Do you run a riad or a hotel?",
+  "Sans engagement : vous arrêtez d’un mois à l’autre. L’installation et la formation sont offertes.": "No commitment: you stop from one month to the next. Setup and training are free.",
+  "langues : français, arabe et anglais": "languages: French, Arabic and English",
+  "Écrivez-nous sur WhatsApp. Nous mettons vos chambres, vos prix et vos liens Airbnb et Booking, et nous formons la réception. Sans frais d’installation, sans engagement.": "Message us on WhatsApp. We add your rooms, your prices and your Airbnb and Booking links, and we train the reception. No setup fee, no commitment.",
+  "Prix HT par mois. Sans engagement. Installation et formation offertes.": "Price excl. VAT per month. No commitment. Setup and training included.",
+  "Installation offerte": "Free setup",
 };
 export const hotelAr: Record<string, string> = {
   "Hôtels et riads": "فنادق ورياضات",
@@ -641,4 +646,9 @@ export const hotelAr: Record<string, string> = {
   "Taille de l’établissement": "حجم المؤسسة",
   "Tout est inclus dans chaque formule. Le prix dépend seulement du nombre de chambres.": "كلشي داخل فكل عرض. الثمن كيتبدل غير على حساب عدد البيوت.",
   "Vous avez un riad ou un hôtel ?": "عندك رياض ولا فندق؟",
+  "Sans engagement : vous arrêtez d’un mois à l’autre. L’installation et la formation sont offertes.": "بلا التزام: كتوقف من شهر لشهر. التركيب والتكوين بالمجان.",
+  "langues : français, arabe et anglais": "لغات: الفرنسية، العربية والإنجليزية",
+  "Écrivez-nous sur WhatsApp. Nous mettons vos chambres, vos prix et vos liens Airbnb et Booking, et nous formons la réception. Sans frais d’installation, sans engagement.": "كتبو لينا فواتساب. كنحطو البيوت ديالكم، الأثمنة وروابط Airbnb و Booking، وكنكونو الاستقبال. بلا مصاريف التركيب، بلا التزام.",
+  "Prix HT par mois. Sans engagement. Installation et formation offertes.": "الثمن بلا ضريبة فالشهر. بلا التزام. التركيب والتكوين بالمجان.",
+  "Installation offerte": "التركيب بالمجان",
 };
