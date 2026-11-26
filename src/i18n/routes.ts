@@ -2,7 +2,7 @@
 import { SITE } from '../config';
 
 export type Lang = 'fr' | 'ar' | 'en';
-export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'pressing' | 'garage' | 'hanout' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog' | 'bssaha' | 'livraison' | 'hotel';
+export type PageKey = 'home' | 'pricing' | 'systems' | 'pos' | 'profit' | 'site' | 'features' | 'marketing' | 'restaurants' | 'salons' | 'spas' | 'pressing' | 'garage' | 'hanout' | 'immobilier' | 'immoAgent' | 'immoStay' | 'maitre' | 'bakery' | 'contact' | 'blogChiffres' | 'blogPointMort' | 'blogValeur' | 'blogVues' | 'blogCout' | 'blogPlateforme' | 'blogCouts' | 'blog' | 'bssaha' | 'livraison' | 'hotel' | 'dentaire';
 
 export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   home: { fr: '/', ar: '/ar/', en: '/en/' },
@@ -22,6 +22,8 @@ export const ROUTES: Record<PageKey, Record<Lang, string>> = {
   pressing: { fr: '/pressing/', ar: '/ar/pressing/', en: '/en/dry-cleaners/' },
   // hotels, riads and guest houses (Amplify Hotel)
   hotel: { fr: '/hotels/', ar: '/ar/hotels/', en: '/en/hotels/' },
+  // dental practices and dental centres (Amplify Dentaire)
+  dentaire: { fr: '/dentistes/', ar: '/ar/dentistes/', en: '/en/dentists/' },
   // garages and workshops (Amplify Garage)
   garage: { fr: '/garages/', ar: '/ar/garages/', en: '/en/garages/' },
   // corner shops and épiceries (Amplify Hanout)

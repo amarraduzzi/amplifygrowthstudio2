@@ -1,0 +1,118 @@
+---
+// "Pour qui": a practice with one dentist, a group practice, a dental centre. One photo per size, and the switches
+// that size usually turns on. The switches only show what each practice tends to use; every one of them exists for all.
+// Tabs cycle on their own until touched. Same mechanics as HotelFit.
+import { tr } from '../i18n/t';
+import type { Lang } from '../i18n/routes';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const tt = tr(lang);
+const kinds = [
+  { k: 'solo', name: tt('Cabinet'), who: tt('un dentiste et son assistante'), img: 'fauteuil', alt: tt('Fauteuil dentaire dans un cabinet lumineux'),
+    line: tt('Le dentiste soigne, l’assistante fait tout le reste : l’agenda, les appels, la caisse et les devis.') },
+  { k: 'groupe', name: tt('Cabinet de groupe'), who: tt('deux ou trois dentistes'), img: 'attente', alt: tt('Salle d’attente d’un cabinet dentaire avec zellige vert'),
+    line: tt('Plusieurs fauteuils, un agenda par dentiste, une salle d’attente partagée et une caisse commune.') },
+  { k: 'centre', name: tt('Centre dentaire'), who: tt('plusieurs praticiens et un accueil'), img: 'cabinet', alt: tt('Accueil d’un centre dentaire avec banquette et fauteuil au fond'),
+    line: tt('Une équipe à l’accueil, des spécialistes, des plans de traitement payés en plusieurs fois et un gérant qui veut des chiffres.') },
+];
+// [label, the sizes that usually switch it on]
+const sw: [string, string][] = [
+  [tt('Agenda par fauteuil'), 'solo groupe centre'],
+  [tt('Rappel WhatsApp la veille'), 'solo groupe centre'],
+  [tt('Dossier patient et schéma dentaire'), 'solo groupe centre'],
+  [tt('Devis envoyé sur WhatsApp'), 'solo groupe centre'],
+  [tt('Site du cabinet et rendez-vous en ligne'), 'solo groupe centre'],
+  [tt('QR d’accueil et questionnaire médical'), 'groupe centre'],
+  [tt('Consentement signé sur l’écran'), 'groupe centre'],
+  [tt('Acompte et paiement par carte'), 'groupe centre'],
+  [tt('Un code par employé'), 'groupe centre'],
+  [tt('Paiement en plusieurs fois'), 'centre'],
+  [tt('Clôture de caisse par employé'), 'centre'],
+];
+---
+<section id="pour-qui" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+  <div class="df grid items-stretch gap-6 lg:grid-cols-[1.25fr_1fr] lg:gap-10" data-t="solo" data-df>
+    <div class="tf relative isolate min-h-[24rem] overflow-hidden rounded-[1.75rem] bg-navy lg:min-h-[36rem]">
+      {kinds.map((x, i) => (
+        <img src={`/img/photos/dent-${x.img}.webp`} alt={x.alt} width="896" height="1200" loading="lazy" decoding="async" data-k={x.k}
+          class={`df-ph absolute inset-0 -z-10 h-full w-full object-cover ${i === 0 ? 'on' : ''}`} />
+      ))}
+      <span class="absolute inset-x-0 bottom-0 -z-10 h-3/4 bg-gradient-to-t from-navy via-navy/75 to-transparent" aria-hidden="true"></span>
+      <div class="flex h-full min-h-[inherit] flex-col justify-end p-5 text-white sm:p-7">
+        {kinds.map(x => (
+          <div class="df-cap" data-k={x.k}>
+            <p class="display text-[clamp(2.4rem,5.6vw,4.2rem)] leading-[0.9]">{x.name}</p>
+            <p class="mt-1 text-lg font-semibold text-green">{x.who}</p>
+            <p class="mt-2 max-w-md text-white/80">{x.line}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <div class="tf flex flex-col" style="--d:120ms">
+      <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Un fauteuil ou dix.')}</span><span class="block text-green-deep">{tt('Vous allumez ce qui vous sert.')}</span></h2>
+      <div class="mt-6 flex gap-1 rounded-full bg-paper p-1 ring-1 ring-line" role="tablist" aria-label={tt('Taille du cabinet')}>
+        {kinds.map((x, i) => <button type="button" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-k={x.k} class="df-tab min-h-11 flex-1 rounded-full px-2 text-[0.82rem] font-semibold leading-tight sm:px-3 sm:text-base">{x.name}</button>)}
+      </div>
+      <ul class="mt-5 divide-y divide-line border-y border-line">
+        {sw.map(([l, on], i) => (
+          <li class="df-row flex items-center justify-between gap-4 py-2.5" data-on={on} style={`--i:${i}`}>
+            <span class="df-l text-[0.95rem] sm:text-base">{l}</span>
+            <span class="df-sw relative h-6 w-10 shrink-0 rounded-full bg-line" aria-hidden="true"><span class="absolute left-0.5 top-0.5 size-5 rounded-full bg-white shadow"></span></span>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 text-sm text-muted">{tt('Chaque fonction s’allume ou s’éteint dans les réglages. Ce qui ne vous sert pas ne vous gêne pas.')}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .df-ph { opacity: 0; transform: scale(1.06); transition: opacity .8s ease, transform 7s ease; }
+  .df-ph.on { opacity: 1; transform: scale(1); }
+  .df-cap { display: none; }
+  .df[data-t='solo'] .df-cap[data-k='solo'], .df[data-t='groupe'] .df-cap[data-k='groupe'], .df[data-t='centre'] .df-cap[data-k='centre'] { display: block; animation: df-in .55s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes df-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .df-tab { color: var(--color-muted, #5b6b7b); transition: background-color .25s, color .25s; }
+  .df-tab[aria-selected='true'] { background: var(--color-navy, #001e3e); color: #fff; }
+  /* the knobs flip one after the other, top to bottom */
+  .df-sw > span { --x: 0rem; transform: translateX(var(--x)); transition: transform .3s cubic-bezier(.3,1.4,.6,1) calc(var(--i, 0) * 45ms); }
+  :global([dir='rtl']) .df-sw > span { --x: 1rem; }
+  .df-sw { transition: background-color .3s calc(var(--i, 0) * 45ms); }
+  .df-l { transition: color .3s; color: var(--color-muted, #5b6b7b); }
+  .df[data-t='solo'] .df-row[data-on~='solo'] .df-sw,
+  .df[data-t='groupe'] .df-row[data-on~='groupe'] .df-sw,
+  .df[data-t='centre'] .df-row[data-on~='centre'] .df-sw { background: var(--color-green, #05b962); }
+  .df[data-t='solo'] .df-row[data-on~='solo'] .df-sw > span,
+  .df[data-t='groupe'] .df-row[data-on~='groupe'] .df-sw > span,
+  .df[data-t='centre'] .df-row[data-on~='centre'] .df-sw > span { --x: 1rem; }
+  :global([dir='rtl']) .df[data-t='solo'] .df-row[data-on~='solo'] .df-sw > span,
+  :global([dir='rtl']) .df[data-t='groupe'] .df-row[data-on~='groupe'] .df-sw > span,
+  :global([dir='rtl']) .df[data-t='centre'] .df-row[data-on~='centre'] .df-sw > span { --x: 0rem; }
+  .df[data-t='solo'] .df-row[data-on~='solo'] .df-l,
+  .df[data-t='groupe'] .df-row[data-on~='groupe'] .df-l,
+  .df[data-t='centre'] .df-row[data-on~='centre'] .df-l { color: var(--color-navy, #001e3e); font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .df-ph, .df-sw, .df-sw > span { transition: none; } .df-cap { animation: none !important; } }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-df]').forEach((root) => {
+    const tabs = [...root.querySelectorAll<HTMLButtonElement>('.df-tab')];
+    const photos = [...root.querySelectorAll<HTMLElement>('.df-ph')];
+    const order = tabs.map((b) => b.dataset.k!);
+    const set = (k: string) => {
+      root.dataset.t = k;
+      tabs.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.k === k)));
+      photos.forEach((p) => p.classList.toggle('on', p.dataset.k === k));
+    };
+    let timer = 0, touched = false;
+    const stop = () => { window.clearInterval(timer); timer = 0; };
+    tabs.forEach((b) => b.addEventListener('click', () => { touched = true; stop(); set(b.dataset.k!); }));
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+    // cycle only while on screen, until the visitor picks one
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !touched && !timer) timer = window.setInterval(() => set(order[(order.indexOf(root.dataset.t!) + 1) % order.length]), 4200);
+      else if (!e.isIntersecting) stop();
+    }, { threshold: 0.4 }).observe(root);
+  });
+</script>

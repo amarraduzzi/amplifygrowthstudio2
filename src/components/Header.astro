@@ -46,8 +46,8 @@ const langs = langsProp ?? liveLanguages();
 const LABEL: Record<Lang, string> = { fr: 'FR', ar: 'عربي', en: 'EN' };
 const SHORT: Record<Lang, string> = { fr: 'FR', ar: 'ع', en: 'EN' };
 const NAME: Record<Lang, string> = { fr: 'Français', ar: 'العربية', en: 'English' };
-// hotels are sold with a demo and set up by us: no free trial there, the button goes to the demo block
-const demoOnly = page === 'hotel';
+// hotels and dental practices are sold with a demo and set up by us: no free trial there, the button goes to the demo block
+const demoOnly = page === 'hotel' || page === 'dentaire';
 const trial = demoOnly ? '#demo' : signupUrl(lang, page === 'profit' ? 'profit' : page === 'site' ? 'site' : page === 'pos' ? 'pos' : undefined);
 const trialLabel = demoOnly ? tt('Demander une démo') : t.nav.trial;
 ---

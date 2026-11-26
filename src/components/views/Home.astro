@@ -87,8 +87,9 @@ const TRADES = [
   { k: 'spas', name: 'Spas et instituts', line: 'Les cabines, les soins et les forfaits.', img: '/img/photos/spa-cabine-800.webp', pos: '55% 50%', cls: '' },
   { k: 'pressing', name: 'Pressings', line: 'Une étiquette par pièce, le client prévenu.', img: '/img/nav-pressing.webp', pos: '55% 45%', cls: '' },
   { k: 'hanout', name: 'Hanouts', line: 'Le kridi, la caisse et le stock, sur le téléphone.', img: '/img/photos/hanout-comptoir-800.webp', pos: '62% 45%', cls: '' },
-  { k: 'hotel', name: 'Hôtels et riads', line: 'La réception, Airbnb et Booking, le ménage.', img: '/img/photos/hotel-patio-800.webp', pos: '50% 55%', cls: '' },
-  { k: 'immobilier', name: 'Immobilier', line: 'Les biens, les visites et les loyers.', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%', cls: '' },
+  { k: 'hotel', name: 'Hôtels et riads', line: 'La réception, Airbnb et Booking, le ménage.', img: '/img/photos/hotel-patio-800.webp', pos: '50% 55%', cls: 'lg:col-span-2' },
+  { k: 'immobilier', name: 'Immobilier', line: 'Les biens, les visites et les loyers.', img: '/img/photos/immo-agent-rue-800.webp', pos: '62% 40%', cls: 'lg:col-span-2' },
+  { k: 'dentaire', name: 'Dentistes', line: 'L’agenda des fauteuils, le dossier, le devis et le site du cabinet.', img: '/img/photos/dent-cabinet.webp', pos: '50% 50%', cls: 'col-span-2' },
 ] as const;
 const trades = TRADES.map(x => ({ ...x, href: ROUTES[x.k][lang] }));
 // the hero's trade picker: each card previews its trade in the scene on the right (hover, focus, or the auto tour)
@@ -184,7 +185,7 @@ const img = (k: string) => `/img/hanout-${k}-${lang === 'ar' ? 'ar' : 'fr'}.webp
   <section id="metiers" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
     <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">Choisissez votre métier.</span><span class="block text-green-deep">Le système est fait pour lui.</span></h2>
     <p class="tf mt-4 max-w-2xl text-lg text-muted" style="--d:100ms">Un restaurant ne travaille pas comme un pressing, un salon ou un hanout. Chaque métier a son système, avec ses mots, ses habitudes et ses chiffres.</p>
-    <div class="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:grid-rows-[15rem_15rem_15rem]">
+    <div class="mt-10 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:grid-rows-[15rem_15rem_15rem_15rem]">
       {trades.map((x, k) => (
         <a href={x.href} class={`tf group/t relative isolate flex min-h-52 flex-col justify-end overflow-hidden rounded-[1.6rem] bg-navy p-5 text-white shadow-[0_18px_40px_-24px_rgba(0,30,62,0.6)] lg:min-h-0 ${x.cls}`} style={`--d:${k * 60}ms`}>
           <img src={x.img} alt="" width="800" height="597" loading="lazy" decoding="async" class="absolute inset-0 -z-20 size-full object-cover transition-transform duration-700 ease-out group-hover/t:scale-105" style={`object-position:${x.pos}`} />
