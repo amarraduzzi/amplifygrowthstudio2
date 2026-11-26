@@ -12,6 +12,7 @@ import DentHeroBoard from '../DentHeroBoard.astro';
 import DentFit from '../DentFit.astro';
 import DentDay from '../DentDay.astro';
 import DentQueue from '../DentQueue.astro';
+import DentFile from '../DentFile.astro';
 import Related from '../Related.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
@@ -34,10 +35,17 @@ const queue = [
   ['bell', tt('Son téléphone vibre'), tt('Quand l’assistante le fait entrer, la page lui dit à quel fauteuil aller.')],
   ['star', tt('L’avis Google après la visite'), tt('Le même bouton pour tout le monde, et un mot privé pour le cabinet.')],
 ];
+const file = [
+  ['shield', tt('Les alertes en rouge'), tt('Allergie, anticoagulant, diabète : le patient les donne dans son questionnaire, et elles suivent son nom partout.')],
+  ['check', tt('Le schéma lu d’un regard'), tt('Chaque dent a sa forme, sa couleur et son signe : carie, obturée, couronne, implant, à extraire. Adulte ou enfant.')],
+  ['camera', tt('Les radios par QR'), tt('L’assistante affiche un QR, prend la radio ou la photo avec son téléphone, et elle arrive dans le dossier, sur la bonne dent.')],
+  ['book', tt('Toute l’histoire du patient'), tt('Chaque séance, chaque acte, chaque devis et chaque paiement, avec la date et le nom de qui l’a fait.')],
+];
 const toc = [
   { id: 'pour-qui', label: tt('Pour qui') },
   { id: 'journee', label: tt('La journée') },
   { id: 'file', label: tt('La salle d’attente') },
+  { id: 'dossier', label: tt('Le dossier') },
   { id: 'demo', label: tt('Démo') },
 ];
 const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentaire[lang]))].filter(Boolean) as Record<string, unknown>[];
@@ -112,6 +120,25 @@ const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentai
         </ul>
       </div>
       <div class="tf" style="--d:160ms"><DentQueue /></div>
+    </div>
+  </section>
+
+  <!-- the patient file: the chart, the alerts, the history and the photos -->
+  <section id="dossier" class="scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy px-5 pb-20 pt-10 text-white sm:px-8 md:px-14 md:pb-24 md:pt-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <div class="grid items-start gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-14">
+        <div>
+          <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Tout le patient.')}</span><span class="block text-green">{tt('Sur une seule fiche.')}</span></h2>
+          <p class="mt-5 text-lg text-white/75">{tt('Le dentiste touche une dent et voit ce qui la concerne. Regardez le schéma se remplir, puis la radio arriver du téléphone de l’assistante.')}</p>
+          <ul class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-1">
+            {file.map(([ic, h, x], i) => (
+              <li class="flex gap-4"><span class="grid size-11 shrink-0 place-items-center rounded-2xl bg-white/10 text-green"><Icon name={ic as 'clock'} class="size-5" /></span><span><b class="block text-lg">{h}</b><span class="text-white/70">{x}</span></span></li>))}
+          </ul>
+        </div>
+        <div class="lg:pt-4"><DentFile /></div>
+      </div>
     </div>
   </section>
 
