@@ -1,0 +1,185 @@
+---
+// The practice's website, played live: the two styles the practice chooses between in the app ("Atelier", warm with photos,
+// and "Clinique", modern blue), then the treatment calculator on Clinique (goal, tooth, plan built from the practice's own
+// prices, always "to be confirmed at the consultation") and the online booking request. Tap a step to jump.
+// Plays by itself once in view, stops when touched. Demo practice, invented names, no invented percentages or reviews.
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const STEPS = [tt('Style Atelier'), tt('Style Clinique'), tt('Calculateur'), tt('Rendez-vous en ligne')];
+const dh = (n: number) => `${n.toLocaleString('fr-FR').replace(/ | /g, ' ')} DH`;
+const PLAN: [string, string, number][] = [[tt('Consultation et radio'), tt('Séance 1'), 300], [tt('Implant'), tt('Séance 2'), 7000], [tt('Couronne céramique'), tt('Séance 3'), 3000]];
+const TOTAL = PLAN.reduce((a, l) => a + l[2], 0);
+const TOOTH = 'M50 8 C30 6 14 20 18 46 C20 62 26 74 30 92 C32 101 40 101 42 88 C44 78 46 72 50 72 C54 72 56 78 58 88 C60 101 68 101 70 92 C74 74 80 62 82 46 C86 20 70 6 50 8 Z';
+const SOINS: [string, string][] = [[tt('Détartrage'), dh(400)], [tt('Blanchiment'), dh(2500)], [tt('Implant'), dh(7000)]];
+const DAYS: [string, string][] = [[tt('Lun'), '7'], [tt('Mar'), '8'], [tt('Mer'), '9'], [tt('Jeu'), '10']];
+const TIMES = ['09:00', '10:30', '15:00', '16:30'];
+---
+<div class="dsx" data-dsx data-s="0">
+  <div class="dsx-frame" dir="ltr">
+    <div class="dsx-bar"><i></i><i></i><i></i><span>cabinet-dr-alami.amplify.ma</span></div>
+    <div class="dsx-stage">
+      <!-- 0: Atelier -->
+      <section class="dsx-v dsx-at" data-v="0">
+        <div class="dsx-hero"><img src="/img/photos/dent-cabinet.webp" alt="" width="1376" height="768" loading="lazy" decoding="async" /><span></span>
+          <div><p class="dsx-k">Cabinet Dr Alami · Agdal, Rabat</p><p class="dsx-serif dsx-t1">{tt('Votre sourire')}, <em>{tt('entre de bonnes mains.')}</em></p></div>
+        </div>
+        <div class="dsx-atb">
+          <ol>{SOINS.map(([a, p], i) => <li><span class="dsx-serif">0{i + 1}</span><b>{a}</b><small>{tt('dès')} {p}</small></li>)}</ol>
+          <span class="dsx-amber">{tt('Prendre rendez-vous')}</span>
+        </div>
+      </section>
+      <!-- 1: Clinique -->
+      <section class="dsx-v dsx-cl" data-v="1">
+        <div class="dsx-clh">
+          <div>
+            <p class="dsx-chip">Cabinet Dr Alami</p>
+            <p class="dsx-t2">{tt('Votre sourire,')} <em>{tt('planifié.')}</em></p>
+            <p class="dsx-btns"><span class="dsx-white">{tt('Prendre rendez-vous')}</span><span class="dsx-ghost">{tt('Estimer mon traitement')}</span></p>
+          </div>
+          <svg class="dsx-tooth" viewBox="0 0 100 105" aria-hidden="true"><defs><linearGradient id="dsxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#BFD8FF" /><stop offset=".5" stop-color="#5D9BFF" /><stop offset="1" stop-color="#1E5FD8" /></linearGradient></defs><path d={TOOTH} fill="url(#dsxg)" /><path d="M30 24 C 36 14 48 12 56 14" fill="none" stroke="#fff" stroke-opacity=".75" stroke-width="3" stroke-linecap="round" /></svg>
+        </div>
+        <ul class="dsx-cards">{[tt('Soins'), tt('Implants'), tt('Orthodontie')].map((n) => <li><b>{n}</b><small>{tt('Voir les prix')}</small></li>)}</ul>
+      </section>
+      <!-- 2: calculator -->
+      <section class="dsx-v dsx-cl dsx-calc" data-v="2">
+        <p class="dsx-t3">{tt('Planifiez')} <em>{tt('votre sourire')}</em></p>
+        <p class="dsx-goals"><span data-goal class="on0">{tt('Remplacer une dent')}</span><span>{tt('Aligner mes dents')}</span><span>{tt('Blanchir')}</span></p>
+        <ul class="dsx-teeth">{['44', '45', '46', '47'].map((n) => <li data-tooth={n}><svg viewBox="0 0 100 105" aria-hidden="true"><path d={TOOTH} /></svg><small>{n}</small></li>)}</ul>
+        <div class="dsx-plan">
+          <ul>{PLAN.map(([a, ph, p], i) => <li data-pl={i}><span><b>{a}</b><small>{ph}</small></span><em>{dh(p)}</em></li>)}</ul>
+          <p class="dsx-tot"><span>{tt('À partir de')}</span><b>{dh(TOTAL)}</b></p>
+          <p class="dsx-note">3 {tt('séances')} · {tt('à confirmer en consultation')}</p>
+        </div>
+      </section>
+      <!-- 3: online booking -->
+      <section class="dsx-v dsx-cl dsx-book" data-v="3">
+        <div class="dsx-card">
+          <p class="dsx-k2">{tt('Choisissez un créneau')}</p>
+          <p class="dsx-days">{DAYS.map(([d, n]) => <span data-day={n}><small>{d}</small><b>{n}</b></span>)}</p>
+          <p class="dsx-times">{TIMES.map((h) => <span data-time={h}>{h}</span>)}</p>
+          <span class="dsx-amber dsx-go" data-go>{tt('Demander ce rendez-vous')}</span>
+          <p class="dsx-sent"><i>✓</i>{tt('Demande envoyée. Le cabinet la confirme.')}</p>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="dsx-steps" role="group" aria-label={tt('Les étapes du site')}>
+    {STEPS.map((s, i) => <button type="button" data-step={i} class={i === 0 ? 'on' : ''}>{s}</button>)}
+  </div>
+</div>
+
+<style is:global>
+  .dsx { container-type: inline-size; }
+  .dsx-frame { border-radius: 1.2rem; background: #fff; box-shadow: 0 40px 80px -34px rgba(11, 30, 51, .55), 0 0 0 1px #D8DDE3; overflow: hidden; font-size: clamp(11px, 1.9cqw, 17px); }
+  .dsx-bar { display: flex; align-items: center; gap: .5em; padding: .8em 1em; background: #EEF1F5; border-bottom: 1px solid #D8DDE3; }
+  .dsx-bar i { width: .8em; height: .8em; border-radius: 50%; background: #C7CED8; }
+  .dsx-bar span { margin-inline-start: .8em; flex: 1; max-width: 26em; border-radius: 99px; background: #fff; padding: .3em 1em; font-size: .85em; color: #536072; }
+  .dsx-stage { display: grid; position: relative; overflow: hidden; }
+  .dsx-v { grid-area: 1 / 1; opacity: 0; transform: scale(.97) translateY(1.2em); transition: opacity .5s, transform .6s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .dsx[data-s="0"] [data-v="0"], .dsx[data-s="1"] [data-v="1"], .dsx[data-s="2"] [data-v="2"], .dsx[data-s="3"] [data-v="3"] { opacity: 1; transform: none; }
+  .dsx-serif { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; letter-spacing: -.01em; }
+  /* Atelier */
+  .dsx-at { background: #f4eee5; color: #0e3b3a; }
+  .dsx-hero { position: relative; display: flex; align-items: flex-end; min-height: 17em; overflow: hidden; color: #fff; }
+  .dsx-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; transform: scale(1.08); transition: transform 6s ease-out; }
+  .dsx[data-s="0"] .dsx-hero img { transform: scale(1); }
+  .dsx-hero span { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(14, 59, 58, .15), rgba(14, 59, 58, .8)); }
+  .dsx-hero div { position: relative; padding: 1.6em 1.8em; }
+  .dsx-k { font-size: .8em; font-weight: 800; text-transform: uppercase; letter-spacing: .14em; opacity: .85; }
+  .dsx-t1 { margin-top: .4em; font-size: 2.9em; line-height: 1.02; max-width: 12em; } .dsx-t1 em { color: #e9a23b; font-style: italic; }
+  .dsx-atb { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1em; padding: 1.2em 1.8em 1.6em; }
+  .dsx-atb ol { display: grid; gap: .5em; flex: 1; min-width: 14em; }
+  .dsx-atb li { display: flex; align-items: baseline; gap: .8em; border-bottom: 1px solid rgba(14, 59, 58, .18); padding-bottom: .5em; }
+  .dsx-atb li span { color: #136F6A; font-size: 1.2em; } .dsx-atb li b { flex: 1; } .dsx-atb li small { color: #5d6b66; font-weight: 600; }
+  .dsx-amber { display: inline-flex; align-items: center; justify-content: center; min-height: 2.9em; padding: 0 1.6em; background: #e9a23b; color: #0e3b3a; font-weight: 800; box-shadow: 0 .25em 0 #b9781e; transition: transform .15s, box-shadow .15s; }
+  .dsx-amber.press { transform: translateY(.25em); box-shadow: none; }
+  .dsx[data-s="0"] .dsx-amber { animation: dsx-nudge 2.4s 1.4s ease-in-out infinite; }
+  @keyframes dsx-nudge { 0%, 80%, 100% { transform: none; } 88% { transform: translateY(-.3em); } 94% { transform: translateY(.1em); } }
+  /* Clinique */
+  .dsx-cl { background: linear-gradient(170deg, #1E5FD8, #0B2A6B); color: #fff; padding: 1.6em 1.8em 1.8em; }
+  .dsx-clh { display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 1em; }
+  .dsx-chip { display: inline-block; border-radius: 99px; background: rgba(255, 255, 255, .14); padding: .35em 1em; font-size: .8em; font-weight: 700; }
+  .dsx-t2 { margin-top: .6em; font-size: 2.7em; line-height: 1.02; font-weight: 800; letter-spacing: -.02em; } .dsx-t2 em, .dsx-t3 em { font-style: normal; color: #9CC4FF; }
+  .dsx-btns { display: flex; flex-wrap: wrap; gap: .6em; margin-top: 1.1em; }
+  .dsx-white, .dsx-ghost { display: inline-flex; align-items: center; min-height: 2.7em; padding: 0 1.3em; border-radius: 99px; font-weight: 700; font-size: .9em; }
+  .dsx-white { background: #fff; color: #0B2A6B; } .dsx-ghost { box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .6); }
+  .dsx-tooth { width: 100%; max-width: 12em; justify-self: center; filter: drop-shadow(0 1.4em 1.2em rgba(0, 20, 70, .5)); animation: dsx-float 4s ease-in-out infinite; }
+  @keyframes dsx-float { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-.8em) rotate(3deg); } }
+  .dsx-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: .8em; margin-top: 1.4em; }
+  .dsx-cards li { border-radius: 1em; background: rgba(255, 255, 255, .12); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .25); padding: .9em 1em; display: grid; }
+  .dsx-cards small { opacity: .75; font-size: .8em; }
+  /* calculator */
+  .dsx-t3 { font-size: 2em; font-weight: 800; letter-spacing: -.02em; }
+  .dsx-goals { display: flex; flex-wrap: wrap; gap: .5em; margin-top: .8em; }
+  .dsx-goals span { border-radius: 99px; padding: .5em 1.1em; font-weight: 700; font-size: .9em; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .45); transition: background .3s, color .3s; }
+  .dsx-goals span.on { background: #fff; color: #0B2A6B; box-shadow: none; }
+  .dsx-teeth { display: flex; gap: .7em; margin-top: 1em; }
+  .dsx-teeth li { display: grid; justify-items: center; gap: .2em; width: 4em; border-radius: .9em; padding: .6em .2em; background: rgba(255, 255, 255, .1); transition: background .3s, transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+  .dsx-teeth svg { width: 2em; fill: rgba(255, 255, 255, .55); transition: fill .3s; } .dsx-teeth small { font-size: .75em; font-weight: 700; }
+  .dsx-teeth li.on { background: #fff; transform: translateY(-.3em) scale(1.08); } .dsx-teeth li.on svg { fill: #1E5FD8; } .dsx-teeth li.on small { color: #0B2A6B; }
+  .dsx-plan { margin-top: 1em; border-radius: 1em; background: #fff; color: #0B2A6B; padding: .8em 1.1em; }
+  .dsx-plan ul { display: grid; }
+  .dsx-plan li { display: flex; justify-content: space-between; gap: 1em; padding: .5em 0; border-bottom: 1px solid #E3EAF5; opacity: 0; transform: translateX(-1.5em); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); }
+  .dsx-plan li.on { opacity: 1; transform: none; } .dsx-plan li span { display: grid; } .dsx-plan li small { color: #6B7C99; font-size: .8em; } .dsx-plan li em { font-style: normal; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .dsx-tot { display: flex; justify-content: space-between; align-items: baseline; padding-top: .6em; font-weight: 700; opacity: 0; transition: opacity .5s; } .dsx-tot b { font-size: 1.6em; color: #1E5FD8; font-variant-numeric: tabular-nums; }
+  .dsx-note { font-size: .8em; color: #6B7C99; opacity: 0; transition: opacity .5s .2s; }
+  .dsx-calc.tot .dsx-tot, .dsx-calc.tot .dsx-note { opacity: 1; }
+  /* booking */
+  .dsx-book { display: grid; place-items: center; }
+  .dsx-card { width: min(100%, 26em); border-radius: 1.2em; background: #fff; color: #0B2A6B; padding: 1.3em 1.4em 1.4em; box-shadow: 0 1.4em 3em -1em rgba(0, 20, 70, .6); }
+  .dsx-k2 { font-size: .8em; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: #6B7C99; }
+  .dsx-days { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6em; margin-top: .8em; }
+  .dsx-days span { display: grid; justify-items: center; border-radius: .8em; padding: .6em 0; box-shadow: inset 0 0 0 1.5px #D5DFF0; transition: background .3s, color .3s, transform .35s cubic-bezier(.3, 1.6, .5, 1); } .dsx-days small { font-size: .75em; font-weight: 700; color: #6B7C99; } .dsx-days b { font-size: 1.3em; }
+  .dsx-times { display: grid; grid-template-columns: repeat(4, 1fr); gap: .6em; margin-top: .7em; }
+  .dsx-times span { text-align: center; border-radius: .7em; padding: .6em 0; font-weight: 700; font-size: .9em; box-shadow: inset 0 0 0 1.5px #D5DFF0; transition: background .3s, color .3s, transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+  .dsx-days span.on, .dsx-times span.on { background: #1E5FD8; color: #fff; box-shadow: none; transform: scale(1.06); } .dsx-days span.on small { color: #CFE0FF; }
+  .dsx-go { width: 100%; margin-top: 1em; border-radius: .7em; background: #1E5FD8; color: #fff; box-shadow: 0 .25em 0 #123F96; }
+  .dsx-sent { display: flex; align-items: center; gap: .6em; max-height: 0; overflow: hidden; opacity: 0; font-weight: 700; color: #059669; transition: max-height .5s, opacity .5s, margin .5s; } .dsx-sent i { display: grid; place-items: center; flex: none; width: 1.6em; height: 1.6em; border-radius: 50%; background: #059669; color: #fff; font-style: normal; font-size: .85em; }
+  .dsx-book.sent .dsx-sent { max-height: 4em; opacity: 1; margin-top: .9em; } .dsx-book.sent .dsx-go { opacity: .45; }
+  .dsx-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.6rem; }
+  .dsx-steps button { min-height: 2.75rem; border-radius: 999px; background: #fff; padding: 0 1rem; font-size: .9rem; font-weight: 700; color: #536072; box-shadow: 0 0 0 1px #D8DDE3; transition: background .3s, color .3s; }
+  .dsx-steps button.on { background: #0B1E33; color: #fff; box-shadow: none; }
+  @media (max-width: 560px) { .dsx-clh { grid-template-columns: 1fr; } .dsx-tooth { max-width: 8em; } .dsx-t2, .dsx-t1 { font-size: 2.3em; } }
+  @media (prefers-reduced-motion: reduce) { .dsx-v, .dsx-plan li, .dsx-hero img { transition: none; } .dsx-tooth, .dsx-amber { animation: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dsx]').forEach((root) => {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const qa = (s: string) => [...root.querySelectorAll<HTMLElement>(s)];
+    const steps = qa('[data-step]'), goal = q('[data-goal]'), calc = q('.dsx-calc'), book = q('.dsx-book'), go = q('[data-go]');
+    const lines = qa('[data-pl]'), tooth = q('[data-tooth="46"]'), day = q('[data-day="8"]'), time = q('[data-time="10:30"]');
+    let timers: number[] = [], auto = false, cur = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    const reset = () => {
+      goal.classList.remove('on'); tooth.classList.remove('on'); lines.forEach(l => l.classList.remove('on')); calc.classList.remove('tot');
+      day.classList.remove('on'); time.classList.remove('on'); go.classList.remove('press'); book.classList.remove('sent');
+    };
+    const show = (s: number) => { cur = s; root.dataset.s = String(s); steps.forEach((b, i) => b.classList.toggle('on', i === s)); reset(); };
+    const play = (s: number) => {
+      if (s === 2) {
+        later(800, () => goal.classList.add('on'));
+        later(1800, () => tooth.classList.add('on'));
+        lines.forEach((l, i) => later(2800 + i * 650, () => l.classList.add('on')));
+        later(4900, () => calc.classList.add('tot'));
+      }
+      if (s === 3) {
+        later(700, () => day.classList.add('on'));
+        later(1500, () => time.classList.add('on'));
+        later(2600, () => go.classList.add('press'));
+        later(2900, () => { go.classList.remove('press'); book.classList.add('sent'); });
+      }
+    };
+    const LEN = [4600, 4400, 8200, 6200];
+    const run = () => { if (!auto) return; show(cur); play(cur); later(LEN[cur], () => { cur = (cur + 1) % 4; run(); }); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { auto = false; clear(); show(i); play(i); }));
+    if (still || !('IntersectionObserver' in window)) { show(2); goal.classList.add('on'); tooth.classList.add('on'); lines.forEach(l => l.classList.add('on')); calc.classList.add('tot'); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; later(700, run); }
+      else if (!e.isIntersecting && auto) { clear(); started = false; auto = false; show(0); }
+    }, { threshold: 0.35 }).observe(root);
+  });
+</script>

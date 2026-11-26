@@ -15,6 +15,7 @@ import DentQueue from '../DentQueue.astro';
 import DentFile from '../DentFile.astro';
 import DentQuote from '../DentQuote.astro';
 import DentCheckin from '../DentCheckin.astro';
+import DentSite from '../DentSite.astro';
 import Related from '../Related.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
@@ -55,6 +56,12 @@ const checkin = [
   ['check', tt('La signature sur l’écran'), tt('Le consentement est lu et signé avec le doigt, daté et rangé dans le dossier.')],
   ['bell', tt('Les alertes dès son arrivée'), tt('Une allergie ou un anticoagulant apparaît en rouge sur son nom avant qu’il s’assoie.')],
 ];
+const site = [
+  ['tv', tt('Deux styles au choix'), tt('Atelier, chaleureux avec des photos, ou Clinique, moderne et bleu. Le cabinet change de style dans l’app, les soins et les prix restent les mêmes.')],
+  ['tag', tt('Un calculateur de traitement'), tt('Le patient choisit un objectif et les dents. Il voit un plan et un prix « à partir de », calculés avec vos tarifs, toujours à confirmer en consultation.')],
+  ['calendar', tt('Le rendez-vous en ligne'), tt('Le patient choisit un créneau libre. La demande arrive dans votre agenda et vous la confirmez.')],
+  ['users', tt('Les photos de l’équipe'), tt('Une photo par dentiste, envoyée depuis l’app et recadrée toute seule. Sans photo, les initiales.')],
+];
 const toc = [
   { id: 'pour-qui', label: tt('Pour qui') },
   { id: 'journee', label: tt('La journée') },
@@ -62,6 +69,7 @@ const toc = [
   { id: 'dossier', label: tt('Le dossier') },
   { id: 'devis', label: tt('Devis et paiement') },
   { id: 'accueil', label: tt('Accueil et consentement') },
+  { id: 'site', label: tt('Le site du cabinet') },
   { id: 'demo', label: tt('Démo') },
 ];
 const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentaire[lang]))].filter(Boolean) as Record<string, unknown>[];
@@ -184,6 +192,19 @@ const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentai
           <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
       </ul>
     </div>
+  </section>
+
+  <!-- the practice's website: two styles, the calculator and online booking -->
+  <section id="site" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="max-w-3xl">
+      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le site du cabinet.')}</span><span class="block text-green-deep">{tt('Deux styles, un seul réglage.')}</span></h2>
+      <p class="tf mt-5 text-lg text-muted" style="--d:80ms">{tt('Le site d’un dentiste est la première visite du patient. Le cabinet choisit son style dans l’app. Mêmes soins, mêmes prix, même prise de rendez-vous en ligne.')}</p>
+    </div>
+    <div class="tf mt-10" style="--d:140ms"><DentSite /></div>
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {site.map(([ic, h, x], i) => (
+        <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+    </ul>
   </section>
 
   <!-- final -->
