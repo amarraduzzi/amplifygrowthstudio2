@@ -1,0 +1,92 @@
+---
+// Who opened which file, played live: the access log of the back office fills up line by line (one opening at 22:40 is
+// flagged as outside opening hours), and on Monday morning the owner's phone gets the security summary of last week.
+// Plays once in view; reduced motion: everything shown. Demo practice, invented names.
+import Device from './Device.astro';
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const LOG: [string, string, string, string, boolean][] = [
+  ['08:52', 'Imane', tt('a ouvert'), 'Youssef Benali · n° 0142', false],
+  ['09:10', 'Dr Bennani', tt('a changé le schéma de'), 'Youssef Benali · n° 0142', false],
+  ['11:24', 'Imane', tt('a fait lire le dossier papier de'), 'Salma Idrissi · n° 0311', false],
+  ['13:05', 'Dr Alami', tt('a fusionné un dossier dans'), 'Omar Tazi · n° 0218', false],
+  ['22:40', 'Karim', tt('a ouvert'), 'Nadia Chraibi · n° 0456', true],
+];
+---
+<div class="dw" data-dw>
+  <div class="dw-log">
+    <div class="dw-head"><b>{tt('Journal des accès')}</b><span>{tt('Patient, personne ou n° de dossier')}</span></div>
+    <div class="dw-chips"><span class="on">{tt('Tout')} · 214</span><span>{tt('Ouvertures')} · 168</span><span>{tt('Fusions')} · 1</span><span>{tt('Lectures de dossiers papier')} · 12</span></div>
+    <ul>
+      {LOG.map(([h, who, act, pat, odd], i) => (
+        <li data-l={i} class={odd ? 'odd' : ''}><time>{h}</time><span><b>{who}</b> {act} <b>{pat}</b></span>{odd && <em>{tt('Hors horaires')}</em>}</li>))}
+    </ul>
+  </div>
+  <div class="dw-phone">
+    <Device kind="phone" w={390} h={820} screenBg="#0b1a2e">
+      <div slot="screen" class="dw-scr" dir="ltr">
+        <p class="dw-day">{tt('lundi')}</p>
+        <p class="dw-time">08:00</p>
+        <div class="dw-note" data-note>
+          <p class="dw-app"><i></i>Amplify · {tt('maintenant')}</p>
+          <b>Cabinet Dr Alami · {tt('dossiers patients, semaine passée')}</b>
+          <span>{tt('1 hors horaires · 3 dossier(s) ouverts sans visite · 1 téléchargement(s) ou fusion(s)')}</span>
+        </div>
+        <div class="dw-note dw-note2" data-note2>
+          <p class="dw-app"><i></i>Amplify · 07:41</p>
+          <b>{tt('Rendez-vous pris en ligne')} · Cabinet Dr Alami</b>
+          <span>Sara · 02/12 10:00 · {tt('Détartrage')}</span>
+        </div>
+      </div>
+    </Device>
+  </div>
+</div>
+
+<style is:global>
+  .dw-log, .dw-scr { --u: 1cqw; }
+
+  .dw { display: grid; gap: 1.5rem; align-items: center; }
+  @media (min-width: 900px) { .dw { grid-template-columns: 1.35fr .65fr; gap: 2.5rem; } }
+  .dw-log { container-type: inline-size; border-radius: 1.6rem; background: #020F20; color: #ECF2FA; padding: clamp(1rem, 3vw, 2rem); box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .45); }
+  .dw-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: calc(var(--u) * 2); align-items: center; }
+  .dw-head b { font-size: calc(var(--u) * 4.2); } .dw-head span { font-size: calc(var(--u) * 2.4); color: #8CA0BE; border-radius: calc(var(--u) * 1.4); background: #071B36; padding: calc(var(--u) * 1.4) calc(var(--u) * 2.4); }
+  .dw-chips { display: flex; flex-wrap: wrap; gap: calc(var(--u) * 1.4); margin-top: calc(var(--u) * 2.6); }
+  .dw-chips span { font-size: calc(var(--u) * 2.2); font-weight: 700; border-radius: calc(var(--u) * 1.2); padding: .9cqw calc(var(--u) * 1.8); box-shadow: inset 0 0 0 1px rgba(210, 225, 245, .14); color: #c9d4e4; }
+  .dw-chips .on { background: #05B962; color: #001E3E; box-shadow: none; }
+  .dw-log ul { margin-top: calc(var(--u) * 3); display: grid; gap: calc(var(--u) * 1.2); }
+  .dw-log li { display: grid; grid-template-columns: calc(var(--u) * 9) 1fr auto; gap: calc(var(--u) * 2); align-items: center; border-radius: calc(var(--u) * 1.4); background: #071B36; padding: calc(var(--u) * 1.8) calc(var(--u) * 2.2); font-size: calc(var(--u) * 2.6); line-height: 1.35; opacity: 0; transform: translateY(calc(var(--u) * 1.6)); transition: opacity .5s, transform .5s; }
+  .dw-log li time { color: #8CA0BE; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .dw-log li.on { opacity: 1; transform: none; }
+  .dw-log li.odd { background: rgba(242, 173, 70, .1); box-shadow: inset 0 0 0 .3cqw #F2AD46; }
+  .dw-log li em { font-style: normal; font-size: calc(var(--u) * 2); font-weight: 800; color: #020F20; background: #F2AD46; border-radius: calc(var(--u) * 1); padding: .6cqw calc(var(--u) * 1.4); }
+  .dw-phone { width: min(100%, 17rem); margin-inline: auto; }
+  .dw-scr { container-type: inline-size; position: relative; width: 100%; aspect-ratio: 390 / 760; overflow: hidden; padding: 14% 5%; color: #fff;
+    background: radial-gradient(120% 70% at 20% 0%, #12406b 0%, #0b1a2e 60%); }
+  .dw-day { text-align: center; font-size: calc(var(--u) * 4.4); font-weight: 600; opacity: .8; text-transform: capitalize; }
+  .dw-time { text-align: center; font-size: calc(var(--u) * 22); font-weight: 300; line-height: 1; letter-spacing: -.02em; }
+  .dw-note { margin-top: calc(var(--u) * 8); border-radius: calc(var(--u) * 5); background: rgba(255, 255, 255, .16); backdrop-filter: blur(8px); padding: calc(var(--u) * 4) calc(var(--u) * 4.6); opacity: 0; transform: translateY(-6cqw) scale(.96); transition: opacity .5s, transform .6s cubic-bezier(.2, .8, .2, 1); }
+  .dw-note2 { margin-top: calc(var(--u) * 3); }
+  .dw-note.on { opacity: 1; transform: none; }
+  .dw-app { display: flex; align-items: center; gap: calc(var(--u) * 2); font-size: calc(var(--u) * 3.2); opacity: .75; } .dw-app i { width: calc(var(--u) * 4.4); height: calc(var(--u) * 4.4); border-radius: calc(var(--u) * 1.2); background: #05B962; }
+  .dw-note b { display: block; margin-top: calc(var(--u) * 1.6); font-size: calc(var(--u) * 3.8); line-height: 1.25; } .dw-note span { display: block; margin-top: calc(var(--u) * 1); font-size: calc(var(--u) * 3.5); line-height: 1.35; opacity: .9; }
+  @media (prefers-reduced-motion: reduce) { .dw-log li, .dw-note { opacity: 1; transform: none; transition: none; } }
+  @media (max-width: 640px) { .dw-log { --u: 1.5cqw; } .dw-log li { grid-template-columns: calc(var(--u) * 9) 1fr; } .dw-log li em { grid-column: 2; justify-self: start; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dw]').forEach((root) => {
+    const lines = [...root.querySelectorAll<HTMLElement>('[data-l]')];
+    const n1 = root.querySelector<HTMLElement>('[data-note]')!, n2 = root.querySelector<HTMLElement>('[data-note2]')!;
+    const all = () => { lines.forEach(l => l.classList.add('on')); n1.classList.add('on'); n2.classList.add('on'); };
+    if (still || !('IntersectionObserver' in window)) { all(); return; }
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      io.disconnect();
+      lines.forEach((l, i) => window.setTimeout(() => l.classList.add('on'), 300 + i * 650));
+      window.setTimeout(() => n2.classList.add('on'), 300 + lines.length * 650 + 300);
+      window.setTimeout(() => n1.classList.add('on'), 300 + lines.length * 650 + 1300);
+    }, { threshold: 0.35 });
+    io.observe(root);
+  });
+</script>

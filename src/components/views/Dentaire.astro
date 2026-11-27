@@ -17,6 +17,8 @@ import DentQuote from '../DentQuote.astro';
 import DentCheckin from '../DentCheckin.astro';
 import DentSite from '../DentSite.astro';
 import DentClose from '../DentClose.astro';
+import DentPaper from '../DentPaper.astro';
+import DentWatch from '../DentWatch.astro';
 import SectorPrices from '../SectorPrices.astro';
 import Faq from '../Faq.astro';
 import Related from '../Related.astro';
@@ -65,6 +67,23 @@ const site = [
   ['calendar', tt('Le rendez-vous en ligne'), tt('Le patient choisit un créneau libre. La demande arrive dans votre agenda et vous la confirmez.')],
   ['users', tt('Les photos de l’équipe'), tt('Une photo par dentiste, envoyée depuis l’app et recadrée toute seule. Sans photo, les initiales.')],
 ];
+const paper = [
+  ['calendar', tt('Les dossiers de demain'), tt('Chaque soir, la liste des patients de demain. L’assistante scanne leur dossier avec son téléphone, page par page, en un seul fichier.')],
+  ['check', tt('Repris en deux minutes'), tt('À côté du scan, elle note le téléphone, les alertes, le schéma et les soins passés. Rien n’entre sans être coché.')],
+  ['book', tt('Votre liste importée'), tt('Depuis votre ancien logiciel ou un fichier Excel, avec les numéros de vos dossiers papier. Et un export complet quand vous voulez.')],
+  ['users', tt('Les doublons réunis'), tt('Le même patient saisi deux fois ? Un geste réunit les deux dossiers. Rendez-vous, soins, paiements et photos : rien ne se perd.')],
+];
+const offer = [
+  [tt('Démarrage accompagné'), tt('1 500 DH'), tt('une fois, offert avec l’engagement d’un an'), tt('Une journée au cabinet : nous importons votre liste, réglons vos actes et vos tarifs, ajoutons votre équipe et formons votre assistante.')],
+  [tt('Numérisation essentielle'), tt('4 DH'), tt('par dossier actif, à partir de 500'), tt('Nous scannons vos dossiers actifs et reprenons l’identité et les alertes médicales de chaque patient. L’historique reste lisible sur le scan.')],
+  [tt('Numérisation complète'), tt('9 DH'), tt('par dossier actif'), tt('En plus : le schéma dentaire et tous les soins passés, avec leur date, dans l’historique du patient.')],
+];
+const watch = [
+  ['search', tt('Qui a ouvert quel dossier'), tt('Chaque ouverture, chaque modification et chaque téléchargement est noté, avec la personne, l’heure et le patient.')],
+  ['bell', tt('Ce qui sort de l’ordinaire'), tt('Un dossier ouvert la nuit, trente dossiers en une journée, un dossier ouvert sans visite : Contrôle vous le montre.')],
+  ['phone', tt('Le résumé du lundi'), tt('Chaque lundi matin, le propriétaire reçoit sur son téléphone le résumé de la semaine. Même quand il n’y a rien.')],
+  ['shield', tt('Le journal pour un contrôle'), tt('Le journal d’une période se télécharge en un clic, et ce téléchargement est lui aussi noté.')],
+];
 const close = [
   ['wallet', tt('Chaque paiement au bon endroit'), tt('Espèces, carte, chèque : chaque encaissement est noté sur le patient et sur la journée.')],
   ['check', tt('La clôture sans calcul'), tt('L’assistante compte les espèces. L’écart éventuel se calcule tout seul.')],
@@ -79,6 +98,11 @@ const faq = [
   [tt('J’ai plusieurs dentistes et plusieurs fauteuils.'), tt('C’est la formule Clinique : un agenda par fauteuil et chacun son code. Avec un seul dentiste, la formule Cabinet suffit.')],
   [tt('Chacun voit-il tout le dossier ?'), tt('Le dentiste, l’assistante et l’accueil entrent chacun avec leur code. Le gérant voit tout.')],
   [tt('Il me faut quel matériel ?'), tt('Une tablette ou un ordinateur au cabinet, et le téléphone de l’équipe. Rien à installer pour vos patients.')],
+  [tt('J’ai des milliers de dossiers papier. Par où commencer ?'), tt('Par demain. Chaque soir, l’assistante scanne le dossier des patients du lendemain, en dix minutes. En quelques semaines, vos patients actifs sont dans le système, et les anciens arrivent le jour où ils reviennent.')],
+  [tt('Pouvez-vous numériser nos dossiers pour nous ?'), tt('Oui. Nous venons au cabinet et scannons vos dossiers actifs : 4 DH par dossier avec l’identité et les alertes, 9 DH avec le schéma et tous les soins passés.')],
+  [tt('Le système sait-il lire l’écriture à la main ?'), tt('En option, il lit les pages scannées et prépare chaque ligne. L’assistante compare avec le scan et coche ce qui est juste. Rien n’entre dans le dossier sans elle, et le scan reste toujours.')],
+  [tt('Qui voit les dossiers de mes patients ?'), tt('Seule votre équipe, chacun avec son code. Chaque accès est noté dans le journal du cabinet et le propriétaire reçoit chaque lundi un résumé de sécurité.')],
+  [tt('Puis-je récupérer mes données ?'), tt('Oui, à tout moment : le registre complet de vos patients se télécharge depuis le back-office, dans un fichier que vous pouvez réimporter ailleurs.')],
   [tt('En quelles langues ?'), tt('Le cabinet et les pages du patient sont en français, en arabe et en anglais.')],
   [tt('Qui met tout en place ?'), tt('Nous. Vos actes et vos prix, vos fauteuils et votre équipe, et nous formons votre assistante.')],
 ];
@@ -87,10 +111,12 @@ const toc = [
   { id: 'journee', label: tt('La journée') },
   { id: 'file', label: tt('La salle d’attente') },
   { id: 'dossier', label: tt('Le dossier') },
+  { id: 'papier', label: tt('Fin du papier') },
   { id: 'devis', label: tt('Devis et paiement') },
   { id: 'accueil', label: tt('Accueil et consentement') },
   { id: 'site', label: tt('Le site du cabinet') },
   { id: 'caisse', label: tt('Caisse et contrôle') },
+  { id: 'securite', label: tt('Sécurité des dossiers') },
   { id: 'tarifs', label: tt('Tarifs') },
   { id: 'faq', label: 'FAQ' },
   { id: 'demo', label: tt('Démo') },
@@ -189,8 +215,42 @@ const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentai
     </div>
   </section>
 
+  <!-- from paper to the system: tomorrow's files, taking them over, the progress, and the service that does it for you -->
+  <section id="papier" class="scroll-mt-20 border-y border-line bg-paper px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="mx-auto max-w-6xl">
+      <div class="grid items-end gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:gap-14">
+        <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Encore sur papier ?')}</span><span class="block text-green-deep">{tt('Vous commencez demain.')}</span></h2>
+        <p class="tf text-lg text-muted" style="--d:80ms">{tt('La plupart des cabinets au Maroc travaillent encore sur papier. Pas par choix : personne ne leur a montré comment en sortir. Avec Amplify, vous ne scannez pas 10 000 dossiers d’un coup. Chaque soir, les dossiers de demain.')}</p>
+      </div>
+      <div class="tf relative isolate mt-10 overflow-hidden rounded-[2.5rem] bg-navy px-4 py-8 sm:px-8 md:px-12 md:py-12" style="--d:140ms">
+        <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+        <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+        <div class="mx-auto max-w-4xl"><DentPaper /></div>
+      </div>
+      <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {paper.map(([ic, h, x], i) => (
+          <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+      </ul>
+
+      <!-- the service: we do it for you -->
+      <div class="tf mt-16 md:mt-20" style="--d:120ms">
+        <p class="text-sm font-bold uppercase tracking-[0.18em] text-green-deep">{tt('Passage au numérique')}</p>
+        <h3 class="display mt-2 text-[2.2rem] leading-[0.95] sm:text-5xl">{tt('Ou nous le faisons pour vous.')}</h3>
+        <ol class="mt-8 grid border-t-2 border-navy md:grid-cols-3">
+          {offer.map(([h, price, unit, x], i) => (
+            <li class={`border-b border-line py-6 md:border-b-0 md:py-8 ${i > 0 ? 'md:border-s md:ps-8' : ''} ${i < 2 ? 'md:pe-8' : ''}`}>
+              <p class="flex items-baseline gap-3"><span class="display text-xl text-muted" dir="ltr">0{i + 1}</span><b class="text-xl">{h}</b></p>
+              <p class="mt-4 flex flex-wrap items-baseline gap-x-2"><span class="display text-6xl text-navy" dir="ltr">{price}</span><span class="text-muted">{unit}</span></p>
+              <p class="mt-3 text-muted">{x}</p>
+            </li>))}
+        </ol>
+        <p class="mt-5 max-w-3xl text-sm text-muted">{tt('Un dossier actif, c’est un patient vu ces deux dernières années ou attendu. Nos équipes signent un engagement de confidentialité. Prix HT.')}</p>
+      </div>
+    </div>
+  </section>
+
   <!-- the quote: built at the chair, accepted and paid on the patient's phone -->
-  <section id="devis" class="mx-auto max-w-6xl scroll-mt-20 px-4 pb-14 sm:px-6 md:pb-24" data-tf>
+  <section id="devis" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
     <div class="max-w-3xl">
       <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Le devis part sur WhatsApp.')}</span><span class="block text-green-deep">{tt('Il revient accepté et payé.')}</span></h2>
       <p class="tf mt-5 text-lg text-muted" style="--d:80ms">{tt('Plus de devis papier qui dort dans un tiroir. Le patient le relit chez lui, en parle en famille, l’accepte sur son téléphone et paie l’acompte par carte.')}</p>
@@ -243,6 +303,19 @@ const schema = [serviceSchema('Amplify Dentaire', description, abs(ROUTES.dentai
           <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-navy text-green"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
       </ul>
     </div>
+  </section>
+
+  <!-- the files under watch: the access log, what is unusual, the Monday summary (law 09-08) -->
+  <section id="securite" class="mx-auto max-w-6xl scroll-mt-20 px-4 py-14 sm:px-6 md:py-24" data-tf>
+    <div class="max-w-3xl">
+      <h2 class="tf text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Chaque dossier ouvert est noté.')}</span><span class="block text-green-deep">{tt('Le lundi, vous savez tout.')}</span></h2>
+      <p class="tf mt-5 text-lg text-muted" style="--d:80ms">{tt('Les dossiers de vos patients sont des données de santé. Amplify note qui les ouvre, vous signale ce qui sort de l’ordinaire et vous envoie le résumé de la semaine. Pensé pour la loi 09-08.')}</p>
+    </div>
+    <div class="tf mt-10" style="--d:140ms"><DentWatch /></div>
+    <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      {watch.map(([ic, h, x], i) => (
+        <li class="tf" style={`--d:${i * 90 + 100}ms`}><span class="grid size-11 place-items-center rounded-2xl bg-mint text-green-deep"><Icon name={ic as 'clock'} class="size-5" /></span><b class="mt-3 block text-lg">{h}</b><span class="text-muted">{x}</span></li>))}
+    </ul>
   </section>
 
   <SectorPrices lang={lang} k="dentaire" trial={false} setup={false} />

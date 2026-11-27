@@ -1,0 +1,183 @@
+---
+// From paper to the system, played live on the practice tablet (the dark look of the practice app), in three steps:
+// 1. "Dossiers de demain": tomorrow's patients, the assistant scans their paper file with her phone one after the other;
+// 2. "Repris dans le dossier": the scanned page on the left, on the right what goes into the file, line by line
+//    (one line the system was not sure of is orange), then "Confirmer";
+// 3. "Le cabinet avance": the active files scanned, counting up, and tomorrow ready.
+// Tap a step to jump. Plays by itself once in view, stops when touched. Demo practice, invented names.
+import { tr, langOf } from '../i18n/t';
+const tt = tr(langOf(Astro.url));
+const STEPS = [tt('Les dossiers de demain'), tt('Repris dans le dossier'), tt('Le cabinet avance')];
+const TOMORROW: [string, string, string][] = [
+  ['09:00', 'Khadija Amrani', '0087'], ['09:30', 'Youssef Benali', '0142'], ['10:30', 'Salma Idrissi', '0311'],
+  ['11:00', 'Omar Tazi', '0218'], ['14:00', 'Nadia Chraibi', '0456'],
+];
+const FIELDS: [string, string, string][] = [
+  ['id', tt('Téléphone'), '06 61 00 00 42'],
+  ['al', tt('Alerte médicale'), tt('Allergie pénicilline')],
+  ['id', tt('Prise en charge'), 'CNOPS'],
+  ['th', tt('Dent 36'), tt('Couronne')],
+  ['hi', '12/03/2019', tt('Extraction 46')],
+  ['hi', '04/09/2021', tt('Détartrage')],
+];
+---
+<div class="dpp" data-dpp data-s="0">
+  <div class="dpp-tab">
+    <div class="dpp-scr" dir="ltr">
+      <!-- 0: tomorrow's files -->
+      <section class="dpp-v" data-v="0">
+        <div class="dpp-head"><b>{tt('Dossiers de demain')}</b><span><em data-ready>2</em> / 5 {tt('prêts')}</span></div>
+        <ul class="dpp-list">
+          {TOMORROW.map(([h, n, no], i) => (
+            <li data-row={i} class={i < 2 ? 'ok' : ''}>
+              <time>{h}</time><span class="dpp-n"><b>{n}</b><small>{tt('Dossier papier')} n° {no}</small></span>
+              <span class="dpp-st"><i class="dpp-pages">3 {tt('pages')}</i><i class="dpp-scan">{tt('Scanner')}</i></span>
+            </li>))}
+        </ul>
+        <div class="dpp-phone" aria-hidden="true"><span class="dpp-sheet"></span><span class="dpp-sheet"></span><span class="dpp-sheet"></span><i></i></div>
+      </section>
+
+      <!-- 1: taking it over -->
+      <section class="dpp-v dpp-split" data-v="1">
+        <div class="dpp-paper" aria-hidden="true">
+          <p class="dpp-hand big">Salma Idrissi</p>
+          <p class="dpp-hand">Tél : 06 61 00 00 42</p>
+          <p class="dpp-hand red">Allergie : PÉNICILLINE !!</p>
+          <p class="dpp-hand">Mutuelle : CNOPS</p>
+          <span class="dpp-rule"></span>
+          <p class="dpp-hand">12/3/19 · ext. 46</p>
+          <p class="dpp-hand">4/9/21 · détartrage</p>
+          <p class="dpp-hand faint">36 couronne (?)</p>
+          <span class="dpp-pageno">p. 1 / 3</span>
+        </div>
+        <div class="dpp-form">
+          <p class="dpp-k">{tt('Reprendre le dossier papier')}</p>
+          <ul>
+            {FIELDS.map(([k, l, v], i) => (
+              <li data-f={i} class={`dpp-f-${k} ${k === 'th' ? 'unsure' : ''}`}><i class="dpp-tick"></i><span>{l}</span><b>{v}</b></li>))}
+          </ul>
+          <span class="dpp-ok" data-confirm>{tt('Confirmer')} (6)</span>
+        </div>
+      </section>
+
+      <!-- 2: the practice moves on -->
+      <section class="dpp-v" data-v="2">
+        <p class="dpp-k">{tt('Dossiers papier')}</p>
+        <p class="dpp-big"><b data-scanned>0</b><span> / 1 840</span></p>
+        <p class="dpp-mute">{tt('dossiers actifs scannés')}</p>
+        <div class="dpp-bar"><i data-bar></i></div>
+        <div class="dpp-grid">
+          <div><small>{tt('Cette semaine')}</small><b>64</b></div>
+          <div><small>{tt('Repris dans le système')}</small><b>287</b></div>
+          <div class="dpp-moon"><small>{tt('Demain')}</small><b>{tt('9 dossiers prêts')}</b></div>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="dpp-steps" role="group" aria-label={tt('Du papier au dossier')}>
+    {STEPS.map((s, i) => <button type="button" data-step={i} class={i === 0 ? 'on' : ''}>{s}</button>)}
+  </div>
+</div>
+
+<style is:global>
+  .dpp { --u: 1cqw; }
+  .dpp-scr { --u: 1cqw; }
+
+  .dpp-tab { border-radius: 1.6rem; background: #0B1422; padding: .65rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .6); }
+  .dpp-scr { container-type: inline-size; position: relative; overflow: hidden; aspect-ratio: 16 / 10.4; border-radius: 1.1rem; background: #020F20; color: #ECF2FA; }
+  .dpp-v { position: absolute; inset: 0; padding: calc(var(--u) * 3.4) calc(var(--u) * 4); opacity: 0; transform: translateY(calc(var(--u) * 2)); transition: opacity .45s, transform .55s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .dpp[data-s="0"] [data-v="0"], .dpp[data-s="1"] [data-v="1"], .dpp[data-s="2"] [data-v="2"] { opacity: 1; transform: none; pointer-events: auto; }
+  .dpp-head { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: calc(var(--u) * 1.6); border-bottom: 1px solid rgba(210, 225, 245, .08); }
+  .dpp-head b { font-size: calc(var(--u) * 3.2); } .dpp-head span { font-size: calc(var(--u) * 2); color: #8CA0BE; font-weight: 700; } .dpp-head em { font-style: normal; color: #05B962; font-size: calc(var(--u) * 2.6); }
+  .dpp-list { margin-top: calc(var(--u) * 1.6); display: grid; gap: calc(var(--u) * 1.1); width: 66%; }
+  .dpp-list li { display: grid; grid-template-columns: calc(var(--u) * 7) 1fr auto; gap: calc(var(--u) * 1.6); align-items: center; border-radius: calc(var(--u) * 1.2); background: #071B36; padding: calc(var(--u) * 1.2) calc(var(--u) * 1.6); transition: background .4s; }
+  .dpp-list time { font-size: calc(var(--u) * 2); font-weight: 800; color: #8CA0BE; font-variant-numeric: tabular-nums; }
+  .dpp-n b { display: block; font-size: calc(var(--u) * 2.2); } .dpp-n small { font-size: calc(var(--u) * 1.6); color: #8CA0BE; }
+  .dpp-st i { font-style: normal; font-size: calc(var(--u) * 1.7); font-weight: 800; border-radius: calc(var(--u) * 1); padding: .7cqw calc(var(--u) * 1.3); }
+  .dpp-scan { color: #020F20; background: #F2AD46; } .dpp-pages { display: none; color: #05B962; background: rgba(5, 185, 98, .14); }
+  .dpp-list li.ok .dpp-scan { display: none; } .dpp-list li.ok .dpp-pages { display: inline-block; }
+  .dpp-list li.now { background: #0D2A52; box-shadow: inset 0 0 0 1px #588CFF; }
+  .dpp-list li.ok .dpp-pages { animation: dpp-pop .5s cubic-bezier(.3, 1.6, .5, 1); }
+  @keyframes dpp-pop { 0% { transform: scale(.4); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  .dpp-phone { position: absolute; right: calc(var(--u) * 5); top: calc(var(--u) * 9); width: calc(var(--u) * 22); aspect-ratio: 9 / 18; border-radius: calc(var(--u) * 3); background: #0B1422; border: .6cqw solid #1a2840; transform: rotate(6deg); }
+  .dpp-phone > i { position: absolute; inset: 8% 8% auto; height: 62%; border: .4cqw dashed rgba(5, 185, 98, .7); border-radius: calc(var(--u) * 1); }
+  .dpp-sheet { position: absolute; left: 14%; top: 12%; width: 72%; height: 54%; border-radius: .6cqw; background: #f7f3ea; opacity: 0;
+    background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--u) * 1.6), rgba(14, 59, 58, .18) calc(var(--u) * 1.6) calc(var(--u) * 1.8)); }
+  .dpp-phone.snap .dpp-sheet { animation: dpp-fly 1.2s cubic-bezier(.5, 0, .3, 1) forwards; }
+  .dpp-phone.snap .dpp-sheet:nth-child(2) { animation-delay: .25s; } .dpp-phone.snap .dpp-sheet:nth-child(3) { animation-delay: .5s; }
+  @keyframes dpp-fly { 0% { opacity: 1; transform: none; } 60% { opacity: 1; transform: translate(-40cqw, calc(var(--u) * 8)) rotate(-6deg) scale(.4); } 100% { opacity: 0; transform: translate(-48cqw, calc(var(--u) * 10)) rotate(-6deg) scale(.2); } }
+  .dpp-split { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: calc(var(--u) * 3); }
+  .dpp-paper { position: relative; border-radius: calc(var(--u) * 1); background: #f7f3ea; color: #23314a; padding: calc(var(--u) * 3) calc(var(--u) * 3.4); transform: rotate(-1.2deg); box-shadow: 0 calc(var(--u) * 2) calc(var(--u) * 4) -1cqw rgba(0, 0, 0, .5);
+    background-image: repeating-linear-gradient(to bottom, transparent 0 calc(var(--u) * 4.4), rgba(60, 90, 140, .16) calc(var(--u) * 4.4) calc(var(--u) * 4.6)); }
+  .dpp-hand { font-family: 'Segoe Print', 'Bradley Hand', 'Comic Sans MS', cursive; font-size: calc(var(--u) * 2.2); line-height: calc(var(--u) * 4.6); transform: rotate(-.6deg); }
+  .dpp-hand.big { font-size: calc(var(--u) * 3); } .dpp-hand.red { color: #C93A3F; font-weight: 700; } .dpp-hand.faint { opacity: .55; }
+  .dpp-rule { display: block; height: 1px; margin: .6cqw 0; background: rgba(35, 49, 74, .3); }
+  .dpp-pageno { position: absolute; right: calc(var(--u) * 2); bottom: calc(var(--u) * 1.6); font-size: calc(var(--u) * 1.6); font-weight: 800; color: #8a7f6a; }
+  .dpp-k { font-size: calc(var(--u) * 1.8); font-weight: 800; text-transform: uppercase; letter-spacing: .14em; color: #8CA0BE; }
+  .dpp-form ul { margin-top: calc(var(--u) * 1.6); display: grid; gap: calc(var(--u) * 1); }
+  .dpp-form li { display: grid; grid-template-columns: calc(var(--u) * 3.4) calc(var(--u) * 14) 1fr; gap: calc(var(--u) * 1.4); align-items: center; border-radius: calc(var(--u) * 1.1); background: #071B36; padding: calc(var(--u) * 1) calc(var(--u) * 1.4); font-size: calc(var(--u) * 2); opacity: .2; transform: translateX(calc(var(--u) * 2)); transition: opacity .45s, transform .45s, background .3s; }
+  .dpp-form li span { color: #8CA0BE; font-weight: 700; font-size: calc(var(--u) * 1.8); } .dpp-form li b { font-weight: 800; }
+  .dpp-form li.on { opacity: 1; transform: none; }
+  .dpp-form li.dpp-f-al b { color: #fff; background: #C93A3F; border-radius: .8cqw; padding: .3cqw calc(var(--u) * 1); justify-self: start; }
+  .dpp-form li.unsure { box-shadow: inset 0 0 0 .3cqw #F2AD46; background: rgba(242, 173, 70, .08); }
+  .dpp-tick { width: calc(var(--u) * 3.4); height: calc(var(--u) * 3.4); border-radius: .8cqw; background: #1a2840; position: relative; }
+  .dpp-form li.on .dpp-tick { background: #05B962; }
+  .dpp-form li.on .dpp-tick::after { content: ''; position: absolute; left: 30%; top: 18%; width: 30%; height: 50%; border: solid #020F20; border-width: 0 .5cqw .5cqw 0; transform: rotate(45deg); }
+  .dpp-ok { display: inline-flex; margin-top: calc(var(--u) * 2); border-radius: calc(var(--u) * 1.2); background: #05B962; color: #020F20; font-weight: 800; font-size: calc(var(--u) * 2.2); padding: calc(var(--u) * 1.4) calc(var(--u) * 3); transition: transform .2s, box-shadow .3s; }
+  .dpp-ok.press { transform: scale(.94); box-shadow: 0 0 0 calc(var(--u) * 1.4) rgba(5, 185, 98, .25); }
+  .dpp-big { margin-top: calc(var(--u) * 2); font-family: var(--font-display, inherit); line-height: .9; } .dpp-big b { font-size: calc(var(--u) * 14); font-variant-numeric: tabular-nums; } .dpp-big span { font-size: calc(var(--u) * 5); color: #8CA0BE; }
+  .dpp-mute { margin-top: calc(var(--u) * 1); color: #8CA0BE; font-size: calc(var(--u) * 2.2); }
+  .dpp-bar { margin-top: calc(var(--u) * 2.4); height: calc(var(--u) * 1.4); border-radius: 99px; background: #0D2A52; overflow: hidden; } .dpp-bar i { display: block; height: 100%; width: 0; background: #05B962; border-radius: 99px; transition: width 2.4s cubic-bezier(.2, .8, .2, 1); }
+  .dpp-grid { margin-top: calc(var(--u) * 3.4); display: grid; grid-template-columns: repeat(3, 1fr); gap: calc(var(--u) * 1.6); }
+  .dpp-grid div { border-radius: calc(var(--u) * 1.2); background: #071B36; padding: calc(var(--u) * 1.8) calc(var(--u) * 2); } .dpp-grid small { display: block; font-size: calc(var(--u) * 1.7); color: #8CA0BE; font-weight: 700; } .dpp-grid b { font-size: calc(var(--u) * 3.6); }
+  .dpp-grid .dpp-moon { background: rgba(5, 185, 98, .12); } .dpp-moon b { font-size: calc(var(--u) * 2.6); color: #05B962; }
+  .dpp-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: 1.4rem; }
+  .dpp-steps button { min-height: 2.75rem; border-radius: 999px; background: rgba(255, 255, 255, .08); padding: 0 1rem; font-size: .9rem; font-weight: 700; color: rgba(255, 255, 255, .7); transition: background .3s, color .3s; }
+  .dpp-steps button.on { background: #05B962; color: #001E3E; }
+  @media (prefers-reduced-motion: reduce) { .dpp-v, .dpp-form li, .dpp-bar i { transition: none; } .dpp-phone.snap .dpp-sheet, .dpp-list li.ok .dpp-pages { animation: none; } }
+  @media (max-width: 640px) {
+    .dpp-scr { --u: 1.9cqw; aspect-ratio: 3 / 4; }
+    .dpp-list { width: 100%; } .dpp-phone { display: none; }
+    .dpp-split { grid-template-columns: 1fr; } .dpp-paper { display: none; }
+    .dpp-form li { grid-template-columns: calc(var(--u) * 3.4) calc(var(--u) * 15) 1fr; }
+    .dpp-grid { grid-template-columns: 1fr 1fr; } .dpp-grid .dpp-moon { grid-column: span 2; }
+  }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-dpp]').forEach((root) => {
+    const q = <T extends HTMLElement>(s: string) => root.querySelector<T>(s)!;
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const rows = [...root.querySelectorAll<HTMLElement>('[data-row]')];
+    const fields = [...root.querySelectorAll<HTMLElement>('[data-f]')];
+    const phone = q('.dpp-phone'), ready = q('[data-ready]'), ok = q('[data-confirm]'), scanned = q('[data-scanned]'), bar = q('[data-bar]');
+    let timers: number[] = [], auto = false, cur = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const clear = () => { timers.forEach(clearTimeout); timers = []; };
+    const count = (to: number) => { const t0 = performance.now(); const f = (t: number) => { const k = Math.min(1, (t - t0) / 2200); scanned.textContent = Math.round(to * (1 - Math.pow(1 - k, 3))).toLocaleString('fr-FR'); if (k < 1 && cur === 2) requestAnimationFrame(f); }; requestAnimationFrame(f); };
+    const reset = () => {
+      rows.forEach((r, i) => { r.classList.toggle('ok', i < 2); r.classList.remove('now'); }); ready.textContent = '2';
+      fields.forEach(f => f.classList.remove('on')); ok.classList.remove('press'); phone.classList.remove('snap');
+      scanned.textContent = '0'; bar.style.width = '0';
+    };
+    const show = (s: number) => { cur = s; root.dataset.s = String(s); steps.forEach((b, i) => b.classList.toggle('on', i === s)); reset(); };
+    const play = (s: number) => {
+      if (s === 0) [2, 3, 4].forEach((i, k) => {
+        later(600 + k * 1700, () => { rows.forEach(r => r.classList.remove('now')); rows[i].classList.add('now'); phone.classList.remove('snap'); void phone.offsetWidth; phone.classList.add('snap'); });
+        later(1700 + k * 1700, () => { rows[i].classList.remove('now'); rows[i].classList.add('ok'); ready.textContent = String(3 + k); });
+      });
+      if (s === 1) { fields.forEach((f, i) => later(500 + i * 650, () => f.classList.add('on'))); later(500 + fields.length * 650 + 400, () => ok.classList.add('press')); }
+      if (s === 2) { later(300, () => { count(312); bar.style.width = '17%'; }); }
+    };
+    const LEN = [6400, 6200, 4600];
+    const run = () => { if (!auto) return; show(cur); play(cur); later(LEN[cur], () => { cur = (cur + 1) % 3; run(); }); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { auto = false; clear(); show(i); play(i); }));
+    if (still || !('IntersectionObserver' in window)) { show(1); fields.forEach(f => f.classList.add('on')); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; later(700, run); }
+      else if (!e.isIntersecting && auto) { clear(); started = false; }
+    }, { threshold: 0.4 }).observe(root);
+  });
+</script>
