@@ -1,0 +1,353 @@
+---
+// "Encore plus": the six newest parts of Amplify Hotel, each played on the reception's tablet. They copy the app:
+//  01 cash out of the drawer (bread, gas, a taxi: amount, reason, the receipt's photo; the expected cash follows)
+//  02 counting blind at the hand-over (per note and coin, the difference only after "Clôturer")
+//  03 a QR per room and one for the hotel (the guest scans, confirms once with his name, lands on his stay)
+//  04 the profit of a sold night (the minimum price from the hotel's own 90 days, orange at the desk under it)
+//  05 the conditions signed with a finger (the text kept as signed, a fingerprint)
+//  06 the price that follows the occupancy (the owner's steps, the website follows, the desk gets advice)
+// Steps play by themselves once in view; touching one stops the tour. Demo riad "Dar Lina", invented names.
+import Icon from './Icon.astro';
+import { tr, langOf } from '../i18n/t';
+const lang = langOf(Astro.url);
+const tt = tr(lang);
+const items: [string, string, string][] = [
+  ['wallet', tt('Les sorties de caisse'), tt('Pain, gaz, taxi : la réception note la sortie et photographie le bon. La caisse attendue suit, le propriétaire voit tout.')],
+  ['shield', tt('Le comptage à l’aveugle'), tt('La réception compte billet par billet sans voir le montant attendu. L’écart s’affiche après, et part sur votre téléphone.')],
+  ['qr', tt('Un QR par chambre'), tt('Le client scanne la carte de sa chambre : wifi, services, sa note. Un ancien client qui a gardé la photo ne voit rien.')],
+  ['chart', tt('Ce que rapporte une nuit'), tt('Le prix minimum calculé avec vos vrais chiffres des 90 derniers jours. La réception le voit à côté du prix convenu.')],
+  ['check', tt('Les conditions signées'), tt('Non-fumeur, dégâts, heure de départ : le client signe du doigt, à la réception ou sur son téléphone. Une preuve, gardée.')],
+  ['calendar', tt('Le prix suit le remplissage'), tt('Vos paliers : +10 % à 70 %, +20 % à 90 %. Le site et Booking suivent tout seuls, un séjour réservé garde son prix.')],
+];
+const notes: [number, number][] = [[200, 12], [100, 7], [50, 3], [20, 4]];
+// a QR-like pattern (21 × 21): the three corner squares, then a fixed pseudo-random fill
+const QN = 21;
+const finder = (r: number, c: number) => { for (const [y, x] of [[0, 0], [0, QN - 7], [QN - 7, 0]]) { const a = r - y, b = c - x; if (a >= 0 && a < 7 && b >= 0 && b < 7) return a === 0 || a === 6 || b === 0 || b === 6 || (a >= 2 && a <= 4 && b >= 2 && b <= 4) ? 1 : 0; } return -1; };
+const near = (r: number, c: number) => (r < 8 && c < 8) || (r < 8 && c >= QN - 8) || (r >= QN - 8 && c < 8);
+const qr = Array.from({ length: QN * QN }, (_, i) => { const r = Math.floor(i / QN), c = i % QN; const f = finder(r, c); if (f >= 0) return f === 1; if (near(r, c)) return false; return ((r * 7 + c * 13 + r * c * 3) % 5) < 2; });
+---
+<div class="hp" data-hp data-s="0" data-k="0">
+  <ol class="hp-list" role="group" aria-label={tt('Les nouveautés')}>
+    {items.map(([ic, h, x], i) => (
+      <li><button type="button" data-step={i} class={`hp-item ${i === 0 ? 'on' : ''}`}>
+        <span class="hp-ic"><Icon name={ic} class="size-5" /></span>
+        <span class="hp-txt"><b><span class="hp-n" dir="ltr">{String(i + 1).padStart(2, '0')}</span>{h}</b><span>{x}</span></span>
+        <i class="hp-bar" aria-hidden="true"></i>
+      </button></li>))}
+  </ol>
+
+  <div class="hp-stage">
+    <div class="hp-tab">
+      <div class="hp-scr" dir={lang === 'ar' ? 'rtl' : 'ltr'} aria-hidden="true"><div class="hp-in">
+        <div class="hp-top"><b>DAR LINA</b><span>{tt('Réception')}</span><i dir="ltr">21:14</i></div>
+
+        <!-- 01 cash out: the receipt is photographed, the line joins the list, the expected cash goes down -->
+        <section class="hp-p hp-s0">
+          <p class="hp-k">{tt('Caisse de la réception')}</p>
+          <div class="c0-exp"><span>{tt('Espèces attendues')}</span><b dir="ltr"><i class="a">3 450 DH</i><i class="b">3 330 DH</i></b></div>
+          <div class="c0-row">
+            <div class="c0-bon"><span class="c0-flash"></span><b>STATION AFRIQUIA</b><small>{tt('Gaz butane')} 12 kg</small><small class="dash"></small><b dir="ltr">120,00</b><small>{tt('Merci')}</small></div>
+            <div class="c0-form">
+              <div class="c0-cats">{[tt('Petit-déjeuner'), tt('Gaz'), tt('Taxi, transport'), tt('Blanchisserie')].map((c, i) => <span class={i === 1 ? 'on' : ''}>{c}</span>)}</div>
+              <p class="c0-amt" dir="ltr">120 DH</p>
+              <p class="c0-ph"><Icon name="camera" class="inline size-[1.1em] align-[-.15em]" /> {tt('Photo du bon ajoutée')}</p>
+            </div>
+          </div>
+          <div class="c0-list">
+            <p class="c0-l old"><span dir="ltr">18:40</span><b>{tt('Pain')}</b><em dir="ltr">−45 DH</em></p>
+            <p class="c0-l new"><span dir="ltr">21:14</span><b>{tt('Gaz')} · Youssef <Icon name="camera" class="inline size-[1em] align-[-.1em] opacity-70" /></b><em dir="ltr">−120 DH</em></p>
+          </div>
+        </section>
+
+        <!-- 02 blind count: the notes are counted, the expected amount stays hidden, then the result -->
+        <section class="hp-p hp-s1">
+          <p class="hp-k">{tt('Comptage à l’aveugle')}</p>
+          <div class="c1-grid">
+            {notes.map(([v, n], i) => (
+              <div class="c1-note" style={`--i:${i}`}><span class={`c1-bill b${v}`} dir="ltr">{v}</span><b dir="ltr" data-cnt={n}>0</b></div>))}
+          </div>
+          <div class="c1-sum"><span>{tt('Total compté')}</span><b dir="ltr" data-sum>0 DH</b></div>
+          <div class="c1-exp"><span>{tt('Attendu')}</span><b dir="ltr"><i class="hide">• • • • •</i><i class="show">3 330 DH</i></b></div>
+          <div class="c1-res"><b>{tt('La caisse est juste.')}</b><small>{tt('Envoyé au propriétaire')} · Youssef · 21:15</small></div>
+        </section>
+
+        <!-- 03 a QR per room: the card, the scan, the name once, the stay -->
+        <section class="hp-p hp-s2">
+          <div class="c2-wrap">
+            <div class="c2-card">
+              <small>DAR LINA</small><b>{tt('Chambre')} 104</b>
+              <span class="c2-qr">{qr.map(f => <i class={f ? 'f' : ''}></i>)}<em class="c2-scan"></em></span>
+              <small>{tt('Wifi, services, votre note')}</small>
+            </div>
+            <div class="c2-phone">
+              <div class="c2-z"><span class="c2-vf"><i></i><i></i><i></i><i></i></span><small>{tt('Scanner le QR de la chambre')}</small></div>
+              <div class="c2-a"><p class="c2-h">{tt('Chambre')} 104</p><p class="c2-t">{tt('Une seule fois sur ce téléphone :')}</p><span class="c2-f"><span class="ty">Benjelloun</span></span><span class="c2-btn">{tt('Ouvrir mon séjour')}</span></div>
+              <div class="c2-b"><p class="c2-h">{tt('Bonjour Youssef')}</p>
+                <p class="c2-r"><b>Wifi</b><small dir="ltr">DarLina-Guest</small></p>
+                <p class="c2-r"><b>{tt('Petit-déjeuner en chambre')}</b><small dir="ltr">80 DH</small></p>
+                <p class="c2-r"><b>{tt('Votre note')}</b><small dir="ltr">1 280 DH</small></p></div>
+            </div>
+          </div>
+          <p class="c2-note"><i>✕</i>{tt('Le client d’avant a gardé la photo du QR : il ne voit rien.')}</p>
+        </section>
+
+        <!-- 04 the profit of a night: the floor counts up, the costs build it, the desk sees it -->
+        <section class="hp-p hp-s3">
+          <p class="hp-k">{tt('Rentabilité')} · {tt('90 derniers jours')}</p>
+          <div class="c3-big"><span>{tt('Prix qui couvre tout')}</span><b dir="ltr"><em data-floor>0</em> DH <small>/ {tt('nuit')}</small></b></div>
+          <div class="c3-bars">
+            {[[tt('Achats d’une nuit'), 55, 6], [tt('Charges fixes par nuit'), 825, 94]].map(([l, v, w], i) => (
+              <p style={`--w:${w}%;--i:${i}`}><span>{l}</span><i></i><b dir="ltr">{v} DH</b></p>))}
+          </div>
+          <div class="c3-desk">
+            <p class="c3-l">{tt('Prix convenu pour le séjour')}</p>
+            <span class="c3-in" dir="ltr"><span class="ty">750</span></span>
+            <p class="c3-w">{tt('750 DH / nuit : sous le prix qui couvre tous les frais (880 DH).')}</p>
+          </div>
+        </section>
+
+        <!-- 05 the conditions signed with a finger -->
+        <section class="hp-p hp-s4">
+          <div class="c4-paper">
+            <p class="c4-h">{tt('Conditions de séjour')} · Dar Lina</p>
+            <p class="c4-m">Sara Benali · {tt('Chambre')} 104 · <span dir="ltr">12/12 → 14/12</span></p>
+            {[tt('Les chambres sont non-fumeur.'), tt('Les dégâts sont à la charge du client.'), tt('Départ avant 12:00.')].map((x, i) => <p class="c4-r">{i + 1}. {x}</p>)}
+            <div class="c4-pad">
+              <svg viewBox="0 0 300 90" preserveAspectRatio="none"><path pathLength="1" d="M14 62 C 30 20, 46 18, 44 50 S 60 78, 78 40 C 86 24, 96 30, 92 52 C 90 66, 108 64, 118 46 C 126 32, 134 38, 132 52 C 131 62, 146 62, 156 44 C 166 28, 176 40, 172 56 C 170 66, 196 50, 212 46 C 230 42, 246 56, 286 38" /></svg>
+              <small>{tt('Signez ici avec le doigt')}</small>
+            </div>
+          </div>
+          <p class="c4-ok"><i>✓</i><span><b>{tt('Signé par Sara Benali')}</b><small dir="ltr">21:14 · A3602040530F9BD8</small></span></p>
+        </section>
+
+        <!-- 06 the price follows the occupancy -->
+        <section class="hp-p hp-s5">
+          <p class="hp-k">{tt('Prix selon le remplissage')} · {tt('ce soir')}</p>
+          <div class="c5-row">
+            <div class="c5-rooms">{Array.from({ length: 10 }, (_, i) => <i style={`--i:${i}`}>{101 + i}</i>)}</div>
+            <div class="c5-pct"><b dir="ltr"><em data-occ>30</em> %</b><span>{tt('des chambres prises')}</span></div>
+          </div>
+          <div class="c5-price">
+            <span>{tt('Double')} · {tt('ce soir')}</span>
+            <b dir="ltr"><em data-price>600</em> DH</b>
+            <i class="c5-step" dir="ltr"></i>
+          </div>
+          <div class="c5-steps">{[['70 %', '+10 %'], ['90 %', '+20 %']].map(([a, b], i) => <p class={`st${i}`} dir="ltr"><b>{a}</b>{b}</p>)}</div>
+          <div class="c5-sync">{[tt('Votre site'), 'Booking.com', 'Airbnb'].map(x => <span>{x}<i>✓</i></span>)}</div>
+        </section>
+      </div></div>
+    </div>
+  </div>
+</div>
+
+<style is:global>
+  .hp { display: grid; gap: 2.2rem; }
+  @media (min-width: 1024px) { .hp { grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); gap: 3.5rem; align-items: start; } .hp-stage { position: sticky; top: 6rem; } }
+  .hp-list { display: grid; gap: .35rem; order: 2; } @media (min-width: 1024px) { .hp-list { order: 0; } }
+  .hp-item { position: relative; display: flex; gap: 1rem; width: 100%; text-align: start; border-radius: 1.2rem; padding: .95rem 1rem 1.15rem; overflow: hidden; color: #fff; transition: background .35s, box-shadow .35s; }
+  .hp-item:hover { background: rgba(255, 255, 255, .05); }
+  .hp-ic { display: grid; place-items: center; flex: none; width: 2.6rem; height: 2.6rem; border-radius: .8rem; background: rgba(255, 255, 255, .08); color: rgba(255, 255, 255, .6); transition: background .35s, color .35s; }
+  .hp-txt { display: grid; gap: .2rem; } .hp-txt b { display: flex; align-items: baseline; gap: .55rem; font-size: 1.12rem; }
+  .hp-n { font-size: .8rem; font-weight: 800; color: rgba(255, 255, 255, .35); transition: color .35s; }
+  .hp-txt > span { color: rgba(255, 255, 255, .62); font-size: .95rem; line-height: 1.45; max-height: 0; overflow: hidden; opacity: 0; transition: max-height .45s, opacity .35s; }
+  .hp-item.on { background: rgba(255, 255, 255, .09); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); }
+  .hp-item.on .hp-ic { background: #05B962; color: #001E3E; } .hp-item.on .hp-n { color: #05B962; }
+  .hp-item.on .hp-txt > span { max-height: 8rem; opacity: 1; }
+  .hp-bar { position: absolute; inset-inline: 1rem; bottom: .5rem; height: 3px; border-radius: 9px; background: rgba(255, 255, 255, .1); opacity: 0; }
+  .hp-bar::after { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; border-radius: inherit; background: #05B962; }
+  .hp-item.on .hp-bar { opacity: 1; }
+  .hp.auto .hp-item.on .hp-bar::after { animation: hp-fill var(--dur, 6s) linear forwards; }
+  .hp:not(.auto) .hp-item.on .hp-bar::after { width: 100%; }
+  @keyframes hp-fill { to { width: 100%; } }
+
+  /* the reception's tablet */
+  .hp-stage { display: grid; place-items: center; }
+  .hp-tab { width: min(560px, 100%); border-radius: 2rem; background: linear-gradient(#2E333B, #15181D 50%, #2E333B); padding: .7rem; box-shadow: 0 40px 80px -30px rgba(0, 0, 0, .7), 0 0 0 1px rgba(255, 255, 255, .08); }
+  .hp-scr { container-type: inline-size; position: relative; aspect-ratio: 4 / 3.35; overflow: hidden; border-radius: 1.4rem; background: #0A1A2E; color: #fff; }
+  .hp-in { position: absolute; inset: 0; font-size: 2.6cqw; }
+  .hp-top { display: flex; align-items: center; gap: .8em; height: 9%; padding: 0 4%; border-bottom: 1px solid rgba(255, 255, 255, .08); font-size: .9em; }
+  .hp-top b { letter-spacing: .2em; } .hp-top span { color: #7BE3A9; font-size: .8em; letter-spacing: .12em; text-transform: uppercase; } .hp-top i { margin-inline-start: auto; font-style: normal; opacity: .6; }
+  .hp-p { position: absolute; inset: 9% 0 0; padding: 4% 4.5%; opacity: 0; transform: translateY(4%); transition: opacity .45s, transform .6s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+  .hp[data-s="0"] .hp-s0, .hp[data-s="1"] .hp-s1, .hp[data-s="2"] .hp-s2, .hp[data-s="3"] .hp-s3, .hp[data-s="4"] .hp-s4, .hp[data-s="5"] .hp-s5 { opacity: 1; transform: none; }
+  .hp-k { font-size: .72em; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
+  .ty { display: inline-block; white-space: nowrap; overflow: hidden; vertical-align: bottom; max-width: 0; }
+  .hp[data-k="1"] .ty, .hp[data-k="2"] .ty, .hp[data-k="3"] .ty { max-width: 12em; transition: max-width 1.1s steps(10); }
+
+  /* 01 */
+  .c0-exp { display: flex; justify-content: space-between; align-items: baseline; margin-top: 3%; border-radius: .8em; background: rgba(255, 255, 255, .06); padding: 2.5% 3.5%; }
+  .c0-exp span { font-weight: 700; } .c0-exp b { display: grid; font-size: 2.1em; font-weight: 800; color: #05B962; }
+  .c0-exp i { grid-area: 1 / 1; font-style: normal; text-align: end; transition: opacity .4s, transform .5s; } .c0-exp .b { opacity: 0; transform: translateY(40%); }
+  .hp[data-k="3"] .c0-exp .a { opacity: 0; transform: translateY(-40%); } .hp[data-k="3"] .c0-exp .b { opacity: 1; transform: none; }
+  .c0-row { display: grid; grid-template-columns: 34% 1fr; gap: 4%; margin-top: 4%; }
+  .c0-bon { position: relative; display: grid; gap: .2em; justify-items: center; align-content: start; background: #FFFEF7; color: #222; padding: 7% 5%; font-family: ui-monospace, 'Courier New', monospace; font-size: .72em; text-align: center; transform: rotate(-4deg); box-shadow: 0 16px 30px -14px rgba(0, 0, 0, .6); overflow: hidden; }
+  .c0-bon .dash { width: 100%; border-top: 1px dashed #999; margin: .3em 0; } .c0-bon b { font-size: 1.05em; }
+  .c0-flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+  .hp[data-k="1"] .c0-flash { animation: c0-fl .5s ease-out; } @keyframes c0-fl { 0% { opacity: .95; } 100% { opacity: 0; } }
+  .hp[data-k="1"] .c0-bon, .hp[data-k="2"] .c0-bon, .hp[data-k="3"] .c0-bon { transform: rotate(-1deg) scale(.96); transition: transform .5s; }
+  .c0-cats { display: grid; grid-template-columns: 1fr 1fr; gap: .45em; }
+  .c0-cats span { border-radius: .55em; background: rgba(255, 255, 255, .07); padding: .55em .6em; font-size: .78em; font-weight: 700; transition: background .3s, color .3s; }
+  .hp:not([data-k="0"]) .c0-cats span.on { background: #05B962; color: #001E3E; }
+  .c0-amt { margin-top: 5%; border-radius: .6em; background: rgba(255, 255, 255, .07); padding: .45em .7em; font-size: 1.6em; font-weight: 800; opacity: .25; transition: opacity .3s; }
+  .hp:not([data-k="0"]) .c0-amt { opacity: 1; }
+  .c0-ph { margin-top: 4%; font-size: .8em; font-weight: 700; color: #7BE3A9; opacity: 0; transition: opacity .3s; } .hp[data-k="2"] .c0-ph, .hp[data-k="3"] .c0-ph { opacity: 1; }
+  .c0-list { margin-top: 4%; display: grid; gap: .4em; }
+  .c0-l { display: flex; align-items: center; gap: .8em; border-radius: .6em; background: rgba(255, 255, 255, .05); padding: .55em .8em; font-size: .85em; }
+  .c0-l span { opacity: .55; } .c0-l em { margin-inline-start: auto; font-style: normal; font-weight: 800; }
+  .c0-l.new { opacity: 0; transform: translateX(-6%); transition: opacity .4s, transform .5s; background: rgba(5, 185, 98, .14); }
+  .hp[data-k="3"] .c0-l.new { opacity: 1; transform: none; }
+
+  /* 02 */
+  .c1-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .6em; margin-top: 3%; }
+  .c1-note { display: flex; align-items: center; justify-content: space-between; border-radius: .7em; background: rgba(255, 255, 255, .06); padding: .5em .7em; }
+  .c1-bill { display: grid; place-items: center; width: 4.2em; height: 2.3em; border-radius: .3em; font-weight: 900; color: rgba(0, 0, 0, .7); font-size: .85em; box-shadow: 0 6px 12px -6px rgba(0, 0, 0, .5); }
+  .b200 { background: linear-gradient(135deg, #9FD3E8, #5BA9C9); } .b100 { background: linear-gradient(135deg, #E9C79A, #C99A5B); } .b50 { background: linear-gradient(135deg, #B7DDA2, #7DB863); } .b20 { background: linear-gradient(135deg, #D8B4E2, #A97BBE); }
+  .c1-note b { font-size: 1.5em; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .c1-sum, .c1-exp { display: flex; justify-content: space-between; align-items: baseline; margin-top: 3%; padding: 0 1%; }
+  .c1-sum b { font-size: 2em; font-weight: 800; font-variant-numeric: tabular-nums; }
+  .c1-exp { opacity: .8; } .c1-exp b { display: grid; font-size: 1.2em; } .c1-exp i { grid-area: 1 / 1; font-style: normal; text-align: end; transition: opacity .4s; }
+  .c1-exp .show { opacity: 0; } .hp[data-k="2"] .c1-exp .hide { opacity: 0; } .hp[data-k="2"] .c1-exp .show { opacity: 1; }
+  .c1-res { display: grid; gap: .2em; margin-top: 3%; border-radius: .9em; background: #05B962; color: #001E3E; padding: 3% 4%; opacity: 0; transform: scale(.94); transition: opacity .4s, transform .5s cubic-bezier(.2, .9, .25, 1.3); }
+  .c1-res b { font-size: 1.6em; } .c1-res small { font-weight: 700; opacity: .75; }
+  .hp[data-k="2"] .c1-res { opacity: 1; transform: none; }
+
+  /* 03 */
+  .c2-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 6%; align-items: center; height: 80%; }
+  .c2-card { display: grid; justify-items: center; gap: .4em; border-radius: .9em; background: #F3F2EA; color: #1C1E17; padding: 8% 6%; text-align: center; transform: rotate(-3deg); box-shadow: 0 20px 40px -18px rgba(0, 0, 0, .7); }
+  .c2-card small { font-size: .7em; letter-spacing: .14em; color: #5F6158; } .c2-card b { font-size: 1.9em; font-weight: 300; letter-spacing: -.02em; }
+  .c2-qr { position: relative; display: grid; grid-template-columns: repeat(21, 1fr); gap: 0; width: 66%; aspect-ratio: 1; background: #fff; padding: 5%; overflow: hidden; }
+  .c2-qr i { background: transparent; } .c2-qr i.f { background: #1C1E17; }
+  .c2-scan { position: absolute; inset-inline: 0; top: 0; height: 12%; background: linear-gradient(transparent, rgba(5, 185, 98, .8), transparent); opacity: 0; }
+  .hp[data-k="0"] .c2-scan { opacity: 1; animation: c2-sc 1.1s ease-in-out infinite alternate; } @keyframes c2-sc { to { top: 88%; } }
+  .c2-phone { position: relative; height: 100%; border-radius: 1.4em; background: #F4F1EA; color: #1E211C; border: .45em solid #000; overflow: hidden; }
+  .c2-a, .c2-b { position: absolute; inset: 0; padding: 12% 9%; transition: opacity .45s, transform .5s; }
+  .c2-b { opacity: 0; transform: translateX(10%); }
+  .c2-z { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 1em; background: #111; color: rgba(255, 255, 255, .7); font-size: .8em; opacity: 0; transition: opacity .4s; }
+  .hp[data-k="0"] .c2-z { opacity: 1; }
+  .c2-vf { position: relative; width: 6em; height: 6em; animation: c2-vf 1.2s ease-in-out infinite alternate; }
+  .c2-vf i { position: absolute; width: 1.6em; height: 1.6em; border: 3px solid #05B962; }
+  .c2-vf i:nth-child(1) { top: 0; left: 0; border-right: 0; border-bottom: 0; } .c2-vf i:nth-child(2) { top: 0; right: 0; border-left: 0; border-bottom: 0; }
+  .c2-vf i:nth-child(3) { bottom: 0; left: 0; border-right: 0; border-top: 0; } .c2-vf i:nth-child(4) { bottom: 0; right: 0; border-left: 0; border-top: 0; }
+  @keyframes c2-vf { to { transform: scale(.88); } }
+  .hp[data-k="0"] .c2-a { opacity: 0; } .hp[data-k="3"] .c2-a { opacity: 0; transform: translateX(-10%); } .hp[data-k="3"] .c2-b { opacity: 1; transform: none; }
+  .c2-h { font-family: Georgia, serif; font-size: 1.7em; line-height: 1.05; } .c2-t { margin-top: 6%; font-size: .78em; color: #6A6C63; }
+  .c2-f { display: block; margin-top: 5%; border: 1px solid #DDD8CC; background: #fff; padding: .55em .7em; font-size: .95em; min-height: 2.4em; }
+  .c2-btn { display: grid; place-items: center; margin-top: 6%; min-height: 2.6em; background: #1F5C4A; color: #fff; font-weight: 700; font-size: .8em; transition: transform .2s; }
+  .hp[data-k="2"] .c2-btn { transform: scale(.95); }
+  .c2-r { display: flex; justify-content: space-between; gap: .5em; margin-top: 7%; border-top: 1px solid #DDD8CC; padding-top: 5%; font-size: .78em; } .c2-r small { color: #6A6C63; }
+  .c2-note { display: flex; align-items: center; gap: .6em; margin-top: 3%; font-size: .8em; color: rgba(255, 255, 255, .7); opacity: 0; transition: opacity .4s; }
+  .c2-note i { display: grid; place-items: center; width: 1.5em; height: 1.5em; border-radius: 9em; background: rgba(239, 68, 68, .25); color: #FCA5A5; font-style: normal; font-size: .8em; }
+  .hp[data-k="3"] .c2-note { opacity: 1; }
+
+  /* 04 */
+  .c3-big { margin-top: 3%; border-radius: 1em; background: linear-gradient(135deg, #062A4F, #001E3E); padding: 4% 5%; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+  .c3-big span { font-size: .75em; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 255, 255, .55); }
+  .c3-big b { display: block; margin-top: .1em; font-size: 3.6em; font-weight: 800; line-height: 1; letter-spacing: -.02em; } .c3-big em { font-style: normal; font-variant-numeric: tabular-nums; } .c3-big small { font-size: .3em; opacity: .6; }
+  .c3-bars { display: grid; gap: .5em; margin-top: 3.5%; }
+  .c3-bars p { display: grid; grid-template-columns: 38% 1fr auto; align-items: center; gap: .8em; font-size: .8em; }
+  .c3-bars i { height: .7em; border-radius: 9em; background: rgba(255, 255, 255, .08); position: relative; overflow: hidden; }
+  .c3-bars i::after { content: ""; position: absolute; inset-block: 0; inset-inline-start: 0; width: 0; border-radius: inherit; background: #05B962; transition: width .9s cubic-bezier(.2, .8, .2, 1) calc(var(--i) * .25s); }
+  .hp:not([data-k="0"]) .c3-bars i::after { width: var(--w); }
+  .c3-desk { margin-top: 4%; border-radius: .9em; background: rgba(255, 255, 255, .06); padding: 3% 4%; opacity: .3; transition: opacity .4s; }
+  .hp[data-k="2"] .c3-desk, .hp[data-k="3"] .c3-desk { opacity: 1; }
+  .c3-l { font-size: .75em; font-weight: 700; } .c3-in { display: block; margin-top: .4em; border-radius: .5em; background: rgba(255, 255, 255, .08); padding: .4em .7em; font-size: 1.3em; font-weight: 800; min-height: 1.9em; }
+  .c3-w { margin-top: .6em; border-radius: .5em; background: rgba(245, 158, 11, .18); color: #FCD34D; padding: .45em .7em; font-size: .78em; font-weight: 700; opacity: 0; transform: translateY(-20%); transition: opacity .35s, transform .4s; }
+  .hp[data-k="3"] .c3-w { opacity: 1; transform: none; }
+
+  /* 05 */
+  .c4-paper { border-radius: .6em; background: #FFFEFA; color: #1D1A16; padding: 4% 5%; font-family: Georgia, serif; box-shadow: 0 20px 40px -22px rgba(0, 0, 0, .7); }
+  .c4-h { font-size: 1.2em; font-weight: 700; } .c4-m { margin: .2em 0 .6em; font-family: Arial, sans-serif; font-size: .7em; color: #666; }
+  .c4-r { font-size: .82em; line-height: 1.6; }
+  .c4-pad { position: relative; margin-top: 3%; height: 7.5em; border-radius: .5em; box-shadow: inset 0 0 0 1px #DDD; }
+  .c4-pad::after { content: ""; position: absolute; inset-inline: 6%; bottom: 26%; border-bottom: 1px dashed #BBB; }
+  .c4-pad small { position: absolute; bottom: 6%; inset-inline-start: 6%; font-family: Arial, sans-serif; font-size: .65em; color: #AAA; }
+  .c4-pad svg { position: absolute; inset: 6% 4% 18%; width: 92%; height: 76%; }
+  .c4-pad path { fill: none; stroke: #141414; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; vector-effect: non-scaling-stroke; }
+  .hp[data-k="1"] .c4-pad path, .hp[data-k="2"] .c4-pad path, .hp[data-k="3"] .c4-pad path { stroke-dashoffset: 0; transition: stroke-dashoffset 1.8s cubic-bezier(.5, .1, .4, 1); }
+  .c4-ok { display: flex; align-items: center; gap: .8em; margin-top: 3%; border-radius: .9em; background: rgba(5, 185, 98, .16); padding: 2.5% 4%; opacity: 0; transform: translateY(15%); transition: opacity .4s, transform .5s; }
+  .c4-ok i { display: grid; place-items: center; width: 2em; height: 2em; border-radius: 9em; background: #05B962; color: #001E3E; font-style: normal; font-weight: 900; }
+  .c4-ok span { display: grid; } .c4-ok small { opacity: .65; font-size: .8em; }
+  .hp[data-k="3"] .c4-ok { opacity: 1; transform: none; }
+
+  /* 06 */
+  .c5-row { display: grid; grid-template-columns: 1.5fr 1fr; gap: 5%; align-items: center; margin-top: 3%; }
+  .c5-rooms { display: grid; grid-template-columns: repeat(5, 1fr); gap: .45em; }
+  .c5-rooms i { display: grid; place-items: center; aspect-ratio: 1.15; border-radius: .55em; background: rgba(255, 255, 255, .07); font-style: normal; font-size: .78em; font-weight: 800; color: rgba(255, 255, 255, .5); transition: background .35s, color .35s; }
+  .c5-rooms i.t { background: #2563EB; color: #fff; }
+  .c5-pct b { display: block; font-size: 3em; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; } .c5-pct em { font-style: normal; } .c5-pct span { font-size: .8em; opacity: .6; }
+  .c5-price { position: relative; display: flex; align-items: baseline; justify-content: space-between; margin-top: 4%; border-radius: 1em; background: #F3F2EA; color: #1C1E17; padding: 3% 4.5%; }
+  .c5-price span { font-size: .85em; color: #5F6158; } .c5-price b { font-size: 2.4em; font-weight: 800; font-variant-numeric: tabular-nums; } .c5-price em { font-style: normal; }
+  .c5-step { position: absolute; top: -.9em; inset-inline-end: 4%; border-radius: 9em; background: #05B962; color: #001E3E; padding: .2em .7em; font-size: .8em; font-weight: 900; font-style: normal; opacity: 0; transform: scale(.7); transition: opacity .3s, transform .4s cubic-bezier(.2, .9, .25, 1.4); }
+  .c5-step.on { opacity: 1; transform: none; }
+  .c5-steps { display: flex; gap: .6em; margin-top: 3%; }
+  .c5-steps p { display: flex; gap: .5em; border-radius: .6em; background: rgba(255, 255, 255, .06); padding: .4em .8em; font-size: .8em; color: rgba(255, 255, 255, .55); transition: background .3s, color .3s; }
+  .c5-steps p b { color: #fff; } .c5-steps p.on { background: rgba(5, 185, 98, .2); color: #7BE3A9; }
+  .c5-sync { display: flex; flex-wrap: wrap; gap: .5em; margin-top: 3%; }
+  .c5-sync span { display: flex; align-items: center; gap: .4em; border-radius: 9em; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .15); padding: .35em .8em; font-size: .75em; }
+  .c5-sync i { font-style: normal; color: #05B962; opacity: 0; transition: opacity .3s; } .c5-sync.on i { opacity: 1; }
+
+  @media (prefers-reduced-motion: reduce) { .hp *, .hp *::after { transition: none !important; animation: none !important; } }
+</style>
+
+<script>
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll<HTMLElement>('[data-hp]').forEach((root) => {
+    const steps = [...root.querySelectorAll<HTMLButtonElement>('[data-step]')];
+    const $ = <T extends Element = HTMLElement>(s: string) => root.querySelector<T>(s);
+    let s = 0, timers: number[] = [], auto = false, loop = 0;
+    const later = (ms: number, f: () => void) => { timers.push(window.setTimeout(f, ms)); };
+    const k = (n: number) => { root.dataset.k = String(n); };
+    const fmt = (n: number) => n.toLocaleString('fr-FR').replace(/[  ]/g, ' ');
+    // a number that counts to its value
+    const count = (el: HTMLElement | null, from: number, to: number, ms: number, suffix = '') => {
+      if (!el) return; const t0 = performance.now();
+      const f = (t: number) => { const p = Math.min(1, (t - t0) / ms); const e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(Math.round(from + (to - from) * e)) + suffix; if (p < 1 && root.dataset.s === String(s)) requestAnimationFrame(f); };
+      requestAnimationFrame(f);
+    };
+    const reset = () => {
+      root.querySelectorAll<HTMLElement>('[data-cnt]').forEach(b => { b.textContent = '0'; });
+      const sum = $('[data-sum]'); if (sum) sum.textContent = '0 DH';
+      const fl = $('[data-floor]'); if (fl) fl.textContent = '0';
+      const oc = $('[data-occ]'); if (oc) oc.textContent = '30';
+      const pr = $('[data-price]'); if (pr) pr.textContent = '600';
+      root.querySelectorAll('.c5-rooms i').forEach((x, i) => x.classList.toggle('t', i < 3));
+      root.querySelectorAll('.c5-steps p, .c5-sync').forEach(x => x.classList.remove('on'));
+      $('.c5-step')?.classList.remove('on');
+    };
+    // what happens inside each step
+    const play = (n: number) => {
+      timers.forEach(clearTimeout); timers = []; reset(); k(0);
+      if (n === 0) { later(1100, () => k(1)); later(2200, () => k(2)); later(3600, () => k(3)); }
+      if (n === 1) {
+        k(1);
+        root.querySelectorAll<HTMLElement>('[data-cnt]').forEach((b, i) => later(300 + i * 450, () => count(b, 0, Number(b.dataset.cnt), 600)));
+        later(400, () => count($('[data-sum]'), 0, 3330, 2200, ' DH'));
+        later(3800, () => k(2));
+      }
+      if (n === 2) { later(1600, () => k(1)); later(3200, () => k(2)); later(3500, () => k(3)); }
+      if (n === 3) { later(300, () => { k(1); count($('[data-floor]'), 0, 880, 1600); }); later(2400, () => k(2)); later(3900, () => k(3)); }
+      if (n === 4) { later(700, () => k(1)); later(2900, () => k(3)); }
+      if (n === 5) {
+        const rooms = [...root.querySelectorAll('.c5-rooms i')];
+        const occ = $('[data-occ]'), price = $('[data-price]'), tag = $('.c5-step');
+        [3, 4, 5, 6, 7, 8].forEach((r, j) => later(600 + j * 650, () => {
+          rooms[r]?.classList.add('t'); const p = (r + 1) * 10; if (occ) occ.textContent = String(p);
+          if (p === 70) { count(price, 600, 660, 600); if (tag) tag.textContent = '+10 %'; tag?.classList.add('on'); root.querySelector('.c5-steps .st0')?.classList.add('on'); }
+          if (p === 90) { count(price, 660, 720, 600); if (tag) tag.textContent = '+20 %'; root.querySelector('.c5-steps .st1')?.classList.add('on'); }
+        }));
+        later(5000, () => $('.c5-sync')?.classList.add('on'));
+      }
+    };
+    const dur = (n: number) => [6000, 6500, 6200, 6500, 5600, 7000][n];
+    const go = (n: number) => { s = n; root.dataset.s = String(n); root.style.setProperty('--dur', `${dur(n)}ms`); steps.forEach((b, i) => b.classList.toggle('on', i === n)); play(n); };
+    const stop = () => { auto = false; root.classList.remove('auto'); clearTimeout(loop); };
+    const tick = () => { if (!auto) return; go((s + 1) % steps.length); loop = window.setTimeout(tick, dur(s)); };
+    steps.forEach((b, i) => b.addEventListener('click', () => { stop(); go(i); }));
+    if (still) { k(3); return; }
+    if (!('IntersectionObserver' in window)) { go(0); return; }
+    let started = false;
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting && !started) { started = true; auto = true; root.classList.add('auto'); go(0); loop = window.setTimeout(tick, dur(0)); }
+      else if (!e.isIntersecting) stop();
+    }, { threshold: 0.3 }).observe(root);
+  });
+</script>

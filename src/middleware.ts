@@ -8,11 +8,12 @@ import { immoEn, immoAr } from './i18n/dict-immobilier';
 import { pressingEn, pressingAr } from './i18n/dict-pressing';
 import { garageEn, garageAr } from './i18n/dict-garage';
 import { hotelEn, hotelAr } from './i18n/dict-hotel';
+import { hotelPlusEn, hotelPlusAr } from './i18n/dict-hotel-plus';
 import { dentaireEn, dentaireAr } from './i18n/dict-dentaire';
 import { hanoutEn, hanoutAr } from './i18n/dict-hanout';
 import { homeEn, homeAr } from './i18n/dict-home';
-const mergedEn = { ...dentaireEn, ...hotelEn, ...garageEn, ...dictEn, ...immoEn, ...pressingEn, ...hanoutEn, ...homeEn };
-const mergedAr = { ...dentaireAr, ...hotelAr, ...garageAr, ...dictAr, ...immoAr, ...pressingAr, ...hanoutAr, ...homeAr };
+const mergedEn = { ...hotelPlusEn, ...dentaireEn, ...hotelEn, ...garageEn, ...dictEn, ...immoEn, ...pressingEn, ...hanoutEn, ...homeEn };
+const mergedAr = { ...hotelPlusAr, ...dentaireAr, ...hotelAr, ...garageAr, ...dictAr, ...immoAr, ...pressingAr, ...hanoutAr, ...homeAr };
 
 const decode = (s: string) => s.replace(/&#39;|&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&');
 const encText = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

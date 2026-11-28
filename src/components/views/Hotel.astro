@@ -21,6 +21,7 @@ import HotelBill from '../HotelBill.astro';
 import HotelFit from '../HotelFit.astro';
 import Related from '../Related.astro';
 import CardQr from '../CardQr.astro';
+import HotelPlus from '../HotelPlus.astro';
 import { tr } from '../../i18n/t';
 import { ROUTES, abs, type Lang } from '../../i18n/routes';
 import { faqSchema, serviceSchema } from '../../lib/schema';
@@ -92,6 +93,7 @@ const toc = [
   { id: 'controle', label: tt('Le contrôle') },
   { id: 'menage', label: tt('Le ménage') },
   { id: 'argent', label: tt('L’argent') },
+  { id: 'nouveautes', label: tt('Nouveautés') },
   { id: 'tarifs', label: tt('Tarifs') },
   { id: 'faq', label: 'FAQ' },
 ];
@@ -254,6 +256,20 @@ const schema = [serviceSchema('Amplify Hotel', description, abs(ROUTES.hotel[lan
         </dl>
       </div>
       <div class="tf lg:pt-6" style="--d:120ms"><HotelBill /></div>
+    </div>
+  </section>
+
+  <!-- the six newest parts, each played on the reception's tablet -->
+  <section id="nouveautes" class="scroll-mt-20 px-4 pt-14 sm:px-6 md:pt-24" data-tf>
+    <div class="tf relative isolate mx-auto max-w-6xl overflow-hidden rounded-[2.5rem] bg-navy p-6 text-white md:p-14">
+      <span class="sl-blob sl-blob-a" aria-hidden="true"></span>
+      <span class="sl-blob sl-blob-b" aria-hidden="true"></span>
+      <div class="mb-10 max-w-3xl md:mb-14">
+        <p class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm font-semibold text-green ring-1 ring-white/15"><i class="size-2 animate-pulse rounded-full bg-green"></i>{tt('Nouveau')}</p>
+        <h2 class="text-[2.6rem] leading-[0.95] sm:text-6xl sm:leading-[0.9]"><span class="block">{tt('Six nouveautés.')}</span><span class="block text-green">{tt('Chacune vous rapporte.')}</span></h2>
+        <p class="mt-5 max-w-xl text-lg text-white/75">{tt('Moins d’argent qui disparaît de la caisse, des nuits jamais vendues à perte, et un prix qui monte quand l’hôtel se remplit. Touchez une nouveauté pour la voir.')}</p>
+      </div>
+      <HotelPlus />
     </div>
   </section>
 
